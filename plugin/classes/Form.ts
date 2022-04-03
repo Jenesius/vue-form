@@ -49,7 +49,7 @@ export class Form extends EventEmitter{
 	
 	values: Values = {};
 	
-	findDepend(name: string) {
+	findDependence(name: string) {
 		return this.dependElements.find(element => element.name === name);
 	}
 	
@@ -128,7 +128,7 @@ export class Form extends EventEmitter{
 	
 	restoreDependence(name: string) {
 		
-		const dep = this.findDepend(name);
+		const dep = this.findDependence(name);
 		if (!dep) return undefined;
 		
 		if (dep.reinitialization)

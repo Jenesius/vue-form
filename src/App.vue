@@ -1,6 +1,6 @@
 <template>
     <p>Test</p>
-    <div class = "flex">
+    <div class = "app-wrap flex">
         <input-field name = 'login' v-model = "state.login" v-if = "state.isLogin"/>
         <input-field name = 'name' />
 
@@ -10,6 +10,7 @@
 
     </div>
 
+    <p>Form Changed: {{form.changed.value}}</p>
     <button @click = "toggleAge">toggle age</button>
     <button @click = "state.isAddress = !state.isAddress">toggle address</button>
     <button @click = "state.isLogin = !state.isLogin">toggle login</button>
@@ -97,5 +98,8 @@
         display: flex;
         gap: 10px;
         flex-direction: column;
+    }
+    .app-wrap{
+        padding: 10px 0 25px 0;
     }
 </style>
