@@ -3,7 +3,7 @@
         <div class = "input-field__name">{{name}}</div>
         <input type = 'text' class = "input-field"
                @input = "input.setValue($event.target.value)"
-               :value = "input.value"
+               :value = "input.state.value"
         >
     </div>
 
@@ -11,7 +11,7 @@
 
 <script setup lang = 'ts'>
 
-    import {inject, defineProps, defineEmits,  watch} from "vue";
+    import {inject, defineProps} from "vue";
     import {Form} from "../../plugin/classes/Form";
     import {Input} from "../../plugin/classes/Input";
 
@@ -20,27 +20,22 @@
         name: string,
         modelValue?: any
     }>()
-    const emit = defineEmits(['update:modelValue'])
 
-    function init() {
 
-        console.log('Init', props.name);
+
+    function init() : Input{
+
+        console.log(`Initialize %c${props.name}`, 'color: green');
+
         const i = new Input({name: props.name});
         form.depend(i);
         return i;
 
     }
-    const input = form.findDepend(props.name) || init();
-    console.log(input);
-
-    input.on('input', v => {
-        emit('update:modelValue', v);
-    })
+    const input = form.restoreDependence(props.name) as Input || init();
 
 
-    watch(() => props.modelValue, () => {
-        input.setValue(props.modelValue);
-    })
+
 
 
 

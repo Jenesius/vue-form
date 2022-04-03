@@ -6,11 +6,15 @@
 
         <input-field name="age" v-if = "age"/>
 
+        <input-address name = "address" v-if = "state.isAddress"/>
+
     </div>
 
     <button @click = "toggleAge">toggle age</button>
+    <button @click = "state.isAddress = !state.isAddress">toggle address</button>
     <button @click = "state.isLogin = !state.isLogin">toggle login</button>
-    <button @click = "form.setValues({'login': (new Date).toString()})">change login</button>
+    <button @click = "form.setValues({'login': Math.floor(Math.random() * 1000)})">change login</button>
+    <button @click = "setDefaultValues"> Default </button>
 
     <div v-html="valueJson"></div>
 </template>
@@ -22,9 +26,11 @@
     import InputField from "@/components/InputField.vue";
 
     import {reactive, ref} from "vue";
+    import InputAddress from "@/components/InputAddress.vue";
 
     const form = new Form({});
     window.form = form;
+    form.setValues({age: 11})
 
     const age = ref(true);
     function toggleAge() {
@@ -54,10 +60,23 @@
         });
     }
 
+    function setDefaultValues(){
+
+        form.setValues({
+            name: "jack",
+            age: 15,
+            address: {
+                city: 'test'
+            }
+        })
+
+    }
+
     const valueJson = ref(null);
 
     const state = reactive({
-        isLogin: false
+        isLogin: false,
+        isAddress: false
     })
 
     setInterval(() => {
