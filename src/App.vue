@@ -5,10 +5,10 @@
 
     </div>
     <div class = "app-wrap flex-column">
-        <input-field name = 'login' v-model = "state.login" v-if = "state.isLogin"/>
-        <input-field name = 'name' :rules = "noEmpty" />
+        <input-field name = 'login' :rules = "[noEmpty]" v-model = "state.login" v-if = "state.isLogin"/>
+        <input-field name = 'name' :rules = "[noEmpty]" />
 
-        <input-field name="age" v-if = "age"/>
+        <input-field name="age" v-if = "age" :rules = "[noEmpty]"/>
 
         <input-address name = "address" v-if = "state.isAddress"/>
 
@@ -16,12 +16,15 @@
 
     <br/>
 
-    <button @click = "toggleAge">toggle age</button>
-    <button @click = "state.isAddress = !state.isAddress">toggle address</button>
-    <button @click = "state.isLogin = !state.isLogin">toggle login</button>
-    <button @click = "form.setValues({'login': Math.floor(Math.random() * 1000)})">change login</button>
-    <button @click = "setDefaultValues"> Default </button>
-    <button @click = "validate"> Validate </button>
+    <div class = "flex">
+        <button @click = "toggleAge">toggle age</button>
+        <button @click = "state.isAddress = !state.isAddress">toggle address</button>
+        <button @click = "state.isLogin = !state.isLogin">toggle login</button>
+        <button @click = "form.setValues({'login': Math.floor(Math.random() * 1000)})">change login</button>
+        <button @click = "setDefaultValues"> Default </button>
+        <button @click = "validate"> Validate </button>
+    </div>
+
 
     <p>{{times}}</p>
     <div v-html="valueJson"></div>
@@ -36,6 +39,7 @@
     import {reactive, ref} from "vue";
     import InputAddress from "@/components/InputAddress.vue";
     import WidgetStatus from "@/components/WidgetStatus.vue";
+    import {ValidationRule} from "../plugin/types";
 
     const form = new Form({});
     /* @ts-ignore */
@@ -102,9 +106,7 @@
         valueJson.value = syntaxHighlight(form.getValues());
     }, 100);
 
-    function noEmpty(x: any) {
-        return !!x || 'Field can`t be empty.';
-    }
+    const noEmpty:ValidationRule = (x: any) => !!x || 'Field can`t be empty.';
 
 </script>
 

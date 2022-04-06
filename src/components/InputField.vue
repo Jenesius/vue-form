@@ -3,7 +3,7 @@
         <div class = "input-field-wrap">
             <div class = "input-field__name">{{name}}</div>
             <input type = 'text' class = "input-field"
-                   @input = "input.setValue($event.target.value)"
+                   @input = "input.setChange($event.target.value)"
                    :value = "input.value"
             >
         </div>

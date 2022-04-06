@@ -2,4 +2,4 @@ export interface Values {
 	[name: string]: any
 }
 
-export type ValidationRule = (value: any) => boolean
+export type ValidationRule = (value: any) => boolean | string;

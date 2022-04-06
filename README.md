@@ -28,3 +28,5 @@ Hi, If you stay here, please leave. This package is not ready ;)
 - depend
 - emit
 - on
+- `validate` Валидирует форму и все подписанные на неё элементы. Вернёт **false**
+если хотя бы один из элементов не прошёл валидацию.

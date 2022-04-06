@@ -15,6 +15,7 @@ import FormErrors from "./FormErrors";
 export class Form extends EventEmitter{
 	
 	static PROVIDE_NAME = 'form-controller';
+	static EVENT_CHANGE_NAME = 'change';
 	
 	name?: string;
 	
@@ -76,7 +77,24 @@ export class Form extends EventEmitter{
 			this.setValueItem(element, value);
 		}
 
+		/**
+		 * Подписываемся на изменение элемента
+		 * */
 		
+		/*
+		Проверка на eventEmitter
+		
+		element.on(Form.EVENT_CHANGE_NAME, () => {
+			this.changes[element.name] = true;
+		})
+		this.changed = computed(() => {
+			return (
+				Object.keys(this.changes).length ||
+				this.dependElements.find(elem => elem.changed.value === true)
+			)
+		})
+			
+		 */
 	}
 	
 	/**
@@ -141,6 +159,10 @@ export class Form extends EventEmitter{
 		return output;
 		
 	}
+	
+	setChanges(values: Values) {}
+	getChanges() {}
+	
 	
 	restoreDependence(name: string) {
 		

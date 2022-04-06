@@ -8,10 +8,23 @@ export function Input(params: InputParams): InputInterface {
 		value: undefined,
 		name : params.name,
 		setValue: function (v: any) {
-			console.log(`Input %c${this.name} %cset value %c${v}`, 'color: green', 'color: black', 'color: red')
+			//console.log(`Input %c${this.name} %cset value %c${v}`, 'color: green', 'color: black', 'color: red')
 			
 			this.value = v;
+			
+
+			
 		},
+		setChange: function (v: any) {
+			/**
+			 * Эмитим на верх о том, что мы были изменены.
+			 * Однако эта функция вызывается для любого установления значения
+			 * */
+			//this.emit('change', v);
+			
+			this.setValue(v);
+		},
+		
 		getValue: function () {
 			return this.value;
 		},
@@ -89,6 +102,7 @@ export interface InputInterface{
 	name: string,
 	value: any,
 	setValue: (v: any) => void,
+	setChange: InputInterface["setValue"],
 	getValue: () => any,
 	validate: () => boolean,
 	errors: string[],
