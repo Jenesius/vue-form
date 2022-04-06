@@ -44,7 +44,7 @@
         border-radius: 4px;
     }
     .input-address__title{
-        margin: 10px 0;
+        margin: 0;
         color: #414040;
         font-size: 18px;
     }

@@ -78,6 +78,22 @@ export class Form extends EventEmitter{
 
 		
 	}
+	
+	/**
+	 * Функция проходит по всем зависимым элементам и проверяет правила валидации
+	 * у каждого
+	 *
+	 * @return {boolean} isValidate. False - if one of the dependence element
+	 * is not validate.
+	 * */
+	validate(): boolean {
+		return this.dependElements.reduce((acc, elem) => {
+			if (elem.validate) acc = elem.validate() && acc;
+			
+			return acc;
+		}, true);
+	}
+	
 	private setValueItem(elementController: any, values: Values) {
 		
 		if (elementController.setValue) {
