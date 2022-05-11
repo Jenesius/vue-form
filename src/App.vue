@@ -2,6 +2,7 @@
     <div class = "flex gap_10">
         <widget-status title="Form changed" :value = "form.changed" :status = "!!form.changed? 'success' : 'error'"/>
         <widget-status title="Form validated" :value = "isFormValidate" :status = "!!isFormValidate? 'success' : 'error'"/>
+        <widget-status title="Form disabled" :value = "formReactiveState.disabled" :status = "!!formReactiveState.disabled? 'success' : 'error'"/>
 
     </div>
     <div class = "app-wrap flex-column">
@@ -23,6 +24,7 @@
         <button @click = "form.setValues({'login': Math.floor(Math.random() * 1000)})">change login</button>
         <button @click = "setDefaultValues"> Default </button>
         <button @click = "validate"> Validate </button>
+        <button @click = "form.disabled?form.enable():form.disable()"> Disable </button>
     </div>
 
 
@@ -40,8 +42,13 @@
     import InputAddress from "@/components/InputAddress.vue";
     import WidgetStatus from "@/components/WidgetStatus.vue";
     import {ValidationRule} from "../plugin/types";
+    import useFormState from "../plugin/hooks/useFormState";
 
     const form = new Form({});
+
+    const formReactiveState = useFormState(form);
+
+
     /* @ts-ignore */
     window.form = form;
     form.setValues({age: 11})
@@ -80,7 +87,8 @@
             name: "jack",
             age: 15,
             address: {
-                city: 'test'
+                city: 'test',
+                country: "Mogilev"
             }
         })
 

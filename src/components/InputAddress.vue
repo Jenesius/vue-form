@@ -12,7 +12,7 @@
 <script setup lang = "ts">
     /* eslint-disable */
 
-    import InputField from "@/components/InputField";
+    import InputField from "@/components/InputField.vue";
     import {Form} from "../../plugin/classes/Form";
     import {inject, defineProps} from "vue";
 

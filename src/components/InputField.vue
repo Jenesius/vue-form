@@ -1,5 +1,5 @@
 <template>
-    <div class = "">
+    <div class = "" :class = "{'input-field_disabled': input.disabled}" >
         <div class = "input-field-wrap">
             <div class = "input-field__name">{{name}}</div>
             <input type = 'text' class = "input-field"
@@ -96,5 +96,8 @@
         margin: 2px;
         font-size: 14px;
         line-height: 18px;
+    }
+    .input-field_disabled .input-field{
+        background-color: #bebcbc;
     }
 </style>

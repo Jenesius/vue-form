@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "jenesius-event-emitter": "^1.0.4",
     "vue": "^3.2.13"
   },
   "devDependencies": {
@@ -31,7 +32,6 @@
       "node": true,
       "vue/setup-compiler-macros": true
     },
-
     "extends": [
       "plugin:vue/vue3-essential",
       "eslint:recommended",

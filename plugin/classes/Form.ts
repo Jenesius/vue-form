@@ -8,14 +8,15 @@ import {
 } from "vue";
 import mergeObjects from "../utils/mergeObjects";
 import {Values} from "../types";
-import EventEmitter from "./EventEmitter";
 import getPropFromObject from "../utils/getPropFromObject";
 import FormErrors from "./FormErrors";
+import EventEmitter from "jenesius-event-emitter";
 
 export class Form extends EventEmitter{
 	
 	static PROVIDE_NAME = 'form-controller';
 	static EVENT_CHANGE_NAME = 'change';
+	static EVENT_DISABLED_UPDATE = 'update-disabled'
 	
 	name?: string;
 	
@@ -158,6 +159,38 @@ export class Form extends EventEmitter{
 		
 		return output;
 		
+	}
+	
+	disabled: boolean = false;
+	/**
+	 * @description Блокировка элементов формы
+	 * */
+	disable() {
+		this.setDisabled(true);
+	}
+	enable() {
+		this.setDisabled(false);
+	}
+	private setDisabled(v:boolean) {
+		this.disabled = v;
+		
+		v?this.disableDepends():this.enableDepends();
+		
+		this.emit(Form.EVENT_DISABLED_UPDATE, v);
+	}
+	private disableDepends() {
+		this.dependElements.forEach(elem => {
+			if (elem.disabled) return; // Depend already stay in status "Disabled"
+			
+			elem.disable?.();
+			
+		})
+	}
+	private enableDepends() {
+		this.dependElements.forEach(elem => {
+			if (!elem.disabled) return;
+			elem.enable?.();
+		})
 	}
 	
 	setChanges(values: Values) {}
