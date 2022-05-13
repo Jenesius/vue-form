@@ -6,21 +6,18 @@
 
     </div>
     <div class = "app-wrap flex-column">
-        <input-field name = 'login' :rules = "[noEmpty]" v-model = "state.login" v-if = "state.isLogin"/>
+        <input-field name = 'login' :rules = "[noEmpty]" />
         <input-field name = 'name' :rules = "[noEmpty]" />
 
-        <input-field name="age" v-if = "age" :rules = "[noEmpty]"/>
+        <input-field name="age"  :rules = "[noEmpty]"/>
 
-        <input-address name = "address" v-if = "state.isAddress"/>
+        <input-address name = "address" />
 
     </div>
 
     <br/>
 
     <div class = "flex">
-        <button @click = "toggleAge">toggle age</button>
-        <button @click = "state.isAddress = !state.isAddress">toggle address</button>
-        <button @click = "state.isLogin = !state.isLogin">toggle login</button>
         <button @click = "form.setValues({'login': Math.floor(Math.random() * 1000)})">change login</button>
         <button @click = "setDefaultValues"> Default </button>
         <button @click = "validate"> Validate </button>
@@ -29,6 +26,12 @@
         <button @click = "form.enable('login')"> Enable Login </button>
         <button @click = "form.hideFields('name')"> Hide Name </button>
         <button @click = "form.showFields('name')"> Show Name </button>
+        <button @click = "form.showFields()"> Show All </button>
+
+        <button @click = "toggle('name')">S/H name</button>
+        <button @click = "toggle('age')">S/H age</button>
+        <button @click = "toggle('login')">S/H login</button>
+        <button @click = "toggle('address')">S/H address</button>
     </div>
 
 
@@ -43,7 +46,7 @@
     import {Form} from "../plugin/classes/Form";
     import InputField from "@/components/InputField.vue";
 
-    import {reactive, ref} from "vue";
+    import { ref} from "vue";
     import InputAddress from "@/components/InputAddress.vue";
     import WidgetStatus from "@/components/WidgetStatus.vue";
     import {ValidationRule} from "../plugin/types";
@@ -58,11 +61,10 @@
     window.form = form;
     form.setValues({age: 11})
 
-    const age = ref(true);
-    function toggleAge() {
-        age.value = !age.value;
+
+    function toggle(name: string) {
+        form.isHidden(name)? form.showFields(name) : form.hideFields(name);
     }
-    const inputValue = ref();
 
     function syntaxHighlight(json: any) {
         if (typeof json != 'string') {
@@ -102,10 +104,6 @@
     const valueJson = ref(null);
     const times = ref(0);
 
-    const state = reactive({
-        isLogin: false,
-        isAddress: false
-    })
 
     const isFormValidate = ref(true);
 

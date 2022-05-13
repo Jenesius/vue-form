@@ -225,43 +225,73 @@ export class Form extends EventEmitter{
 	/**
 	 * Methods and props for hide/show fields
 	 * */
+	hidden: boolean = false;
 	hiddenFields = reactive<string[]>([]);
 	
 	hideFields (names: string | string[]) {
 		if (typeof names === "string") names = [names];
 		
-		this.hiddenFields.push(...names);
-		
-		names.forEach(name => {
-			
-			const d = this.findDependence(name);
-			if (!d) return;
-			
-			if ("hide" in d) d.hide();
-			
-		})
+		this.setHiddenFields([...this.hiddenFields, ...names]);
+
 	}
-	
+
 	showFields (names?: string | string[]) {
 		
-		if (!names) return this.hiddenFields.splice(0, this.hiddenFields.length);
+		if (!names) return this.setHiddenFields([])
 		
 		const newArray: string[] = [];
 		this.hiddenFields.forEach(name => {
-			if (names.includes(name)) {
-				const d = this.findDependence(name);
-				if (!d) return;
-				
-				d.show?.();
-				return;
-			}
+			if (names.includes(name)) return;
 			newArray.push(name);
 		})
 		
-		this.hiddenFields.splice(0, this.hiddenFields.length);
-		this.hiddenFields.push(...newArray);
+		this.setHiddenFields(newArray)
+	}
+	isHidden(name: string) {
+		return this.hiddenFields.includes(name);
 	}
 	
+	hide() {
+		this.setHidden(true);
+	}
+	show() {
+		this.setHidden(false);
+	}
+	setHidden(v: boolean) {
+		this.hidden = v;
+		this.emit(Form.EVENT_HIDE_UPDATE, v);
+	}
+	/**
+	 * @description Function get new array of hidden fields. All fields, that now
+	 * don't stay in status "hidden" will be showed. Other fields will be hidden.
+	 * */
+	private setHiddenFields(names: string[]) {
+		
+		// Скрываем новые
+		names.forEach(name => {
+			const d = this.findDependence(name);
+			if (!d) return;
+			
+			// Если он уже содержит этот инпут
+			if (this.hiddenFields.includes(name)) return;
+			
+			d.hide?.();
+		})
+		
+		// Если в скрытых поля присутсвует поле, которые нужно расскрыть
+		this.hiddenFields.forEach(name => {
+			const d = this.findDependence(name);
+			if (!d) return;
+			
+			// Если новая пачка имён попрежнему содержит поле - пропускаем
+			if (names.includes(name)) return;
+			
+			d.show?.();
+		})
+		
+		this.hiddenFields.splice(0, this.hiddenFields.length);
+		this.hiddenFields.push(...names);
+	}
 	
 
 }

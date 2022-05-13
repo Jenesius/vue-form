@@ -1,5 +1,5 @@
 <template>
-    <div class = "input-address">
+    <div class = "input-address" v-if = "!formState.hidden">
 
         <p class = "input-address__title">Address</p>
 
@@ -15,6 +15,7 @@
     import InputField from "@/components/InputField.vue";
     import {Form} from "../../plugin/classes/Form";
     import {inject, defineProps} from "vue";
+    import useFormState from "../../plugin/hooks/useFormState";
 
     const props = defineProps<{
         name: string
@@ -30,6 +31,7 @@
     }
 
     const form = parentForm.restoreDependence(props.name) as Form || init();
+    const formState = useFormState(form);
 
 </script>
 
