@@ -10,27 +10,16 @@
 </template>
 
 <script setup lang = "ts">
-    /* eslint-disable */
-
     import InputField from "@/components/InputField.vue";
     import {Form} from "../../plugin/classes/Form";
-    import {inject, defineProps} from "vue";
     import useFormState from "../../plugin/hooks/useFormState";
+    import buildDepend from "../../plugin/methods/build-depend";
 
     const props = defineProps<{
         name: string
     }>()
-    const parentForm = inject(Form.PROVIDE_NAME) as Form;
 
-
-    function init() {
-        return new Form({
-            name: props.name,
-            composition: true
-        });
-    }
-
-    const form = parentForm.restoreDependence(props.name) as Form || init();
+    const form = buildDepend(props.name, () => new Form({name:props.name}))
     const formState = useFormState(form);
 
 </script>
