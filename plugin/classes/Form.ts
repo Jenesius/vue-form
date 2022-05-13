@@ -14,9 +14,10 @@ import EventEmitter from "jenesius-event-emitter";
 
 export class Form extends EventEmitter{
 	
-	static PROVIDE_NAME = 'form-controller';
-	static EVENT_CHANGE_NAME = 'change';
-	static EVENT_DISABLED_UPDATE = 'update-disabled'
+	static PROVIDE_NAME			 = 'form-controller';
+	static EVENT_CHANGE_NAME	 = 'change';
+	static EVENT_DISABLED_UPDATE = 'update-disabled';
+	static EVENT_HIDE_UPDATE	 = 'update-hidden-fields';
 	
 	name?: string;
 	
@@ -97,7 +98,16 @@ export class Form extends EventEmitter{
 			
 		 */
 	}
-	
+	restoreDependence(name: string) {
+		
+		const dep = this.findDependence(name);
+		if (!dep) return undefined;
+		
+		if (dep.reinitialization)
+			dep.reinitialization();
+		
+		return dep;
+	}
 	/**
 	 * Функция проходит по всем зависимым элементам и проверяет правила валидации
 	 * у каждого
@@ -161,15 +171,29 @@ export class Form extends EventEmitter{
 		
 	}
 	
+	
 	disabled: boolean = false;
 	/**
 	 * @description Блокировка элементов формы
 	 * */
-	disable() {
-		this.setDisabled(true);
+	disable(names?: string[] | string) {
+		if (!names) {
+			this.setDisabled(true);
+			return;
+		}
+		
+		if (typeof names === "string") names = [names];
+		this.disableDepends(names);
+		
 	}
-	enable() {
-		this.setDisabled(false);
+	enable(names?: string[] | string) {
+		if (!names) {
+			this.setDisabled(false);
+			return;
+		}
+		if (typeof names === "string") names = [names];
+		this.enableDepends(names);
+		
 	}
 	private setDisabled(v:boolean) {
 		this.disabled = v;
@@ -178,16 +202,18 @@ export class Form extends EventEmitter{
 		
 		this.emit(Form.EVENT_DISABLED_UPDATE, v);
 	}
-	private disableDepends() {
-		this.dependElements.forEach(elem => {
+	private disableDepends(names?: string[]) {
+		this.dependElements.filter(v => {
+			if (!names) return true;
+			if (names.includes(v.name)) return true;
+			return false;
+		}).forEach(elem => {
 			if (elem.disabled) return; // Depend already stay in status "Disabled"
-			
 			elem.disable?.();
-			
 		})
 	}
-	private enableDepends() {
-		this.dependElements.forEach(elem => {
+	private enableDepends(names?: string[]) {
+		this.dependElements.filter(v => !names || names.includes(v.name)).forEach(elem => {
 			if (!elem.disabled) return;
 			elem.enable?.();
 		})
@@ -196,17 +222,48 @@ export class Form extends EventEmitter{
 	setChanges(values: Values) {}
 	getChanges() {}
 	
+	/**
+	 * Methods and props for hide/show fields
+	 * */
+	hiddenFields = reactive<string[]>([]);
 	
-	restoreDependence(name: string) {
+	hideFields (names: string | string[]) {
+		if (typeof names === "string") names = [names];
 		
-		const dep = this.findDependence(name);
-		if (!dep) return undefined;
+		this.hiddenFields.push(...names);
 		
-		if (dep.reinitialization)
-			dep.reinitialization();
-		
-		return dep;
+		names.forEach(name => {
+			
+			const d = this.findDependence(name);
+			if (!d) return;
+			
+			if ("hide" in d) d.hide();
+			
+		})
 	}
+	
+	showFields (names?: string | string[]) {
+		
+		if (!names) return this.hiddenFields.splice(0, this.hiddenFields.length);
+		
+		const newArray: string[] = [];
+		this.hiddenFields.forEach(name => {
+			if (names.includes(name)) {
+				const d = this.findDependence(name);
+				if (!d) return;
+				
+				d.show?.();
+				return;
+			}
+			newArray.push(name);
+		})
+		
+		this.hiddenFields.splice(0, this.hiddenFields.length);
+		this.hiddenFields.push(...newArray);
+	}
+	
+	
+
 }
 
 export interface FormParams {

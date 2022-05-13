@@ -7,6 +7,7 @@ export function Input(params: InputParams): InputInterface {
 		value: undefined,
 		name : params.name,
 		disabled: false,
+		hidden: false,
 		disable: function () {
 			this.disabled = true;
 		},
@@ -17,9 +18,12 @@ export function Input(params: InputParams): InputInterface {
 			//console.log(`Input %c${this.name} %cset value %c${v}`, 'color: green', 'color: black', 'color: red')
 			
 			this.value = v;
-			
-
-			
+		},
+		hide() {
+			this.hidden = true;
+		},
+		show() {
+			this.hidden = false;
 		},
 		setChange: function (v: any) {
 			/**
@@ -84,5 +88,8 @@ export interface InputInterface{
 	errors: string[],
 	disabled: boolean,
 	disable: () => void,
-	enable: () => void
+	enable: () => void,
+	hidden: boolean,
+	hide: () => void,
+	show: () => void,
 }

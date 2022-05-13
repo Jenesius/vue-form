@@ -25,11 +25,16 @@
         <button @click = "setDefaultValues"> Default </button>
         <button @click = "validate"> Validate </button>
         <button @click = "form.disabled?form.enable():form.disable()"> Disable </button>
+        <button @click = "form.disable('login')"> Disable Login </button>
+        <button @click = "form.enable('login')"> Enable Login </button>
+        <button @click = "form.hideFields('name')"> Hide Name </button>
+        <button @click = "form.showFields('name')"> Show Name </button>
     </div>
 
 
     <p>{{times}}</p>
     <div v-html="valueJson"></div>
+    <div >{{form.hiddenFields}}</div>
 </template>
 
 <script setup lang = 'ts'>

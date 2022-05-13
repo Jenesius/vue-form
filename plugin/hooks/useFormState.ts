@@ -4,7 +4,7 @@ import {reactive} from "vue";
 export default function useFormState(form: Form) {
 	
 	const state = reactive({
-		disabled: form.disabled
+		disabled: form.disabled,
 	});
 	
 	form.on(Form.EVENT_DISABLED_UPDATE, () => {

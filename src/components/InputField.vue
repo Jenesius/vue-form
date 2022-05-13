@@ -1,5 +1,7 @@
 <template>
-    <div class = "" :class = "{'input-field_disabled': input.disabled}" >
+    <div class = "" :class = "{'input-field_disabled': input.disabled}"
+        v-if = "!input.hidden"
+    >
         <div class = "input-field-wrap">
             <div class = "input-field__name">{{name}}</div>
             <input type = 'text' class = "input-field"
@@ -27,15 +29,12 @@
     } from "../../plugin/classes/Input";
     import {ValidationRule} from "../../plugin/types";
 
-
-
     const form = inject(Form.PROVIDE_NAME) as Form;
     const props = defineProps<{
         name: string,
         // eslint-disable-next-line no-unused-vars
         rules?:   ValidationRule[] | ValidationRule
     }>()
-
 
 
     function init() : InputInterface{
@@ -54,12 +53,6 @@
 
     }
     const input = form.restoreDependence(props.name) as InputInterface || init();
-
-
-
-
-
-
 
 </script>
 
