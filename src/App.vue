@@ -13,6 +13,11 @@
 
         <input-address name = "address" />
 
+        <p>Form-field</p>
+        <form-field name = "number"/>
+        <form-field name = "location"/>
+        <form-field name = "date"/>
+
     </div>
 
     <br/>
@@ -37,7 +42,9 @@
 
     <p>{{times}}</p>
     <div v-html="valueJson"></div>
-    <div >{{form.hiddenFields}}</div>
+    <div v-html="changesJson"></div>
+    <div>{{form.hiddenFields}}</div>
+
 </template>
 
 <script setup lang = 'ts'>
@@ -45,22 +52,47 @@
 
     import {Form} from "../plugin/classes/Form";
     import InputField from "@/components/InputField.vue";
+    import InputCoordinate from "@/components/input-coordinate.vue";
 
     import { ref} from "vue";
     import InputAddress from "@/components/InputAddress.vue";
     import WidgetStatus from "@/components/WidgetStatus.vue";
     import {ValidationRule} from "../plugin/types";
     import useFormState from "../plugin/hooks/useFormState";
+    import FormField from "@/components/form-field.vue";
 
-    const form = new Form({});
+    function metadata(form: Form) {
 
+        form.on('read', () => {
+            console.log('read metadata');
+        })
+
+        form.on(Form.EVENT_DEPEND, e => {
+            console.log(e);
+        })
+
+        form.on('metadata-depend-new-proxy-field', (c: any) => {
+
+            if (c.name === 'location') c.setComponent(InputAddress);
+            else if (c.name === 'date') c.setComponent(InputCoordinate)
+            else  c.setComponent(InputField);
+        })
+    }
+
+    const form = new Form({
+        plugins: [metadata]
+    });
     const formReactiveState = useFormState(form);
+
+    setTimeout(() => {
+        form.emit('read');
+    }, 2000);
+
 
 
     /* @ts-ignore */
     window.form = form;
-    form.setValues({age: 11})
-
+    form.setValues({age: 11}, {change: false})
 
     function toggle(name: string) {
         form.isHidden(name)? form.showFields(name) : form.hideFields(name);
@@ -97,11 +129,14 @@
                 city: 'test',
                 country: "Mogilev"
             }
+        }, {
+            change: false
         })
 
     }
 
     const valueJson = ref(null);
+    const changesJson = ref(null);
     const times = ref(0);
 
 
@@ -109,12 +144,12 @@
 
     function validate() {
         isFormValidate.value = form.validate();
-
     }
 
     setInterval(() => {
         times.value = 1 + times.value
         valueJson.value = syntaxHighlight(form.getValues());
+        changesJson.value = syntaxHighlight(form.changes);
     }, 100);
 
     const noEmpty:ValidationRule = (x: any) => !!x || 'Field can`t be empty.';

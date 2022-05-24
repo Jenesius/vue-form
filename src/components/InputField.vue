@@ -1,12 +1,12 @@
 <template>
-    <div class = "" :class = "{'input-field_disabled': input.disabled}"
+    <div class = "" :class = "{'input-field_disabled': state.disabled}"
         v-if = "!input.hidden"
     >
         <div class = "input-field-wrap">
             <div class = "input-field__name">{{name}}</div>
             <input type = 'text' class = "input-field"
                    @input = "input.setChange($event.target.value)"
-                   :value = "input.value"
+                   :value = "state.value"
             >
         </div>
         <p
@@ -19,40 +19,33 @@
 </template>
 
 <script setup lang = 'ts'>
-
-    import {inject, defineProps} from "vue";
-    import {Form} from "../../plugin/classes/Form";
     import {
         Input,
-        InputInterface,
-        InputParams
+        InputInterface, useInputState,
     } from "../../plugin/classes/Input";
     import {ValidationRule} from "../../plugin/types";
+    import buildDepend from "../../plugin/methods/build-depend";
 
-    const form = inject(Form.PROVIDE_NAME) as Form;
     const props = defineProps<{
         name: string,
-        // eslint-disable-next-line no-unused-vars
         rules?:   ValidationRule[] | ValidationRule
     }>()
 
 
     function init() : InputInterface{
-
         console.log(`Initialize %c${props.name}`, 'color: green');
 
-        const params: InputParams = {
+        let validation: any[] = [];
+        if (props.rules) validation = Array.isArray(props.rules)?props.rules: [props.rules];
+
+        return new Input({
             name: props.name,
-        }
-
-        if (props.rules) params.validation = Array.isArray(props.rules)?props.rules: [props.rules];
-
-        const i = Input(params);
-        form.depend(i);
-        return i;
-
+            validation: validation
+        });
     }
-    const input = form.restoreDependence(props.name) as InputInterface || init();
+
+    const input = buildDepend(props.name, init);
+    const state = useInputState(input);
 
 </script>
 

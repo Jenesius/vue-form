@@ -15,16 +15,21 @@ import EventEmitter from "jenesius-event-emitter";
 export class Form extends EventEmitter{
 	
 	static PROVIDE_NAME			 = 'form-controller';
-	static EVENT_CHANGE_NAME	 = 'change';
+	static EVENT_CHANGE	 = 'change';
 	static EVENT_DISABLED_UPDATE = 'update-disabled';
 	static EVENT_HIDE_UPDATE	 = 'update-hidden-fields';
+	static EVENT_DEPEND			 = 'on-depend';
+	
+	static getParentForm(): Form {
+		return injectVue(Form.PROVIDE_NAME) as Form;
+	}
 	
 	name?: string;
 	
 	/**
 	 * @description ComputedRef, true - when one of form's elements is changed.
 	 * */
-	changed: ComputedRef<boolean> = computed(() => true);
+	changed = false;
 	
 	/**
 	 * @description Store all depend elements.
@@ -37,9 +42,13 @@ export class Form extends EventEmitter{
 		if (params.name) this.name = params.name;
 		
 		if (params.composition) {
-			
 			const parentForm = injectVue(Form.PROVIDE_NAME) as Form;
 			parentForm.depend(this);
+		}
+		
+		// Connection plugins to form.
+		if (params.plugins) {
+			params.plugins.forEach(p => p(this));
 		}
 		
 		this.reinitialization();
@@ -47,7 +56,6 @@ export class Form extends EventEmitter{
 	
 	reinitialization() {
 		provideVue(Form.PROVIDE_NAME, this);
-		
 	}
 	
 	values: Values = {};
@@ -59,6 +67,7 @@ export class Form extends EventEmitter{
 	/**
 	 * @description Подписывает элемент на форму
 	 * */
+	changes:any =  {}
 	depend(element: any) {
 		
 		// Если элемент с таким именем уже был подписан на форму
@@ -69,34 +78,28 @@ export class Form extends EventEmitter{
 		
 		this.dependElements.push(markRaw(element));
 		
+		this.emit(Form.EVENT_DEPEND, element);
+		
 		if (element.name) {
 			const value = getPropFromObject(this.values, element.name);
 			
 			
 			// Нового значения у нас не найдено.
-			if (value === undefined) return;
+			if (value !== undefined) this.setValueItem(element, value);
 			
-			this.setValueItem(element, value);
+			
 		}
 
+
+		
 		/**
 		 * Подписываемся на изменение элемента
 		 * */
-		
-		/*
-		Проверка на eventEmitter
-		
-		element.on(Form.EVENT_CHANGE_NAME, () => {
+		element.on(Form.EVENT_CHANGE, () => {
 			this.changes[element.name] = true;
+			this.emit(Form.EVENT_CHANGE)
 		})
-		this.changed = computed(() => {
-			return (
-				Object.keys(this.changes).length ||
-				this.dependElements.find(elem => elem.changed.value === true)
-			)
-		})
-			
-		 */
+
 	}
 	restoreDependence(name: string) {
 		
@@ -137,7 +140,7 @@ export class Form extends EventEmitter{
 		}
 		
 	}
-	setValues(values: Values){
+	setValues(values: Values, options: ISetValuesOptions = {}){
 		mergeObjects(this.values, values);
 		
 		this.dependElements.forEach(controller => {
@@ -154,6 +157,17 @@ export class Form extends EventEmitter{
 			}
 			
 		})
+		
+		function dtoOptions(options: ISetValuesOptions): ISetValuesOptions {
+			
+			if (!("change" in options)) options.change = true;
+			
+			return options;
+			
+		}
+		options = dtoOptions(options);
+		console.log(values, options);
+		if (options.change) this.setChange(true)
 		
 	}
 	
@@ -219,8 +233,13 @@ export class Form extends EventEmitter{
 		})
 	}
 	
-	setChanges(values: Values) {}
-	getChanges() {}
+
+	
+	setChange(v: boolean) {
+		console.log('Form: On change');
+		this.changed = v;
+		this.emit(Form.EVENT_CHANGE, v);
+	}
 	
 	/**
 	 * Methods and props for hide/show fields
@@ -292,12 +311,16 @@ export class Form extends EventEmitter{
 		this.hiddenFields.splice(0, this.hiddenFields.length);
 		this.hiddenFields.push(...names);
 	}
-	
+
 
 }
 
 export interface FormParams {
 	name?: string,
-	composition?: boolean
+	composition?: boolean,
+	plugins?: any[]
+}
+export interface ISetValuesOptions {
+	change?: boolean
 }
 

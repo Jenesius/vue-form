@@ -1,10 +1,13 @@
 import {inject} from "vue";
 import {Form} from "../classes/Form";
+import {InputInterface} from "../classes/Input";
 
-export default function buildDepend(name: string, init: () => Form) {
+export default function buildDepend(name: string, init: () => Form | InputInterface) {
 	const parentForm = inject(Form.PROVIDE_NAME) as Form;
-	
-	const form = parentForm.restoreDependence(name) as Form || init();
-	parentForm.depend(form);
-	return form;
+
+	return parentForm.restoreDependence(name) as Form || (() => {
+		const d = init();
+		parentForm.depend(d);
+		return d
+	})();
 }

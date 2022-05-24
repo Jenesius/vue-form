@@ -8,6 +8,8 @@ export default function useFormState(form: Form) {
 		hidden: form.hidden
 	});
 	
+	if (!form) throw new Error('eee')
+	
 	form.on(Form.EVENT_DISABLED_UPDATE, () => {
 		state.disabled = form.disabled;
 	})

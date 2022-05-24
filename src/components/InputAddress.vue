@@ -11,7 +11,7 @@
 
 <script setup lang = "ts">
     import InputField from "@/components/InputField.vue";
-    import {Form} from "../../plugin/classes/Form";
+    import {Form} from "../../plugin";
     import useFormState from "../../plugin/hooks/useFormState";
     import buildDepend from "../../plugin/methods/build-depend";
 
