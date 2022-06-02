@@ -5,7 +5,8 @@ export default function useFormState(form: Form) {
 	
 	const state = reactive({
 		disabled: form.disabled,
-		hidden: form.hidden
+		hidden: form.hidden,
+		changed: form.changed
 	});
 	
 	if (!form) throw new Error('eee')
@@ -16,6 +17,10 @@ export default function useFormState(form: Form) {
 	form.on(Form.EVENT_HIDE_UPDATE, () => {
 		state.hidden = form.hidden;
 	})
+	
+	form.on(Form.EVENT_CHANGE, () => {
+		state.changed = form.changed
+	});
 	
 	return state;
 }

@@ -1,6 +1,11 @@
 <template>
+
+    <new-input-field name = "test-1"/>
+    <new-input-field name = "test-2"/>
+    <new-address-field name = "test-address"/>
+
     <div class = "flex gap_10">
-        <widget-status title="Form changed" :value = "form.changed" :status = "!!form.changed? 'success' : 'error'"/>
+        <widget-status title="Form changed" :value = "formReactiveState.changed" :status = "!!formReactiveState.changed? 'success' : 'error'"/>
         <widget-status title="Form validated" :value = "isFormValidate" :status = "!!isFormValidate? 'success' : 'error'"/>
         <widget-status title="Form disabled" :value = "formReactiveState.disabled" :status = "!!formReactiveState.disabled? 'success' : 'error'"/>
 
@@ -60,16 +65,11 @@
     import {ValidationRule} from "../plugin/types";
     import useFormState from "../plugin/hooks/useFormState";
     import FormField from "@/components/form-field.vue";
+    import NewInputField from "@/components/v2/new-input-field.vue";
+    import NewAddressField from "@/components/v2/new-address-field.vue";
 
     function metadata(form: Form) {
 
-        form.on('read', () => {
-            console.log('read metadata');
-        })
-
-        form.on(Form.EVENT_DEPEND, e => {
-            console.log(e);
-        })
 
         form.on('metadata-depend-new-proxy-field', (c: any) => {
 
@@ -149,7 +149,7 @@
     setInterval(() => {
         times.value = 1 + times.value
         valueJson.value = syntaxHighlight(form.getValues());
-        changesJson.value = syntaxHighlight(form.changes);
+        changesJson.value = syntaxHighlight(form.getChanges());
     }, 100);
 
     const noEmpty:ValidationRule = (x: any) => !!x || 'Field can`t be empty.';

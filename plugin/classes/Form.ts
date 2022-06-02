@@ -1,6 +1,4 @@
 import {
-	computed,
-	ComputedRef,
 	reactive,
 	markRaw,
 	provide as provideVue,
@@ -11,6 +9,7 @@ import {Values} from "../types";
 import getPropFromObject from "../utils/getPropFromObject";
 import FormErrors from "./FormErrors";
 import EventEmitter from "jenesius-event-emitter";
+import {runPromiseQueue} from "../utils/run-promise-queue";
 
 export class Form extends EventEmitter{
 	
@@ -19,10 +18,17 @@ export class Form extends EventEmitter{
 	static EVENT_DISABLED_UPDATE = 'update-disabled';
 	static EVENT_HIDE_UPDATE	 = 'update-hidden-fields';
 	static EVENT_DEPEND			 = 'on-depend';
+	static EVENT_READ			 = 'read';
+	static EVENT_SAVE			 = 'save';
 	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
 	}
+	
+	/**
+	 * Version of current form. Can be used for check the current data of form.
+	 * */
+	version: number | undefined = undefined;
 	
 	name?: string;
 	
@@ -51,6 +57,10 @@ export class Form extends EventEmitter{
 			params.plugins.forEach(p => p(this));
 		}
 		
+		this.on(Form.EVENT_CHANGE, (...arr) => {
+			console.log(arr)
+		})
+		
 		this.reinitialization();
 	}
 	
@@ -67,7 +77,7 @@ export class Form extends EventEmitter{
 	/**
 	 * @description Подписывает элемент на форму
 	 * */
-	changes:any =  {}
+	changes:{[name: string]: boolean} =  {}
 	depend(element: any) {
 		
 		// Если элемент с таким именем уже был подписан на форму
@@ -97,6 +107,7 @@ export class Form extends EventEmitter{
 		 * */
 		element.on(Form.EVENT_CHANGE, () => {
 			this.changes[element.name] = true;
+			this.changed = true;
 			this.emit(Form.EVENT_CHANGE)
 		})
 
@@ -166,7 +177,6 @@ export class Form extends EventEmitter{
 			
 		}
 		options = dtoOptions(options);
-		console.log(values, options);
 		if (options.change) this.setChange(true)
 		
 	}
@@ -185,6 +195,32 @@ export class Form extends EventEmitter{
 		
 	}
 	
+	/**
+	 * @description Получение значения по имени элемента
+	 * */
+	getValueByName(name: string) {
+		return getPropFromObject(this.values, name);
+	}
+	
+	getChanges() {
+		
+		const output =Object.keys(this.changes).reduce((acc: any, name) => {
+			
+			const d = this.findDependence(name);
+			
+			// Класс для работы со значением не найден.
+			if (!d) acc[name] = this.values[name];
+			
+			if (d && "getChanges" in d) acc[name] = d.getChanges();
+			
+			if (d) acc[name] = d.getValue?d.getValue():d.getValues();
+			
+			return acc;
+		}, {})
+		
+		return output;
+		
+	}
 	
 	disabled: boolean = false;
 	/**
@@ -234,12 +270,20 @@ export class Form extends EventEmitter{
 	}
 	
 
+
 	
 	setChange(v: boolean) {
-		console.log('Form: On change');
+
 		this.changed = v;
 		this.emit(Form.EVENT_CHANGE, v);
 	}
+	/**
+	 * @description Method cleans all names that was changed
+	 * */
+	cleanChanges() {
+		this.changes = {}
+	}
+	
 	
 	/**
 	 * Methods and props for hide/show fields
@@ -312,9 +356,84 @@ export class Form extends EventEmitter{
 		this.hiddenFields.push(...names);
 	}
 
+	
+	
+	/**
+	 * @description Function for read data (For example from DataBase)
+	 * */
+	private readData: FunctionHandleData = () => Promise.resolve();
+	/**
+	 * @description Method takes read functions from all children elements, and
+	 * run it
+	 */
+	get read() {
+		const array: Array<FunctionHandleData> =
+			this.dependElements.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
+				if (elemController.read) acc.push(elemController.read);
+				return acc;
+			}, []);
+		
+		if (this.readData) array.push(() =>
+			runPromiseQueue([() => this.readData?.(), (data: any) => this.emit(Form.EVENT_READ, data)])
+		)
+		
+		return () => Promise.all(array.map(c => c()));
+	}
+	set read(callback: FunctionHandleData){
+		this.readData = callback;
+	}
+	
+	/**
+	 * @description Function for save data (Update/Create)
+	 * */
+	private saveData: FunctionHandleData = () => Promise.resolve();
+	
+	get save() {
+		
+		const array: Array<FunctionHandleData> =
+			this.dependElements.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
+				if (elemController.save) acc.push(elemController.save);
+				return acc;
+			}, []);
+		
+		array.push(() =>
+			runPromiseQueue([
+				() => this.saveData?.(),
+				(data: any) => this.emit(Form.EVENT_SAVE, data),
+				() => this.cleanChanges()
+			])
+		)
+		
+		return () => Promise.all(array.map(c => c()));
+	}
+	set save(callback: FunctionHandleData) {
+		this.saveData = callback;
+	}
+	
+	
+	
+	
+	
+	
+	onInput(name: string, callback: any) {
+		return this.on(`input:${name}`, callback);
+	}
+	changeByName(name: string, value: any) {
+		this.emit(`input:${name}`, value);
+		mergeObjects(this.values, {
+			[name]: value
+		});
+	}
 
+	
+	
+	
+	
+	
 }
 
+
+type FunctionHandleData = () => Promise<any> | any | void
 export interface FormParams {
 	name?: string,
 	composition?: boolean,

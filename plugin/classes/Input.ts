@@ -48,10 +48,19 @@ export class Input extends EventEmitter{
 	show() {
 		this.hidden = false;
 	}
+	
+	change(v: any) {
+		this.emit(Form.EVENT_CHANGE, v);
+		this.setValue(v);
+	}
+	/**
+	 * @deprecated
+	 * */
 	setChange(v: any) {
 		/**
 		 * Эмитим на верх о том, что мы были изменены.
 		 * Однако эта функция вызывается для любого установления значения
+		 * @deprecated
 		 * */
 		this.emit(Form.EVENT_CHANGE, v);
 		

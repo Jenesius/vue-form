@@ -33,7 +33,6 @@
 
 
     function init() : InputInterface{
-        console.log(`Initialize %c${props.name}`, 'color: green');
 
         let validation: any[] = [];
         if (props.rules) validation = Array.isArray(props.rules)?props.rules: [props.rules];
