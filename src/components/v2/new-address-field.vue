@@ -7,8 +7,10 @@
 </template>
 
 <script setup lang="ts">
-    import {Form} from "../../../plugin";
+
     import NewInputField from "@/components/v2/new-input-field.vue";
+    import SimpleCompositeInput
+        from "../../../plugin/classes/simple-composite-input";
 
     const props = defineProps<{
         name: string
@@ -18,11 +20,12 @@
 
     function useCState(name: string) {
 
-        const form = new Form({name: props.name});
+        const form = new SimpleCompositeInput({name: props.name});
 
-        setInterval(() => console.log(form), 1000);
         return {}
     }
+
+
 
 </script>
 

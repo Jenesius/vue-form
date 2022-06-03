@@ -10,6 +10,7 @@ import getPropFromObject from "../utils/getPropFromObject";
 import FormErrors from "./FormErrors";
 import EventEmitter from "jenesius-event-emitter";
 import {runPromiseQueue} from "../utils/run-promise-queue";
+import deepenValue from "../utils/deepenValue";
 
 export class Form extends EventEmitter{
 	
@@ -24,6 +25,8 @@ export class Form extends EventEmitter{
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
 	}
+	static FORM_ID = 0;
+	
 	
 	/**
 	 * Version of current form. Can be used for check the current data of form.
@@ -41,6 +44,8 @@ export class Form extends EventEmitter{
 	 * @description Store all depend elements.
 	 * */
 	dependElements: any[] = reactive([]);
+	
+	formIdentifier = Form.FORM_ID++;
 	
 	constructor(params: FormParams) {
 		super();
@@ -68,7 +73,7 @@ export class Form extends EventEmitter{
 		provideVue(Form.PROVIDE_NAME, this);
 	}
 	
-	values: Values = {};
+
 	
 	findDependence(name: string) {
 		return this.dependElements.find(element => element.name === name);
@@ -160,7 +165,6 @@ export class Form extends EventEmitter{
 			if (name) {
 				const value = getPropFromObject(values, name);
 				
-				
 				// Нового значения у нас не найдено.
 				if (value === undefined) return;
 				
@@ -195,12 +199,7 @@ export class Form extends EventEmitter{
 		
 	}
 	
-	/**
-	 * @description Получение значения по имени элемента
-	 * */
-	getValueByName(name: string) {
-		return getPropFromObject(this.values, name);
-	}
+
 	
 	getChanges() {
 		
@@ -414,22 +413,43 @@ export class Form extends EventEmitter{
 	
 	
 	
+	/**
+	 * METHODS V2
+	 * */
+	
 	
 	onInput(name: string, callback: any) {
+		console.log(`Add onInput(${this.formIdentifier}) for %c${name}`, 'color: green');
+		
 		return this.on(`input:${name}`, callback);
 	}
+	
 	changeByName(name: string, value: any) {
+		console.log(name, value);
 		this.emit(`input:${name}`, value);
-		mergeObjects(this.values, {
-			[name]: value
-		});
+		mergeObjects(this.values, deepenValue(name, value));
 	}
-
 	
+	/**
+	 * @description Получение значения по имени элемента
+	 * */
+	getValueByName(name: string) {
+		return getPropFromObject(this.values, name);
+	}
 	
-	
-	
-	
+	values: Values = new Proxy({}, {
+		set(target: any, name: string | symbol, value: any, receiver: any): boolean {
+			
+			const splitName = name.toString().split('.');
+			if (splitName.length > 1) {
+				console.log('emit for composite', splitName[0], value);
+			}
+			console.log(name);
+			target[name] = value;
+			
+			return true;
+		}
+	})
 }
 
 

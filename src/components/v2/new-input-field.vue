@@ -16,7 +16,7 @@
     function useState( name: string) {
 
         const parentForm = inject(Form.PROVIDE_NAME) as Form;
-        console.log(parentForm);
+
         const state = reactive({
             value: parentForm.getValueByName(name)
         })

@@ -2,14 +2,18 @@
 
     <new-input-field name = "test-1"/>
     <new-input-field name = "test-2"/>
-    <new-address-field name = "test-address"/>
+    <new-input-field name = "a.b.c.d.e.f"/>
+    <new-address-field name = "address"/>
+
+    <new-input-field name="address.city"/>
+    <new-input-field name="address.description"/>
 
     <div class = "flex gap_10">
         <widget-status title="Form changed" :value = "formReactiveState.changed" :status = "!!formReactiveState.changed? 'success' : 'error'"/>
         <widget-status title="Form validated" :value = "isFormValidate" :status = "!!isFormValidate? 'success' : 'error'"/>
         <widget-status title="Form disabled" :value = "formReactiveState.disabled" :status = "!!formReactiveState.disabled? 'success' : 'error'"/>
-
     </div>
+    <!--
     <div class = "app-wrap flex-column">
         <input-field name = 'login' :rules = "[noEmpty]" />
         <input-field name = 'name' :rules = "[noEmpty]" />
@@ -24,7 +28,7 @@
         <form-field name = "date"/>
 
     </div>
-
+-->
     <br/>
 
     <div class = "flex">
@@ -82,6 +86,10 @@
     const form = new Form({
         plugins: [metadata]
     });
+    form.setValues({
+        address: {city: 'Mogilev', description: '111'}
+    })
+
     const formReactiveState = useFormState(form);
 
     setTimeout(() => {

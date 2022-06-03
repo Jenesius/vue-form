@@ -4,7 +4,7 @@ import {Values} from "../types/index";
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
  * */
 export default function mergeObjects(formValues: Values, newValues: Values, path: string[] = []){
-
+	
 	function set(formValues: Values, v: Values, path: string[]) {
 		if (path.length === 0) {
 			console.warn('Path length === 0');
@@ -34,14 +34,13 @@ export default function mergeObjects(formValues: Values, newValues: Values, path
 		return formValues;
 	}
 
-	if (typeof newValues !== 'object') set(formValues, newValues, path);
+	if (typeof newValues !== 'object' || newValues === null) set(formValues, newValues, path);
 	else {
 		for(const key in newValues) {
 			
 			mergeObjects(formValues, newValues[key], [...path, key]);
 		}
 	}
-
 
 	return formValues;
 }
