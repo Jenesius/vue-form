@@ -3,6 +3,9 @@
         <p>Address</p>
         <new-input-field name = "city"/>
         <new-input-field name = "description"/>
+
+        <new-input-field name="code.title"/>
+
     </div>
 </template>
 

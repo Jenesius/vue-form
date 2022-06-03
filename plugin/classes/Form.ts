@@ -404,23 +404,24 @@ export class Form extends EventEmitter{
 			[name]: value
 		});
 	}
+	static NotifyInput(form: Form, object: any, path:any = '') {
+		Object.keys(object).forEach(key => {
+
+			form.emit(`input:${path}${key}`, object[key]);
+			
+			const v = object[key];
+			if (typeof v === 'object' && v !== null) {
+				Form.NotifyInput(form,v, `${path}${key}.`);
+			}
+		})
+	}
+	
 	setValues(values: Values, options: ISetValuesOptions = {}){
 		const _v = deepenObject(values);
 		mergeObjects(this.values, _v);
 		
-		const self = this;
-		function run(object: any, path: any = '') {
-			Object.keys(object).forEach(key => {
-				console.log(`input:${path}${key}`)
-				self.emit(`input:${path}${key}`, object[key]);
-				
-				const v = object[key];
-				if (typeof v === 'object' && v !== null) {
-					run(v, `${key}.`);
-				}
-			})
-		}
-		run(_v);
+		
+		Form.NotifyInput(this, _v)
 		/*
 		this.dependElements.forEach(controller => {
 			

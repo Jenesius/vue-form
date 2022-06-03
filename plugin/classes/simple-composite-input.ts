@@ -13,20 +13,8 @@ export default class SimpleCompositeInput extends Form{
 		this.parentForm = injectVue(Form.PROVIDE_NAME) as Form;
 		this.parentForm.onInput(a.name, (v: any) => {
 		
-			const self = this;
-			console.log(v);
-			function run(object: any, path: any = '') {
-				Object.keys(object).forEach(key => {
-					console.log(`input:${path}${key}`)
-					self.emit(`input:${path}${key}`, object[key]);
-					
-					const v = object[key];
-					if (typeof v === 'object' && v !== null) {
-						run(v, `${key}.`);
-					}
-				})
-			}
-			run(v);
+			Form.NotifyInput(this, v);
+			
 		})
 		
 		this.name = a.name;

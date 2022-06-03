@@ -7,6 +7,7 @@
 
     <new-input-field name="address.city"/>
     <new-input-field name="address.description"/>
+    <new-input-field name="address.code.title"/>
 
     <button @click = "ts">test</button>
 
