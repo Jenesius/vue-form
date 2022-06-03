@@ -8,6 +8,8 @@
     <new-input-field name="address.city"/>
     <new-input-field name="address.description"/>
 
+    <button @click = "ts">test</button>
+
     <div class = "flex gap_10">
         <widget-status title="Form changed" :value = "formReactiveState.changed" :status = "!!formReactiveState.changed? 'success' : 'error'"/>
         <widget-status title="Form validated" :value = "isFormValidate" :status = "!!isFormValidate? 'success' : 'error'"/>
@@ -91,6 +93,13 @@
     })
 
     const formReactiveState = useFormState(form);
+
+    function ts() {
+        form.changeByName('address', {
+            city: '5',
+            description: '100'
+        })
+    }
 
     setTimeout(() => {
         form.emit('read');

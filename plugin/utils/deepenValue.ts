@@ -3,7 +3,7 @@ import mergeObjects from "./mergeObjects";
 /**
  * раскладывает составное значение
  * */
-function deepenObject(value: any) {
+export  function deepenObject(value: any) {
 	
 	if (typeof value !== 'object') return value;
 	

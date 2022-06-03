@@ -10,7 +10,7 @@ import getPropFromObject from "../utils/getPropFromObject";
 import FormErrors from "./FormErrors";
 import EventEmitter from "jenesius-event-emitter";
 import {runPromiseQueue} from "../utils/run-promise-queue";
-import deepenValue from "../utils/deepenValue";
+import deepenValue, {deepenObject} from "../utils/deepenValue";
 
 export class Form extends EventEmitter{
 	
@@ -156,34 +156,7 @@ export class Form extends EventEmitter{
 		}
 		
 	}
-	setValues(values: Values, options: ISetValuesOptions = {}){
-		mergeObjects(this.values, values);
-		
-		this.dependElements.forEach(controller => {
-			
-			const name = controller.name; // name of fields or form
-			if (name) {
-				const value = getPropFromObject(values, name);
-				
-				// Нового значения у нас не найдено.
-				if (value === undefined) return;
-				
-				this.setValueItem(controller, value);
-			}
-			
-		})
-		
-		function dtoOptions(options: ISetValuesOptions): ISetValuesOptions {
-			
-			if (!("change" in options)) options.change = true;
-			
-			return options;
-			
-		}
-		options = dtoOptions(options);
-		if (options.change) this.setChange(true)
-		
-	}
+
 	
 	getValues() {
 		
@@ -425,11 +398,57 @@ export class Form extends EventEmitter{
 	}
 	
 	changeByName(name: string, value: any) {
-		console.log(name, value);
-		this.emit(`input:${name}`, value);
-		mergeObjects(this.values, deepenValue(name, value));
+		//console.log(name, value);
+		//this.emit(`input:${name}`, value);
+		this.setValues({
+			[name]: value
+		});
 	}
-	
+	setValues(values: Values, options: ISetValuesOptions = {}){
+		const _v = deepenObject(values);
+		mergeObjects(this.values, _v);
+		
+		const self = this;
+		function run(object: any, path: any = '') {
+			Object.keys(object).forEach(key => {
+				console.log(`input:${path}${key}`)
+				self.emit(`input:${path}${key}`, object[key]);
+				
+				const v = object[key];
+				if (typeof v === 'object' && v !== null) {
+					run(v, `${key}.`);
+				}
+			})
+		}
+		run(_v);
+		/*
+		this.dependElements.forEach(controller => {
+			
+			const name = controller.name; // name of fields or form
+			if (name) {
+				const value = getPropFromObject(values, name);
+				
+				// Нового значения у нас не найдено.
+				if (value === undefined) return;
+				
+				this.setValueItem(controller, value);
+			}
+			
+		})
+		
+		function dtoOptions(options: ISetValuesOptions): ISetValuesOptions {
+			
+			if (!("change" in options)) options.change = true;
+			
+			return options;
+			
+		}
+		options = dtoOptions(options);
+		if (options.change) this.setChange(true)
+		
+		
+		 */
+	}
 	/**
 	 * @description Получение значения по имени элемента
 	 * */
@@ -437,21 +456,32 @@ export class Form extends EventEmitter{
 		return getPropFromObject(this.values, name);
 	}
 	
-	values: Values = new Proxy({}, {
-		set(target: any, name: string | symbol, value: any, receiver: any): boolean {
-			
-			const splitName = name.toString().split('.');
-			if (splitName.length > 1) {
-				console.log('emit for composite', splitName[0], value);
-			}
-			console.log(name);
-			target[name] = value;
-			
-			return true;
-		}
-	})
+	
+	values: Values = new Proxy({}, validator)
 }
 
+const validator = {
+	// @ts-ignore
+	get(target: any, key) {
+		key = key.toString();
+		if (typeof target[key] === 'object' && target[key] !== null) {
+			return new Proxy(target[key], validator)
+		} else {
+			return target[key];
+		}
+	},
+	set(target: any, name: string | symbol, value: any, receiver: any): boolean {
+		//console.log('proxy', name,  receiver);
+		const splitName = name.toString().split('.');
+		if (splitName.length > 1) {
+			//console.log('emit for composite', splitName[0], value);
+		}
+
+		target[name] = value;
+		
+		return true;
+	},
+}
 
 type FunctionHandleData = () => Promise<any> | any | void
 export interface FormParams {
