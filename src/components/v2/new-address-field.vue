@@ -25,6 +25,7 @@
 
     import NewInputField from "@/components/v2/new-input-field.vue";
     import FormProxy from "../../../plugin/classes/FormProxy";
+    import {onUnmounted} from "vue";
 
     const props = defineProps<{
         name: string
@@ -35,6 +36,10 @@
     function useCState(name: string) {
 
         const form = new FormProxy({name: props.name});
+
+        onUnmounted(() => {
+            form.parentForm?.unsubscribe(form);
+        })
 
         return {}
     }

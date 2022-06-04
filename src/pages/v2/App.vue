@@ -14,11 +14,21 @@
         <new-input-field name = "uer.account.private.login"/>
     </div>
 
-    <new-address-field name = "address"/>
+    <div class = "flex" >
+        <new-address-field name = "address" v-if = "state.address"/>
+        <div>
+            <button @click = "state.address = !state.address">toggle</button>
+        </div>
+    </div>
 
-    <div>
-        <p>Address.city</p>
-        <new-input-field name="address.city"/>
+    <div class = "flex">
+        <div v-if = "state.city">
+            <p>Address.city</p>
+            <new-input-field name="address.city"/>
+        </div>
+        <div>
+            <button @click = "state.city = !state.city">toggle</button>
+        </div>
     </div>
     <div>
         <p>Address.description</p>
@@ -36,7 +46,7 @@
 </template>
 
 <script setup lang = 'ts'>
-    import { ref} from "vue";
+    import {reactive, ref} from "vue";
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
     import Form from "../../../plugin/classes/Form";
@@ -44,7 +54,10 @@
 
     const form = new Form();
 
-
+    const state = reactive({
+        city: false,
+        address: true
+    })
 
     setTimeout(() => {
         form.emit('read');

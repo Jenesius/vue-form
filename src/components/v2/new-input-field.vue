@@ -21,18 +21,18 @@
 
         const state = reactive({
             value: parentForm.getValueByName(name),
-            disabled: false
+            disabled: parentForm.getDisabledByName(name)
         })
 
         const off = parentForm.dependInput(name, {
+            change: (v:any) => {
+                state.value = v;
+            },
             disable: () => {
                 state.disabled = true;
             },
             enable: () => {
                 state.disabled = false;
-            },
-            change: (v:any) => {
-                state.value = v;
             },
             hide: () => {},
             show: () => {},
@@ -43,12 +43,15 @@
             off();
         })
 
+        /**
+         * Предоставляется фронтенду, презентейшен view.
+         * */
         return {
             state,
             input: {
                 change: (v:any) => {
                     parentForm.input(name, v);
-                }
+                },
             }
         }
     }
