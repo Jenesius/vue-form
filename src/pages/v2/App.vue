@@ -1,15 +1,33 @@
 <template>
 
-    <new-input-field name = "test-1"/>
-    <new-input-field name = "test-2"/>
-    <new-input-field name = "a.b.c.d.e.f"/>
+    <div>
+        <p>Name</p>
+        <new-input-field name = "name"/>
+        <new-input-field name = "name"/>
+    </div>
+    <div>
+        <p>Age</p>
+        <new-input-field name = "age"/>
+    </div>
+    <div>
+        <p>User.account.private.login</p>
+        <new-input-field name = "uer.account.private.login"/>
+    </div>
+
     <new-address-field name = "address"/>
 
-    <new-input-field name="address.city"/>
-    <new-input-field name="address.description"/>
-    <new-input-field name="address.code.title"/>
-
-
+    <div>
+        <p>Address.city</p>
+        <new-input-field name="address.city"/>
+    </div>
+    <div>
+        <p>Address.description</p>
+        <new-input-field name="address.description"/>
+    </div>
+    <div>
+        <p>Address.code.title</p>
+        <new-input-field name="address.code.title"/>
+    </div>
 
     <br/>
 
@@ -19,29 +37,18 @@
 
 <script setup lang = 'ts'>
     import { ref} from "vue";
-    import {ValidationRule} from "../../../plugin/types";
-    import useFormState from "../../../plugin/hooks/useFormState";
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
-    import {Form} from "../../../plugin";
+    import Form from "../../../plugin/classes/Form";
 
 
-    const form = new Form({
-
-    });
-    form.setValues({
-        address: {city: 'Mogilev', description: '111'}
-    })
-
-    const formReactiveState = useFormState(form);
+    const form = new Form();
 
 
 
     setTimeout(() => {
         form.emit('read');
     }, 2000);
-
-
 
     /* @ts-ignore */
     window.form = form;
@@ -80,7 +87,7 @@
 
     setInterval(() => {
 
-        valueJson.value = syntaxHighlight(form.getValues());
+        valueJson.value = syntaxHighlight(form.values);
 
     }, 100);
 
@@ -113,4 +120,18 @@
         padding: 10px 0 25px 0;
     }
 
+    p{
+        color: #0262a4;
+        font-size: 12px;
+        margin: 4px 0;
+    }
+    span{
+        color: #02a425;
+        font-size: 12px;
+        margin: 4px 0;
+        min-width: 200px;
+    }
+    .flex{
+        display: flex;
+    }
 </style>

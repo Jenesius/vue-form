@@ -62,7 +62,7 @@
 <script setup lang = 'ts'>
     /* eslint-disable */
 
-    import {Form} from "../plugin/classes/Form";
+    import {FormOld} from "../plugin/classes/Form";
     import InputField from "@/components/InputField.vue";
     import InputCoordinate from "@/components/input-coordinate.vue";
 
@@ -75,7 +75,7 @@
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
 
-    function metadata(form: Form) {
+    function metadata(form: FormOld) {
 
 
         form.on('metadata-depend-new-proxy-field', (c: any) => {
@@ -86,7 +86,7 @@
         })
     }
 
-    const form = new Form({
+    const form = new FormOld({
         plugins: [metadata]
     });
     form.setValues({

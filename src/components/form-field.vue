@@ -4,16 +4,16 @@
 
 <script setup lang = "ts">
 
-    import {Form} from "../../plugin";
+    import {FormOld} from "../../plugin";
     import {reactive} from "vue";
 
     const props = defineProps<{
         name: string
     }>()
 
-    const parentForm = Form.getParentForm();
+    const parentForm = FormOld.getParentForm();
 
-    function useStateFormField(f: Form){
+    function useStateFormField(f: FormOld){
 
         const state = reactive({
             component: null

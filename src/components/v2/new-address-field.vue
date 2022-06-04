@@ -1,10 +1,22 @@
 <template>
     <div>
         <p>Address</p>
-        <new-input-field name = "city"/>
-        <new-input-field name = "description"/>
+        <div class = "flex">
+            <span>city</span>
+            <new-input-field name = "city"/>
+        </div>
 
-        <new-input-field name="code.title"/>
+        <div class = "flex">
+            <span>description</span>
+            <new-input-field name = "description"/>
+        </div>
+
+        <div class = "flex">
+            <span>code.title</span>
+            <new-input-field name="code.title"/>
+        </div>
+
+
 
     </div>
 </template>
@@ -12,8 +24,7 @@
 <script setup lang="ts">
 
     import NewInputField from "@/components/v2/new-input-field.vue";
-    import SimpleCompositeInput
-        from "../../../plugin/classes/simple-composite-input";
+    import FormProxy from "../../../plugin/classes/FormProxy";
 
     const props = defineProps<{
         name: string
@@ -23,11 +34,10 @@
 
     function useCState(name: string) {
 
-        const form = new SimpleCompositeInput({name: props.name});
+        const form = new FormProxy({name: props.name});
 
         return {}
     }
-
 
 
 </script>

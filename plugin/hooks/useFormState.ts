@@ -1,4 +1,4 @@
-import {Form} from "../classes/Form";
+import Form from "../classes/Form";
 import {reactive} from "vue";
 
 export default function useFormState(form: Form) {

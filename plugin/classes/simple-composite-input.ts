@@ -1,23 +1,26 @@
-import {Form} from "./Form";
+import {FormOld} from "./Form";
 import {provide as provideVue} from "@vue/runtime-core";
 import {inject as injectVue} from "vue";
 
-export default class SimpleCompositeInput extends Form{
-	parentForm: Form
+export default class SimpleCompositeInput extends FormOld{
+	parentForm: FormOld
 	name: string
 	constructor(a: {name: string}) {
 		super(a);
 		
-		provideVue(Form.PROVIDE_NAME, this);
+		provideVue(FormOld.PROVIDE_NAME, this);
 		
-		this.parentForm = injectVue(Form.PROVIDE_NAME) as Form;
+		this.parentForm = injectVue(FormOld.PROVIDE_NAME) as FormOld;
 		this.parentForm.onInput(a.name, (v: any) => {
-		
-			Form.NotifyInput(this, v);
-			
+			this.notifyInput(v);
 		})
-		
 		this.name = a.name;
+		
+		setTimeout(() => {
+			this.parentForm.dependInput(this.name, this);
+			
+		}, 10);
+		
 	}
 	changeByName(name: string, v: any) {
 		this.parentForm.changeByName(this.name, {
