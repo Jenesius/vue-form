@@ -55,7 +55,7 @@
     const form = new Form();
 
     const state = reactive({
-        city: false,
+        city: true,
         address: true
     })
 

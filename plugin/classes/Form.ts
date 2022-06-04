@@ -48,6 +48,12 @@ export default class Form extends EventEmitter{
 	}
 	
 	protected recursiveChangeItem(values:any, path: string = '') {
+		
+		this.dependencies.forEach(dep => {
+			dep.change(getPropFromObject(values, dep.name));
+		})
+		return;
+		
 		Object.keys(values).forEach(key => {
 			const stepName = `${path}${key}`;
 			const v = values[key];
@@ -82,7 +88,12 @@ export default class Form extends EventEmitter{
 		/**
 		 * поменять notify input, сделать его как метод для array
 		 * */
-		this.recursiveChangeItem(_v)
+		this.recursiveChangeItem(this.values)
+	}
+	
+	cleanValues(values?: Values) {
+		this.#values = {};
+		this.setValues(values || {});
 	}
 	
 	/**
@@ -108,18 +119,27 @@ export default class Form extends EventEmitter{
 		
 		return this.depend(i);
 	}
+	
 	/**
-	 * @description Вернёт возможные зависимости по имени, т.к. они могут быть составные
+	 * @description Вернёт зависимости, которые связаны с переданным именем.
+	 * @example address -> address address.city address.description address.name
+	 * @example address.city -> address address.city
 	 * */
-	getRelevantDependencies(name: string) {
-		return this.dependencies.filter(v => name.startsWith(v.name));
+	getAssociatedDependencies(name: string) {
+		return this.dependencies.filter(dep => {
+			const depName = dep.name;
+			return depName.startsWith(name) || name.startsWith(depName);
+		})
 	}
+
 	/**
 	 * @description Вернёт точное совпадение зависимостей по имени
 	 * */
 	getDependenciesByName(name: string): any[] {
 		return this.dependencies.filter(i => i.name === name);
 	}
+	
+	
 	
 	/**
 	 * @description Получение значения по имени элемента
@@ -128,6 +148,9 @@ export default class Form extends EventEmitter{
 		return getPropFromObject(this.values, name);
 	}
 	
+	
+	
+	
 	#disabledElements:string[] = [];
 	
 	get disabledElements(){
@@ -135,17 +158,44 @@ export default class Form extends EventEmitter{
 	}
 	
 	protected recursiveDisableItem(name: string) {
-		this.getRelevantDependencies(name)
+		if (!name) {
+			this.dependencies.forEach(dep => dep.disable())
+			return;
+		}
+		
+		this.getAssociatedDependencies(name)
 		.forEach(dep => {
-			if (dep.name === name) return dep.disable(); // Точное совпадение
+			if (dep.name.startsWith(name)) return dep.disable(); // Точное совпадение
 			dep.disable(name.slice(dep.name.length + 1));
 		})
 	}
+	protected recursiveEnableItem(name?: string) {
+		
+		if (!name) {
+			this.dependencies.forEach(dep => dep.enable())
+			return;
+		}
+		
+		this.dependencies.filter(dep => name.startsWith(dep.name))
+		.forEach(dep => {
+			if (dep.name === name) return dep.enable(); // Точное совпадение
+			dep.enable(name.slice(dep.name.length + 1));
+		})
+	}
+	
 	disable(name: string){
 		this.#disabledElements.push(name);
 		this.recursiveDisableItem(name);
 	}
-	enable() {}
+	enable(name?: string) {
+		console.log(name);
+		if (name) {
+			const index = this.disabledElements.indexOf(name);
+			if (index !== -1) this.#disabledElements.splice(index, 1);
+		}
+		
+		this.recursiveEnableItem(name);
+	}
 	
 	/**
 	 * @description
@@ -153,7 +203,7 @@ export default class Form extends EventEmitter{
 	 * 	значит он является дочерним) - вернёт true
 	 * */
 	getDisabledByName(name: string) {
-		return !!this.disabledElements.find(n => name.startsWith(n));
+		return !!this.disabledElements.find(n => name.startsWith(n)) || this.disabledElements.includes('');
 	}
 	
 	
