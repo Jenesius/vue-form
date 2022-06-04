@@ -150,18 +150,53 @@ export default class Form extends EventEmitter{
 	
 	
 	
+	handleDE = {
+		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
+			const value = attributes.value;
+			
+			target[name] = attributes.value;
+			
+			if (value) this.recursiveDisableItem(name.toString());
+			else this.recursiveEnableItem(name.toString())
+			
+			return true;
+		},
+		deleteProperty: (target: any, name: string | symbol): boolean => {
+			name = name.toString();
+			delete target[name];
+			
+			this.recursiveEnableItem(name)
+			
+			return true;
+		}
+	}
+	#disabledElements:{
+		[name: string]: boolean
+	} = new Proxy({}, this.handleDE);
 	
-	#disabledElements:string[] = [];
+	#disabled: boolean = false;
+	get disabled() {
+		return this.#disabled;
+	}
+	set disabled(value: boolean){
+		this.#disabled = value;
+		
+		if (value) {
+			this.#disabledElements = new Proxy({}, this.handleDE);
+			this.recursiveDisableItem();
+		} else {
+			Object.keys(this.disabledElements).forEach(key => delete this.#disabledElements[key])
+		}
+
+	}
 	
 	get disabledElements(){
 		return this.#disabledElements;
 	}
 	
-	protected recursiveDisableItem(name: string) {
-		if (!name) {
-			this.dependencies.forEach(dep => dep.disable())
-			return;
-		}
+	protected recursiveDisableItem(name?: string) {
+		// No name - disable all elements
+		if (!name) return this.dependencies.forEach(dep => dep.disable())
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
@@ -183,19 +218,17 @@ export default class Form extends EventEmitter{
 		})
 	}
 	
-	disable(name: string){
-		this.#disabledElements.push(name);
-		this.recursiveDisableItem(name);
+	
+	disable(name?: string){
+		if(name) this.#disabledElements[name] = true;
+		else this.disabled = true;
 	}
 	enable(name?: string) {
-		console.log(name);
-		if (name) {
-			const index = this.disabledElements.indexOf(name);
-			if (index !== -1) this.#disabledElements.splice(index, 1);
-		}
-		
-		this.recursiveEnableItem(name);
+		if (name) this.#disabledElements[name] = false;
+		else this.disabled = false;
 	}
+	
+
 	
 	/**
 	 * @description
@@ -203,7 +236,8 @@ export default class Form extends EventEmitter{
 	 * 	значит он является дочерним) - вернёт true
 	 * */
 	getDisabledByName(name: string) {
-		return !!this.disabledElements.find(n => name.startsWith(n)) || this.disabledElements.includes('');
+		
+		return this.#disabledElements[name];
 	}
 	
 	
