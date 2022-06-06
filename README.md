@@ -2,6 +2,17 @@
 Hi, If you stay here, please leave. This package is not ready ;)
 (But just now you can test it)
 
+## Links
+- Documentation
+- Examples
+- GitHub
+## Reason
+
+- 🦵 multifunctional form logic. Херово звучит. Многофункциональная система для 
+работы с формой. Или Большой выбор функцонала для работы и управления формой.
+- 🖕 you can use this library with your own input components.
+- 🤝 create interface using composite and aggregate logical. Read more <- ссылку
+
 ## Main Form
 Для создавния формы, необходимо просто создать экземпляр. JenesiusVueForm сделает
 большую часть работы за вас.
