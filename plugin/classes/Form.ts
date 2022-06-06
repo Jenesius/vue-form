@@ -6,7 +6,7 @@ import {deepenObject} from "../utils/deepenValue";
 import mergeObjects from "../utils/mergeObjects";
 
 export default class Form extends EventEmitter{
-	static PROVIDE_NAME			 = 'form-controller';
+  static PROVIDE_NAME			 = 'form-controller';
 	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
