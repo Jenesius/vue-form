@@ -6,7 +6,7 @@ import {deepenObject} from "../utils/deepenValue";
 import mergeObjects from "../utils/mergeObjects";
 
 export default class Form extends EventEmitter{
-  static PROVIDE_NAME			 = 'form-controller';
+	static PROVIDE_NAME			 = 'form-controller';
 	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
@@ -47,13 +47,33 @@ export default class Form extends EventEmitter{
 		this.changeByName(name, v);
 	}
 	
-	protected recursiveChangeItem(values:any, path: string = '') {
-		
+	/**
+	 * Рекурсивное зименение значений.
+	 * По фатку в конечной реализации оно нихуя не рекурсивное.
+	 * Реализация 2: для каждой зависимости получает значение из values и устанавливаем его
+	 * Реализация 1: идем рекурсивно по всем значениям, находим подходящие зависимости
+	 * и устанвливаем значения для них. Основная проблема в количетсве итераций.
+	 * Нужно это протестировать
+	 * И переименовать метод: changeValuesOfItem(values: any);
+	 * А лучше добавить новый просто метод, рекурсию сохранив
+	 *
+	 * Можно изменить метод getPropFromObject, или реализовать другую версию,
+	 * которая будет кидать экспешен, если значения нет.
+	 * Таким образом мы сможем понять, имеется ли новое значение в объекте.
+	 * А если мы устанавливаем например
+	 * address: {
+	 *     city: "Mogilev"
+	 * }
+	 * В таком случае address.description - должен установится в null/undefined
+	 *
+	 * Можно реализовать метод getRelevantedProps - для
+	 * */
+	protected changeValuesOfItem(values: any) {
 		this.dependencies.forEach(dep => {
 			dep.change(getPropFromObject(values, dep.name));
 		})
-		return;
-		
+	}
+	protected recursiveChangeItem(values:any, path: string = '') {
 		Object.keys(values).forEach(key => {
 			const stepName = `${path}${key}`;
 			const v = values[key];
@@ -88,7 +108,7 @@ export default class Form extends EventEmitter{
 		/**
 		 * поменять notify input, сделать его как метод для array
 		 * */
-		this.recursiveChangeItem(this.values)
+		this.changeValuesOfItem(this.values)
 	}
 	
 	cleanValues(values?: Values) {
@@ -152,9 +172,22 @@ export default class Form extends EventEmitter{
 	
 	handleDE = {
 		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
+			console.log('define', name);
+
 			const value = attributes.value;
 			
+			
+			console.log('Clean not relevanted names.');
+			Object.keys(target).forEach(disabledName => {
+				if (disabledName.startsWith(name.toString())) {
+					delete target[disabledName];
+					console.log(`Delete disable for %c${disabledName}`, 'color: red')
+				}
+			})
+			
 			target[name] = attributes.value;
+			
+			
 			
 			if (value) this.recursiveDisableItem(name.toString());
 			else this.recursiveEnableItem(name.toString())
@@ -170,28 +203,39 @@ export default class Form extends EventEmitter{
 			return true;
 		}
 	}
+	
+	
+	
+	#disabled: boolean = false;
+	
 	#disabledElements:{
 		[name: string]: boolean
 	} = new Proxy({}, this.handleDE);
 	
-	#disabled: boolean = false;
+	get disabledElements(){
+		return this.#disabledElements;
+	}
+	
+	
 	get disabled() {
 		return this.#disabled;
 	}
 	set disabled(value: boolean){
-		this.#disabled = value;
+		/**
+		 * if (this.#disabled === value) is wrong:
+		 * f.disable()
+		 * f.enable('address')
+		 * f.disable() <-- Not working.
+		 * */
 		
-		if (value) {
-			this.#disabledElements = new Proxy({}, this.handleDE);
-			this.recursiveDisableItem();
-		} else {
-			Object.keys(this.disabledElements).forEach(key => delete this.#disabledElements[key])
-		}
-
-	}
-	
-	get disabledElements(){
-		return this.#disabledElements;
+		this.#disabled = value;
+		// installation disabledElements
+		this.#disabledElements = new Proxy({}, this.handleDE);
+		
+		if (value)
+			this.recursiveDisableItem()
+		else
+			this.recursiveEnableItem()
 	}
 	
 	protected recursiveDisableItem(name?: string) {
@@ -211,33 +255,51 @@ export default class Form extends EventEmitter{
 			return;
 		}
 		
-		this.dependencies.filter(dep => name.startsWith(dep.name))
+		this.getAssociatedDependencies(name)
 		.forEach(dep => {
-			if (dep.name === name) return dep.enable(); // Точное совпадение
+			console.log(dep, name);
+			if (dep.name.startsWith(name)) return dep.enable(); // Точное совпадение
 			dep.enable(name.slice(dep.name.length + 1));
 		})
 	}
 	
 	
 	disable(name?: string){
-		if(name) this.#disabledElements[name] = true;
+		if (name) this.disableByName(name);
 		else this.disabled = true;
 	}
 	enable(name?: string) {
-		if (name) this.#disabledElements[name] = false;
+		if (name) this.enableByName(name);
 		else this.disabled = false;
 	}
 	
 
-	
+	protected disableByName(name: string) {
+		if (this.disabled) delete this.#disabledElements[name];
+		else this.#disabledElements[name] = true;
+	}
+	protected enableByName(name: string) {
+		this.#disabledElements[name] = false;
+	}
 	/**
-	 * @description
-	 * 	Если найдено имя равное или то, с которого начинается запрашиваемое имя(
-	 * 	значит он является дочерним) - вернёт true
+	 * @description Функция вернёт наиболее релевантное значения для поля по име
+	 * ни. Для address.city.name более релевантным является address.city, чем
+	 * address.
 	 * */
-	getDisabledByName(name: string) {
+	getDisabledByName(name: string): boolean {
+
+		let refName = name;
+		// Start with the most relevant level (From the End)
+		while(refName.length !== 0) {
+			if (refName in this.disabledElements) return this.disabledElements[refName]
+			
+			const dotIndex = refName.lastIndexOf('.');
+			if (dotIndex === -1) refName = '';
+			refName = refName.slice(0, dotIndex);
+		}
 		
-		return this.#disabledElements[name];
+		// Not founded relevant value.
+		return this.#disabled;
 	}
 	
 	

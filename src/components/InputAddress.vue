@@ -11,7 +11,7 @@
 
 <script setup lang = "ts">
     import InputField from "@/components/InputField.vue";
-    import {FormOld} from "../../plugin";
+
     import useFormState from "../../plugin/hooks/useFormState";
     import buildDepend from "../../plugin/methods/build-depend";
 
@@ -19,8 +19,7 @@
         name: string
     }>()
 
-    const form = buildDepend(props.name, () => new FormOld({name:props.name}))
-    const formState = useFormState(form);
+
 
 </script>
 

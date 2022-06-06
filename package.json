@@ -24,8 +24,9 @@
   "url": "https://github.com/Jenesius/vue-form/issues",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "webuild": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "build": "rollup -c rollup.config.js",
     "full": "rollup -c rollup.config.js && npm publish"
   },
   "peerDependencies": {

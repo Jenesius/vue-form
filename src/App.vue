@@ -3,6 +3,7 @@
     <new-input-field name = "test-1"/>
     <new-input-field name = "test-2"/>
     <new-input-field name = "a.b.c.d.e.f"/>
+
     <new-address-field name = "address"/>
 
     <new-input-field name="address.city"/>
