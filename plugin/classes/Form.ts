@@ -11,6 +11,12 @@ export default class Form extends EventEmitter{
 	static EVENT_READ			 = 'read';
 	static EVENT_SAVE			 = 'save';
 	
+	/**
+	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
+	 * Не установлено значение setValues, а изменена
+	 * */
+	static EVENT_CHANGE		 	 = 'changed';
+	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
 	}

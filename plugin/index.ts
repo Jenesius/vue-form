@@ -5,7 +5,7 @@ import useFormState from "./hooks/use-form-state";
 import useInputState from "./hooks/use-input-state";
 import useProxyState from "./hooks/use-proxy-state";
 
-export default {
+export {
 	Form,
 	FormProxy,
 	

@@ -63,7 +63,6 @@
 <script setup lang = 'ts'>
     /* eslint-disable */
 
-    import {FormOld} from "../plugin/classes/Form";
     import InputField from "@/components/InputField.vue";
     import InputCoordinate from "@/components/input-coordinate.vue";
 
@@ -71,8 +70,6 @@
     import InputAddress from "@/components/InputAddress.vue";
     import WidgetStatus from "@/components/WidgetStatus.vue";
     import {ValidationRule} from "../plugin/types";
-    import useFormState from "../plugin/hooks/useFormState";
-    import FormField from "@/components/form-field.vue";
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
 
