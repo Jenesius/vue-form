@@ -23,12 +23,6 @@ Hi, If you stay here, please leave. This package is not ready ;)
 
 ## Input
 Для того, чтобы связать поле input с формой нужно просто выполнить следующий хук:
-```js
-    import {useInputState} from "jenesius-vue-modal"
-    const {state, input} = useState(props.name);
-```
-- **input** - контроллер для работы с виджетом. Необходим для обработки изменения
-поля ввода (Пример использования):
 ```vue
     <input type = "text" 
            @input = "input.change($event.target.value)" 
@@ -36,6 +30,13 @@ Hi, If you stay here, please leave. This package is not ready ;)
            :disabled = "state.disabled"
     >
 ```
+```js
+    import {useInputState} from "jenesius-vue-modal"
+    const {state, input} = useState(props.name);
+```
+- **input** - контроллер для работы с виджетом. Необходим для обработки изменения
+поля ввода.
+
 
 ## Основная логика
 1. Значения хранятся только в **агригатном элементе**
