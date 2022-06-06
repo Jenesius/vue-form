@@ -1,12 +1,15 @@
 import EventEmitter from "jenesius-event-emitter";
 import {inject as injectVue, provide as provideVue} from "vue";
 import getPropFromObject from "../utils/getPropFromObject";
-import {Values} from "../types";
+import {FunctionHandleData, Values} from "../types";
 import {deepenObject} from "../utils/deepenValue";
 import mergeObjects from "../utils/mergeObjects";
+import {runPromiseQueue} from "../utils/run-promise-queue";
 
 export default class Form extends EventEmitter{
 	static PROVIDE_NAME			 = 'form-controller';
+	static EVENT_READ			 = 'read';
+	static EVENT_SAVE			 = 'save';
 	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
@@ -303,4 +306,56 @@ export default class Form extends EventEmitter{
 	}
 	
 	
+	/**
+	 * @description Function for read data (For example from DataBase)
+	 * */
+	private readData: FunctionHandleData = () => Promise.resolve();
+	/**
+	 * @description Method takes read functions from all children elements, and
+	 * run it
+	 */
+	get read() {
+		const array: Array<FunctionHandleData> =
+			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
+				if (elemController.read) acc.push(elemController.read);
+				return acc;
+			}, []);
+		
+		if (this.readData) array.push(() =>
+			runPromiseQueue([() => this.readData?.(), (data: any) => this.emit(Form.EVENT_READ, data)])
+		)
+		
+		return () => Promise.all(array.map(c => c()));
+	}
+	set read(callback: FunctionHandleData){
+		this.readData = callback;
+	}
+	
+	/**
+	 * @description Function for save data (Update/Create)
+	 * */
+	private saveData: FunctionHandleData = () => Promise.resolve();
+	
+	get save() {
+		
+		const array: Array<FunctionHandleData> =
+			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
+				if (elemController.save) acc.push(elemController.save);
+				return acc;
+			}, []);
+		
+		array.push(() =>
+			runPromiseQueue([
+				() => this.saveData?.(),
+				(data: any) => this.emit(Form.EVENT_SAVE, data)
+			])
+		)
+		
+		return () => Promise.all(array.map(c => c()));
+	}
+	set save(callback: FunctionHandleData) {
+		this.saveData = callback;
+	}
+	
 }
+
