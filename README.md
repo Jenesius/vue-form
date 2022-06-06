@@ -32,7 +32,7 @@ Hi, If you stay here, please leave. This package is not ready ;)
 ```
 ```js
     import {useInputState} from "jenesius-vue-modal"
-    const {state, input} = useState(props.name);
+    const {state, input} = useInputState(props.name);
 ```
 - **input** - контроллер для работы с виджетом. Необходим для обработки изменения
 поля ввода.
