@@ -5,6 +5,8 @@ import {FunctionHandleData, Values} from "../types";
 import {deepenObject} from "../utils/deepenValue";
 import mergeObjects from "../utils/mergeObjects";
 import {runPromiseQueue} from "../utils/run-promise-queue";
+import replaceValues from "../utils/replaceValues";
+import getCastObject from "../utils/getCastObject";
 
 export default class Form extends EventEmitter{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -22,13 +24,19 @@ export default class Form extends EventEmitter{
 	}
 	/**=========**/
 	
-	name: string;
+	name?: string;
 	
 	// Массив Объект-Контроллер, используемый для работы с зависимыми элементами
 	dependencies: any[] = [];
 	parentForm: Form | null = null;
 	#values: Values = {}
 	
+	
+	#changes = {};
+	// Накладывание слепка #changes на #values
+	get changes() {
+		return getCastObject(this.values, this.#changes);
+	}
 	
 	
 	get values() {
@@ -38,10 +46,17 @@ export default class Form extends EventEmitter{
 		this.#values = a;
 	}
 	
-	constructor(params: any = {}) {
+	readonly #_debug:boolean = false;
+	get debug(){
+		return this.#_debug
+	}
+	
+	constructor(params: FormParams = {}) {
 		super();
 		
-		this.name = params.name;
+		if (params.name)
+			this.name = params.name;
+		this.#_debug = Boolean(params.debug);
 		
 		this.parentForm = injectVue(Form.PROVIDE_NAME, null) as Form | null;
 		if (this.parentForm) this.parentForm.depend(this);
@@ -49,11 +64,20 @@ export default class Form extends EventEmitter{
 		provideVue(Form.PROVIDE_NAME, this);
 	}
 	
+	private markChanges(values: any) {
+		const v = deepenObject(replaceValues<boolean>(values, true));
+		console.log(v);
+		mergeObjects(this.#changes, v);
+	}
 	/**
 	 * @description Метод-контроллер, используемый для инпутов
 	 * */
 	input(name: string, v: any){
+
+		
 		this.changeByName(name, v);
+		
+		this.markChanges({[name]: v});
 	}
 	
 	/**
@@ -82,6 +106,7 @@ export default class Form extends EventEmitter{
 			dep.change(getPropFromObject(values, dep.name));
 		})
 	}
+	// На данный момент не используется. ПОдсвечивается поскольку рекурсивная
 	protected recursiveChangeItem(values:any, path: string = '') {
 		Object.keys(values).forEach(key => {
 			const stepName = `${path}${key}`;
@@ -207,7 +232,8 @@ export default class Form extends EventEmitter{
 			name = name.toString();
 			delete target[name];
 			
-			this.recursiveEnableItem(name)
+			if (this.disabled) this.recursiveDisableItem(name)
+			else this.recursiveEnableItem(name)
 			
 			return true;
 		}
@@ -284,8 +310,15 @@ export default class Form extends EventEmitter{
 	
 
 	protected disableByName(name: string) {
-		if (this.disabled) delete this.#disabledElements[name];
-		else this.#disabledElements[name] = true;
+		if (this.disabled) {
+			
+			if (name in this.disabledElements)
+				delete this.#disabledElements[name];
+			
+			return;
+		}
+		
+		this.#disabledElements[name] = true;
 	}
 	protected enableByName(name: string) {
 		this.#disabledElements[name] = false;
@@ -365,3 +398,7 @@ export default class Form extends EventEmitter{
 	
 }
 
+interface FormParams {
+	debug?: boolean,
+	name? : string
+}

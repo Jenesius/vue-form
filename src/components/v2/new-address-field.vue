@@ -3,7 +3,7 @@
         <p>Address</p>
         <div class = "flex">
             <span>city</span>
-            <new-input-field name = "city"/>
+            <new-city-field name = "city"/>
         </div>
 
         <div class = "flex">
@@ -26,6 +26,7 @@
     import NewInputField from "@/components/v2/new-input-field.vue";
     import FormProxy from "../../../plugin/classes/FormProxy";
     import {onUnmounted} from "vue";
+    import NewCityField from "@/components/v2/new-city-field.vue";
 
     const props = defineProps<{
         name: string

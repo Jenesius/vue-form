@@ -24,7 +24,7 @@
     <div class = "flex">
         <div v-if = "state.city">
             <p>Address.city</p>
-            <new-input-field name="address.city"/>
+            <new-input-field name="address.city.name"/>
         </div>
         <div>
             <button @click = "state.city = !state.city">toggle</button>
@@ -39,6 +39,17 @@
         <new-input-field name="address.code.title"/>
     </div>
 
+    <button @click = "form.disable()">Disable</button>
+    <button @click = "form.enable()">Enable</button>
+
+    <button @click = "form.disable('address')">D address</button>
+    <button @click = "form.enable('address')">E address</button>
+
+    <button @click = "form.disable('address.city')">D address.city</button>
+    <button @click = "form.enable('address.city')">E address.city</button>
+
+    <button @click = "form.disable('address.city.name')">D city.name</button>
+    <button @click = "form.enable('address.city.name')">E city.name</button>
     <br/>
 
     <div v-html="valueJson"></div>
