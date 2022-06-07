@@ -37,6 +37,7 @@ export default class Form extends EventEmitter{
 	get changes() {
 		return getCastObject(this.values, this.#changes);
 	}
+
 	
 	
 	get values() {
@@ -66,18 +67,15 @@ export default class Form extends EventEmitter{
 	
 	private markChanges(values: any) {
 		const v = deepenObject(replaceValues<boolean>(values, true));
-		console.log(v);
 		mergeObjects(this.#changes, v);
 	}
 	/**
 	 * @description Метод-контроллер, используемый для инпутов
 	 * */
 	input(name: string, v: any){
-
-		
-		this.changeByName(name, v);
-		
-		this.markChanges({[name]: v});
+		this.change({
+			[name]: v
+		})
 	}
 	
 	/**
@@ -130,8 +128,19 @@ export default class Form extends EventEmitter{
 			[name]: value
 		});
 	}
+	cleanChanges() {
+		this.#changes = {};
+	}
 	change(values: Values){
 		this.setValues(values);
+		
+		this.markChanges(values);
+	}
+	
+	protected setValuesByName(name: string, value: any) {
+		this.setValues({
+			[name]: value
+		});
 	}
 	/**
 	 * @description Установка новых значений формы.
@@ -206,16 +215,13 @@ export default class Form extends EventEmitter{
 	
 	handleDE = {
 		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
-			console.log('define', name);
 
 			const value = attributes.value;
 			
 			
-			console.log('Clean not relevanted names.');
 			Object.keys(target).forEach(disabledName => {
 				if (disabledName.startsWith(name.toString())) {
 					delete target[disabledName];
-					console.log(`Delete disable for %c${disabledName}`, 'color: red')
 				}
 			})
 			
@@ -292,7 +298,6 @@ export default class Form extends EventEmitter{
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
-			console.log(dep, name);
 			if (dep.name.startsWith(name)) return dep.enable(); // Точное совпадение
 			dep.enable(name.slice(dep.name.length + 1));
 		})
@@ -386,7 +391,8 @@ export default class Form extends EventEmitter{
 		array.push(() =>
 			runPromiseQueue([
 				() => this.saveData?.(),
-				(data: any) => this.emit(Form.EVENT_SAVE, data)
+				(data: any) => this.emit(Form.EVENT_SAVE, data),
+				() => this.cleanChanges()
 			])
 		)
 		
@@ -400,5 +406,6 @@ export default class Form extends EventEmitter{
 
 interface FormParams {
 	debug?: boolean,
-	name? : string
+	name? : string,
+	cleanChangesAfterSave?: boolean,
 }

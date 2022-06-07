@@ -3,6 +3,13 @@ import getPropFromObject from "../utils/getPropFromObject";
 
 export default class FormProxy extends Form{
 
+	name: string;
+	constructor(p:any) {
+		super(p);
+		
+		this.name = p.name;
+	}
+	
 	get values() {
 		return getPropFromObject(this.parentForm?.values, this.name);
 	}
