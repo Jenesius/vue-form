@@ -25,7 +25,7 @@ const form = new Form()
 Реактивное состояния формы можно получить из *useFormState* хука:
 ```js
 import {useFormState} from "jenesius-vue-modal"
-const {state} = useFormState(form)
+const {state} = useFormState(form) // disabled changed
 ```
 
 ## Proxy Form
@@ -49,7 +49,8 @@ const {state} = useProxyState(name);
 ```
 ```js
 import {useInputState} from "jenesius-vue-modal"
-const {state, input} = useInputState(props.name);
+const {state, input} = useInputState(props.name)
+// state - {value, disabled}
 ```
 - **input** - контроллер для работы с виджетом. Необходим для обработки изменения
 поля ввода.
