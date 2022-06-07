@@ -1,6 +1,5 @@
 # Jenesius Vue Form
-Hi, If you stay here, please leave. This package is not ready ;)
-(But just now you can test it)
+Heavy form system for Vue.js v3. Library provides a wide range of functionality and interaction with form elements.
 
 ## Links
 - Documentation
@@ -18,8 +17,15 @@ Hi, If you stay here, please leave. This package is not ready ;)
 большую часть работы за вас.
 
 ```js
-    import {Form} from "jenesius-vue-modal"
-    const form = new Form()
+import {Form} from "jenesius-vue-modal"
+const form = new Form()
+```
+
+### Main Form state
+Реактивное состояния формы можно получить из *useFormState* хука:
+```js
+import {useFormState} from "jenesius-vue-modal"
+const {state} = useFormState(form)
 ```
 
 ## Proxy Form
@@ -28,22 +34,22 @@ Hi, If you stay here, please leave. This package is not ready ;)
 инпут address, который в себе может хранить такие поля, как: city, country, street.
 
 ```ts
-    import {useProxyState} from "jenesius-vue-modal"
-    const {state} = useProxyState(name);
+import {useProxyState} from "jenesius-vue-modal"
+const {state} = useProxyState(name);
 ```
 
 ## Input
 Для того, чтобы связать поле input с формой нужно просто выполнить следующий хук:
 ```vue
-    <input type = "text" 
-           @input = "input.change($event.target.value)" 
-           :value="state.value"
-           :disabled = "state.disabled"
-    >
+<input type = "text" 
+    @input = "input.change($event.target.value)" 
+    :value="state.value"
+    :disabled = "state.disabled"
+>
 ```
 ```js
-    import {useInputState} from "jenesius-vue-modal"
-    const {state, input} = useInputState(props.name);
+import {useInputState} from "jenesius-vue-modal"
+const {state, input} = useInputState(props.name);
 ```
 - **input** - контроллер для работы с виджетом. Необходим для обработки изменения
 поля ввода.
@@ -54,3 +60,19 @@ Hi, If you stay here, please leave. This package is not ready ;)
 - **агригатный элемент** - не зависимый(или слабозависимый) экземпляр Form. Знач
 ения инпутов, disabled поля, hidden поля и т.д. должны храниться в ближайшей 
 *aggregate* Form.
+
+## InputField widgets
+Данная библиотека также предоставляет набор компонент, которые можно легко испол
+ьзовать для построения форм:
+
+```vue
+<input-field type = "text" name = "username"/>
+
+<script>
+    import {InputField} from "jenesius-vue-form"
+</script>
+```
+- **type** - тип инпута. Принимает одно из следующих значения: text. По умолчанию:
+text
+- **name** - имя контролла, по которому он будет привязан к форме.
+- **label** метка элемента. Используется как заголовок.
