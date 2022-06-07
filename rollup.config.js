@@ -1,7 +1,7 @@
 /*eslint-disable*/
 
 import pkg from './package.json'
-import vuePlugin from 'rollup-plugin-vue';
+import vuePlugin from '@vitejs/plugin-vue'
 import postcss from 'rollup-plugin-postcss';
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript';
@@ -32,7 +32,7 @@ function createConfig(format, output) {
 	output.globals = {
 		vue: 'Vue',
 	}
-	
+	output.sourcemap = true;
 	const isGlobalBuild = format === 'global'
 	
 	if (isGlobalBuild) output.name = 'JenesiusVueForm'
@@ -43,13 +43,13 @@ function createConfig(format, output) {
 		input: "./plugin/index.ts",
 		external,
 		plugins: [
-			typescript({ tsconfig: './plugin/tsconfig.json' }),
-			/*
+			typescript({ tsconfig: './plugin/tsconfig.json',  }),
+
 			vuePlugin({
-				preprocessStyles: true
+
 			}),
 			commonjs(),
-			postcss(),*/
+			postcss(),
 		],
 		output,
 	}

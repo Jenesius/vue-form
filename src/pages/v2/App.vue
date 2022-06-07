@@ -1,6 +1,12 @@
 <template>
 
     <div>
+        <input-field type = "text" name = "address.description" label="Address description" />
+        <input-field type = "text" name = "name" label="Name" />
+
+    </div>
+
+    <div>
         <p>Name</p>
         <new-input-field name = "name"/>
         <new-input-field name = "name"/>
@@ -15,19 +21,19 @@
     </div>
 
     <div class = "flex" >
-        <new-address-field name = "address" v-if = "state.address"/>
+        <new-address-field name = "address" v-if = "stateHidden.address"/>
         <div>
-            <button @click = "state.address = !state.address">toggle</button>
+            <button @click = "stateHidden.address = !stateHidden.address">toggle</button>
         </div>
     </div>
 
     <div class = "flex">
-        <div v-if = "state.city">
+        <div v-if = "stateHidden.city">
             <p>Address.city</p>
             <new-input-field name="address.city.name"/>
         </div>
         <div>
-            <button @click = "state.city = !state.city">toggle</button>
+            <button @click = "stateHidden.city = !stateHidden.city">toggle</button>
         </div>
     </div>
     <div>
@@ -54,6 +60,11 @@
 
     <div v-html="valueJson"></div>
 
+    <div>
+        <p>Changed: {{state.changed}}</p>
+        <p>Disabled: {{state.disabled}}</p>
+    </div>
+
 </template>
 
 <script setup lang = 'ts'>
@@ -61,11 +72,14 @@
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
     import Form from "../../../plugin/classes/Form";
+    import WidgetInputText from "../../../plugin/widgets/inputs/widget-input-text.vue";
+    import InputField from "../../../plugin/widgets/input-field.vue";
+    import {useFormState} from "../../../plugin";
 
 
     const form = new Form();
 
-    const state = reactive({
+    const stateHidden = reactive({
         city: true,
         address: true
     })
@@ -77,6 +91,7 @@
     /* @ts-ignore */
     window.form = form;
 
+    const {state} = useFormState(form);
 
 
 

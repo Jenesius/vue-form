@@ -4,6 +4,8 @@ import getPropFromObject from "../utils/getPropFromObject";
 export default class FormProxy extends Form{
 
 	name: string;
+	
+	
 	constructor(p:any) {
 		super(p);
 		

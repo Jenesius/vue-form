@@ -14,4 +14,8 @@
     "declaration": true,
     "declarationDir": "dts"
   },
+  "exclude": [
+    "./classes/Input.old.ts",
+    "./classes/Form.old.ts"
+  ]
 }

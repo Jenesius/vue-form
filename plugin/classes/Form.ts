@@ -15,29 +15,113 @@ export default class Form extends EventEmitter{
 	
 	/**
 	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
-	 * Не установлено значение setValues, а изменена
+	 * Не установлено значение setValues, а изменена.
 	 * */
-	static EVENT_CHANGE		 	 = 'changed';
+	static EVENT_CHANGED		 	 = 'changed';
+	static EVENT_DISABLED		 	 = 'disabled';
 	
 	static getParentForm(): Form {
 		return injectVue(Form.PROVIDE_NAME) as Form;
 	}
 	/**=========**/
 	
+	/**
+	 * @description Name of current entity.
+	 */
 	name?: string;
 	
-	// Массив Объект-Контроллер, используемый для работы с зависимыми элементами
+	/**
+	 * @description Array of bound items.
+	 */
 	dependencies: any[] = [];
-	parentForm: Form | null = null;
+	
+	/**
+	 * @description Link to parent Form
+	 */
+	parentForm?: Form;
+	
+	/**
+	 * @description Prettify values of Form. Modified after deepenObject
+	 */
 	#values: Values = {}
 	
-	
+	/**
+	 * @description Prettify changes of Form.
+	 * Have next format: {
+	 *     user: { name: true, age: true }
+	 * }
+	 * Mean user.name and user.age from Form.values was changed.
+	 */
 	#changes = {};
-	// Накладывание слепка #changes на #values
+	
+	/**
+	 * @description Property for displaying warns.
+	 */
+	readonly #debug:boolean = false;
+	
+	/**
+	 * @description If true - all elements by default will be blocked.
+	 */
+	#disabled: boolean = false;
+	
+	/**
+	 * Experiment. Code review.
+	 * */
+	#handleDE = {
+		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
+			
+			const value = attributes.value;
+			
+			
+			Object.keys(target).forEach(disabledName => {
+				if (disabledName.startsWith(name.toString())) {
+					delete target[disabledName];
+				}
+			})
+			
+			target[name] = attributes.value;
+			
+			
+			
+			if (value) this.recursiveDisableItem(name.toString());
+			else this.recursiveEnableItem(name.toString())
+			
+			return true;
+		},
+		deleteProperty: (target: any, name: string | symbol): boolean => {
+			name = name.toString();
+			delete target[name];
+			
+			if (this.disabled) this.recursiveDisableItem(name)
+			else this.recursiveEnableItem(name)
+			
+			return true;
+		}
+	}
+	#disabledElements:{
+		[name: string]: boolean
+	} = new Proxy({}, this.#handleDE);
+	
+	
+	/**
+	 * @description Function for read data (For example from DataBase)
+	 * */
+	#readData: FunctionHandleData = () => Promise.resolve();
+	
+	/**
+	 * @description Function for save data (Update/Create)
+	 * */
+	#saveData: FunctionHandleData = () => Promise.resolve();
+	
+	/**
+	 *	@description Getting cast of Form.values
+	 */
 	get changes() {
 		return getCastObject(this.values, this.#changes);
 	}
-
+	get changed() {
+		return !!Object.keys(this.#changes).length;
+	}
 	
 	
 	get values() {
@@ -47,9 +131,9 @@ export default class Form extends EventEmitter{
 		this.#values = a;
 	}
 	
-	readonly #_debug:boolean = false;
+
 	get debug(){
-		return this.#_debug
+		return this.#debug
 	}
 	
 	constructor(params: FormParams = {}) {
@@ -57,20 +141,29 @@ export default class Form extends EventEmitter{
 		
 		if (params.name)
 			this.name = params.name;
-		this.#_debug = Boolean(params.debug);
+
+		this.#debug = Boolean(params.debug);
 		
-		this.parentForm = injectVue(Form.PROVIDE_NAME, null) as Form | null;
+		this.parentForm = injectVue(Form.PROVIDE_NAME, undefined) as Form | undefined;
 		if (this.parentForm) this.parentForm.depend(this);
 		
 		provideVue(Form.PROVIDE_NAME, this);
 	}
 	
 	private markChanges(values: any) {
+		
+		if (!values) {
+			console.log(`%cUndefined values%c`, 'color:red', 'color: black', this);
+			return;
+		}
+		
 		const v = deepenObject(replaceValues<boolean>(values, true));
 		mergeObjects(this.#changes, v);
+		
+		if (this.changed) this.emit(Form.EVENT_CHANGED, this.changed);
 	}
 	/**
-	 * @description Метод-контроллер, используемый для инпутов
+	 * @description Method for input-component.
 	 * */
 	input(name: string, v: any){
 		this.change({
@@ -130,10 +223,12 @@ export default class Form extends EventEmitter{
 	}
 	cleanChanges() {
 		this.#changes = {};
+		this.emit(Form.EVENT_CHANGED, this.changed);
 	}
-	change(values: Values){
+	change(values?: Values){
 		this.setValues(values);
 		
+		if (values)
 		this.markChanges(values);
 	}
 	
@@ -145,12 +240,15 @@ export default class Form extends EventEmitter{
 	/**
 	 * @description Установка новых значений формы.
 	 * */
-	setValues(values: Values){
-		const _v = deepenObject(values);
-		this.mergeValues(_v);
-		/**
-		 * поменять notify input, сделать его как метод для array
-		 * */
+	setValues(values?: Values){
+		
+		if (values) {
+			const _v = deepenObject(values);
+			this.mergeValues(_v);
+		}
+		
+
+
 		this.changeValuesOfItem(this.values)
 	}
 	
@@ -160,13 +258,13 @@ export default class Form extends EventEmitter{
 	}
 	
 	/**
-	 * @description Метод для сливания объектов
+	 * @description Merging values.
 	 * */
 	protected mergeValues(values: Values) {
 		mergeObjects(this.values, values);
 	}
 	
-	/***TEST***/
+
 	unsubscribe(item: any){
 		const index = this.dependencies.indexOf(item);
 		if (index === -1) return;
@@ -213,45 +311,11 @@ export default class Form extends EventEmitter{
 	
 	
 	
-	handleDE = {
-		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
 
-			const value = attributes.value;
-			
-			
-			Object.keys(target).forEach(disabledName => {
-				if (disabledName.startsWith(name.toString())) {
-					delete target[disabledName];
-				}
-			})
-			
-			target[name] = attributes.value;
-			
-			
-			
-			if (value) this.recursiveDisableItem(name.toString());
-			else this.recursiveEnableItem(name.toString())
-			
-			return true;
-		},
-		deleteProperty: (target: any, name: string | symbol): boolean => {
-			name = name.toString();
-			delete target[name];
-			
-			if (this.disabled) this.recursiveDisableItem(name)
-			else this.recursiveEnableItem(name)
-			
-			return true;
-		}
-	}
 	
 	
 	
-	#disabled: boolean = false;
-	
-	#disabledElements:{
-		[name: string]: boolean
-	} = new Proxy({}, this.handleDE);
+
 	
 	get disabledElements(){
 		return this.#disabledElements;
@@ -262,16 +326,11 @@ export default class Form extends EventEmitter{
 		return this.#disabled;
 	}
 	set disabled(value: boolean){
-		/**
-		 * if (this.#disabled === value) is wrong:
-		 * f.disable()
-		 * f.enable('address')
-		 * f.disable() <-- Not working.
-		 * */
 		
 		this.#disabled = value;
+		this.emit(Form.EVENT_DISABLED, this.#disabled);
 		// installation disabledElements
-		this.#disabledElements = new Proxy({}, this.handleDE);
+		this.#disabledElements = new Proxy({}, this.#handleDE);
 		
 		if (value)
 			this.recursiveDisableItem()
@@ -350,10 +409,7 @@ export default class Form extends EventEmitter{
 	}
 	
 	
-	/**
-	 * @description Function for read data (For example from DataBase)
-	 * */
-	private readData: FunctionHandleData = () => Promise.resolve();
+
 	/**
 	 * @description Method takes read functions from all children elements, and
 	 * run it
@@ -365,20 +421,21 @@ export default class Form extends EventEmitter{
 				return acc;
 			}, []);
 		
-		if (this.readData) array.push(() =>
-			runPromiseQueue([() => this.readData?.(), (data: any) => this.emit(Form.EVENT_READ, data)])
+		array.push(() =>
+			runPromiseQueue([
+				() => this.#readData?.(),
+				(data: any) => this.emit(Form.EVENT_READ, data)
+				]
+			)
 		)
 		
 		return () => Promise.all(array.map(c => c()));
 	}
 	set read(callback: FunctionHandleData){
-		this.readData = callback;
+		this.#readData = callback;
 	}
 	
-	/**
-	 * @description Function for save data (Update/Create)
-	 * */
-	private saveData: FunctionHandleData = () => Promise.resolve();
+
 	
 	get save() {
 		
@@ -390,7 +447,7 @@ export default class Form extends EventEmitter{
 		
 		array.push(() =>
 			runPromiseQueue([
-				() => this.saveData?.(),
+				() => this.#saveData?.(),
 				(data: any) => this.emit(Form.EVENT_SAVE, data),
 				() => this.cleanChanges()
 			])
@@ -399,7 +456,7 @@ export default class Form extends EventEmitter{
 		return () => Promise.all(array.map(c => c()));
 	}
 	set save(callback: FunctionHandleData) {
-		this.saveData = callback;
+		this.#saveData = callback;
 	}
 	
 }
@@ -407,5 +464,5 @@ export default class Form extends EventEmitter{
 interface FormParams {
 	debug?: boolean,
 	name? : string,
-	cleanChangesAfterSave?: boolean,
+	// cleanChangesAfterSave?: boolean,
 }

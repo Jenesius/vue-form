@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   pages: {
     index: {
-      entry: './src/main.ts'
+      entry: './src/pages/index/main.ts'
     },
     v2: {
       entry: './src/pages/v2/main.ts'

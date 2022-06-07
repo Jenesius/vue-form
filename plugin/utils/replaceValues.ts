@@ -20,6 +20,7 @@ function replace(o: Values, value: any): {} {
 
 export default function replaceValues<Type>(object: Values, value: Type) {
 
+
 	const copyObject = JSON.parse(JSON.stringify(object));
 	
 	return replace(copyObject, value);
