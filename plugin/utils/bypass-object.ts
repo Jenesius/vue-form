@@ -5,7 +5,10 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
 	
 	Object.keys(value)
 	.forEach(key => {
-		const p = [...path, key]; // Step path
+		
+		const parsedKey = key.split('.');
+		
+		const p = [...path, ...parsedKey]; // Step path
 		const v = value[key];	  // Step value
 		
 		if (checkPrimitiveType(v)) {

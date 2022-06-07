@@ -1,6 +1,7 @@
 import mergeObjects from "./mergeObjects";
 
 /**
+ * @deprecated
  * раскладывает составное значение
  * */
 export function deepenObject(value: any) {
@@ -16,6 +17,7 @@ export function deepenObject(value: any) {
 
 
 /**
+ * @deprecated
  * Раскладывает составное имя и значение
  * */
 export default function deepenValue(name: string, value: any): any {

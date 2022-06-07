@@ -62,6 +62,17 @@ describe("Bypass object", () => {
 		
 	});
 	
-	
+	test('Composite name', () => {
+		
+		const v = {'address.name': null}
+		
+		expect(bypassObject(v)).toEqual([
+			{
+				path: ['address','name'],
+				value: null
+			}
+		])
+		
+	})
 	
 })
