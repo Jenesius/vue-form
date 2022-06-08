@@ -46,4 +46,4 @@ import WidgetExampleValues from '../components/widget-example-values.vue'
 
 In this article, the basic features of the library were considered.
 
-- Detailed Form Documentation [here](/guide/form/index.md).
+- Detailed Form Documentation [here](/guide/form.md).

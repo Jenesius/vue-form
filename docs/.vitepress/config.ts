@@ -23,6 +23,16 @@ function sidebar() {
 			items: [
 				{ text: 'Installation', link: '/guide/installation' },
 				{ text: 'Getting started', link: '/guide/getting-started' },
+				{ text: 'Form', link: '/guide/form' },
+				{ text: 'FormProxy', link: '/guide/form-proxy' },
+				{ text: 'Input', link: '/guide/input' },
+			]
+		},
+		{
+			text: 'Form',
+			items: [
+				{ text: 'State', link: '/guide/form-state' },
+				{ text: 'Methods', link: '/guide/form-methods' },
 			]
 		}
 	]

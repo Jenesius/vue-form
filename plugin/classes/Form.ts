@@ -12,6 +12,7 @@ export default class Form extends EventEmitter{
 	static PROVIDE_NAME			 = 'form-controller';
 	static EVENT_READ			 = 'read';
 	static EVENT_SAVE			 = 'save';
+	static EVENT_VALUE			 = 'value';
 	
 	/**
 	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
@@ -211,16 +212,6 @@ export default class Form extends EventEmitter{
 		})
 	}
 	
-	/**
-	 * @description Частный случай setValues, используется для input элементов.
-	 *
-	 * change, changeByName - прослойка над setValue
-	 * */
-	changeByName(name: string, value: any) {
-		this.setValues({
-			[name]: value
-		});
-	}
 	cleanChanges() {
 		this.#changes = {};
 		this.emit(Form.EVENT_CHANGED, this.changed);
@@ -246,7 +237,7 @@ export default class Form extends EventEmitter{
 			const _v = grandObject(values);
 			this.mergeValues(_v);
 		}
-		
+		this.emit(Form.EVENT_VALUE, values);
 
 
 		this.changeValuesOfItem(this.values)
@@ -264,17 +255,17 @@ export default class Form extends EventEmitter{
 		mergeObjects(this.values, values);
 	}
 	
-
-	unsubscribe(item: any){
-		const index = this.dependencies.indexOf(item);
-		if (index === -1) return;
-		this.dependencies.splice(index, 1);
-	}
 	depend(item: any) {
 		this.dependencies.push(item)
 		
 		return () => this.unsubscribe(item)
 	}
+	unsubscribe(item: any){
+		const index = this.dependencies.indexOf(item);
+		if (index === -1) return;
+		this.dependencies.splice(index, 1);
+	}
+
 	dependInput(name: string, i: any) {
 		i.name = name;
 		

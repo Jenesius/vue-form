@@ -11,11 +11,17 @@
 <script setup>
     import {Form, InputField} from "../../plugin";
     import hljs from 'highlight.js';
+    import {ref} from "vue";
 
-    import {onUnmounted, ref} from "vue";
+
     const form = new Form({});
-
     const test = ref();
+
+
+    form.on('value', () => {
+        test.value.innerHTML = JSON.stringify(form.values, null, "  ");
+        hljs.highlightElement(test.value)
+    })
 
     function set(){
         form.setValues({
@@ -23,14 +29,4 @@
             age : 23
         })
     }
-
-    const id = setInterval(() => {
-        test.value.innerHTML = JSON.stringify(form.values, null, "  ");
-        hljs.highlightElement(test.value)
-    }, 150);
-
-    onUnmounted(() => {
-        clearInterval(id);
-    })
-
 </script>
