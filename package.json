@@ -1,6 +1,6 @@
 {
   "name": "jenesius-vue-form",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Heavy form system for Vue.js",
   "author": "Jenesius",
   "license": "MIT",
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/Jenesius/vue-form/issues"
   },
-  "homepage": "https://github.com/Jenesius/vue-form#readme",
+  "homepage": "https://form.jenesius.com/",
   "url": "https://github.com/Jenesius/vue-form/issues",
   "scripts": {
     "serve": "vue-cli-service serve",

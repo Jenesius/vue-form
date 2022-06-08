@@ -2,9 +2,9 @@
 Heavy form system for Vue.js v3. Library provides a wide range of functionality and interaction with form elements.
 
 ## Links
-- Documentation
+- [Documentation](https://form.jenesius.com/)
 - Examples
-- GitHub
+- [GitHub](https://github.com/Jenesius/vue-form)
 ## Reason
 
 - 🦵 multifunctional form logic. Херово звучит. Многофункциональная система для 
