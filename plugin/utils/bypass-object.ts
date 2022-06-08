@@ -1,4 +1,4 @@
-import checkPrimitiveType from "./checkPrimitiveType";
+import checkPrimitiveType from "./check-primitive-type";
 
 function step(array: BypassItem[], value: any, path: string[] = []): void {
 	if (checkPrimitiveType(value)) return;

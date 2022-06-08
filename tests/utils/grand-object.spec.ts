@@ -1,34 +1,27 @@
-import deepenValue from "../plugin/utils/deepenValue";
+import grandObject from "../../plugin/utils/grand-object";
 
-describe("utils", () => {
-
+describe("Grand Object", () => {
+	
 	test("Simple name with simple value", () => {
-		expect(deepenValue('name', null)).toEqual({name: null})
+		expect(grandObject({name: null})).toEqual({name: null})
 	})
 	test("Composite name with simple value", () => {
-		expect(deepenValue('name.sub', null)).toEqual({name: {sub: null}})
+		expect(grandObject({'name.sub': null})).toEqual({name: {sub: null}})
 	})
 	test("Simple name with composite value", () => {
-		expect(deepenValue('name', {sub: null})).toEqual({name: {sub: null}})
+		expect(grandObject({name: {sub: null}})).toEqual({name: {sub: null}})
 	})
 	test("Composite name with composite value", () => {
-		expect(deepenValue('name.test', {sub: null})).toEqual(
+		expect(grandObject({'name.test': {sub: null}})).toEqual(
 			{name: {test: {sub: null}}}
 		)
 	})
-	
-	test("Composite name with double composite value", () => {
-		expect(deepenValue('name.test', {sub: {level: null}})).toEqual(
-			{name: {test: {sub: {level: null}}}}
-		)
-	})
-	
 	test("Composite HARD value", () => {
-		expect(deepenValue('name.test', {
+		expect(grandObject({'name.test': {
 			sub: {a: 1, b: 2, c: 3},
 			dd: 1,
 			c: {a: 1, b: 1}
-		})).toEqual({
+		}})).toEqual({
 			name: {
 				test: {
 					sub: {a: 1, b: 2, c: 3},
@@ -38,11 +31,11 @@ describe("utils", () => {
 			}
 		})
 	})
-
+	
 	test("Composite values with composite value's name", () => {
-		expect(deepenValue('name.value', {
+		expect(grandObject({'name.value': {
 			'sub.name': null
-		})).toEqual({
+		}})).toEqual({
 			name: {
 				value: {
 					sub: {
@@ -54,14 +47,14 @@ describe("utils", () => {
 	})
 	
 	test(`Composite values with HARD composite value's name`, () => {
-		expect(deepenValue('name.value', {
+		expect(grandObject({'name.value': {
 			'sub.name': {
 				'test.name.value': 1,
 				'test.name.data': 2,
 				'test.abort': 3
 			},
 			'sub.name.test.name.age': 4
-		})).toEqual({
+		}})).toEqual({
 			name: {
 				value: {
 					sub: {
@@ -80,6 +73,7 @@ describe("utils", () => {
 			}
 		})
 	})
+	
 	
 })
 /**

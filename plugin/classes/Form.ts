@@ -1,12 +1,12 @@
 import EventEmitter from "jenesius-event-emitter";
 import {inject as injectVue, provide as provideVue} from "vue";
-import getPropFromObject from "../utils/getPropFromObject";
+import getPropFromObject from "../utils/get-prop-from-object";
 import {FunctionHandleData, Values} from "../types";
-import {deepenObject} from "../utils/deepenValue";
-import mergeObjects from "../utils/mergeObjects";
-import {runPromiseQueue} from "../utils/run-promise-queue";
-import replaceValues from "../utils/replaceValues";
-import getCastObject from "../utils/getCastObject";
+import mergeObjects from "../utils/merge-objects";
+import runPromiseQueue from "../utils/run-promise-queue";
+import replaceValues from "../utils/replace-values";
+import getCastObject from "../utils/get-cast-object";
+import grandObject from "../utils/grand-object";
 
 export default class Form extends EventEmitter{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -157,7 +157,7 @@ export default class Form extends EventEmitter{
 			return;
 		}
 		
-		const v = deepenObject(replaceValues<boolean>(values, true));
+		const v = grandObject(replaceValues(values));
 		mergeObjects(this.#changes, v);
 		
 		if (this.changed) this.emit(Form.EVENT_CHANGED, this.changed);
@@ -243,7 +243,7 @@ export default class Form extends EventEmitter{
 	setValues(values?: Values){
 		
 		if (values) {
-			const _v = deepenObject(values);
+			const _v = grandObject(values);
 			this.mergeValues(_v);
 		}
 		
@@ -457,6 +457,19 @@ export default class Form extends EventEmitter{
 	}
 	set save(callback: FunctionHandleData) {
 		this.#saveData = callback;
+	}
+	
+	
+	/**VALIDATION**/
+	
+	validate() {
+	
+		return this.dependencies.reduce((acc, dep) => {
+			if (dep.validate) acc = dep.validate();
+			
+			return acc;
+		}, true);
+	
 	}
 	
 }

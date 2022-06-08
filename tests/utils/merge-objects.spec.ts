@@ -1,4 +1,4 @@
-import mergeObjects from "../plugin/utils/mergeObjects";
+import mergeObjects from "../../plugin/utils/merge-objects";
 
 describe('', () => {
 	

@@ -1,4 +1,4 @@
-import plainObject from "../plugin/utils/plain-object";
+import plainObject from "../../plugin/utils/plain-object";
 
 describe('Plain object', () => {
 	

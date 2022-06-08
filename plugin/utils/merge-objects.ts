@@ -1,4 +1,4 @@
-import {Values} from "../types/index";
+import {Values} from "../types";
 /**
  * @description Мержит два объекта, полностью не перезаписываю значения.
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}

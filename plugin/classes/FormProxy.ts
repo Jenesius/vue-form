@@ -1,5 +1,5 @@
 import Form from "./Form";
-import getPropFromObject from "../utils/getPropFromObject";
+import getPropFromObject from "../utils/get-prop-from-object";
 
 export default class FormProxy extends Form{
 

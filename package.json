@@ -45,6 +45,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-typescript": "^8.3.2",
+    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "@vitejs/plugin-vue": "^2.3.3",
@@ -57,7 +58,7 @@
     "core-js": "^3.8.3",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^9.0.1",
-    "jest": "26.6.3",
+    "jest": "^26.6.3",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-vue": "^6.0.0",
     "ts-jest": "^26.5.6",
@@ -69,8 +70,5 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ],
-  "dependencies": {
-
-  }
+  ]
 }

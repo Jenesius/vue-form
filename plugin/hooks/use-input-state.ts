@@ -1,15 +1,17 @@
 import {inject, onUnmounted, reactive} from "vue";
 import Form from "../classes/Form";
 
-export default function useInputState(name: string) {
+export default function useInputState(name: string, validation: []) {
 	const parentForm = inject(Form.PROVIDE_NAME) as Form;
 	
 	const state = reactive({
 		value: parentForm.getValueByName(name),
-		disabled: parentForm.getDisabledByName(name)
+		disabled: parentForm.getDisabledByName(name),
+		errors: []
 	})
 	
-	const off = parentForm.dependInput(name, {
+	
+	const controls = {
 		change: (v:any) => {
 			state.value = v;
 		},
@@ -21,9 +23,13 @@ export default function useInputState(name: string) {
 		},
 		hide: () => {},
 		show: () => {},
-		validate: () => {},
+		validate: () => {
+		
+		},
 		focus: () => {}
-	})
+	}
+	
+	const off = parentForm.dependInput(name, controls)
 	onUnmounted(() => {
 		off();
 	})

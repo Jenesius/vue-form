@@ -4,13 +4,13 @@ import {
 	provide as provideVue,
 	inject as injectVue
 } from "vue";
-import mergeObjects from "../utils/mergeObjects";
+import mergeObjects from "../utils/merge-objects";
 import {Values} from "../types";
-import getPropFromObject from "../utils/getPropFromObject";
+import getPropFromObject from "../utils/get-prop-from-object";
 import FormErrors from "./FormErrors";
 import EventEmitter from "jenesius-event-emitter";
 import {runPromiseQueue} from "../utils/run-promise-queue";
-import deepenValue, {deepenObject} from "../utils/deepenValue";
+
 
 export class FormOld extends EventEmitter{
 	
