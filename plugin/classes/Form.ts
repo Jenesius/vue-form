@@ -465,7 +465,9 @@ export default class Form extends EventEmitter{
 	validate() {
 	
 		return this.dependencies.reduce((acc, dep) => {
-			if (dep.validate) acc = dep.validate();
+			if (dep.validate) {
+				acc = acc && dep.validate();
+			}
 			
 			return acc;
 		}, true);

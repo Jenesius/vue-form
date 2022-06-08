@@ -1,15 +1,28 @@
-import {inject, onUnmounted, reactive} from "vue";
-import Form from "../classes/Form";
+import {onUnmounted, reactive} from "vue";
+import Input from "../classes/Input";
 
-export default function useInputState(name: string, validation: []) {
-	const parentForm = inject(Form.PROVIDE_NAME) as Form;
+export default function useInputState(name: string, validation: any[] = []) {
 	
-	const state = reactive({
-		value: parentForm.getValueByName(name),
-		disabled: parentForm.getDisabledByName(name),
+	const input = new Input({name, validation});
+	const state = useInputController(input);
+
+	return {
+		state,
+		input
+	}
+}
+
+function useInputController(input: Input) {
+	
+	const state = reactive<{
+		value: any,
+		disabled: boolean,
+		errors: string[]
+	}>({
+		value: input.value,
+		disabled: input.disabled,
 		errors: []
 	})
-	
 	
 	const controls = {
 		change: (v:any) => {
@@ -24,25 +37,16 @@ export default function useInputState(name: string, validation: []) {
 		hide: () => {},
 		show: () => {},
 		validate: () => {
-		
+			state.errors = input.validate();
+			return state.errors.length === 0;
 		},
 		focus: () => {}
 	}
 	
-	const off = parentForm.dependInput(name, controls)
+	const off = input.parentForm.dependInput(input.name, controls)
 	onUnmounted(() => {
 		off();
 	})
 	
-	/**
-	 * Предоставляется фронтенду, презентейшен view.
-	 * */
-	return {
-		state,
-		input: {
-			change: (v:any) => {
-				parentForm.input(name, v);
-			},
-		}
-	}
+	return state;
 }

@@ -2,7 +2,7 @@
 
     <div>
         <input-field type = "text" name = "address.description" label="Address description" />
-        <input-field type = "text" name = "name" label="Name" />
+        <input-field type = "text" name = "name" label="Name" :validation = "[required]" />
 
     </div>
 
@@ -76,6 +76,7 @@
     import InputField from "../../../plugin/widgets/input-field.vue";
     import {useFormState} from "../../../plugin";
 
+    const required = (v: any) => !!v || "Not empty"
 
     const form = new Form();
 

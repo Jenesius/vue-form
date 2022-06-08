@@ -34,10 +34,6 @@
             enable: () => {
                 state.disabled = false;
             },
-            hide: () => {},
-            show: () => {},
-            validate: () => {},
-            focus: () => {}
         })
         onUnmounted(() => {
             off();

@@ -3,38 +3,40 @@
         :is = "componentItem"
 
         :modelValue = "state.value"
-        @update:modelValue = "test"
+        @update:modelValue = "v => input.change(v)"
 
-        :label = "label"
+        :label = "props.label"
         :disabled = "state.disabled"
+        :errors = "state.errors"
     />
 </template>
 
 <script setup lang="ts">
 
-    import {computed} from "vue";
+    import {computed, withDefaults} from "vue";
 
     import WidgetInputText from "./inputs/widget-input-text.vue";
     import useInputState from "../hooks/use-input-state";
 
-    const props = defineProps<{
+    interface Props {
         type: string,
         name: string,
-        label?: string
-    }>()
+        label?: string,
+        validation?: any[]
+    }
+
+    const props = withDefaults(defineProps<Props>(), {
+        validation: () => []
+    })
 
     const store = {
         text: WidgetInputText
     }
     const componentItem = computed(() => store[props.type] || store.text);
 
-    const {state, input} = useInputState(props.name);
+    const {state, input} = useInputState(props.name, props.validation);
 
 
-    function test(a){
-
-        input.change(a);
-    }
 
 </script>
 
