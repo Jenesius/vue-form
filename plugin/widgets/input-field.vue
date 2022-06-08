@@ -8,6 +8,7 @@
         :label = "props.label"
         :disabled = "state.disabled"
         :errors = "state.errors"
+        :options = "options"
     />
 </template>
 
@@ -16,13 +17,16 @@
     import {computed, withDefaults} from "vue";
 
     import WidgetInputText from "./inputs/widget-input-text.vue";
+    import WidgetInputSelect from "./inputs/widget-input-select.vue";
     import useInputState from "../hooks/use-input-state";
+    import {OptionRow} from "../types";
 
     interface Props {
         type: string,
         name: string,
         label?: string,
-        validation?: any[]
+        validation?: any[],
+        options?: OptionRow[]
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -30,7 +34,8 @@
     })
 
     const store = {
-        text: WidgetInputText
+        text: WidgetInputText,
+        select: WidgetInputSelect
     }
     const componentItem = computed(() => store[props.type] || store.text);
 
@@ -40,6 +45,10 @@
 
 </script>
 
-<style scoped>
-
+<style>
+    .widget-input__label{
+        color: #333;
+        font-size: 13px;
+        margin: 4px 0;
+    }
 </style>
