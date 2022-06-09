@@ -41,4 +41,7 @@
         border-color: #b2b2b2;
     }
 
+    .widget-input-text:disabled{
+        background-color: #b1b1b1;
+    }
 </style>
