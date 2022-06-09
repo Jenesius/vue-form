@@ -34,6 +34,15 @@ function sidebar() {
 				{ text: 'State', link: '/guide/form-state' },
 				{ text: 'Methods', link: '/guide/form-methods' },
 			]
+		},
+
+		{
+			text: 'Inputs',
+			items: [
+				{
+					text: 'Widgets', link: '/guide/input-widgets'
+				}
+			]
 		}
 	]
 }
