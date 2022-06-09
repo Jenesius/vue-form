@@ -23,7 +23,7 @@
 <style scoped>
     .select-options{
         background-color: white;
-        z-index: 1;
+        z-index: 2;
         position: relative;
         padding: 2px 2px;
 
