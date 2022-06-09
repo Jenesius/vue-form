@@ -44,7 +44,6 @@
   },
   "devDependencies": {
     "vitepress": "^1.0.0-alpha.1",
-    "highlight.js": "^11.5.1",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/preset-typescript": "^7.17.12",

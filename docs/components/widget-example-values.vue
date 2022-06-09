@@ -10,7 +10,6 @@
 </template>
 <script setup>
     import {Form, InputField} from "../../plugin";
-    import hljs from 'highlight.js';
     import {ref} from "vue";
 
 
@@ -20,7 +19,6 @@
 
     form.on('value', () => {
         test.value.innerHTML = JSON.stringify(form.values, null, "  ");
-        hljs.highlightElement(test.value)
     })
 
     function set(){
