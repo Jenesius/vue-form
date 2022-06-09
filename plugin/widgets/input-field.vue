@@ -22,15 +22,16 @@
     import {OptionRow} from "../types";
 
     interface Props {
-        type: string,
-        name: string,
+        type?: string,
+        name?: string,
         label?: string,
         validation?: any[],
         options?: OptionRow[]
     }
 
     const props = withDefaults(defineProps<Props>(), {
-        validation: () => []
+        validation: () => [],
+        type: 'text'
     })
 
     const store = {

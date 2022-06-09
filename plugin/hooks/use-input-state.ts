@@ -43,9 +43,11 @@ function useInputController(input: Input) {
 		focus: () => {}
 	}
 	
-	const off = input.parentForm.dependInput(input.name, controls)
+	const off = input.parentForm?.dependInput(input.name, controls)
 	onUnmounted(() => {
-		off();
+		if (off) {
+			off();
+		}
 	})
 	
 	return state;
