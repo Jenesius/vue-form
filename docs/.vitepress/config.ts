@@ -1,7 +1,7 @@
 
 
 export default {
-	title: 'Jenesius VueForm',
+	title: 'JenesiusVueForm',
 	description: "Form system for Vue.",
 	
 	themeConfig: {

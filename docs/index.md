@@ -1,8 +1,8 @@
 ---
 layout: home
 
-title: JenesiusVueModal
-titleTemplate: Jenesius & Heavy form system for Vue
+title: JenesiusVueForm
+titleTemplate: Jenesius Vue Form & Heavy form system for Vue
 
 hero:
   name: JenesiusVueForm

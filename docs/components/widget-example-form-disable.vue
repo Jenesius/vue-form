@@ -33,7 +33,7 @@
         alert(JSON.stringify(form.values, null, "   "))
     }
     const test = ref();
-    const formDisabledState = ref(form.disabled);
+    const formDisabledState = ref();
 
     // form.on(Form.EVENT_UPDATE_ABILITY, () => renderDisableState());
 
@@ -43,7 +43,9 @@
 
     function renderDisableState() {
         //console.log(form.disabledElements)
+        if (test.value)
         test.value.innerHTML = JSON.stringify(form.disabledElements, null, "  ");
+        if (formDisabledState.value)
         formDisabledState.value.innerHTML = JSON.stringify({
             'form.disable': form.disabled
         }, null, "  ");
