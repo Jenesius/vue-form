@@ -1,16 +1,15 @@
 # State
-Полагаясь на состояние формы мы можем перестраивать интерфейс, обновлять данные
-пользователя и т.д.
+Relying on the state of the form, we can rebuild the interface, update the data
+user, etc.
 
 ## Form State
-
-Экземпляр формы имеет набор свойств с которыми пользователь может
-взаимодействовать.
+The form instance has a set of properties with which the user can
+to interact.
 
 ### values
-Является getter свойством, вернёт набор всех значений данной формы. Важно помнить,
-что все значения передаваемые в форму упрощаются и записываются в максимально
-[углубленном представлении](/).
+Is a getter property, will return a set of all values of the given form. Important to remember,
+that all values passed to the form are simplified and written to the maximum
+[in-depth view](/).
 ```js
 form.setValues({ name: 'vue'})
 form.change({ 'user.age': 23 })
@@ -18,8 +17,8 @@ form.values // { name: 'vue', user: { age: 23 } }
 ```
 
 ### changes
-Данный getter вернёт лишь те поля, которые были помечены, как изменившиеся. 
-Аналогично с верхним примером будет выведено:
+This getter will only return those fields that have been marked as changed.
+Similarly, with the upper example, it will be displayed:
 ```json
 {
   "user": {
@@ -29,18 +28,18 @@ form.values // { name: 'vue', user: { age: 23 } }
 ```
 
 ### name
-String. Имя формы. Обычно используется для связи формы с сущностью, которую она
-отображает.
+String. The name of the form. Typically, used to link a form to the entity it is
+displays.
 
 ### disabled
-Boolean. Принимает значение true, если форма была заблокирована.
+Boolean. Returns true if the form has been disabled.
 
 ### changed
-Boolean, принимает значение true, если форма была изменена.
+Boolean, evaluates to true if the form has been modified.
 
 ### read
-Setter read используется для уставки метода, которые будет вызван при чтении
-данных дл формы:
+Setter read is used to set the method that will be called when reading
+form data:
 ```js
 form.read = async () => {
 	const newData = await readDataFromDB();
@@ -49,8 +48,8 @@ form.read = async () => {
 ```
 
 ### save
-Аналогично с read, существует setter save, который устанавливает значение функции,
-которая будет вызвана при сохранении формы:
+Similar to read, there is a save setter that sets the value of the function,
+which will be called when the form is saved:
 ```js
 form.save = async () => {
 	await saveDataToDB(form.changes);
@@ -59,23 +58,23 @@ form.save = async () => {
 ```
 
 ### parentForm
-Ссылка на родительскую форму или *undefined*, если форма является основной.
+A reference to the parent form, or *undefined* if the form is the main form.
 
 ## Reactive State
-Выше были описаны свойства объектов Form, однако сама форма не является
-реактивной и не имеет в себе ни reactive, ни ref, ни
-computed свойств. Однако для реактивности можно использовать следующих hook:
+The properties of the Form objects have been described above, but the form itself is not
+reactive and has neither reactive, nor ref, nor
+computed properties. However, the following hook can be used for reactivity:
 ```js
 // import {useFormState} from "jenesius-vue-form"
 const {state} = useFormState(form);
 ```
 
-State является reactive объектом и имеет следующие свойства:
+State is a reactive object and has the following properties:
 
 ### changed
 
-Принимает значение true, если форма была изменена полем ввода или
-используя метод *form.change*:
+Returns true if the form has been modified by an input field, or
+using the *form.change* method:
 ```js
 // does not put the form in the "changed" state
 form.setValues({name: 'vue'}) 
@@ -84,6 +83,6 @@ form.setValues({name: 'vue'})
 form.change({name: 'vue'})
 ```
 ### disabled
-Принимает значение true, если форма была переведена в состояние
-не редактируемое при помощи
-методе [disable](/guide/form-methods#disable)
+Returns true if the form has been put into a state
+not editable with
+method [disable](/guide/form-methods#disable)

@@ -3,17 +3,17 @@
     <input-field name = "username" label = "Username"/>
     <input-street name = "street"/>
     <button @click = "showValues">Values</button>
-    <div>
-        <button @click = "disable()">Disable Form</button>
-        <button @click = "enable()">Enable Form</button>
+    <div class = "button-wrap">
+        <button class = "btn" @click = "disable()">Disable Form</button>
+        <button class = "btn btn-success" @click = "enable()">Enable Form</button>
     </div>
-    <div>
-        <button @click = "disable('street')">Disable street</button>
-        <button @click = "enable('street')">Enable street</button>
+    <div class = "button-wrap">
+        <button class = "btn" @click = "disable('street')">Disable street</button>
+        <button class = "btn btn-success" @click = "enable('street')">Enable street</button>
     </div>
-    <div>
-        <button @click = "disable('street.name')">Disable street.name</button>
-        <button @click = "enable('street.name')">Enable street.name</button>
+    <div class = "button-wrap">
+        <button class = "btn" @click = "disable('street.name')">Disable street.name</button>
+        <button class = "btn btn-success" @click = "enable('street.name')">Enable street.name</button>
     </div>
     <div class = "language-json">
         <pre><code ref = "test"></code></pre>
@@ -56,5 +56,18 @@
 </script>
 
 <style scoped>
-
+    .btn{
+        padding: 0 10px;
+        border-radius: 15px;
+        border: 1px solid #a9a9a9;
+    }
+    .btn-success{
+        border: 1px solid #42b883;
+        color:  #42b883;
+    }
+    .button-wrap{
+        display: flex;
+        gap: 5px;
+        margin-bottom: 5px;
+    }
 </style>

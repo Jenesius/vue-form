@@ -1,21 +1,23 @@
 <script setup>
-import WidgetExampleOnePointValue from '../components/widget-example-one-point-value.vue'
-import WidgetExampleSimpleForm from '../components/widget-example-simple-form.vue'
+import WidgetExampleOnePointValue from '../components/widget-example-one-point-value.vue';
+import WidgetExampleSimpleForm from '../components/widget-example-simple-form.vue';
 import WidgetExampleFormDisable from '../components/widget-example-form-disable.vue'
 </script>
-# Form
-Форма - элемент 
 
-## Создание формы
-Для создания формы необходимо создать экземпляр класса *Form*:
+# Form
+Form is the main element developed in this library. Servant uniform for
+combining input fields and the mechanism of providing for common work with them.
+
+## Form creation
+To create a form, you need to create an instance of the *Form* class:
 ```ts
 import {Form} from "jenesius-vue-modal"
 const form = new Form()
 ```
-Это минимальное требования для использования формы. Все дочерние элементы,
-которые пользуются механизмами данной библиотеки автоматически будут подписаны
-на дочернюю форму. 
-Для этого добавим пару полей для ввода, которые автоматически подпишутся на форму.
+This is the minimum requirement to use the form. All child elements
+that use the mechanisms of this library will automatically be signed
+to the child form.
+To do this, let's add a couple of input fields that will automatically subscribe to the form.
 ```vue
 <template>
     <input-field type = "text" name = "note"/>
@@ -34,93 +36,95 @@ const form = new Form()
 ```
 <WidgetExampleSimpleForm/>
 
-## Установка значений
-Для того чтобы установить значение формы, можно воспользоваться одним из
-следующих методов:
-- **change**(values: Values) - метод устанавливает значения форме и помечает их
-как изменённые. Данный метод влияет на **changed** формы.
-Тип Values представляет собой объект значений, любой вложенности, имеет следующий
-интерфейс:
+## Setting values
+To set the form value, you can use one of the
+the following methods:
+- **change**(values: Values) - method sets form values and marks them as changed.
+This method affects **changed** forms.
+The Values type is a value object, any nesting, has the following
+interface:
 ```ts
 interface Values {
 	[name: string]: any
 }
 ```
-- **setValues**(values: Values) - метод просто устанавливает значение, не помечая их
-как изменённые.
-Необходимо помнить об [методе разворачивания значений](#form-values-simplified)!
+- **setValues**(values: Values) - the method just sets the value without flagging them
+as changed.
 
-## Получение значений
-Имеется два обратных способ получения значений:
-- **changes** - вернёт объект изменённых значений
-- **values** - вернёт все значения формы
+Things to remember about [value unwrapping method](#form-values-simplified)!
 
-Иногда необходимо получить значение по имени поля. Для этого воспользуемся методом
+## Getting values
+There are two reverse ways to get values:
+- **changes** - will return an object of changed values
+- **values** - will return all form values
+
+Sometimes you need to get a value by a field name. To do this, we use the method
 **getValueByName**:
 ```ts
 fomr.values // { address: { city: { code: 1, name: 'Jenesius' } } }
 fotm.getValueByName('address.city') // { code: 1, name: 'Jenesius' }
 ```
 
-## Блокировка и разблокировка
-Достаточно полезным по своей сути функционалу являться возможность блокировки
-полей через JS. Данный подход позволяет просто строить динамические интерфейсы.
-В форме имеются следующие методы:
-- **disable** - блокирует форму целиком или одно поле.
+## Lock and unlock
+Quite useful in its essence functionality is the ability to block
+fields via JS. This approach allows you to easily build dynamic interfaces.
+
+The form has the following methods:
+- **disable** - blocks the entire form or one field.
 ```ts
 disable(name?: string)
 ```
-- **enable** - разблокирует поле целиком или одно поле.
+- **enable** - unlocks the entire field or one field.
 ```ts
 enable(name?: string)
 ```
-Для примера была реализована форма с которой можно поиграть, чтобы посмотреть
-как это работает.
+
+For example, a form was implemented with which you can play around to see
+how it works.
 <WidgetExampleFormDisable/>
-Необходимо помнить, что блокирую общий элемент, мы автоматически блокируем всех
-его потомком, и наоборот. Разблокирую общий элемент, мы автоматически разблокируем
-всех его потомков.
-Также при разблокировании формы: `form.enable()` - все ранее элементы будут 
-разблокированы. То же самое относится и к блокировке формы.
+
+It must be remembered that when I block a common element, we automatically block everyone
+his offspring and vice versa. Unblock a shared item, we will automatically unblock
+all his descendants.
+Also, when the form is unlocked: `form.enable()` - all previously elements will be
+unlocked. The same applies to form blocking.
 
 
 ## Validation
-Валидация форму подразумевает проверку всех дочерних подписанных элементов. 
-Проверка проходит рекурсивно, по этому вызвав метод **validate** в родительской
-форме, он автоматически вызовется у всех дочерних элементов.
-- **validate** - Возвращается true, если форма (все её дочерние элементы) являются
-валидными, false иначе.
+Form validation involves checking all child signed elements.
+The validation is recursive, so by calling the **validate** method on the parent
+form, it will automatically be called for all child elements.
+- **validate** - Returns true if the form (all of its children) are
+valid, false otherwise.
 ```ts
 form.validate() // true or false
 ```
 
-## Автоматические зависимости
-При создании формы, она автоматически выполняет уведомление всех дочерних элементов:
+## Automatic Dependencies
+When a form is created, it will automatically notify all child elements:
 ```ts
 // provide('form-controller', form)
 provideVue(Form.PROVIDE_NAME, this); 
 ```
-Таким образом дочерние элементы: Form, FormProxy, Input - могут подписаться на 
-форму и контролироваться ею.
+Thus, child elements: Form, FormProxy, Input - can subscribe to
+form and be controlled by it.
 
-
-
-## Основные принципы
-Для успешной работы с формой необходимо помнить основные принципы формы:
-### Всё состояние внутри Form
-Все поля для ввода, а так-же компоненты для хранения и работы с данными на 
-основе form, всегда должны полагаться на значения внутри родительской формы.
+## Basic principles
+To successfully work with the form, you need to remember the basic principles of the form:
+### All state inside the Form
+All input fields, as well as components for storing and working with data on
+based form should always rely on the values inside the parent form.
 ### Form values simplified
-Это значит, что любые переданные значения формы, будут упрощены и разложены.
-Сделано это для того, чтобы было проще работать и полагаться на одну точку.
-Приведём пример, как это работает на практике.
-Пример:
+This means that any form values that are passed in will be simplified and decomposed.
+This is done in order to make it easier to work and rely on a single point.
+Let's take an example of how this works in practice.
+Example:
 
 ```ts
 form.setValues({ 'address.city.name': 'Jenesius Town'})
 ```
 
-На выходе мы получим следующее:
+At the output we will get the following:
 ```js
 {
 	address: {
@@ -130,9 +134,10 @@ form.setValues({ 'address.city.name': 'Jenesius Town'})
     }
 }
 ```
-В таком случае абсолютно не важно используете ли вы составное имя для input или
-используете вложенность основываясь на FormProxy, значения во всех inputs будет
-одинаковым:
+
+In this case, it doesn't matter at all whether you use a compound name for input or
+use nesting based on FormProxy, values in all inputs will be
+the same:
 
 ```html
 <input-field name="address.city"/>

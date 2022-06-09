@@ -8,7 +8,11 @@ export default {
 		nav: nav(),
 		sidebar: sidebar(),
 		logo: './../images/logo.svg',
-	}
+		socialLinks: [
+			{ icon: 'github', link: 'https://github.com/Jenesius/vue-form' },
+		]
+	},
+	
 }
 
 function nav() {
@@ -33,6 +37,7 @@ function sidebar() {
 			items: [
 				{ text: 'State', link: '/guide/form-state' },
 				{ text: 'Methods', link: '/guide/form-methods' },
+				{ text: 'Events', link: '/guide/form-events' },
 			]
 		},
 
