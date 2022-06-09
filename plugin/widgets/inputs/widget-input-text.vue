@@ -42,6 +42,6 @@
     }
 
     .widget-input-text:disabled{
-        background-color: #b1b1b1;
+        background-color: #e9e9e9;
     }
 </style>
