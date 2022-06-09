@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitepress'
 
-export default defineConfig({
+
+export default {
 	title: 'Jenesius VueForm',
 	description: "Form system for Vue.",
 	
@@ -9,7 +9,7 @@ export default defineConfig({
 		sidebar: sidebar(),
 		logo: './../images/logo.svg',
 	}
-})
+}
 
 function nav() {
 	return [

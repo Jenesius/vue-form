@@ -1,5 +1,100 @@
+<script setup>
+import WidgetExampleOnePointValue from '../components/widget-example-one-point-value.vue'
+import WidgetExampleSimpleForm from '../components/widget-example-simple-form.vue'
+import WidgetExampleFormDisable from '../components/widget-example-form-disable.vue'
+</script>
 # Form
+Форма - элемент 
 
+## Создание формы
+Для создания формы необходимо создать экземпляр класса *Form*:
+```ts
+import {Form} from "jenesius-vue-modal"
+const form = new Form()
+```
+Это минимальное требования для использования формы. Все дочерние элементы,
+которые пользуются механизмами данной библиотеки автоматически будут подписаны
+на дочернюю форму. 
+Для этого добавим пару полей для ввода, которые автоматически подпишутся на форму.
+```vue
+<template>
+    <input-field type = "text" name = "note"/>
+    <input-field type = "select" name = "planet" :options = "arr" />
+    <button @click = "show">values</button>
+</template>
+<script setup>
+    import {Form, InputField} from "jenesius-vue-modal"
+    const form = new Form();
+    const arr = [ {value: 1, title: 'Earth'} ]
+
+    function show() {
+        alert(form.values)
+    }
+</script>
+```
+<WidgetExampleSimpleForm/>
+
+## Установка значений
+Для того чтобы установить значение формы, можно воспользоваться одним из
+следующих методов:
+- **change**(values: Values) - метод устанавливает значения форме и помечает их
+как изменённые. Данный метод влияет на **changed** формы.
+Тип Values представляет собой объект значений, любой вложенности, имеет следующий
+интерфейс:
+```ts
+interface Values {
+	[name: string]: any
+}
+```
+- **setValues**(values: Values) - метод просто устанавливает значение, не помечая их
+как изменённые.
+Необходимо помнить об [методе разворачивания значений](#form-values-simplified)!
+
+## Получение значений
+Имеется два обратных способ получения значений:
+- **changes** - вернёт объект изменённых значений
+- **values** - вернёт все значения формы
+
+Иногда необходимо получить значение по имени поля. Для этого воспользуемся методом
+**getValueByName**:
+```ts
+fomr.values // { address: { city: { code: 1, name: 'Jenesius' } } }
+fotm.getValueByName('address.city') // { code: 1, name: 'Jenesius' }
+```
+
+## Блокировка и разблокировка
+Достаточно полезным по своей сути функционалу являться возможность блокировки
+полей через JS. Данный подход позволяет просто строить динамические интерфейсы.
+В форме имеются следующие методы:
+- **disable** - блокирует форму целиком или одно поле.
+```ts
+disable(name?: string)
+```
+- **enable** - разблокирует поле целиком или одно поле.
+```ts
+enable(name?: string)
+```
+Для примера была реализована форма с которой можно поиграть, чтобы посмотреть
+как это работает.
+<WidgetExampleFormDisable/>
+Необходимо помнить, что блокирую общий элемент, мы автоматически блокируем всех
+его потомком, и наоборот. Разблокирую общий элемент, мы автоматически разблокируем
+всех его потомков.
+Также при разблокировании формы: `form.enable()` - все ранее элементы будут 
+разблокированы. То же самое относится и к блокировке формы.
+
+
+## Validation
+Валидация форму подразумевает проверку всех дочерних подписанных элементов. 
+Проверка проходит рекурсивно, по этому вызвав метод **validate** в родительской
+форме, он автоматически вызовется у всех дочерних элементов.
+- **validate** - Возвращается true, если форма (все её дочерние элементы) являются
+валидными, false иначе.
+```ts
+form.validate() // true or false
+```
+
+## Автоматические зависимости
 При создании формы, она автоматически выполняет уведомление всех дочерних элементов:
 ```ts
 // provide('form-controller', form)
@@ -7,6 +102,8 @@ provideVue(Form.PROVIDE_NAME, this);
 ```
 Таким образом дочерние элементы: Form, FormProxy, Input - могут подписаться на 
 форму и контролироваться ею.
+
+
 
 ## Основные принципы
 Для успешной работы с формой необходимо помнить основные принципы формы:
@@ -41,11 +138,9 @@ form.setValues({ 'address.city.name': 'Jenesius Town'})
 <input-field name="address.city"/>
 <input-address name="address"/>
 . . .
-// input-address.vue
+// ./input-address.vue
 <input-field name = "city"/>
 ```
 
-<script setup>
-import WidgetExampleOnePointValue from '../components/widget-example-one-point-value.vue'
-</script>
+
 <WidgetExampleOnePointValue/>
