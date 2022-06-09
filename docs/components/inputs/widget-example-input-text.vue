@@ -1,5 +1,5 @@
 <template>
-    <input-field type = "text" v-model = "value"/>
+    <input-field type = "text" v-model = "value" />
     <p>Value: {{value}}</p>
 </template>
 
