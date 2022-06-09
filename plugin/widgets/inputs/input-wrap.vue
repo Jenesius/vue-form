@@ -15,6 +15,10 @@
 </script>
 
 <style scoped>
+    .widget-input-wrap{
+        display: flex;
+        flex-direction: column;
+    }
     .widget-input__label{
         color: #333;
         font-size: 13px;
