@@ -30,7 +30,7 @@
         flex-direction: column;
     }
     .widget-input-text{
-        height: 30px;
+        height: 35px;
         border-radius: 4px;
         border: 1px solid #c8c8c8;
         outline: none;
@@ -40,9 +40,5 @@
     .widget-input-text:focus{
         border-color: #b2b2b2;
     }
-    .widget-input__label{
-        color: #333;
-        font-size: 13px;
-        margin: 4px 0;
-    }
+
 </style>

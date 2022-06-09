@@ -21,8 +21,8 @@ export default class Form extends EventEmitter{
 	static EVENT_CHANGED		 	 = 'changed';
 	static EVENT_DISABLED		 	 = 'disabled';
 	
-	static getParentForm(): Form {
-		return injectVue(Form.PROVIDE_NAME) as Form;
+	static getParentForm(): Form | undefined {
+		return injectVue(Form.PROVIDE_NAME, undefined) as Form | undefined;
 	}
 	/**=========**/
 	

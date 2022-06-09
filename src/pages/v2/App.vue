@@ -3,6 +3,9 @@
     <div>
         <input-field type = "text" name = "address.description" label="Address description" />
         <input-field type = "text" name = "name" label="Name" :validation = "[required]" />
+        <input-field type = "select" name = "type" label="Type" :validation = "[required]"
+            :options = "arrayType"
+        />
 
     </div>
 
@@ -85,6 +88,21 @@
         address: true
     })
 
+    const arrayType = [
+        {
+            title: "First",
+            value: 1
+        },
+        {
+            title: 'Second',
+            value: 2
+        },
+        {
+            title: 'Third',
+            value: 3
+        }
+    ]
+
     setTimeout(() => {
         form.emit('read');
     }, 2000);
@@ -134,7 +152,7 @@
 
 </script>
 
-<style>
+<style scoped>
     * {
         font-family: 'Open Sans', sans-serif;
     }

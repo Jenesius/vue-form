@@ -8,3 +8,8 @@ export type FunctionHandleData = () => Promise<any> | any | void;
 
 export type ValidationGuard = () => void
 
+export interface OptionRow {
+	title: string,
+	value: any
+}
+

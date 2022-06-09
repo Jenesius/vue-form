@@ -3,7 +3,7 @@ import Form from "./Form";
 
 export default class Input extends EventEmitter {
 
-	parentForm: Form;
+	parentForm?: Form;
 	name: string;
 	validation: any[] = []
 	
@@ -16,14 +16,14 @@ export default class Input extends EventEmitter {
 	}
 	
 	get value() {
-		return this.parentForm.getValueByName(this.name);
+		return this.parentForm?.getValueByName(this.name);
 	}
 	get disabled() {
-		return this.parentForm.getDisabledByName(this.name);
+		return this.parentForm?.getDisabledByName(this.name) || false;
 	}
 	
 	change(v: any) {
-		this.parentForm.input(this.name, v);
+		this.parentForm?.input(this.name, v);
 	}
 	/**
 	 * @description Run all guards from validation. Input is not validated If on
