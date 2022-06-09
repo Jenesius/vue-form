@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>Test v-model</p>
-        <input-field  v-model = "test" :options = "array"/>
+        <input-field  type = "select" v-model = "test" :options = "array"/>
         <p>Value: {{test}}</p>
 
     </div>

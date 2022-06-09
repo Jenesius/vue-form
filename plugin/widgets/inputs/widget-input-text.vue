@@ -1,6 +1,5 @@
 <template>
-    <div class = "container__input-text">
-        <p v-if = "label" class = "widget-input__label">{{label}}</p>
+    <input-wrap :label = "label">
         <input
             class = "widget-input-text"
             type = "text"
@@ -8,10 +7,12 @@
             @input = "emit('update:modelValue', $event.target.value)"
             :disabled = "disabled"
         >
-    </div>
+    </input-wrap>
 </template>
 
 <script setup lang = "ts">
+    import InputWrap from "./input-wrap.vue";
+
     defineProps<{
         label?: string,
         modelValue: any,
@@ -25,10 +26,6 @@
 </script>
 
 <style scoped>
-    .container__input-text{
-        display: flex;
-        flex-direction: column;
-    }
     .widget-input-text{
         height: 35px;
         border-radius: 4px;
