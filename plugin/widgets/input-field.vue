@@ -17,7 +17,7 @@
     import {computed, withDefaults} from "vue";
 
     import WidgetInputText from "./inputs/widget-input-text.vue";
-    import WidgetInputSelect from "./inputs/widget-input-select.vue";
+    import WidgetInputSelect from "./inputs/input-select/widget-input-select.vue";
     import useInputState from "../hooks/use-input-state";
     import {OptionRow} from "../types";
 
