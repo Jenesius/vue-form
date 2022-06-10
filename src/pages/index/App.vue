@@ -1,12 +1,16 @@
 <template>
     <div>
         <p>Test v-model</p>
-        <input-field name = "1" type = "radio" v-model = "test" :options = "array" disabled />
-        <input-field name = "2" type = "radio" v-model = "test" :options = "array" label = "Test"/>
+        <input-field name = "1" type = "radio" v-model = "test" :options = "array" disabled
+                     :validation = "[required]"
+        />
+        <input-field name = "1" type = "radio" v-model = "test" :options = "array" label = "Test"
+        />
         <input-field name = "3" type = "checkbox" v-model = "test2" :options = "array"/>
         <input-field name = "3" type = "checkbox" v-model = "test2" :options = "array" disabled/>
-        <input-field name = "3" type = "switch" v-model = "test3"/>
-        <input-field name = "3" type = "switch" v-model = "test3" disabled/>
+
+        <input-field name = "4" type = "switch" v-model = "test3"/>
+        <input-field name = "4" type = "switch" v-model = "test3" disabled/>
         <p>Value: {{test3}}</p>
 
     </div>
@@ -19,13 +23,16 @@
 
     const form = new Form()
     window.form = form;
-
+    const required = (v: any) => {
+        console.log(v);
+        return !!v || "Not empty";
+    }
     const test = ref('2');
     const test2 = ref([]);
     const test3 = ref(false);
     const array = [
-        { title: 'test', value: '1'},
-        { title: 'test2', value: '2'}
+        { title: 'test', value: 1},
+        { title: 'test2', value: 2}
     ]
 
 </script>

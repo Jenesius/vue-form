@@ -36,7 +36,7 @@
     }>()
 
     function isActive(v) {
-        return props.modelValue.includes(v);
+        return props.modelValue?.includes?.(v);
     }
     function toggle(v) {
         const arr:any[] = Array.isArray(props.modelValue)? props.modelValue: [];

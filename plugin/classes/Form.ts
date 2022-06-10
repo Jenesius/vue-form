@@ -235,6 +235,7 @@ export default class Form extends EventEmitter{
 		
 		if (values) {
 			const _v = grandObject(values);
+
 			this.mergeValues(_v);
 		}
 		this.emit(Form.EVENT_VALUE, values);

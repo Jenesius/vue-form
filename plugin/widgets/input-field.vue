@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 
-    import {computed, withDefaults} from "vue";
+    import {computed, watch, withDefaults} from "vue";
 
     import WidgetInputText from "./inputs/widget-input-text.vue";
     import WidgetInputSelect from "./inputs/input-select/widget-input-select.vue";
@@ -29,7 +29,8 @@
         name?: string,
         label?: string,
         validation?: any[],
-        options?: OptionRow[]
+        options?: OptionRow[],
+
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -48,6 +49,12 @@
 
     const {state, input} = useInputState(props.name, props.validation);
 
+    watch(() => props.modelValue, (a, b) => {
+        if (a === b) return;
+        input.value = props.modelValue
+    }, {
+        immediate: true
+    })
 
 
 </script>
