@@ -1,6 +1,5 @@
 <template>
     <input-wrap :label = "label">
-        {{modelValue}}
         <div class = "input-checkbox-container">
             <div
                 v-for = "item in options"
@@ -89,6 +88,7 @@
     .input-checkbox{
         cursor: pointer;
         display: flex;
+        align-items: center;
         gap: 13px;
     }
     .input-checkbox_disabled{

@@ -107,7 +107,7 @@
         display: block;
         position: absolute;
         height: 1px;
-        width: 20px;
+        width: 16px;
         background-color: black;
         left: -21%;
         top: 48%;

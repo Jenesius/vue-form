@@ -13,7 +13,7 @@
                 }"
                 ></div>
             </div>
-            <p class = "input-switch-title widget-input-title">123</p>
+            <p class = "input-switch-title widget-input-title">{{label}}</p>
         </div>
 
     </input-wrap>
