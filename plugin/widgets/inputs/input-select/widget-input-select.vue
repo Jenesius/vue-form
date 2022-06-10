@@ -1,7 +1,11 @@
 <template>
     <input-wrap :label = "label">
         <div class = "container__input-select-wrap" ref = "inputSelectWrap">
-            <div class = "input-select">
+            <div class = "input-select"
+                :class = "{
+                    'input-select_disabled': disabled
+                }"
+            >
 
                 <widget-input-select-current
                     :title = "title"
@@ -14,7 +18,7 @@
                         v-if = "active"
                         :value = "modelValue"
                         :options = "options"
-                        @select = "$emit('update:modelValue', $event), setActive(false)"
+                        @select = "onInput($event), setActive(false)"
                     />
                 </transition>
 
@@ -47,6 +51,8 @@
 
     function setActive(v = !active.value) {
 
+        if (props.disabled) return active.value = false;
+
         if (v) {
             off = clickOutside(inputSelectWrap.value, setActive.bind(null, false))
         }else {
@@ -56,6 +62,14 @@
         active.value = v;
     }
 
+    const emit = defineEmits<{
+        (e: 'update:modelValue', v: any): void
+    }>()
+
+    function onInput(v: any) {
+        if (props.disabled) return;
+        emit('update:modelValue', v)
+    }
 
     const title = computed(() => {
 
@@ -93,6 +107,10 @@
     }
 
 
+    .input-select_disabled{
+        background-color: #e9e9e9;
+        cursor: default;
+    }
 
 
 

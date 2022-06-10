@@ -1,4 +1,5 @@
 import {Values} from "../types";
+import checkPrimitiveType from "./check-primitive-type";
 /**
  * @description Мержит два объекта, полностью не перезаписываю значения.
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
@@ -34,7 +35,7 @@ export default function mergeObjects(formValues: Values, newValues: Values, path
 		return formValues;
 	}
 
-	if (typeof newValues !== 'object' || newValues === null) set(formValues, newValues, path);
+	if (checkPrimitiveType(newValues)) set(formValues, newValues, path);
 	else {
 		for(const key in newValues) {
 			

@@ -14,10 +14,14 @@
 
 <script setup lang="ts">
 
-    import {computed, withDefaults} from "vue";
+    import {computed, watch, withDefaults} from "vue";
 
     import WidgetInputText from "./inputs/widget-input-text.vue";
     import WidgetInputSelect from "./inputs/input-select/widget-input-select.vue";
+    import WidgetInputRadio from "./inputs/input-radio/widget-input-radio.vue";
+    import WidgetInputCheckbox from "./inputs/input-checkbox/widget-input-checkbox.vue";
+    import WidgetInputSwitch from "./inputs/input-switch/widget-input-switch.vue";
+    import WidgetInputPassword from "./inputs/input-password/widget-input-password.vue";
     import useInputState from "../hooks/use-input-state";
     import {OptionRow} from "../types";
 
@@ -26,7 +30,8 @@
         name?: string,
         label?: string,
         validation?: any[],
-        options?: OptionRow[]
+        options?: OptionRow[],
+
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -36,12 +41,22 @@
 
     const store = {
         text: WidgetInputText,
-        select: WidgetInputSelect
+        select: WidgetInputSelect,
+        radio: WidgetInputRadio,
+        checkbox: WidgetInputCheckbox,
+        switch: WidgetInputSwitch,
+        password: WidgetInputPassword
     }
     const componentItem = computed(() => store[props.type] || store.text);
 
     const {state, input} = useInputState(props.name, props.validation);
 
+    watch(() => props.modelValue, (a, b) => {
+        if (a === b) return;
+        input.value = props.modelValue
+    }, {
+        immediate: true
+    })
 
 
 </script>

@@ -18,6 +18,11 @@ export default class Input extends EventEmitter {
 	get value() {
 		return this.parentForm?.getValueByName(this.name);
 	}
+	set value(v) {
+		this.parentForm?.setValues({
+			[this.name]: v
+		})
+	}
 	get disabled() {
 		return this.parentForm?.getDisabledByName(this.name) || false;
 	}
