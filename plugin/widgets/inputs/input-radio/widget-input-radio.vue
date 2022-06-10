@@ -53,7 +53,7 @@
     .input-radio-container{
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 14px;
     }
     .input-radio{
         display: flex;
@@ -74,7 +74,6 @@
     .input-radio-title{
         color: #1c1c1c;
         margin: 0;
-        padding: 5px 0;
     }
 
     .input-radio-button-active{

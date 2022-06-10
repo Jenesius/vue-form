@@ -19,6 +19,7 @@
     import WidgetInputText from "./inputs/widget-input-text.vue";
     import WidgetInputSelect from "./inputs/input-select/widget-input-select.vue";
     import WidgetInputRadio from "./inputs/input-radio/widget-input-radio.vue";
+    import WidgetInputCheckbox from "./inputs/input-checkbox/widget-input-checkbox.vue";
     import useInputState from "../hooks/use-input-state";
     import {OptionRow} from "../types";
 
@@ -38,7 +39,8 @@
     const store = {
         text: WidgetInputText,
         select: WidgetInputSelect,
-        radio: WidgetInputRadio
+        radio: WidgetInputRadio,
+        checkbox: WidgetInputCheckbox
     }
     const componentItem = computed(() => store[props.type] || store.text);
 
