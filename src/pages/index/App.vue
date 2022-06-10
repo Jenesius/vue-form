@@ -13,6 +13,10 @@
         <input-field name = "4" type = "switch" v-model = "test3" disabled/>
         <p>Value: {{test3}}</p>
 
+        <input-field name = "5" type = "select" v-model = "test5" :options = "array"/>
+        <input-field name = "5" type = "select" v-model = "test5" :options = "array" disabled/>
+        <p>{{test5}}</p>
+
     </div>
 </template>
 
@@ -30,6 +34,7 @@
     const test = ref('2');
     const test2 = ref([]);
     const test3 = ref(false);
+    const test5 = ref();
     const array = [
         { title: 'test', value: 1},
         { title: 'test2', value: 2}
