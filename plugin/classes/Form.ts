@@ -13,6 +13,7 @@ export default class Form extends EventEmitter{
 	static EVENT_READ			 = 'read';
 	static EVENT_SAVE			 = 'save';
 	static EVENT_VALUE			 = 'value';
+	static EVENT_UPDATE_ABILITY  = 'update:ability'
 	
 	/**
 	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
@@ -356,10 +357,15 @@ export default class Form extends EventEmitter{
 	
 	
 	disable(name?: string){
+		
+		this.emit(Form.EVENT_UPDATE_ABILITY, name);
+		
 		if (name) this.disableByName(name);
 		else this.disabled = true;
 	}
 	enable(name?: string) {
+		this.emit(Form.EVENT_UPDATE_ABILITY, name);
+		
 		if (name) this.enableByName(name);
 		else this.disabled = false;
 	}
