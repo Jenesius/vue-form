@@ -17,6 +17,11 @@
         <input-field name = "5" type = "select" v-model = "test5" :options = "array" disabled/>
         <p>{{test5}}</p>
 
+        <input-field name = "pass" type = "password" v-model = "pass" />
+        <input-field name = "pass" type = "password" v-model = "pass"  disabled/>
+        <input-field name = "pass"  v-model = "pass"  />
+        <p>{{test5}}</p>
+
     </div>
 </template>
 
@@ -39,7 +44,7 @@
         { title: 'test', value: 1},
         { title: 'test2', value: 2}
     ]
-
+    const pass = ref("");
 </script>
 
 <style>

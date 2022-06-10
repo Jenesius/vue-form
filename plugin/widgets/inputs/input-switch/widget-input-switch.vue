@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang = "ts">
-    import InputWrap from "../input-wrap";
+    import InputWrap from "../input-wrap.vue";
 
     const props = defineProps<{
         label?: string,
@@ -30,7 +30,7 @@
 
 
     const emit = defineEmits<{
-        (e: 'update:modelValue', v: any): voide
+        (e: 'update:modelValue', v: any): void
     }>()
 
     function onInput(v = !props.modelValue) {

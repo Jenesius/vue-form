@@ -50,7 +50,7 @@
     }
 
     const emit = defineEmits<{
-        (e: 'update:modelValue', v: any): voide
+        (e: 'update:modelValue', v: any): void
     }>()
 
     function onInput(v) {
