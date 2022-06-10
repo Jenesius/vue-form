@@ -1,8 +1,8 @@
 ---
 layout: home
 
-title: VitePress
-titleTemplate: Vite & Vue Powered Static Site Generator
+title: JenesiusVueForm
+titleTemplate: Jenesius Vue Form & Heavy form system for Vue
 
 hero:
   name: JenesiusVueForm

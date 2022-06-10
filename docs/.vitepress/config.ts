@@ -1,15 +1,19 @@
-import { defineConfig } from 'vitepress'
 
-export default defineConfig({
-	title: 'Jenesius VueForm',
+
+export default {
+	title: 'JenesiusVueForm',
 	description: "Form system for Vue.",
 	
 	themeConfig: {
 		nav: nav(),
 		sidebar: sidebar(),
 		logo: './../images/logo.svg',
-	}
-})
+		socialLinks: [
+			{ icon: 'github', link: 'https://github.com/Jenesius/vue-form' },
+		]
+	},
+	
+}
 
 function nav() {
 	return [
@@ -33,6 +37,16 @@ function sidebar() {
 			items: [
 				{ text: 'State', link: '/guide/form-state' },
 				{ text: 'Methods', link: '/guide/form-methods' },
+				{ text: 'Events', link: '/guide/form-events' },
+			]
+		},
+
+		{
+			text: 'Inputs',
+			items: [
+				{
+					text: 'Widgets', link: '/guide/input-widgets'
+				}
 			]
 		}
 	]
