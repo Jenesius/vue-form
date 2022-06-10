@@ -1,45 +1,57 @@
 # Jenesius Vue Form
-Heavy form system for Vue.js v3. Library provides a wide range of functionality and interaction with form elements.
+Heavy form system for Vue.js ( Only 3 Version ). Library provides a wide range of
+functionality and interaction with form elements.
 
 ## Links
 - [Documentation](https://form.jenesius.com/)
 - Examples
 - [GitHub](https://github.com/Jenesius/vue-form)
-## Reason
+## Reason For Use
 
-- 🦵 multifunctional form logic. Херово звучит. Многофункциональная система для 
-работы с формой. Или Большой выбор функционала для работы и управления формой.
-- 🖕 you can use this library with your own input components.
-- 🤝 create interface using composite and aggregate logical. Read more <- ссылку
+- 💪 The functionality of the form allows you to flexibly work with dependent elements.
+- 🤝 Create complex interfaces with lots of dependencies. One page can contain many
+forms that will be managed from one place.
+- ✍ Connect your own input fields to the form. This gives flexibility and
+independence on the part of the site design.
+
+*Where the spirit does not work with the hand there is no art.* @Leonardo da Vinci
 
 ## Main Form
-Для создания формы, необходимо просто создать экземпляр. JenesiusVueForm сделает
-большую часть работы за вас.
-
-```js
+To create a form, you just need to create an instance. JenesiusVueForm will do
+most of the work for you.
+```ts
 import {Form} from "jenesius-vue-modal"
 const form = new Form()
 ```
 
 ### Main Form state
-Реактивное состояния формы можно получить из *useFormState* хука:
+The reactive form state can be obtained from the **useFormState** hook:
 ```js
 import {useFormState} from "jenesius-vue-modal"
 const {state} = useFormState(form) // disabled changed
 ```
 
 ## Proxy Form
-Для работы удобно использовать композитный элемент, который хранит в себе другие
-инпуты, но не добавляет никакой логики для работы с формой. Отличный пример тому
-инпут address, который в себе может хранить такие поля, как: city, country, street.
-
+Composite objects (For example, Address, which contains country, city etc.)
+can be created by calling the **useProxyState** hook.
 ```ts
 import {useProxyState} from "jenesius-vue-modal"
 const {state} = useProxyState(name);
 ```
+In this example, the Composite field will automatically subscribe to the parent form,
+and will also serve as a bridge for all its child elements.
 
 ## Input
-Для того чтобы связать поле input с формой нужно просто выполнить следующий хук:
+When using the built-in input field, the library will do everything for you.
+You don't need to sign it on the form yourself.
+```ts
+import {InputField} from "jenesius-vue-form";
+```
+
+### Custom Input
+In most cases, you will use your own input fields.
+In this case, you need to implement a small layer:
+
 ```vue
 <input type = "text" 
     @input = "input.change($event.target.value)" 
@@ -50,38 +62,12 @@ const {state} = useProxyState(name);
 ```js
 import {useInputState} from "jenesius-vue-modal"
 const {state, input} = useInputState(props.name)
-// state - {value, disabled}
+// state - {value, disabled, errors}
 ```
-- **input** - контроллер для работы с виджетом. Необходим для обработки изменения
-поля ввода.
+- **input** - an instance of Input which has several methods to work with
+  form interaction.
 
-## Validation
-Для валидации формы используется метод **validate**, который вернёт true в случае
-если всё зависимые элементы - валидны:
-```js
-form.validate(); // true or false
-```
-
-
-## Основная логика
-1. Значения хранятся только в **агрегатном элементе**
-- **агрегатный элемент** - не зависимый(или слабо зависимый) экземпляр Form. Зна
-- чения инпутов, disabled поля, hidden поля и т.д. должны храниться в ближайшей 
-*aggregate* Form.
-
-## InputField widgets
-Данная библиотека также предоставляет набор компонент, которые можно легко испол
-ьзовать для построения форм:
-
-```vue
-<input-field type = "text" name = "username"/>
-
-<script>
-    import {InputField} from "jenesius-vue-form"
-</script>
-```
-- **type** - тип инпута. Принимает одно из следующих значения: text. По умолчанию:
-text
-- **name** - имя контролла, по которому он будет привязан к форме.
-- **label** метка элемента. Используется как заголовок.
-- **validation** массив обработчиков валидности поля.
+## Full Functionality
+I recommend going to the [documentation site](http://form.jenesius.com/),
+which provides information on 
+validation, form lock/unlock, and all the states of the form and input fields.

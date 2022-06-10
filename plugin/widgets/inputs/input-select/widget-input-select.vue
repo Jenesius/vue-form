@@ -63,10 +63,10 @@
     }
 
     const emit = defineEmits<{
-        (e: 'update:modelValue', v: any): voide
+        (e: 'update:modelValue', v: any): void
     }>()
 
-    function onInput(v) {
+    function onInput(v: any) {
         if (props.disabled) return;
         emit('update:modelValue', v)
     }
