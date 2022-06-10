@@ -20,6 +20,7 @@
     import WidgetInputSelect from "./inputs/input-select/widget-input-select.vue";
     import WidgetInputRadio from "./inputs/input-radio/widget-input-radio.vue";
     import WidgetInputCheckbox from "./inputs/input-checkbox/widget-input-checkbox.vue";
+    import WidgetInputSwitch from "./inputs/input-switch/widget-input-switch.vue";
     import useInputState from "../hooks/use-input-state";
     import {OptionRow} from "../types";
 
@@ -40,7 +41,8 @@
         text: WidgetInputText,
         select: WidgetInputSelect,
         radio: WidgetInputRadio,
-        checkbox: WidgetInputCheckbox
+        checkbox: WidgetInputCheckbox,
+        switch: WidgetInputSwitch
     }
     const componentItem = computed(() => store[props.type] || store.text);
 

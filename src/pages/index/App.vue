@@ -5,7 +5,9 @@
         <input-field name = "2" type = "radio" v-model = "test" :options = "array" label = "Test"/>
         <input-field name = "3" type = "checkbox" v-model = "test2" :options = "array"/>
         <input-field name = "3" type = "checkbox" v-model = "test2" :options = "array" disabled/>
-        <p>Value: {{test}}</p>
+        <input-field name = "3" type = "switch" v-model = "test3"/>
+        <input-field name = "3" type = "switch" v-model = "test3" disabled/>
+        <p>Value: {{test3}}</p>
 
     </div>
 </template>
@@ -20,6 +22,7 @@
 
     const test = ref('2');
     const test2 = ref([]);
+    const test3 = ref(false);
     const array = [
         { title: 'test', value: '1'},
         { title: 'test2', value: '2'}
