@@ -8,6 +8,11 @@ functionality and interaction with form elements.
 - [GitHub](https://github.com/Jenesius/vue-form)
 ## Reason For Use
 
+![](https://img.shields.io/npm/dm/jenesius-vue-form)
+![](https://img.shields.io/npm/dt/jenesius-vue-form)
+![](https://img.shields.io/github/issues/Jenesius/vue-form)
+![](https://img.shields.io/github/stars/Jenesius/vue-form)
+
 - 💪 The functionality of the form allows you to flexibly work with dependent elements.
 - 🤝 Create complex interfaces with lots of dependencies. One page can contain many
 forms that will be managed from one place.
