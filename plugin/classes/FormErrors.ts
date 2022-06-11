@@ -14,4 +14,7 @@ export default class FormErrors extends Error{
 		return new FormErrors(`Can't create FormProxy without name.`);
 	}
 	
+	static MergingObjectGotPrimitiveValue() {
+	
+	}
 }
