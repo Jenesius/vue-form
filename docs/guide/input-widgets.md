@@ -45,13 +45,24 @@ Represents an element that allows you to select a value from the provided ones.
 <WidgetExampleInputSelect/>
 
 Passed parameters:
-- **options** The set of values to sample. It has the following form:
+- **options** A set of enumerated dimensions. There are two types of transfer
+possible:
+As Object:
+```json
+{
+	"green": "Green color",
+    "red"  : "Red color"
+}
+```
+Like Array:
 ```ts
 [
 	{ title: 'Green color', value: 'green' },
 	{ title: 'Red color', value: 'red' }
 ]
 ```
+When passed as an object, the value will always be of type *string*. When
+*Array* value type can be any.
 
 ## Password
 Password entry field. It has the ability to switch the visibility mode.
