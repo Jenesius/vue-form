@@ -9,7 +9,7 @@
         :label = "props.label"
         :disabled = "state.disabled"
         :errors = "state.errors"
-        :options = "options"
+        :options = "parseOptions(options)"
     />
 </template>
 
@@ -26,7 +26,7 @@
         name?: string,
         label?: string,
         validation?: any[],
-        options?: OptionRow[],
+        options?: OptionRow[] | { [value: string]: string},
 
     }
 
@@ -40,14 +40,23 @@
     const componentItem = computed(() => inputsStore[props.type] || inputsStore.text);
 
     const {state, input} = useInputState(props.name, props.validation);
-/*
+
     watch(() => props.modelValue, (a, b) => {
         if (a === b) return;
         input.value = props.modelValue
     }, {
         immediate: true
     })
-*/
+
+    /**
+     * @description Parsing OptionsObject to ObjectRow[]
+     */
+    function parseOptions(v: typeof props.options) {
+        if (!v) return [];
+        if (Array.isArray(v)) return v;
+
+        return Object.entries(v).map(arr => ({ value: arr[0], title: arr[1] }));
+    }
 
 </script>
 
