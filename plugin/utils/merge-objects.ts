@@ -4,7 +4,7 @@ import checkPrimitiveType from "./check-primitive-type";
  * @description Сливает второй объект в первый.
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
  * */
-export default function mergeObjects(originalValues: Values, newValues: Values, path: string[] = []){
+export default function mergeObjects(originalValues: Values, newValues: Values){
 	function set(o: any, k: string, v: any) {
 		o[k] = v;
 	}
