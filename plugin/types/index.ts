@@ -12,4 +12,3 @@ export interface OptionRow {
 	title: string,
 	value: any
 }
-

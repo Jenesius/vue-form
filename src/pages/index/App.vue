@@ -13,16 +13,17 @@
         <input-field name = "4" type = "switch" v-model = "test3" disabled/>
         <p>Value: {{test3}}</p>
 
-        <input-field name = "5" type = "select" v-model = "test5" :options = "array"/>
+        <input-field name = "5" type = "select" v-model = "test5" :options = "computedOptions"/>
         <input-field name = "5" type = "select" v-model = "test5" :options = "array" disabled/>
+        <input-field name = "5" type = "select" v-model = "test5" :options = "arrayO"/>
         <p>{{test5}}</p>
 
         <input-field name = "pass" type = "password" v-model = "pass" />
         <input-field name = "pass" type = "password" v-model = "pass"  disabled/>
         <input-field name = "pass"  v-model = "pass"  />
 
-        <input-field type = "address" name = "addressss"  />
-        <p>{{test5}}</p>
+        <input-field type = "address" name = "addressss" v-model = "test5" />
+        <p>V:{{test5}}</p>
 
     </div>
 </template>
@@ -46,9 +47,25 @@
     const test5 = ref();
     const ad = ref();
     const array = [
-        { title: 'test', value: 1},
-        { title: 'test2', value: 2}
+        { title: 'test', value: '1'},
+        { title: 'test2', value: '2'}
     ]
+    const arrayO = {
+        1: 'test',
+        2: 'test2'
+    }
+
+    const computedOptions = ref([
+        { title: 'test', value: '1'},
+        { title: 'test2', value: '2'}
+    ])
+
+    setTimeout(() => {
+        computedOptions.value.push({
+            title: 'test3', value: '3'
+        })
+    }, 3000);
+
     const pass = ref("");
 
     config({
