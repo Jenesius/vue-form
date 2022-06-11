@@ -30,6 +30,7 @@ function sidebar() {
 				{ text: 'Form', link: '/guide/form' },
 				{ text: 'FormProxy', link: '/guide/form-proxy' },
 				{ text: 'Input', link: '/guide/input' },
+				{ text: 'Configuration', link: '/guide/configuration' }
 			]
 		},
 		{
