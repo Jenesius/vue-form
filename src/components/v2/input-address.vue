@@ -1,14 +1,20 @@
 <template>
-    <p class = "address-title">Address</p>
-    <input-field name = "city" label = "City"/>
+    <div>
+        <p class = "address-title"
+            :class = "{
+                'address-title_disabled': disabled
+            }"
+        >Address</p>
+        <input-field name = "city" label = "City"/>
+    </div>
 </template>
 
 <script setup lang="ts">
-    import InputField from "../../../plugin/widgets/input-field.vue";
-    import {useProxyState} from "../../../plugin";
+    import {useProxyState, InputField} from "../../../plugin";
 
     const props = defineProps<{
-        name: string
+        name: string,
+        disabled: boolean
     }>()
 
     useProxyState(props.name)
@@ -19,5 +25,8 @@
     .address-title{
         margin: 10px 0 5px;
         font-weight: bold;
+    }
+    .address-title_disabled{
+        color: gray;
     }
 </style>

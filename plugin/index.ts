@@ -5,6 +5,9 @@ import useFormState from "./hooks/use-form-state";
 import useInputState from "./hooks/use-input-state";
 import useProxyState from "./hooks/use-proxy-state";
 
+import config from "./config/config";
+import STORE from "./config/store";
+
 import InputField from "./widgets/input-field.vue";
 
 export {
@@ -15,5 +18,7 @@ export {
 	useInputState,
 	useFormState,
 	
-	InputField
+	InputField,
+	config,
+	STORE
 }

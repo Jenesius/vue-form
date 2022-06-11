@@ -20,6 +20,8 @@
         <input-field name = "pass" type = "password" v-model = "pass" />
         <input-field name = "pass" type = "password" v-model = "pass"  disabled/>
         <input-field name = "pass"  v-model = "pass"  />
+
+        <input-field type = "address" name = "addressss"  />
         <p>{{test5}}</p>
 
     </div>
@@ -29,6 +31,8 @@
     import InputField from "../../../plugin/widgets/input-field.vue";
     import {ref} from "vue";
     import {Form} from "../../../plugin";
+    import config from "../../../plugin/config/config";
+    import InputAddress from "./../../components/v2/input-address.vue";
 
     const form = new Form()
     window.form = form;
@@ -40,11 +44,19 @@
     const test2 = ref([]);
     const test3 = ref(false);
     const test5 = ref();
+    const ad = ref();
     const array = [
         { title: 'test', value: 1},
         { title: 'test2', value: 2}
     ]
     const pass = ref("");
+
+    config({
+        inputTypes: {
+            address: InputAddress
+        }
+    })
+
 </script>
 
 <style>
