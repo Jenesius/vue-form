@@ -2,7 +2,7 @@ import {defineConfig} from "vitepress";
 
 export default defineConfig({
 	title: 'JenesiusVueForm',
-	description: "Form system for Vue.",
+	description: "Vue Form. Form system for Vue.",
 	head: [
 		['link', { rel: 'icon', href: `./../images/logo.png` }]
 	],

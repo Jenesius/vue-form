@@ -8,6 +8,7 @@ import replaceValues from "../utils/replace-values";
 import getCastObject from "../utils/get-cast-object";
 import grandObject from "../utils/grand-object";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
+import checkCompositeName from "../utils/check-composite-name";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller'; // LOCK
@@ -342,17 +343,28 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 	private getProxyAbilities(){
 		return new Proxy({}, 	 {
-			defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
+			defineProperty: (target: any, name: string, attributes: PropertyDescriptor): boolean=>{
 				
 				const value = attributes.value;
 				
-				Object.keys(target).forEach(disabledName => {
-					if (disabledName.startsWith(name.toString())) {
-						delete target[disabledName];
-					}
+				// Находим всех дочерних элементов и удаляем их
+				Object.keys(target).forEach(childrenName => {
+					if (checkCompositeName(name, childrenName))
+						delete target[childrenName];
 				})
 				
-				target[name] = attributes.value;
+				const nearestName = findNearestNameFromArray(name, Object.keys(target));
+				
+				// @ts-ignore
+				// Если родитель находится в таком же состоянии
+				if (
+					(nearestName && value === target[nearestName]) ||
+					(!nearestName && value === !this.disabled)
+				) {}
+				else {
+					target[name] = attributes.value;
+				}
+				
 				
 				if (value) this.recursiveEnableItem(name.toString());
 				else this.recursiveDisableItem(name.toString())
@@ -378,6 +390,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @param {Boolean} mark. True - Enable, false: disable
 	 * */
 	private markElementForAbility(name: string, mark: boolean) {
+		return this.abilities[name] = mark;
 		
 		const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
 		
@@ -387,15 +400,17 @@ export default class Form extends EventEmitter implements FormDependence{
 			return ;
 		}
 		
-		// Был найден родительский элемент, сейчас всё зависит от него
+		return this.abilities[name] = mark;
 		
+		/*
+		if (this.abilities[nearestName] === mark) return this.abilities[name] = mark;
 		// Ближайший элемент заблокирован и нужно заблокировать
 		if (!this.abilities[nearestName] && !mark) return;
 		// Ближайший элемент разблокирован и нужно разблокировать
 		if (this.abilities[nearestName] && mark) return;
 		
-		return this.abilities[name] = mark;
-		
+*/
+	
 	}
 	
 	protected disableByName(name: string) {
