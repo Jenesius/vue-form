@@ -32,7 +32,7 @@
 
     <div class = "flex">
         <div v-if = "stateHidden.city">
-            <p>Address.city</p>
+            <p>Address.city.name</p>
             <new-input-field name="address.city.name"/>
         </div>
         <div>

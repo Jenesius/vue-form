@@ -7,6 +7,7 @@ import runPromiseQueue from "../utils/run-promise-queue";
 import replaceValues from "../utils/replace-values";
 import getCastObject from "../utils/get-cast-object";
 import grandObject from "../utils/grand-object";
+import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -65,44 +66,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description If true - all elements by default will be blocked.
 	 */
 	#disabled: boolean = false;
-	
-	/**
-	 * Experiment. Code review.
-	 * */
-	#handleDE = {
-		defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
-			
-			const value = attributes.value;
-			
-			
-			Object.keys(target).forEach(disabledName => {
-				if (disabledName.startsWith(name.toString())) {
-					delete target[disabledName];
-				}
-			})
-			
-			target[name] = attributes.value;
-			
-			
-			
-			if (value) this.recursiveDisableItem(name.toString());
-			else this.recursiveEnableItem(name.toString())
-			
-			return true;
-		},
-		deleteProperty: (target: any, name: string | symbol): boolean => {
-			name = name.toString();
-			delete target[name];
-			
-			if (this.disabled) this.recursiveDisableItem(name)
-			else this.recursiveEnableItem(name)
-			
-			return true;
-		}
-	}
-	#disabledElements:{
-		[name: string]: boolean
-	} = new Proxy({}, this.#handleDE);
 	
 	
 	/**
@@ -307,20 +270,6 @@ export default class Form extends EventEmitter implements FormDependence{
 		return getPropFromObject(this.values, name);
 	}
 	
-	
-	
-
-	
-	
-	
-
-	
-	get disabledElements(){
-		return this.#disabledElements;
-	}
-	
-	
-	
 	get disabled() {
 		return this.#disabled;
 	}
@@ -329,7 +278,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		this.#disabled = value;
 		this.emit(Form.EVENT_DISABLED, this.#disabled);
 		// installation disabledElements
-		this.#disabledElements = new Proxy({}, this.#handleDE);
+		this.abilities = this.getProxyAbilities();
 		
 		if (value)
 			this.recursiveDisableItem()
@@ -381,43 +330,73 @@ export default class Form extends EventEmitter implements FormDependence{
 		else this.disabled = false;
 	}
 	
+
+	
+	private getProxyAbilities(){
+		return new Proxy({}, 	 {
+			defineProperty: (target: any, name: string | symbol, attributes: PropertyDescriptor): boolean=>{
+				
+				const value = attributes.value;
+				
+				Object.keys(target).forEach(disabledName => {
+					if (disabledName.startsWith(name.toString())) {
+						delete target[disabledName];
+					}
+				})
+				
+				target[name] = attributes.value;
+				
+				if (value) this.recursiveEnableItem(name.toString());
+				else this.recursiveDisableItem(name.toString())
+				
+				return true;
+			},
+			deleteProperty: (target: any, name: string | symbol): boolean => {
+				name = name.toString();
+				delete target[name];
+				
+				if (this.disabled) this.recursiveDisableItem(name)
+				else this.recursiveEnableItem(name)
+				
+				return true;
+			}
+		})
+	}
+	abilities: {
+		[name: string]: boolean
+	} = this.getProxyAbilities()
 	/**
 	 * @param {String} name. Element name.
 	 * @param {Boolean} mark. True - Enable, false: disable
 	 * */
 	private markElementForAbility(name: string, mark: boolean) {
-	
-		function geNearest(name: string, names: string[]) {
-			
-			names.forEach(depName => {
-				if (!name.startsWith(depName)) return;
-				
-				
-			})
 		
+		const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
+		console.log(name, nearestName);
+		if (!nearestName) {
+			this.abilities[name] = mark;
+			
+			return ;
 		}
 		
+		// Был найден родительский элемент, сейчас всё зависит от него
+		
+		// Ближайший элемент заблокирован и нужно заблокировать
+		if (!this.abilities[nearestName] && !mark) return;
+		// Ближайший элемент разблокирован и нужно разблокировать
+		if (this.abilities[nearestName] && mark) return;
+		
+		return this.abilities[name] = mark;
+		
 	}
-	
-	
 	
 	protected disableByName(name: string) {
 		
-		if (!this.disabled)
-			return this.markElementForAbility(name, false);
-		
-		// Form is disabled.
-		if (this.disabled) {
-			
-			if (name in this.disabledElements)
-				delete this.#disabledElements[name];
-			
-			return;
-		}
+		return this.markElementForAbility(name, false);
 
 	}
 	protected enableByName(name: string) {
-		this.#disabledElements[name] = false;
+		return this.markElementForAbility(name, true);
 	}
 	/**
 	 * @description Функция вернёт наиболее релевантное значения для поля по име
@@ -425,19 +404,12 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * address.
 	 * */
 	getDisabledByName(name: string): boolean {
-
-		let refName = name;
-		// Start with the most relevant level (From the End)
-		while(refName.length !== 0) {
-			if (refName in this.disabledElements) return this.disabledElements[refName]
-			
-			const dotIndex = refName.lastIndexOf('.');
-			if (dotIndex === -1) refName = '';
-			refName = refName.slice(0, dotIndex);
-		}
+		const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
 		
-		// Not founded relevant value.
-		return this.#disabled;
+		if (!nearestName) return this.disabled;
+		
+		return !this.abilities[nearestName];
+
 	}
 	
 	

@@ -1,6 +1,6 @@
 import checkCompositeName from "./check-composite-name";
 
-export default function getNearestNameFromArray(name: string, array: string[]): string | undefined {
+export default function findNearestNameFromArray(name: string, array: string[]): string | undefined {
 	let answer = "";
 	
 	array.forEach(n => {
