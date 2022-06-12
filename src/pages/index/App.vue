@@ -52,7 +52,20 @@
     ]
     const arrayO = {
         1: 'test',
-        2: 'test2'
+        2: 'test2',
+        3: 'test3',
+        4: 'test3',
+        5: 'test3',
+        6: 'test3',
+        7: 'test3',
+        8: 'test3',
+        9: 'test3',
+        10: 'test3',
+        11: 'test3',
+        12: 'test3',
+        13: 'test3',
+        14: 'test3',
+        15: 'test3',
     }
 
     const computedOptions = ref([

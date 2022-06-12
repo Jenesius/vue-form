@@ -29,6 +29,7 @@
 
         transition: max-height 200ms;
         max-height: 200px;
+        overflow: auto;
     }
     .select-options-item{
         padding: 8px 6px;
