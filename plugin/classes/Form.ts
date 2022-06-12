@@ -10,11 +10,17 @@ import grandObject from "../utils/grand-object";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 
 export default class Form extends EventEmitter implements FormDependence{
-	static PROVIDE_NAME			 = 'form-controller';
-	static EVENT_READ			 = 'read';
-	static EVENT_SAVE			 = 'save';
+	static PROVIDE_NAME			 = 'form-controller'; // LOCK
+	static EVENT_READ			 = 'read'; // LOCK
+	static EVENT_SAVE			 = 'save'; // LOCK
+	static EVENT_DISABLE		 = 'disable'; // LOCK
+	static EVENT_ENABLE			 = 'enable'; // LOCK
+	
+	static EVENT_SUBSCRIBE		 = 'subscribe'; // LOCK
+	static EVENT_UNSUBSCRIBE	 = 'unsubscribe'; // LOCK
+	
 	static EVENT_VALUE			 = 'value';
-	static EVENT_UPDATE_ABILITY  = 'update:ability'
+	static EVENT_UPDATE_ABILITY  = 'ability:update';
 	
 	/**
 	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
@@ -137,11 +143,11 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	/**
-	 * Рекурсивное зименение значений.
-	 * По фатку в конечной реализации оно нихуя не рекурсивное.
+	 * Рекурсивное изменение значений.
+	 * В конечной реализации оно нихуя не рекурсивное.
 	 * Реализация 2: для каждой зависимости получает значение из values и устанавливаем его
 	 * Реализация 1: идем рекурсивно по всем значениям, находим подходящие зависимости
-	 * и устанвливаем значения для них. Основная проблема в количетсве итераций.
+	 * и устанавливаем значения для них. Основная проблема в количестве итераций.
 	 * Нужно это протестировать
 	 * И переименовать метод: changeValuesOfItem(values: any);
 	 * А лучше добавить новый просто метод, рекурсию сохранив
@@ -163,7 +169,7 @@ export default class Form extends EventEmitter implements FormDependence{
 			dep.change(getPropFromObject(values, dep.name));
 		})
 	}
-	// На данный момент не используется. ПОдсвечивается поскольку рекурсивная
+	// На данный момент не используется. Подсвечивается поскольку рекурсивная
 	protected recursiveChangeItem(values:any, path: string = '') {
 		Object.keys(values).forEach(key => {
 			const stepName = `${path}${key}`;
@@ -222,7 +228,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	depend(item: any) {
-		this.dependencies.push(item)
+		this.dependencies.push(item);
+		this.emit(Form.EVENT_SUBSCRIBE, item);
 		
 		return () => this.unsubscribe(item)
 	}
@@ -230,6 +237,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		const index = this.dependencies.indexOf(item);
 		if (index === -1) return;
 		this.dependencies.splice(index, 1);
+		this.emit(Form.EVENT_UNSUBSCRIBE, item);
 	}
 
 	dependInput(name: string, i: any) {
@@ -276,8 +284,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	set disabled(value: boolean){
 		
 		this.#disabled = value;
-		this.emit(Form.EVENT_DISABLED, this.#disabled);
-		// installation disabledElements
 		this.abilities = this.getProxyAbilities();
 		
 		if (value)
@@ -289,10 +295,10 @@ export default class Form extends EventEmitter implements FormDependence{
 	disable(names?: string | string[]){
 		if (typeof names === "string") names = [names];
 		
+		this.emit(Form.EVENT_DISABLE, names);
+		
 		// Provided undefined -> full disable form
 		if (!names) return this.disabled = true;
-		
-		//this.emit(Form.EVENT_UPDATE_ABILITY, name);
 		
 		names.forEach(name => this.disableByName(name)) ;
 	}
@@ -323,11 +329,13 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 	
 
-	enable(name?: string) {
-		this.emit(Form.EVENT_UPDATE_ABILITY, name);
+	enable(names?: string | string[]) {
+		if (typeof names === "string") names = [names];
 		
-		if (name) this.enableByName(name);
-		else this.disabled = false;
+		this.emit(Form.EVENT_ENABLE, names);
+		
+		if (!names) return  this.disabled = false;
+		names.forEach(name => this.enableByName(name)) ;
 	}
 	
 
@@ -372,7 +380,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	private markElementForAbility(name: string, mark: boolean) {
 		
 		const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
-		console.log(name, nearestName);
+		
 		if (!nearestName) {
 			this.abilities[name] = mark;
 			

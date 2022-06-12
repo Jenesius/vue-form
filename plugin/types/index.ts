@@ -16,7 +16,7 @@ export interface OptionRow {
 export interface FormDependence {
 	name?: string,
 	disable: (name?: string | string[]) => void,
-	enable : (name?: string) => void,
+	enable : (name?: string | string[]) => void,
 	change : (v: any) => void,
 	validate: () => boolean | string
 }
