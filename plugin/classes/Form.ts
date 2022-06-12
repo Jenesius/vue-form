@@ -1,7 +1,7 @@
 import EventEmitter from "jenesius-event-emitter";
 import {inject as injectVue, provide as provideVue} from "vue";
 import getPropFromObject from "../utils/get-prop-from-object";
-import {FunctionHandleData, Values} from "../types";
+import {FormDependence, NamedFormDependence, FunctionHandleData, Values} from "../types";
 import mergeObjects from "../utils/merge-objects";
 import runPromiseQueue from "../utils/run-promise-queue";
 import replaceValues from "../utils/replace-values";
@@ -35,7 +35,7 @@ export default class Form extends EventEmitter{
 	/**
 	 * @description Array of bound items.
 	 */
-	dependencies: any[] = [];
+	dependencies: FormDependence[] = [];
 	
 	/**
 	 * @description Link to parent Form
@@ -196,6 +196,7 @@ export default class Form extends EventEmitter{
 	 * */
 	protected changeValuesOfItem(values: any) {
 		this.dependencies.forEach(dep => {
+			if (!dep.name) return;
 			dep.change(getPropFromObject(values, dep.name));
 		})
 	}
@@ -280,10 +281,14 @@ export default class Form extends EventEmitter{
 	 * @example address.city -> address address.city
 	 * */
 	getAssociatedDependencies(name: string) {
-		return this.dependencies.filter(dep => {
+		
+		function t(dep: FormDependence): dep is NamedFormDependence {
+			if (dep.name === undefined) return false;
 			const depName = dep.name;
 			return depName.startsWith(name) || name.startsWith(depName);
-		})
+		}
+		
+		return this.dependencies.filter(t)
 	}
 
 	/**
@@ -464,7 +469,7 @@ export default class Form extends EventEmitter{
 	
 		return this.dependencies.reduce((acc, dep) => {
 			if (dep.validate) {
-				acc = acc && dep.validate();
+				acc = acc && !!dep.validate();
 			}
 			
 			return acc;
