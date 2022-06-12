@@ -18,7 +18,7 @@ export default {
 function nav() {
 	return [
 		{ text: 'Guide', link: '/guide/installation', activeMatch: '/guide/' },
-		{ text: 'Found mistake?', link: 'https://github.com/Jenesius/vue-form/issues/new?assignees=&labels=docs+report&template=documentation-misstake.md'},
+		{ text: 'Found mistake?', link: 'https://github.com/Jenesius/vue-form/issues/new?assignees=&labels=docs+report&template=documentation-mistake.md'},
 	]
 }
 function sidebar() {
