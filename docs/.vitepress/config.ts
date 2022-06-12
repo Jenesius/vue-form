@@ -46,9 +46,8 @@ function sidebar() {
 		{
 			text: 'Inputs',
 			items: [
-				{
-					text: 'Widgets', link: '/guide/input-widgets'
-				}
+				{ text: 'Widgets', link: '/guide/input-widgets' },
+				{ text: 'Custom Widgets', link: '/guide/custom-widgets' },
 			]
 		}
 	]

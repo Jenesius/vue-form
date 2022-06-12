@@ -6,7 +6,7 @@
         <slot/>
         <!--Errors-->
 
-        <div class = "input-errors">
+        <div class = "input-errors" v-if = "errors && errors.length > 0">
             <p
                 class = "input-error-label"
                 v-for = "(str, index) in errors"
