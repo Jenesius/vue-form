@@ -8,7 +8,7 @@ import replaceValues from "../utils/replace-values";
 import getCastObject from "../utils/get-cast-object";
 import grandObject from "../utils/grand-object";
 
-export default class Form extends EventEmitter{
+export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
 	static EVENT_READ			 = 'read';
 	static EVENT_SAVE			 = 'save';
@@ -466,7 +466,7 @@ export default class Form extends EventEmitter{
 	/**VALIDATION**/
 	
 	validate() {
-	
+		
 		return this.dependencies.reduce((acc, dep) => {
 			if (dep.validate) {
 				acc = acc && !!dep.validate();
@@ -474,7 +474,7 @@ export default class Form extends EventEmitter{
 			
 			return acc;
 		}, true);
-	
+		
 	}
 	
 }

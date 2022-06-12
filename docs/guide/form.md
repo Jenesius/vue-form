@@ -100,6 +100,37 @@ valid, false otherwise.
 form.validate() // true or false
 ```
 
+## Save and Read
+To save and read data in the form, getters / setters were implemented for
+save and read properties:
+```ts
+form.save
+form.read
+```
+You can set an async function to be called whenever
+when the corresponding method is called, as well as along the chain for all dependent
+elements. This is best shown with an example:
+```ts
+// ./ParentForm.vue
+const parentForm = new Form();
+parentForm.save = () => asyncSaveData(form.changes);
+```
+```ts
+// ./ChildrenForm.vue
+const childrenForm = new Form();
+childrenForm.save = () => asyncSaveChildrenData()
+```
+In this example, `children.save()` will be automatically called after
+`parentForm.save()` will be executed.
+
+Similar behavior will be for the **form.read** property.
+
+Using this approach, it is possible to build a single dependent interface that
+it is convenient to manage through the parent form. For example, you might have the form
+from the input field, as well as a widget, with its own logic (For example, a table,
+which can be modified). This table can be implemented based on form
+and link to the parent.
+
 ## Automatic Dependencies
 When a form is created, it will automatically notify all child elements:
 ```ts
