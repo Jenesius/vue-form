@@ -37,7 +37,7 @@ To do this, let's add a couple of input fields that will automatically subscribe
 <WidgetExampleSimpleForm/>
 
 ## Setting values
-To set the form value, you can use one of the
+To set the form value, you can use one of
 the following methods:
 - **change**(values: Values) - method sets form values and marks them as changed.
 This method affects **changed** forms.

@@ -320,6 +320,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	
+	
 	get disabled() {
 		return this.#disabled;
 	}
@@ -334,6 +335,17 @@ export default class Form extends EventEmitter implements FormDependence{
 			this.recursiveDisableItem()
 		else
 			this.recursiveEnableItem()
+	}
+	
+	disable(names?: string | string[]){
+		if (typeof names === "string") names = [names];
+		
+		// Provided undefined -> full disable form
+		if (!names) return this.disabled = true;
+		
+		//this.emit(Form.EVENT_UPDATE_ABILITY, name);
+		
+		names.forEach(name => this.disableByName(name)) ;
 	}
 	
 	protected recursiveDisableItem(name?: string) {
@@ -361,13 +373,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	
-	disable(name?: string){
-		
-		this.emit(Form.EVENT_UPDATE_ABILITY, name);
-		
-		if (name) this.disableByName(name);
-		else this.disabled = true;
-	}
+
 	enable(name?: string) {
 		this.emit(Form.EVENT_UPDATE_ABILITY, name);
 		
@@ -375,8 +381,32 @@ export default class Form extends EventEmitter implements FormDependence{
 		else this.disabled = false;
 	}
 	
-
+	/**
+	 * @param {String} name. Element name.
+	 * @param {Boolean} mark. True - Enable, false: disable
+	 * */
+	private markElementForAbility(name: string, mark: boolean) {
+	
+		function geNearest(name: string, names: string[]) {
+			
+			names.forEach(depName => {
+				if (!name.startsWith(depName)) return;
+				
+				
+			})
+		
+		}
+		
+	}
+	
+	
+	
 	protected disableByName(name: string) {
+		
+		if (!this.disabled)
+			return this.markElementForAbility(name, false);
+		
+		// Form is disabled.
 		if (this.disabled) {
 			
 			if (name in this.disabledElements)
@@ -384,8 +414,7 @@ export default class Form extends EventEmitter implements FormDependence{
 			
 			return;
 		}
-		
-		this.#disabledElements[name] = true;
+
 	}
 	protected enableByName(name: string) {
 		this.#disabledElements[name] = false;
