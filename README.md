@@ -49,8 +49,16 @@ and will also serve as a bridge for all its child elements.
 ## Input
 When using the built-in input field, the library will do everything for you.
 You don't need to sign it on the form yourself.
-```ts
-import {InputField} from "jenesius-vue-form";
+```vue
+<template>
+    <input-field type = "text" name = "user" label = "Username"/>
+    <input-field type = "text" name = "age" label = "Age"/>
+</template>
+<script setup>
+    import {Form, InputField} from "jenesius-vue-form"
+    
+    const form = new Form();
+</script>
 ```
 
 ### Custom Input
