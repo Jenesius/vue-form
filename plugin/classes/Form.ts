@@ -9,6 +9,7 @@ import getCastObject from "../utils/get-cast-object";
 import grandObject from "../utils/grand-object";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import checkCompositeName from "../utils/check-composite-name";
+import deletePropByName from "../utils/delete-prop-by-name";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller'; // LOCK
@@ -184,8 +185,8 @@ export default class Form extends EventEmitter implements FormDependence{
 		})
 	}
 	
-	cleanChanges() {
-		this.#changes = {};
+	cleanChanges(values = {}) {
+		this.#changes = grandObject(replaceValues(values));
 		this.emit(Form.EVENT_CHANGED, this.changed);
 	}
 	change(values?: Values){
@@ -223,7 +224,9 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * {name: 'jack'}
 	 * */
 	clearField(name: string) {
-	
+		deletePropByName(this.values, name);
+		deletePropByName(this.#changes, name);
+		this.cleanChanges(this.#changes);
 	}
 	cleanValues(values?: Values) {
 		this.#values = {};
