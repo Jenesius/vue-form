@@ -215,7 +215,16 @@ export default class Form extends EventEmitter implements FormDependence{
 
 		this.changeValuesOfItem(this.values)
 	}
+	/**
+	 * @description Method using for clear field. Dont set NULL. Remove field
+	 * from values.
+	 * @example
+	 * { address: { city: 'Some' }, name: 'jack' } clearField('address')
+	 * {name: 'jack'}
+	 * */
+	clearField(name: string) {
 	
+	}
 	cleanValues(values?: Values) {
 		this.#values = {};
 		this.setValues(values || {});
