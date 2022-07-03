@@ -23,7 +23,7 @@
         <input-field name = "pass"  v-model = "pass"  />
 
         <input-field type = "address" name = "addressss" v-model = "test5" />
-        <input-field type = "tel" name = "tel" label = "tel" v-model = "test6" />
+        <input-field type = "tel" name = "tel" label = "tel" v-model = "test6" disabled />
         <input-field type = "tel" name = "tel" label = "tel" v-model = "test7" />
     </div>
 </template>

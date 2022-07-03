@@ -1,10 +1,13 @@
 <template>
     <widget-wrap :label = "label">
-        <div class = "container-input-tel" @click = "inputTel?.focus()">
+        <div class = "container-input-tel" @click = "inputTel?.focus()"             :class = "{
+                    'input-tel_disabled': disabled
+                }">
             <widget-input-tel-code :country-code="countryCode"/>
             <input type = "text" class = "input-tel" ref = "inputTel"
                    @input = "onInput"
                    :value = "prettyValue"
+                   :disabled = "disabled"
             >
         </div>
     </widget-wrap>
@@ -19,6 +22,7 @@ import {parsePhoneNumber, AsYouType} from 'libphonenumber-js'
 const props = defineProps<{
 	label?: string,
 	modelValue: any,
+    disabled?: boolean
 }>()
 const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
@@ -70,6 +74,10 @@ function onInput(e: any) {
 
 	    border-radius: 4px;
 	    border: 1px solid #c8c8c8;
+        background-color: white;
+    }
+    .input-tel_disabled{
+	    background-color: #e9e9e9;
     }
     .input-tel{
         border: 0;
