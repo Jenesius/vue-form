@@ -14,6 +14,10 @@ export default function mergeObjects(originalValues: Values, newValues: Values){
 		if (checkPrimitiveType(value)) set(originalValues, key, value);
 		else {
 			if (!originalValues.hasOwnProperty(key)) originalValues[key] = {};
+
+			// If current value is primitive we need to change it to object.
+			if (checkPrimitiveType(originalValues[key])) originalValues[key] = {};
+
 			mergeObjects(originalValues[key], value);
 		}
 	}

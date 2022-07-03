@@ -9,7 +9,7 @@ import WidgetInputSwitch
 	from "../widgets/inputs/input-switch/widget-input-switch.vue";
 import WidgetInputPassword
 	from "../widgets/inputs/input-password/widget-input-password.vue";
-
+import WidgetInputTel from "../widgets/inputs/input-tel/widget-input-tel.vue"
 const STORE: IStore = {
 	inputTypes: {
 		text	: WidgetInputText,
@@ -17,7 +17,8 @@ const STORE: IStore = {
 		radio	: WidgetInputRadio,
 		checkbox: WidgetInputCheckbox,
 		switch	: WidgetInputSwitch,
-		password: WidgetInputPassword
+		password: WidgetInputPassword,
+		tel     : WidgetInputTel
 	}
 }
 export default STORE;

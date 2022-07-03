@@ -37,7 +37,7 @@ function createConfig(format, output) {
 	
 	if (isGlobalBuild) output.name = 'JenesiusVueForm'
 	
-	const external = ['vue', 'jenesius-event-emitter']
+	const external = ['vue', 'jenesius-event-emitter', 'libphonenumber-js']
 	
 	return {
 		input: "./plugin/index.ts",

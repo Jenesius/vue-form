@@ -1,25 +1,27 @@
 <template>
-    <input-field type = "text" name = "street.name" label = "Street.Name"/>
-    <input-field name = "username" label = "Username"/>
-    <input-street name = "street"/>
-    <button @click = "showValues">Values</button>
-    <div class = "button-wrap">
-        <button class = "btn" @click = "disable()">Disable Form</button>
-        <button class = "btn btn-success" @click = "enable()">Enable Form</button>
-    </div>
-    <div class = "button-wrap">
-        <button class = "btn" @click = "disable('street')">Disable street</button>
-        <button class = "btn btn-success" @click = "enable('street')">Enable street</button>
-    </div>
-    <div class = "button-wrap">
-        <button class = "btn" @click = "disable('street.name')">Disable street.name</button>
-        <button class = "btn btn-success" @click = "enable('street.name')">Enable street.name</button>
-    </div>
-    <div class = "language-json">
-        <pre><code ref = "test"></code></pre>
-    </div>
-    <div class = "language-json">
-        <pre><code ref = "formDisabledState"></code></pre>
+    <div class = "widget-example-form-disable">
+        <input-field type = "text" name = "street.name" label = "Street.Name"/>
+        <input-field name = "username" label = "Username"/>
+        <input-street name = "street"/>
+        <button @click = "showValues">Values</button>
+        <div class = "button-wrap">
+            <button class = "btn widget-example-button-disable" @click = "disable()">Disable Form</button>
+            <button class = "btn btn-success" @click = "enable()">Enable Form</button>
+        </div>
+        <div class = "button-wrap">
+            <button class = "btn" @click = "disable('street')">Disable street</button>
+            <button class = "btn btn-success" @click = "enable('street')">Enable street</button>
+        </div>
+        <div class = "button-wrap">
+            <button class = "btn" @click = "disable('street.name')">Disable street.name</button>
+            <button class = "btn btn-success" @click = "enable('street.name')">Enable street.name</button>
+        </div>
+        <div class = "language-json">
+            <pre><code ref = "test"></code></pre>
+        </div>
+        <div class = "language-json">
+            <pre><code ref = "formDisabledState"></code></pre>
+        </div>
     </div>
 </template>
 

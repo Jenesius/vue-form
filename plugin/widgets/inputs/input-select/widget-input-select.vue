@@ -94,6 +94,7 @@
         color: #1c1c1c;
         cursor: pointer;
         overflow: hidden;
+        background-color: white;
     }
 
     .fade-enter-active,

@@ -23,8 +23,8 @@
         <input-field name = "pass"  v-model = "pass"  />
 
         <input-field type = "address" name = "addressss" v-model = "test5" />
-        <p>V:{{test5}}</p>
-
+        <input-field type = "tel" name = "tel" label = "tel" v-model = "test6" />
+        <input-field type = "tel" name = "tel" label = "tel" v-model = "test7" />
     </div>
 </template>
 
@@ -45,6 +45,8 @@
     const test2 = ref([]);
     const test3 = ref(false);
     const test5 = ref();
+    const test6 = ref();
+    const test7 = ref("+796275272");
     const ad = ref();
     const array = [
         { title: 'test', value: '1'},

@@ -21,7 +21,7 @@
 <script setup lang="ts">
     defineProps<{
         label?: string,
-        errors: string[]
+        errors?: string[]
     }>()
 </script>
 
