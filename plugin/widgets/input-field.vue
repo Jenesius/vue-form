@@ -28,6 +28,7 @@
         validation?: any[],
         options?: OptionRow[] | { [value: string]: string},
 
+        required?: boolean
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -39,7 +40,16 @@
 
     const componentItem = computed(() => inputsStore[props.type] || inputsStore.text);
 
-    const {state, input} = useInputState(props.name, props.validation);
+	/**
+     * @description Extend validation array with default validation rules, like: Required
+     */
+	const extendValidation = computed(() => {
+		const arr = [...(props.validation || [])];
+		if (props.required) arr.push((v: any) => !!v || 'Please fill in this field')
+        return arr;
+    })
+
+    const {state, input} = useInputState(props.name, extendValidation.value);
 
     watch(() => props.modelValue, (a, b) => {
         if (a === b) return;

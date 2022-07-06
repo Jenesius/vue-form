@@ -30,6 +30,7 @@ export default class Input extends EventEmitter {
 	change(v: any) {
 		this.parentForm?.input(this.name, v);
 	}
+
 	/**
 	 * @description Run all guards from validation. Input is not validated If on
 	 * e of guard don't return true.

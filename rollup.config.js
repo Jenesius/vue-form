@@ -5,6 +5,7 @@ import vuePlugin from '@vitejs/plugin-vue'
 import postcss from 'rollup-plugin-postcss';
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript';
+import {getBabelOutputPlugin} from "@rollup/plugin-babel";
 
 const NAME = pkg.name;
 const VERSION = pkg.version;
@@ -46,10 +47,14 @@ function createConfig(format, output) {
 			typescript({ tsconfig: './plugin/tsconfig.json',  }),
 
 			vuePlugin({
-
+				isProduction: true
 			}),
+
 			commonjs(),
 			postcss(),
+			getBabelOutputPlugin({
+				presets: ['@babel/preset-env']
+			})
 		],
 		output,
 	}

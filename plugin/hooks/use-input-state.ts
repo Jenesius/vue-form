@@ -28,6 +28,9 @@ function useInputController(input: Input) {
 		change: (v:any) => {
 			state.value = v;
 		},
+		setValues(v: any) {
+			state.value = v;
+		},
 		disable: () => {
 			state.disabled = true;
 		},

@@ -7,9 +7,13 @@ export default function useFormState(form: Form) {
 		disabled: form.disabled
 	})
 	
-	form.on(Form.EVENT_CHANGED, v => state.changed = v);
+	form.on(Form.EVENT_CHANGED, () => {
+		state.changed = form.changed
+	});
 	form.on(Form.EVENT_DISABLED, v => state.disabled = v);
-	
+
+
+
 	return {
 		state
 	}

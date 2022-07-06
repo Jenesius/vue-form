@@ -15,10 +15,13 @@ export interface OptionRow {
 
 export interface FormDependence {
 	name?: string,
+	changed?: boolean
 	disable: (name?: string | string[]) => void,
 	enable : (name?: string | string[]) => void,
-	change : (v: any) => void,
-	validate: () => boolean | string
+	change ?: (v: any) => void,
+	setValues?: (v: any) => void,
+	validate: () => boolean | string,
+	cleanChanges?: (values?: any) => void
 }
 export interface NamedFormDependence extends FormDependence{
 	name: string

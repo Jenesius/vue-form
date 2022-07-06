@@ -1,5 +1,7 @@
 <template>
 
+	<new-table/>
+
     <div>
         <input-field type = "text" name = "address.description" label="Address description" />
         <input-field type = "text" name = "name" label="Name" :validation = "[required]" />
@@ -78,7 +80,7 @@
     import WidgetInputText from "../../../plugin/widgets/inputs/widget-input-text.vue";
     import InputField from "../../../plugin/widgets/input-field.vue";
     import {useFormState} from "../../../plugin";
-
+	import NewTable from "./NewTable.vue";
     const required = (v: any) => !!v || "Not empty"
 
     const form = new Form();

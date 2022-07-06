@@ -93,7 +93,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		return getCastObject(this.values, this.#changes);
 	}
 	get changed() {
-		return !!Object.keys(this.#changes).length;
+		return !!Object.keys(this.#changes).length || !!this.dependencies.find(d => d.changed);
 	}
 	
 	
@@ -116,10 +116,11 @@ export default class Form extends EventEmitter implements FormDependence{
 			this.name = params.name;
 
 		this.#debug = Boolean(params.debug);
-		
-		this.parentForm = injectVue(Form.PROVIDE_NAME, undefined) as Form | undefined;
-		if (this.parentForm) this.parentForm.depend(this);
-		
+
+		if (params.parent !== false) {
+			this.parentForm = injectVue(Form.PROVIDE_NAME, undefined) as Form | undefined;
+			if (this.parentForm) this.parentForm.depend(this);
+		}
 		provideVue(Form.PROVIDE_NAME, this);
 	}
 	
@@ -133,7 +134,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		const v = grandObject(replaceValues(values));
 		mergeObjects(this.#changes, v);
 		
-		if (this.changed) this.emit(Form.EVENT_CHANGED, this.changed);
+		this.emit(Form.EVENT_CHANGED, this.changed);
 	}
 	/**
 	 * @description Method for input-component.
@@ -151,7 +152,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * Реализация 1: идем рекурсивно по всем значениям, находим подходящие зависимости
 	 * и устанавливаем значения для них. Основная проблема в количестве итераций.
 	 * Нужно это протестировать
-	 * И переименовать метод: changeValuesOfItem(values: any);
+	 * И переименовать метод: setValuesOfItem(values: any);
 	 * А лучше добавить новый просто метод, рекурсию сохранив
 	 *
 	 * Можно изменить метод getPropFromObject, или реализовать другую версию,
@@ -165,10 +166,10 @@ export default class Form extends EventEmitter implements FormDependence{
 	 *
 	 * Можно реализовать метод getRelevantedProps - для
 	 * */
-	protected changeValuesOfItem(values: any) {
+	protected setValuesOfItem(values: any) {
 		this.dependencies.forEach(dep => {
 			if (!dep.name) return;
-			dep.change(getPropFromObject(values, dep.name));
+			dep.setValues?.(getPropFromObject(values, dep.name));
 		})
 	}
 	// На данный момент не используется. Подсвечивается поскольку рекурсивная
@@ -186,9 +187,21 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	cleanChanges(values = {}) {
+		this.dependencies.forEach(dep => {
+			dep.cleanChanges?.();
+		})
+
+		this.cleanCurrentChanges(values);
+	}
+
+	/**
+	 * @description Clean just current form without clean children depend items.
+	 * */
+	cleanCurrentChanges(values = {}) {
 		this.#changes = grandObject(replaceValues(values));
 		this.emit(Form.EVENT_CHANGED, this.changed);
 	}
+
 	change(values?: Values){
 		this.setValues(values);
 		
@@ -214,7 +227,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		this.emit(Form.EVENT_VALUE, values);
 
 
-		this.changeValuesOfItem(this.values)
+		this.setValuesOfItem(this.values)
 	}
 	/**
 	 * @description Method using for clear field. Dont set NULL. Remove field
@@ -239,12 +252,34 @@ export default class Form extends EventEmitter implements FormDependence{
 	protected mergeValues(values: Values) {
 		mergeObjects(this.values, values);
 	}
-	
+
+	/**
+	 * @description subscribe is alice for depend. Subscribe element to Form.
+	 * */
+	subscribe(item: any) {
+		return this.depend(item);
+	}
 	depend(item: any) {
 		this.dependencies.push(item);
 		this.emit(Form.EVENT_SUBSCRIBE, item);
-		
-		return () => this.unsubscribe(item)
+
+
+		try {
+			item.on(Form.EVENT_CHANGED, () => this.emit(Form.EVENT_CHANGED, this.changed));
+		} catch (e) {
+
+		}
+		// Из-за того, что мы эмитим чужое значение!
+		// Form.proxyEvent(item, this, Form.EVENT_CHANGED);
+
+		return () => {
+			this.unsubscribe(item)
+
+		}
+	}
+	static proxyEvent(from: any, to: any, eventName: string) {
+		if (from.on && to.emit)
+			from.on(eventName, (...arg: any) => to.emit(eventName, ...arg));
 	}
 	unsubscribe(item: any){
 		const index = this.dependencies.indexOf(item);
@@ -504,8 +539,10 @@ export default class Form extends EventEmitter implements FormDependence{
 	validate() {
 		
 		return this.dependencies.reduce((acc, dep) => {
+
 			if (dep.validate) {
-				acc = acc && !!dep.validate();
+				const result = dep.validate();
+				acc = acc && !!result;
 			}
 			
 			return acc;
@@ -518,5 +555,6 @@ export default class Form extends EventEmitter implements FormDependence{
 interface FormParams {
 	debug?: boolean,
 	name? : string,
+	parent?: boolean // Don't subscribe to parent form if FALSE
 	// cleanChangesAfterSave?: boolean,
 }
