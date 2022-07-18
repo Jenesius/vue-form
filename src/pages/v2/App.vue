@@ -77,7 +77,7 @@
     import NewInputField from "@/components/v2/new-input-field.vue";
     import NewAddressField from "@/components/v2/new-address-field.vue";
     import Form from "../../../plugin/classes/Form";
-    import WidgetInputText from "../../../plugin/widgets/inputs/widget-input-text.vue";
+    import WidgetInputText from "../../../plugin/widgets/inputs/input-text/widget-input-text.vue";
     import InputField from "../../../plugin/widgets/input-field.vue";
     import {useFormState} from "../../../plugin";
 	import NewTable from "./NewTable.vue";

@@ -2,7 +2,7 @@
 	<div>
 		<p>User</p>
 		<input-field name = "name" label = "name"/>
-		<input-field name = "age" label = "age"/>
+		<input-field type = "number" name = "age" label = "age" required/>
 	</div>
 </template>
 
