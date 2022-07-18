@@ -5,7 +5,7 @@ manage all the functionality that spans the library.
 ## Creating a Form
 To initialize the form, you also need to create:
 ```ts
-import {Form} from "jenesius-vue-modal"
+import {Form} from "jenesius-vue-form"
 const form = new Form();
 ```
 Connecting child elements, provide form to child component, setting
