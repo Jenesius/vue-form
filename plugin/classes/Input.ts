@@ -16,9 +16,11 @@ export default class Input extends EventEmitter {
 	}
 	
 	get value() {
+		if (!this.name) return '';
 		return this.parentForm?.getValueByName(this.name);
 	}
 	set value(v) {
+		if (!this.name) return;
 		this.parentForm?.setValues({
 			[this.name]: v
 		})
@@ -28,6 +30,7 @@ export default class Input extends EventEmitter {
 	}
 	
 	change(v: any) {
+		if (!this.name) return;
 		this.parentForm?.input(this.name, v);
 	}
 
