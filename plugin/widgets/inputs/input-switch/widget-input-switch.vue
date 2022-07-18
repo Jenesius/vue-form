@@ -56,6 +56,7 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+		background-color: white;
     }
     .input-switch-button{
         height: 15px;

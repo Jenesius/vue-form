@@ -59,6 +59,7 @@
         height: 35px;
         border-radius: 4px;
         border: 1px solid #c8c8c8;
+		background-color: white;
     }
     .input-password-container:focus-within{
         border-color: #b2b2b2;

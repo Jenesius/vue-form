@@ -25,14 +25,14 @@ independence on the part of the site design.
 To create a form, you just need to create an instance. JenesiusVueForm will do
 most of the work for you.
 ```ts
-import {Form} from "jenesius-vue-modal"
+import {Form} from "jenesius-vue-form"
 const form = new Form()
 ```
 
 ### Main Form state
 The reactive form state can be obtained from the **useFormState** hook:
 ```js
-import {useFormState} from "jenesius-vue-modal"
+import {useFormState} from "jenesius-vue-form"
 const {state} = useFormState(form) // disabled changed
 ```
 
@@ -40,7 +40,7 @@ const {state} = useFormState(form) // disabled changed
 Composite objects (For example, Address, which contains country, city etc.)
 can be created by calling the **useProxyState** hook.
 ```ts
-import {useProxyState} from "jenesius-vue-modal"
+import {useProxyState} from "jenesius-vue-form"
 const {state} = useProxyState(name);
 ```
 In this example, the Composite field will automatically subscribe to the parent form,
@@ -73,7 +73,7 @@ In this case, you need to implement a small layer:
 >
 ```
 ```js
-import {useInputState} from "jenesius-vue-modal"
+import {useInputState} from "jenesius-vue-form"
 const {state, input} = useInputState(props.name)
 // state - {value, disabled, errors}
 ```
