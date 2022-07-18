@@ -6,5 +6,5 @@ customize them.
 Install *jenesius-vue-modal* as a dependency using any manager
 packages:
 ```shell
-npm i jenesius-vue-modal
+npm i jenesius-vue-form
 ```
