@@ -78,6 +78,7 @@ function onStep(v: boolean) {
 
 	.input-number_disabled{
 		background-color: #e9e9e9;
+		position: relative;
 	}
 	.input-number_error{
 		border: 1px solid #fa5c5c;

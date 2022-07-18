@@ -1,13 +1,16 @@
-import {onUnmounted, reactive} from "vue";
+import {onUnmounted, reactive, watch} from "vue";
 import Input from "../classes/Input";
 
 export default function useInputState(name: string, validation: any[] = []) {
 	
 	const input = new Input({name, validation});
-	const state = useInputController(input);
+	const {state, updateName} = useInputController(input);
+
+
 
 	return {
 		state,
+		updateName,
 		input
 	}
 }
@@ -45,13 +48,29 @@ function useInputController(input: Input) {
 		},
 		focus: () => {}
 	}
-	
-	const off = input.parentForm?.dependInput(input.name, controls)
+
+	let off:any; // Off handle for unsubscribe input from FORM.
+
+	updateName(input.name)
+
 	onUnmounted(() => {
 		if (off) {
 			off();
 		}
 	})
-	
-	return state;
+
+	/**
+	 * @description method for updating name of input in real-time.
+	 * Using with Dynamic :name = "test", test = ref()
+	 * */
+	function updateName(name: string) {
+		off?.();
+		input.name = name;
+		off = input.parentForm?.dependInput(name, controls);
+	}
+
+	return {
+		state,
+		updateName
+	};
 }

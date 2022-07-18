@@ -2,6 +2,7 @@
     <div class = "t">
 		
 		<input-hard name = "user"/>
+		<input-field label = "test" :name = "test"/>
 		
 		<p>Changed: {{state.changed}}</p>
 		
@@ -22,6 +23,10 @@
     const form = new Form();
 	const {state} = useFormState(form);
 	
+	const test = ref<string | null>(null);
+	setTimeout(() => {
+		test.value = "city"
+	}, 1000);
 	
     window.form = form;
 
