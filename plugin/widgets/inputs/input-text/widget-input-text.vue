@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang = "ts">
-    import InputWrap from "./input-wrap.vue";
+    import InputWrap from "../input-wrap.vue";
 
     defineProps<{
         label?: string,

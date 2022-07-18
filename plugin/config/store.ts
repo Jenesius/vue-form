@@ -1,4 +1,4 @@
-import WidgetInputText from "../widgets/inputs/widget-input-text.vue";
+import WidgetInputText from "../widgets/inputs/input-text/widget-input-text.vue";
 import WidgetInputSelect
 	from "../widgets/inputs/input-select/widget-input-select.vue";
 import WidgetInputRadio
@@ -9,7 +9,9 @@ import WidgetInputSwitch
 	from "../widgets/inputs/input-switch/widget-input-switch.vue";
 import WidgetInputPassword
 	from "../widgets/inputs/input-password/widget-input-password.vue";
-import WidgetInputTel from "../widgets/inputs/input-tel/widget-input-tel.vue"
+import WidgetInputTel from "../widgets/inputs/input-tel/widget-input-tel.vue";
+import WidgetInputNumber from "../widgets/inputs/input-number/widget-input-number.vue";
+
 const STORE: IStore = {
 	inputTypes: {
 		text	: WidgetInputText,
@@ -18,7 +20,8 @@ const STORE: IStore = {
 		checkbox: WidgetInputCheckbox,
 		switch	: WidgetInputSwitch,
 		password: WidgetInputPassword,
-		tel     : WidgetInputTel
+		tel     : WidgetInputTel,
+		number  : WidgetInputNumber
 	}
 }
 export default STORE;

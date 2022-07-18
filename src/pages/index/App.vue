@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class = "t">
 		
 		<input-hard name = "user"/>
 		
@@ -7,6 +7,7 @@
 		
         <button @click = "validate">validate</button>
         <button @click = "init">button</button>
+        <button @click = "disable()">disable</button>
     </div>
 </template>
 
@@ -27,12 +28,13 @@
 	function init() {
 		form.setValues({
 			user: {
-				name: 'Jenesius'
+				name: 'Jenesius',
+				age: 16
 			}
 		})
 	}
 
-
+	const disable = form.disable.bind(form);
     function validate() {
 	    form.validate();
 		console.log(form);
@@ -48,6 +50,8 @@
 </script>
 
 <style>
-
+	body{
+		background-color: #e9f3ff;
+	}
 
 </style>
