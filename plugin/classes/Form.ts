@@ -549,7 +549,23 @@ export default class Form extends EventEmitter implements FormDependence{
 		}, true);
 		
 	}
-	
+
+	/**
+	 * @description Method return values in {[key]: value} format.
+	 * */
+	getValues(...names: string[]) {
+		if (!names || !names.length) return this.values;
+
+		const cast = names.reduce((acc: {[key: string]: boolean}, name) => {
+			acc[name] = true
+			return acc;
+		}, {})
+
+
+		return getCastObject(this.values, grandObject(cast));
+
+	}
+
 }
 
 interface FormParams {

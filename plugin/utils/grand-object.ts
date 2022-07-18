@@ -1,5 +1,14 @@
 import bypassObject from "./bypass-object";
 
+
+/**
+ * @description На вход получает объект данных, возвращает максимально упрощённо разложенный объект. (Предыдущее название:
+ * DeepenObject)
+ * {                                        {
+ *     address.city.name: 'Berlin'  --->        address: { city: { name: 'Berlin' } }
+ * }                                        }
+ * */
+
 export default function grandObject(object: any) {
 	
 	return bypassObject(object)

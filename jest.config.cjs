@@ -1,20 +1,17 @@
 module.exports = {
+  coverageProvider: 'v8',
   "moduleFileExtensions": [
     "js",
     "json",
     "ts",
-    // tell Jest to handle `*.vue` files
     "vue"
   ],
   transform: {
-    '^.+\\.vue$': 'vue-jest',
     "^.+\\.jsx?$": "babel-jest",
     '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.vue?$': '@vue/vue3-jest',
+
   },
-  globals: {
-    'ts-jest': {
-      babelConfig: true,
-    },
-  },
+
 
 }

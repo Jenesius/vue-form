@@ -24,15 +24,19 @@
     .container-default-code{
         width:  24px;
         height: 16px;
+		display: grid;
 
         background-color: #dadada;
         text-align: center;
     }
-    .container-default-code>span{
-        color: gray;
-    }
+
     .tel-code{
         user-select: none;
         border: 1px solid #f6f6f6;
     }
+	.container-default-code>span{
+		color: gray;
+		font-size: 11px;
+		line-height: 13px;
+	}
 </style>

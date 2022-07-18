@@ -5,6 +5,7 @@ import WidgetExampleInputSelect from '../components/inputs/widget-example-input-
 import WidgetExampleInputCheckbox from '../components/inputs/widget-example-input-checkbox.vue';
 import WidgetExampleInputSwitch from '../components/inputs/widget-example-input-switch.vue';
 import WidgetExampleInputRadio from '../components/inputs/widget-example-input-radio.vue';
+import WidgetExampleInputTel from '../components/inputs/widget-example-input-tel.vue';
 
 </script>
 
@@ -22,6 +23,7 @@ For work, fields for entering the following type were developed:
 - [Checkbox](#checkbox)
 - [Switch](#switch)
 - [Radio](#radio)
+- [Tel](#tel)
 - Date (in developing)
 - Color (in developing, low-priority)
 - File (in developing)
@@ -67,7 +69,7 @@ When passed as an object, the value will always be of type *string*. When
 ## Password
 Password entry field. It has the ability to switch the visibility mode.
 ```html
-<input-field :type = "password" />
+<input-field type = "password" />
 ```
 <WidgetExampleInputPassword/>
 
@@ -75,7 +77,7 @@ Password entry field. It has the ability to switch the visibility mode.
 Elements of type checkbox are rendered by default as boxes that are checked 
 (ticked) when activated, like you might see in an official government paper form.
 ```html
-<input-field :type = "checkbox" :options = "options" />
+<input-field type = "checkbox" :options = "options" />
 ```
 - **options** - similar with InputSelect
 
@@ -84,7 +86,7 @@ Elements of type checkbox are rendered by default as boxes that are checked
 ## Switch
 Switch element. Has two states turn on / turn off, which corresponds to **true** / **false**
 ```html
-<input-field :type = "switch"  />
+<input-field type = "switch"  />
 ```
 <WidgetExampleInputSwitch/>
 
@@ -94,8 +96,16 @@ buttons describing a set of related options.
 
 Only one radio button in a given group can be selected at the same time.
 ```html
-<input-field :type = "radio" :options = "options" />
+<input-field type = "radio" :options = "options" />
 ```
 - **options** - similar with InputSelect
-
 <WidgetExampleInputRadio/>
+
+## Tel
+Input elements of type tel are used to let the user enter and edit a telephone number.
+
+```html
+<input-field type = "tel"/>
+```
+
+<WidgetExampleInputTel/>
