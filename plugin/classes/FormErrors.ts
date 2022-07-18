@@ -13,7 +13,9 @@ export default class FormErrors extends Error{
 	static ProxyFormWithoutName() {
 		return new FormErrors(`Can't create FormProxy without name.`);
 	}
-	
+	static TryToGetValueWithoutName() {
+		return new FormErrors(`Can't get value without name. Looks like form.getValueByName(). Current method has one required param.`)
+	}
 	static MergingObjectGotPrimitiveValue() {
 	
 	}

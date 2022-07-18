@@ -10,6 +10,7 @@ import grandObject from "../utils/grand-object";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
+import FormErrors from "./FormErrors";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller'; // LOCK
@@ -323,6 +324,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Получение значения по имени элемента
 	 * */
 	getValueByName(name: string) {
+		if (!name) throw FormErrors.TryToGetValueWithoutName();
 		return getPropFromObject(this.values, name);
 	}
 	
@@ -347,7 +349,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		
 		// Provided undefined -> full disable form
 		if (!names) return this.disabled = true;
-		
+
 		names.forEach(name => this.disableByName(name)) ;
 	}
 	

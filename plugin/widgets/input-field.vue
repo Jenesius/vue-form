@@ -49,8 +49,10 @@
         return arr;
     })
 
-    const {state, input} = useInputState(props.name, extendValidation.value);
-
+    const {state, input, updateName} = useInputState(props.name, extendValidation.value);
+	watch(() => props.name, () => {
+		if (props.name) updateName(props.name);
+	})
     watch(() => props.modelValue, (a, b) => {
         if (a === b) return;
         input.value = props.modelValue
