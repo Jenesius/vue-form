@@ -2,10 +2,10 @@
     <div class = "t">
 		
 		<input-hard name = "user"/>
-		<input-field label = "test" :name = "test"/>
-		
+		<input-field label = "test" name = "test"/>
+		<input-field name = "Volume" label = "Volume" type = "range"  required thumb  />
 		<p>Changed: {{state.changed}}</p>
-		
+		<p>{{test}}</p>
         <button @click = "validate">validate</button>
         <button @click = "init">button</button>
         <button @click = "disable()">disable</button>
@@ -23,10 +23,8 @@
     const form = new Form();
 	const {state} = useFormState(form);
 	
-	const test = ref<string | null>(null);
-	setTimeout(() => {
-		test.value = "city"
-	}, 1000);
+	const test = ref<number>(0);
+
 	
     window.form = form;
 
