@@ -9,19 +9,12 @@
 			   }"
 			   :style = "`background: linear-gradient(to right, ${ACTIVE_COLOR} 0%, ${ACTIVE_COLOR} ${progressCount}%, #fff ${progressCount}%, white 100%)`"
 		/>
-		<!--
-		<div class = "container-range-thumb">
-			<span class = "range-thumb" v-if = "thumb"
-				:style = "`transform: translateX(calc(${progressCount}% - calc(20px * ${(progressCount + (2 * (100 -progressCount)/100) )/100})))`"
-			>{{modelValue}}</span>
-		</div>
-		-->
 	</input-wrap>
 </template>
 
 <script setup lang = "ts">
 import InputWrap from "../input-wrap.vue"
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, ref} from "vue";
 
 interface Props {
 	label: string,
@@ -42,9 +35,7 @@ const refInputRange = ref<HTMLInputElement>();
 
 const ACTIVE_COLOR = '#4e74ff'
 
-const progressCount = computed(() => props.modelValue / (Number(props.max) - Number(props.min)) * 100); // 0 ... 100
-
-
+const progressCount = computed(() => Number(props.modelValue) / (Number(props.max) - Number(props.min)) * 100); // 0 ... 100
 /**
  * If someone uses this shit, I will write custom input-range with Blackjack and hookers.
  * 19.07.2022 @Jenesius
@@ -52,7 +43,6 @@ const progressCount = computed(() => props.modelValue / (Number(props.max) - Num
  * Thumb was removed, because organization thumb container using transform is ugly. In the future, we can use custom
  * thumb and int this case realize thumb-value will be easy.
  * */
-
 </script>
 
 <style scoped>
