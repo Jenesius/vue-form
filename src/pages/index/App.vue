@@ -3,7 +3,7 @@
 		
 		<input-hard name = "user"/>
 		<input-field label = "test" name = "test"/>
-		<input-field name = "Volume" label = "Volume" type = "range" step = "0.01" min = "0" max = "10" v-model = "test" />
+		<input-field name = "Volume" label = "Volume" type = "range"  required thumb  />
 		<p>Changed: {{state.changed}}</p>
 		<p>{{test}}</p>
         <button @click = "validate">validate</button>
@@ -23,7 +23,7 @@
     const form = new Form();
 	const {state} = useFormState(form);
 	
-	const test = ref<number>(2);
+	const test = ref<number>(0);
 
 	
     window.form = form;
