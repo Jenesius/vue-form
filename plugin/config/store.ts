@@ -11,6 +11,7 @@ import WidgetInputPassword
 	from "../widgets/inputs/input-password/widget-input-password.vue";
 import WidgetInputTel from "../widgets/inputs/input-tel/widget-input-tel.vue";
 import WidgetInputNumber from "../widgets/inputs/input-number/widget-input-number.vue";
+import WidgetInputRange from "../widgets/inputs/input-range/widget-input-range.vue";
 
 const STORE: IStore = {
 	inputTypes: {
@@ -21,7 +22,8 @@ const STORE: IStore = {
 		switch	: WidgetInputSwitch,
 		password: WidgetInputPassword,
 		tel     : WidgetInputTel,
-		number  : WidgetInputNumber
+		number  : WidgetInputNumber,
+		range   : WidgetInputRange
 	}
 }
 export default STORE;
