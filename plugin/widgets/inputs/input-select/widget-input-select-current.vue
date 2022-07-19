@@ -33,4 +33,7 @@
 
         flex-grow: 1;
     }
+	.input-select__current>.arrow{
+		margin: 0 10px 0 0;
+	}
 </style>

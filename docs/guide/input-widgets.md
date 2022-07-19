@@ -6,6 +6,7 @@ import WidgetExampleInputCheckbox from '../components/inputs/widget-example-inpu
 import WidgetExampleInputSwitch from '../components/inputs/widget-example-input-switch.vue';
 import WidgetExampleInputRadio from '../components/inputs/widget-example-input-radio.vue';
 import WidgetExampleInputTel from '../components/inputs/widget-example-input-tel.vue';
+import WidgetExampleInputRange from '../components/inputs/widget-example-input-range.vue';
 
 </script>
 
@@ -13,7 +14,7 @@ import WidgetExampleInputTel from '../components/inputs/widget-example-input-tel
 For rapid form development, access to a set of components
 (input fields) that are automatically connected to the form.
 ```html
-// import {InputField} from "jenesius-vue-modal"
+// import {InputField} from "jenesius-vue-form"
 <input-field :type = "type" />
 ```
 For work, fields for entering the following type were developed:
@@ -24,11 +25,11 @@ For work, fields for entering the following type were developed:
 - [Switch](#switch)
 - [Radio](#radio)
 - [Tel](#tel)
+- [Range](#range)
 - Date (in developing)
 - Color (in developing, low-priority)
-- File (in developing)
+- File (in developing, low-priority)
 - Email (in developing, low-priority)
-- Range (in developing)
 
 ## Text
 The usual field for entering textual information.
@@ -109,3 +110,17 @@ Input elements of type tel are used to let the user enter and edit a telephone n
 ```
 
 <WidgetExampleInputTel/>
+
+## Range
+Input elements of type range let the user specify a numeric value which must be no less than a given value, and no 
+more than another given value.
+
+```html
+<input-field type = "range" label = "Volume"/>
+```
+**Options**:
+- min (Number) - Value won't be less than min. The default is 0.
+- max (Number) - Value won't be greater than max The default is 100.
+- step (Number) - Step value. The default is 1.
+
+<WidgetExampleInputRange/>

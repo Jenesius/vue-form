@@ -11,7 +11,7 @@ combining input fields and the mechanism of providing for common work with them.
 ## Form creation
 To create a form, you need to create an instance of the *Form* class:
 ```ts
-import {Form} from "jenesius-vue-modal"
+import {Form} from "jenesius-vue-form"
 const form = new Form()
 ```
 This is the minimum requirement to use the form. All child elements
@@ -25,7 +25,7 @@ To do this, let's add a couple of input fields that will automatically subscribe
     <button @click = "show">values</button>
 </template>
 <script setup>
-    import {Form, InputField} from "jenesius-vue-modal"
+    import {Form, InputField} from "jenesius-vue-form"
     const form = new Form();
     const arr = [ {value: 1, title: 'Earth'} ]
 
