@@ -11,7 +11,6 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
 		const p = [...path, ...parsedKey]; // Step path
 		const v = value[key];	  // Step value
 		
-		
 		if (checkPrimitiveType(v)) {
 			array.push({
 				path: p,
@@ -26,6 +25,19 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
 /**
  * @description Функция проходит по всем полям объекта.
  * @return Array of {path: string[], value: any}
+ * @example
+ * { person: { profile: { head: { mouth: 1, eyes: 2 } } } }
+ * Result:
+ * [
+ *   {
+ *     path: ['person', 'profile', 'head', 'mouth'],
+ *     value: 1
+ *   },
+ *   {
+ *     path: ['person', 'profile', 'head', 'eyes'],
+ *     value: 2
+ *   }
+ * ]
  */
 export default function bypassObject(object: any): BypassItem[] {
 	const array:BypassItem[] = [];

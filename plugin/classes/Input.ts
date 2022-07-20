@@ -35,7 +35,7 @@ export default class Input extends EventEmitter {
 	}
 
 	/**
-	 * @description Run all guards from validation. Input is not validated If on
+	 * @description Run all validations. Input is not validated If on
 	 * e of guard don't return true.
 	 * @return Array {} Array of string messages.
 	 *
