@@ -7,6 +7,7 @@
 			   :class = "{
 				   'input-range_error': errors.length
 			   }"
+			   :autofocus="autofocus"
 			   :style = "`background: linear-gradient(to right, ${ACTIVE_COLOR} 0%, ${ACTIVE_COLOR} ${progressCount}%, #fff ${progressCount}%, white 100%)`"
 		/>
 	</input-wrap>
@@ -16,17 +17,18 @@
 import InputWrap from "../input-wrap.vue"
 import {computed, ref} from "vue";
 
-interface Props {
-	label: string,
-	modelValue: any,
-	disabled?: boolean,
-	errors: string[],
+interface RangeProps {
 	max: number | string,
 	min: number | string,
 	step: number | string,
+	label?: string,
+	errors: string[],
+	modelValue: any,
+	disabled: boolean,
+	autofocus: boolean
 	// thumb?: boolean
 }
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<RangeProps>(), {
 	min: 0,
 	max: 100,
 	step: 1

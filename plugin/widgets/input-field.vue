@@ -10,6 +10,7 @@
         :disabled = "state.disabled"
         :errors = "state.errors"
         :options = "parseOptions(options)"
+		:autofocus="autofocus"
     />
 </template>
 
@@ -18,20 +19,21 @@
     import {computed, watch, withDefaults} from "vue";
 
     import useInputState from "../hooks/use-input-state";
-    import {OptionRow} from "../types";
+	import {OptionRow} from "../types";
     import STORE from "../config/store";
 
-    interface Props {
-        type?: string,
-        name?: string,
-        label?: string,
-        validation?: any[],
-        options?: OptionRow[] | { [value: string]: string},
-
-        required?: boolean
-    }
-
-    const props = withDefaults(defineProps<Props>(), {
+	
+    const props = withDefaults(defineProps<{
+		type?: string,
+		name?: string,
+		label?: string,
+		validation?: any[],
+		options?: OptionRow[] | Record<string, string>,
+	
+		required?: boolean,
+		modelValue?: any,
+		autofocus?: boolean
+	}>(), {
         validation: () => [],
         type: 'text'
     })

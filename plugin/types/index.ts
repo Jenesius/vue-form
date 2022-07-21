@@ -26,3 +26,18 @@ export interface FormDependence {
 export interface NamedFormDependence extends FormDependence{
 	name: string
 }
+
+export interface InputProps {
+
+}
+
+/**
+ * @description Current interface using for special widget-inputs, not for InputField
+ * */
+export type IPropsInput = {
+	label?: string,
+	errors: string[],
+	modelValue: any,
+	disabled: boolean,
+	autofocus: boolean
+}

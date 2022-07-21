@@ -8,6 +8,7 @@
                    @input = "onInput"
                    :value = "prettyValue"
                    :disabled = "disabled"
+				   :autofocus="autofocus"
             >
         </div>
     </widget-wrap>
@@ -19,11 +20,15 @@ import WidgetInputTelCode from "./widget-input-tel-code.vue";
 import {computed, ref} from "vue";
 import {parsePhoneNumber, AsYouType} from 'libphonenumber-js'
 
-const props = defineProps<{
+interface Props {
 	label?: string,
+	errors: string[],
 	modelValue: any,
-    disabled?: boolean
-}>()
+	disabled: boolean,
+	autofocus: boolean
+}
+
+const props = defineProps<Props>()
 const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
 }>()

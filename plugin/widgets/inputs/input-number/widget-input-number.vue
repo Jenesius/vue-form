@@ -16,9 +16,7 @@
 				:value = "modelValue"
 				@input = "onInput($event.target.value)"
 				:disabled = "disabled"
-				:class = "{
-				
-            }"
+				:autofocus="autofocus"
 			>
 		</div>
 	</input-wrap>
@@ -30,11 +28,12 @@ import WidgetNumberStep from "./widget-number-step.vue";
 import {withDefaults} from "vue";
 
 interface Props{
+	step?: number,
 	label?: string,
-	modelValue: any,
-	disabled?: boolean,
 	errors: string[],
-	step?: number
+	modelValue: any,
+	disabled: boolean,
+	autofocus: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
 	step: 1
