@@ -80,6 +80,34 @@ const {state, input} = useInputState(props.name)
 - **input** - an instance of Input which has several methods to work with
   form interaction.
 
+## Example
+
+The current example shows the simplest binding of two fields to a form and working with them
+```vue
+<template>
+    <input-field name = "username"/>
+    <input-field name = "password" type = "password"/>
+    
+    <button @click = "showValues">values</button>
+    <button @click = "setUsername">set default name</button>
+</template>
+<script setup >
+    import {Form, InputField} from "jenesius-vue-form"
+    const form = new Form();
+	
+    // Getting values from Form
+    function showValues() {
+        console.log(form.values);
+    }
+	// Setting username
+    function setUsername() {
+        form.change({
+            username: 'Jack'
+        })
+    }
+</script>
+```
+
 ## Full Functionality
 I recommend going to the [documentation site](http://form.jenesius.com/),
 which provides information on 
