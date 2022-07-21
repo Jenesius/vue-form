@@ -26,5 +26,15 @@ describe("Form.changes", () => {
 		})
 	})
 
+	test("Plain object should be granted", () => {
+		const form = new Form();
+		form.change({
+			"address.city": "Toronto"
+		})
+		expect(form.changes).toEqual({
+			address: {city: 'Toronto'}
+		})
+	})
+
 
 })
