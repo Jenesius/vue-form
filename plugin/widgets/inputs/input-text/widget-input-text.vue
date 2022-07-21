@@ -9,6 +9,7 @@
             :class = "{
 				'input-text_error': errors.length !== 0
             }"
+			:autofocus="autofocus"
         >
     </input-wrap>
 </template>
@@ -16,12 +17,13 @@
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
 
-    defineProps<{
-        label?: string,
-        modelValue: any,
-        disabled?: boolean,
-        errors: string[]
-    }>()
+	defineProps<{
+		label?: string,
+		errors: string[],
+		modelValue: any,
+		disabled: boolean,
+		autofocus: boolean
+	}>()
 
     const emit = defineEmits<{
         (e: 'update:modelValue', value: any): void

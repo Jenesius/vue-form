@@ -26,11 +26,12 @@ const STORE: IStore = {
 		range   : WidgetInputRange
 	}
 }
-export default STORE;
 
-type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password';
+type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range';
 interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any
 	}
 }
+export default STORE;
+

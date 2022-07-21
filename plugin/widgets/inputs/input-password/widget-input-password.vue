@@ -9,6 +9,7 @@
                 :value = "modelValue"
                 @input = "emit('update:modelValue', $event.target.value)"
                 :disabled = "disabled"
+				:autofocus="autofocus"
             />
             <div class = "input-password__toggle" @click = "toggleType()">
                 <div
@@ -26,11 +27,14 @@
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
     import {ref} from "vue";
-    const props = defineProps<{
-        label?: string,
-        modelValue: any,
-        disabled: boolean
-    }>()
+	interface Props  {
+		label?: string,
+		errors: string[],
+		modelValue: any,
+		disabled: boolean,
+		autofocus: boolean
+	}
+    const props = defineProps<Props>()
     const emit = defineEmits<{
         (e: 'update:modelValue', v: any): void
     }>()

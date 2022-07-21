@@ -35,7 +35,7 @@
         label?: string,
         options: OptionRow[],
         modelValue: any,
-        disabled: boolean
+        disabled: boolean,
     }>()
 
     const emit = defineEmits<{

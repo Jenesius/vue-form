@@ -5,8 +5,5 @@ module.exports = defineConfig({
     index: {
       entry: './src/pages/index/main.ts'
     },
-    v2: {
-      entry: './src/pages/v2/main.ts'
-    }
   }
 })

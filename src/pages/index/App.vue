@@ -1,9 +1,9 @@
 <template>
     <div class = "t">
 		
-		<input-hard name = "user"/>
-		<input-field label = "test" name = "test"/>
-		<input-field name = "Volume" label = "Volume" type = "range"  required thumb  />
+
+		<input-field label = "test" name = "test" autofocus />
+
 		<p>Changed: {{state.changed}}</p>
 		<p>{{test}}</p>
         <button @click = "validate">validate</button>
