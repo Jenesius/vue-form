@@ -5,7 +5,7 @@
 
 <script setup>
     import {Form, InputField} from "../../plugin";
-    import InputAddress from "./../../src/components/v2/input-address.vue";
+    import InputAddress from "@/components/input-address.vue";
 
     const form = new Form()
 
