@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-    import InputField from "../../../plugin/widgets/input-field.vue";
-    import {useProxyState} from "../../../plugin";
+    import InputField from "../../plugin/widgets/input-field.vue";
+    import {useProxyState} from "../../plugin";
 
     const props = defineProps<{
         name: string

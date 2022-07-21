@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-    import {useProxyState, InputField} from "../../../plugin";
+    import {useProxyState, InputField} from "../../plugin";
 
     const props = defineProps<{
         name: string,
