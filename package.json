@@ -44,7 +44,7 @@
     "vue": "^3.0.0"
   },
   "dependencies": {
-    "jenesius-event-emitter": "^1.0.4",
+    "jenesius-event-emitter": "^1.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
