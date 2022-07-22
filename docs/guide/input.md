@@ -40,11 +40,11 @@ As you can see from the example, *state* is a reactive object and stores the fol
 
 After creating this input, you can safely use it with the form:
 ```vue
-    <new-input name = "login" />
+<new-input name = "login" />
     
-    <script setup>
-	    const form = new Form();
-    </script>
+<script setup>
+    const form = new Form();
+</script>
 ```
 In the current example, the field will be associated with and managed by the form's data model.
 
@@ -89,9 +89,9 @@ Now it remains to add it to the configuration:
 import {config} from "jenesius-vue-form";
 import NewInput from "./new-input.vue";
 config({
-  inputTypes: {
-    new: NewInput, // New Input
-  }
+    inputTypes: {
+        new: NewInput, // New Input
+    }
 })
 ```
 And feel free to use it in your code:

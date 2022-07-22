@@ -31,7 +31,7 @@
 		options?: OptionRow[] | Record<string, string>,
 	
 		required?: boolean,
-		modelValue?: any,
+		
 		autofocus?: boolean
 	}>(), {
         validation: () => [],

@@ -7,6 +7,7 @@ import WidgetExampleInputSwitch from '../components/inputs/widget-example-input-
 import WidgetExampleInputRadio from '../components/inputs/widget-example-input-radio.vue';
 import WidgetExampleInputTel from '../components/inputs/widget-example-input-tel.vue';
 import WidgetExampleInputRange from '../components/inputs/widget-example-input-range.vue';
+import WidgetExampleInputNumber from '../components/inputs/widget-example-input-number.vue';
 
 </script>
 
@@ -26,6 +27,7 @@ For work, fields for entering the following type were developed:
 - [Radio](#radio)
 - [Tel](#tel)
 - [Range](#range)
+- [Number](#number)
 - Date (in developing)
 - Color (in developing, low-priority)
 - File (in developing, low-priority)
@@ -124,3 +126,15 @@ more than another given value.
 - step (Number) - Step value. The default is 1.
 
 <WidgetExampleInputRange/>
+
+## Number
+
+Input elements of type number are used to let the user enter a number. They include built-in validation to reject non-numerical entries.
+
+```html
+<input-field type = "number" label = "Age"/>
+```
+**Options**:
+- step (Number) - Step value. The default is 1.
+
+<WidgetExampleInputNumber/>

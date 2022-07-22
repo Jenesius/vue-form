@@ -18,9 +18,9 @@ import InputWrap from "../input-wrap.vue"
 import {computed, ref} from "vue";
 
 interface RangeProps {
-	max: number | string,
-	min: number | string,
-	step: number | string,
+	max?: number | string,
+	min?: number | string,
+	step?: number | string,
 	label?: string,
 	errors: string[],
 	modelValue: any,
