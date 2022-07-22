@@ -38,7 +38,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * Bottleneck of current library: inject, provide should state outside classes.
 	 */
 	static getParentForm(): Form | undefined {
-		return injectVue<Form>(Form.PROVIDE_NAME);
+		return injectVue<Form | undefined>(Form.PROVIDE_NAME, undefined);
 	}
 
 	/**
