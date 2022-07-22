@@ -45,7 +45,9 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Name of current entity. Can be undefined for parent Form.
 	 */
 	name?: string;
-	
+
+	version?: any
+
 	/**
 	 * @description Children of current form. Array of subscribed elements.
 	 */
