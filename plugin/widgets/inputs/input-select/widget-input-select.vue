@@ -95,6 +95,7 @@
         cursor: pointer;
         overflow: hidden;
         background-color: white;
+		position: relative;
     }
 
     .fade-enter-active,
