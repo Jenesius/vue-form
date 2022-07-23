@@ -248,6 +248,9 @@ export default class Form extends EventEmitter implements FormDependence{
 		deletePropByName(this.#changes, name);
 		this.cleanChanges(this.#changes);
 	}
+	/**
+	 * @description Clean all values, values equal {}, after that if new values was provided set them like current.
+	 * */
 	cleanValues(values?: Values) {
 		this.#values = {};
 		this.setValues(values || {});
