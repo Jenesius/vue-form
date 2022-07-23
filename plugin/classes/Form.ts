@@ -373,12 +373,12 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * */
 	protected disableChildren(name?: string) {
 		// No name - disable all elements
-		if (!name) return this.dependencies.forEach(dep => dep.disable())
+		if (!name) return this.dependencies.forEach(dep => dep.disable?.())
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
-			if (dep.name.startsWith(name)) return dep.disable(); // Точное совпадение
-			dep.disable(name.slice(dep.name.length + 1));
+			if (dep.name.startsWith(name)) return dep.disable?.(); // Точное совпадение
+			dep.disable?.(name.slice(dep.name.length + 1));
 		})
 	}
 	/**
@@ -387,12 +387,14 @@ export default class Form extends EventEmitter implements FormDependence{
 	protected enableChildren(name?: string) {
 		
 		if (!name) {
-			this.dependencies.forEach(dep => dep.enable())
+			this.dependencies.forEach(dep => dep.enable?.())
 			return;
 		}
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
+			if (!dep.enable) return;
+
 			if (dep.name.startsWith(name)) return dep.enable(); // Точное совпадение
 			dep.enable(name.slice(dep.name.length + 1));
 		})
