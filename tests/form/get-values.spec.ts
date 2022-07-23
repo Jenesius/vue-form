@@ -6,8 +6,6 @@ describe('Form:getValues', () => {
 		const form = new Form();
 		form.setValues({ name: 'Jenesius' })
 
-		console.log(form.values)
-
 		expect(form.getValues()).toEqual({name: 'Jenesius'})
 	});
 

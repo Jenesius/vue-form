@@ -267,9 +267,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description subscribe is alice for depend. Subscribe element to Form.
 	 * */
 	subscribe(item: any) {
-		return this.depend(item);
-	}
-	depend(item: any) {
 		this.dependencies.push(item);
 		this.emit(Form.EVENT_SUBSCRIBE, item);
 
@@ -287,6 +284,12 @@ export default class Form extends EventEmitter implements FormDependence{
 
 		}
 	}
+	/**
+	 * @deprecated
+	 * */
+	depend(item: any) {
+		return this.subscribe(item)
+	}
 	static proxyEvent(from: any, to: any, eventName: string) {
 		if (from.on && to.emit)
 			from.on(eventName, (...arg: any) => to.emit(eventName, ...arg));
@@ -301,7 +304,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	dependInput(name: string, i: any) {
 		i.name = name;
 		
-		return this.depend(i);
+		return this.subscribe(i);
 	}
 	
 	/**
@@ -375,12 +378,12 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * */
 	protected disableChildren(name?: string) {
 		// No name - disable all elements
-		if (!name) return this.dependencies.forEach(dep => dep.disable())
+		if (!name) return this.dependencies.forEach(dep => dep.disable?.())
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
-			if (dep.name.startsWith(name)) return dep.disable(); // Точное совпадение
-			dep.disable(name.slice(dep.name.length + 1));
+			if (dep.name.startsWith(name)) return dep.disable?.(); // Точное совпадение
+			dep.disable?.(name.slice(dep.name.length + 1));
 		})
 	}
 	/**
@@ -389,12 +392,14 @@ export default class Form extends EventEmitter implements FormDependence{
 	protected enableChildren(name?: string) {
 		
 		if (!name) {
-			this.dependencies.forEach(dep => dep.enable())
+			this.dependencies.forEach(dep => dep.enable?.())
 			return;
 		}
 		
 		this.getAssociatedDependencies(name)
 		.forEach(dep => {
+			if (!dep.enable) return;
+
 			if (dep.name.startsWith(name)) return dep.enable(); // Точное совпадение
 			dep.enable(name.slice(dep.name.length + 1));
 		})
