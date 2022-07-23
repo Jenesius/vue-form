@@ -1,5 +1,5 @@
 # Jenesius Vue Form
-Heavy form system for Vue.js ( Only 3 Version ). Library provides a wide range of
+Heavy form system for Vue.js ( **Only 3 Version** ). Library provides a wide range of
 functionality and interaction with form elements.
 
 ## Links
