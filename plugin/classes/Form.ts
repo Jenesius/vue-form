@@ -262,9 +262,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description subscribe is alice for depend. Subscribe element to Form.
 	 * */
 	subscribe(item: any) {
-		return this.depend(item);
-	}
-	depend(item: any) {
 		this.dependencies.push(item);
 		this.emit(Form.EVENT_SUBSCRIBE, item);
 
@@ -282,6 +279,12 @@ export default class Form extends EventEmitter implements FormDependence{
 
 		}
 	}
+	/**
+	 * @deprecated
+	 * */
+	depend(item: any) {
+		return this.subscribe(item)
+	}
 	static proxyEvent(from: any, to: any, eventName: string) {
 		if (from.on && to.emit)
 			from.on(eventName, (...arg: any) => to.emit(eventName, ...arg));
@@ -296,7 +299,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	dependInput(name: string, i: any) {
 		i.name = name;
 		
-		return this.depend(i);
+		return this.subscribe(i);
 	}
 	
 	/**
