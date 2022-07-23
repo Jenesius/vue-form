@@ -1,5 +1,5 @@
 import {Values} from "../types";
-import checkPrimitiveType from "./check-primitive-type";
+import isEndPointValue from "./is-end-point-value";
 
 /**
  * @description Метод вернёт новый объект, заменив все примитивные значения
@@ -9,7 +9,7 @@ import checkPrimitiveType from "./check-primitive-type";
 function replace(o: Values, value: any): {} {
 	Object.keys(o)
 	.forEach(key => {
-		if (checkPrimitiveType(o[key])) return  o[key] = value;
+		if (isEndPointValue(o[key])) return  o[key] = value;
 		
 		replace(o[key], value);
 	})

@@ -1,5 +1,5 @@
 import {Values} from "../types";
-import checkPrimitiveType from "./check-primitive-type";
+import isEndPointValue from "./is-end-point-value";
 /**
  * @description Сливает второй объект в первый.
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
@@ -11,12 +11,12 @@ export default function mergeObjects(originalValues: Values, newValues: Values){
 	
 	for( const key in newValues ) {
 		const value = newValues[key];
-		if (checkPrimitiveType(value)) set(originalValues, key, value);
+		if (isEndPointValue(value)) set(originalValues, key, value);
 		else {
 			if (!originalValues.hasOwnProperty(key)) originalValues[key] = {};
 
 			// If current value is primitive we need to change it to object.
-			if (checkPrimitiveType(originalValues[key])) originalValues[key] = {};
+			if (isEndPointValue(originalValues[key])) originalValues[key] = {};
 
 			mergeObjects(originalValues[key], value);
 		}
