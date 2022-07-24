@@ -39,7 +39,7 @@
 
 		
 
-		const values = {file: Object.freeze(file)};
+		const values = {file: file};
 
 		console.log('Replace', replaceValues(values))
 		

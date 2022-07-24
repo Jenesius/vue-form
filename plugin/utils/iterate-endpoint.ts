@@ -1,13 +1,14 @@
 import isEndPointValue from "./is-end-point-value";
 
 interface Endpoint {
-	set(v: any): void,
+	set(v: any): void, // For set new value
 	path: string[],
 	value: any
 }
 /**
  * @description Method for iterate for each end point instance.
  * @return {Endpoint} EndpointController to manipulate with point.
+ * @example { address: {city: "Berlin" } } -> [ { path: ["address", "city"], value: "Berlin", set(){} } ]
  */
 export default function iterateEndpoint(value: any) {
 	function next(endpointsArray: Endpoint[], value: any, path: string[] = []) {
