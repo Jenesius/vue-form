@@ -146,6 +146,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		}
 		
 		const v = grandObject(replaceValues(values));
+
 		mergeObjects(this.#changes, v);
 		
 		this.emit(Form.EVENT_CHANGED, this.changed);
@@ -231,6 +232,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Установка новых значений формы.
 	 * */
 	setValues(values?: Values){
+
 		if (values) this.mergeValues(grandObject(values));
 		this.emit(Form.EVENT_VALUE, values);
 

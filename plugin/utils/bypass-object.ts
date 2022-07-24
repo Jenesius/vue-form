@@ -1,7 +1,7 @@
-import checkPrimitiveType from "./check-primitive-type";
+import isEndPointValue from "./is-end-point-value";
 
 function step(array: BypassItem[], value: any, path: string[] = []): void {
-	if (checkPrimitiveType(value)) return;
+	if (isEndPointValue(value)) return;
 	
 	Object.keys(value)
 	.forEach(key => {
@@ -11,14 +11,14 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
 		const p = [...path, ...parsedKey]; // Step path
 		const v = value[key];	  // Step value
 		
-		if (checkPrimitiveType(v)) {
+		if (isEndPointValue(v)) {
 			array.push({
 				path: p,
 				value: v
 			})
 			return;
 		}
-		
+
 		step(array, v, p)
 	})
 }

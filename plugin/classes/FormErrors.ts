@@ -16,6 +16,10 @@ export default class FormErrors extends Error{
 	static TryToGetValueWithoutName() {
 		return new FormErrors(`Can't get value without name. Looks like form.getValueByName(). Current method has one required param.`)
 	}
+	static UnableExtendPrimitive(fieldKey: string) {
+		return new FormErrors(`The field(${fieldKey}) cannot be expanded because it is a primitive`)
+	}
+
 	static MergingObjectGotPrimitiveValue() {
 	
 	}
