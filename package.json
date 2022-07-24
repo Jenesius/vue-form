@@ -1,6 +1,6 @@
 {
   "name": "jenesius-vue-form",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Heavy form system for Vue.js",
   "author": "Jenesius",
   "license": "MIT",
@@ -25,7 +25,12 @@
   "files": [
     "dist/jenesius-vue-form.cjs.js",
     "README.md",
-    "dist/**/*.ts"
+    "dist/**/*.ts",
+    "tests",
+    "babel.config.js",
+    "jest.config.cjs",
+    ".eslintrc.js",
+    "LICENSE"
   ],
   "main": "dist/jenesius-vue-form.cjs.js",
   "private": false,
