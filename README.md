@@ -10,6 +10,7 @@ functionality and interaction with form elements.
 
 ![](https://img.shields.io/npm/dm/jenesius-vue-form)
 ![](https://img.shields.io/npm/dt/jenesius-vue-form)
+![Greet everyone](https://github.com/Jenesius/vue-form/actions/workflows/node.js.yml/badge.svg)
 ![](https://img.shields.io/github/issues/Jenesius/vue-form)
 ![](https://img.shields.io/github/stars/Jenesius/vue-form)
 

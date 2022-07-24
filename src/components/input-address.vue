@@ -14,7 +14,7 @@
 
     const props = defineProps<{
         name: string,
-        disabled: boolean
+        disabled?: boolean
     }>()
 
     useProxyState(props.name)
