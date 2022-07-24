@@ -51,6 +51,13 @@ function sidebar() {
 			items: [
 				{ text: 'Widgets', link: '/guide/input-widgets' },
 				{ text: 'Custom Widgets', link: '/guide/custom-widgets' },
+				{ text: "Input File", link: "/guide/input-file" }
+			]
+		},
+		{
+			text: "Best Practices",
+			items: [
+				{ text: "Depth information", link: "/guide/form-in-depth" }
 			]
 		}
 	]

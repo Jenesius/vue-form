@@ -22,9 +22,7 @@
 	const {state} = useFormState(form);
 	
      window.form = form;
-	form.on(Form.EVENT_VALUE, v => {
-		console.log("+",v);
-	})
+
 	function init() {
 		form.setValues({
 			user: {
