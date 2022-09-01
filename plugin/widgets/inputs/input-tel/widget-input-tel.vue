@@ -91,5 +91,6 @@ function onInput(e: any) {
 
 	    color: #1c1c1c;
         flex-grow: 1;
+		width: 100%;
     }
 </style>

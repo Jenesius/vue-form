@@ -78,6 +78,7 @@
         background-color: transparent;
         height: 100%;
         flex-grow: 1;
+		width: 100%;
         padding: 0 4px;
     }
 
