@@ -1,5 +1,5 @@
 <template>
-    <input-wrap :label = "label">
+    <input-wrap :label = "label" :errors = "errors">
         <input
             class = "widget-input-text"
             type = "text"

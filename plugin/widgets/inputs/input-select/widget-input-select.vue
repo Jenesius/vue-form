@@ -1,9 +1,10 @@
 <template>
-    <input-wrap :label = "label">
+    <input-wrap :label = "label" :errors = "errors">
         <div class = "container__input-select-wrap" ref = "inputSelectWrap">
             <div class = "input-select"
                 :class = "{
-                    'input-select_disabled': disabled
+                    'input-select_disabled': disabled,
+                    'input-select_error': errors.length
                 }"
             >
 
@@ -41,7 +42,8 @@
         modelValue: any,
         disabled?: boolean,
         options: OptionRow[],
-        placeholder?: string
+        placeholder?: string,
+		errors: string[],
     }>()
 
     const inputSelectWrap = ref();
@@ -97,6 +99,9 @@
         background-color: white;
 		position: relative;
     }
+	.input-select_error{
+		border: 1px solid red;
+	}
 
     .fade-enter-active,
     .fade-leave-active {

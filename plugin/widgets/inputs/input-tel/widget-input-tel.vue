@@ -1,7 +1,8 @@
 <template>
-    <widget-wrap :label = "label">
+    <widget-wrap :label = "label" :errors = "errors">
         <div class = "container-input-tel" @click = "inputTel?.focus()"             :class = "{
-                    'input-tel_disabled': disabled
+                    'input-tel_disabled': disabled,
+                    'input-tel_error': errors.length
                 }">
             <widget-input-tel-code :country-code="countryCode"/>
             <input type = "text" class = "input-tel" ref = "inputTel"
@@ -93,4 +94,7 @@ function onInput(e: any) {
         flex-grow: 1;
 		width: 100%;
     }
+	.input-tel_error{
+		border: 1px solid red;
+	}
 </style>

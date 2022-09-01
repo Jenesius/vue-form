@@ -1,7 +1,10 @@
 <template>
-    <input-wrap :label = "label">
+    <input-wrap :label = "label" :errors = "errors">
         <div class = "input-password-container"
-            :class = "{ 'input-password-container_disabled': disabled}"
+            :class = "{
+			'input-password-container_disabled': disabled,
+			'input-password_error': errors.length
+		}"
         >
             <input
                 class = "input-password"
@@ -118,4 +121,7 @@
         left: -21%;
         top: 48%;
     }
+	.input-password_error{
+		border: 1px solid red;
+	}
 </style>

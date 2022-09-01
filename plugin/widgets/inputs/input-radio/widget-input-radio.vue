@@ -1,5 +1,5 @@
 <template>
-    <input-wrap :label = "label">
+    <input-wrap :label = "label" :errors = "errors">
 
         <div class = "input-radio-container"
 
@@ -10,7 +10,8 @@
                  @click = "onInput(item.value)"
                  :class = "{
                      'input-radio_active': modelValue === item.value,
-                     'input-radio_disabled': disabled
+                     'input-radio_disabled': disabled,
+                     'input-radio_error': errors.length
                  }"
             >
                 <div class = "input-radio-button">
@@ -36,6 +37,7 @@
         options: OptionRow[],
         modelValue: any,
         disabled: boolean,
+		errors: string[],
     }>()
 
     const emit = defineEmits<{
@@ -102,4 +104,7 @@
     .input-radio_disabled .input-radio-button-active{
         background-color: #bac7f8
     }
+	.input-radio_error .input-radio-button{
+		border: 1px solid red;
+	}
 </style>
