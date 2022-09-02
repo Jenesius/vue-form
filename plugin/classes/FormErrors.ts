@@ -19,7 +19,9 @@ export default class FormErrors extends Error{
 	static UnableExtendPrimitive(fieldKey: string) {
 		return new FormErrors(`The field(${fieldKey}) cannot be expanded because it is a primitive`)
 	}
-
+	static ComputedValueWithoutName() {
+		return new FormErrors(`ComputedValue cannot be execute without name.`)
+	}
 	static MergingObjectGotPrimitiveValue() {
 	
 	}

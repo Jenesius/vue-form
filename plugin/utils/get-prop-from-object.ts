@@ -1,5 +1,5 @@
 
-import {Values} from "../types";
+import {Value, Values} from "../types";
 
 
 /**
@@ -10,7 +10,7 @@ import {Values} from "../types";
 
 
 
-export default function getPropFromObject(obj: Values, name: string) : Values | undefined{
+export default function getPropFromObject(obj: Values, name: string) : Value | undefined{
 
     /**
      * Если переданный объект, явялется примитивным типом, то дальнейший спуск
@@ -41,7 +41,7 @@ export default function getPropFromObject(obj: Values, name: string) : Values | 
         const subName:string = name.substring(0, _index); // address (first name)
 
         if (subName in obj)
-            return getPropFromObject(obj[subName], name.substr(_index + 1));
+            return getPropFromObject(obj[subName], name.substring(_index + 1));
 
         return undefined;
     }

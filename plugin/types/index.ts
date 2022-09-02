@@ -1,6 +1,7 @@
 export interface Values {
-	[name: string]: any
+	[name: string]: Value
 }
+export type Value = Values | any;
 
 export type ValidationRule = (value: any) => boolean | string;
 

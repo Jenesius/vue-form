@@ -9,6 +9,7 @@ import config from "./config/config";
 import STORE from "./config/store";
 
 import InputField from "./widgets/input-field.vue";
+import ComputedValue from "./methods/ComputedValue";
 
 export {
 	Form,
@@ -20,5 +21,6 @@ export {
 	
 	InputField,
 	config,
-	STORE
+	STORE,
+	ComputedValue
 }

@@ -93,6 +93,7 @@
         cursor: pointer;
     }
     .password-eye{
+		box-sizing: content-box;
         width: 13px;
         height: 13px;
         border: solid 1px #000;

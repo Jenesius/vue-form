@@ -3,13 +3,14 @@
         <input
             class = "widget-input-text"
             type = "text"
-            :value = "modelValue"
+            :value = "pretty(modelValue)"
             @input = "emit('update:modelValue', $event.target.value)"
             :disabled = "disabled"
             :class = "{
 				'input-text_error': errors.length !== 0
             }"
 			:autofocus="autofocus"
+			:placeholder="placeholder"
         >
     </input-wrap>
 </template>
@@ -17,13 +18,17 @@
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
 
-	defineProps<{
+	const props = withDefaults(defineProps<{
 		label?: string,
 		errors: string[],
 		modelValue: any,
 		disabled: boolean,
-		autofocus: boolean
-	}>()
+		autofocus: boolean,
+		pretty?: (a: string) => string,
+		placeholder?: string
+	}>(), {
+		pretty: (a: string) => a
+	})
 
     const emit = defineEmits<{
         (e: 'update:modelValue', value: any): void
