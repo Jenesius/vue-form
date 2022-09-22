@@ -1,6 +1,6 @@
 <template>
     <div>
-		<input-field label = "test" name = "test" autofocus />
+		<input-field label = "test" name = "test" autofocus max-length = "10" />
 		<input-field label = "test" name = "test" autofocus type = "radio" :options = "radio"/>
 		<input-field label = "Pretty" :pretty = "test" name = "pretty" autofocus :placeholder = "prettyPlaceholder" />
 		<input-field type = "file" name = "file"/>
