@@ -13,7 +13,6 @@
 			:autofocus="autofocus"
 			:placeholder="placeholder"
         >
-      {{modelValue}}
     </input-wrap>
 </template>
 
