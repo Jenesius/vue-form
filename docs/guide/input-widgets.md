@@ -43,6 +43,26 @@ The usual field for entering textual information.
 
 By the way, the *:type* parameter in the case of the Text field can be omitted.
 
+#### Params:
+
+- `max-length`: Limits the content length.
+- `pretty`: Function used for prettify input. It can be simple used for modify view of modalValue, not itself.
+
+```vue
+
+<template>
+  <input-field :pretty = "justNumeric" />
+</template>
+<script setup>
+import InputField from "jenesius-vue-form";
+
+function justNumeric(value) {
+  return value.replace(/\D/g, "");
+}
+
+</script>
+```
+
 ## Select
 
 Represents an element that allows you to select a value from the provided ones.
