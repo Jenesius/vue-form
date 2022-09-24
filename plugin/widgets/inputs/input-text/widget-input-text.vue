@@ -18,7 +18,7 @@
 
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
-    import {ref} from "vue";
+    import {ref, watch} from "vue";
 
 	const props = withDefaults(defineProps<{
 		label?: string,
@@ -38,14 +38,15 @@
         (e: 'update:modelValue', value: any): void
     }>()
 
-    function onInput(v: string) {
-      if (props.maxLength)
+    function onInput(v: unknown) {
+      if (props.maxLength && typeof v === "string")
         v = v.slice(0, Number(props.maxLength))
 
       refInput.value.value = v;
       emit('update:modelValue', v);
-
     }
+
+    watch(() => props.maxLength, () => onInput(props.modelValue));
 
 </script>
 
