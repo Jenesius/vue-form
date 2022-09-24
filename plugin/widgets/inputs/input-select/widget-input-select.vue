@@ -6,6 +6,11 @@
                     'input-select_disabled': disabled,
                     'input-select_error': errors.length
                 }"
+                 tabindex="0"
+                 @focusout = "deactivate"
+                 @keyup.enter = "setActive()"
+                 ref = "refInputSelect"
+
             >
 
                 <widget-input-select-current
@@ -31,11 +36,11 @@
 <script setup lang = "ts">
 
     import {OptionRow} from "../../../types";
-    import {computed, ref} from "vue";
-    import clickOutside from "../../../utils/click-outside";
+    import {computed, onMounted, ref} from "vue";
     import InputWrap from "../input-wrap.vue";
     import WidgetInputSelectOptions from "./widget-input-select-options.vue";
     import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
+    import updateInputPosition from "../../../utils/update-input-position";
 
     const props = defineProps<{
         label?: string,
@@ -46,21 +51,15 @@
 		errors: string[],
     }>()
 
+    const refInputSelect = ref<HTMLElement>()
     const inputSelectWrap = ref();
     const active = ref(false);
 
-    let off:any;
 
     function setActive(v = !active.value) {
 
+      console.log('set-active', v)
         if (props.disabled) return active.value = false;
-
-        if (v) {
-            off = clickOutside(inputSelectWrap.value, setActive.bind(null, false))
-        }else {
-            off?.();
-        }
-
         active.value = v;
     }
 
@@ -82,6 +81,21 @@
 
     })
 
+    function deactivate() {
+      setActive(false);
+    }
+
+    onMounted(() => {
+
+      refInputSelect.value?.addEventListener("keydown", e => {
+        switch (e.code) {
+          case "ArrowDown": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
+          case "ArrowUp": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
+        }
+      })
+
+    })
+
 </script>
 
 <style scoped>
@@ -98,6 +112,10 @@
         overflow: hidden;
         background-color: white;
 		position: relative;
+      outline: none;
+    }
+    .input-select:focus{
+      border-color: #b2b2b2;
     }
 	.input-select_error{
 		border: 1px solid red;

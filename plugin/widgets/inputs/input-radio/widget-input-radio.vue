@@ -2,7 +2,8 @@
     <input-wrap :label = "label" :errors = "errors">
 
         <div class = "input-radio-container"
-
+          tabindex="0"
+             ref = "refInputRadioContainer"
         >
             <div class = "input-radio"
                  v-for = "item in options"
@@ -31,13 +32,15 @@
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
     import {OptionRow} from "../../../types";
+    import {onMounted, ref} from "vue";
+    import updateInputPosition from "../../../utils/update-input-position";
 
     const props = defineProps<{
         label?: string,
         options: OptionRow[],
         modelValue: any,
         disabled: boolean,
-		errors: string[],
+		    errors: string[],
     }>()
 
     const emit = defineEmits<{
@@ -48,6 +51,21 @@
         if (props.disabled) return;
         emit('update:modelValue', v)
     }
+
+    const refInputRadioContainer = ref<HTMLElement>();
+
+
+
+    onMounted(() => {
+
+      refInputRadioContainer.value?.addEventListener("keydown", e => {
+        switch (e.code) {
+          case "ArrowDown": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
+          case "ArrowUp": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
+        }
+      })
+
+    })
 
 </script>
 

@@ -3,6 +3,7 @@
 		<input-field label = "test" name = "test" autofocus max-length = "10" />
 		<input-field label = "test" name = "test" autofocus type = "radio" :options = "radio"/>
 		<input-field label = "Pretty" :pretty = "test" name = "pretty" autofocus :placeholder = "prettyPlaceholder" />
+      <input-field label = "test" name = "test" autofocus type = "select" :options = "radio"/>
 		<input-field type = "file" name = "file"/>
 		<p>Changed: {{state.changed}}</p>
 		
@@ -27,7 +28,9 @@
 
 	 const radio = {
 		 1: "test-1",
-		 2: "test-2"
+		 2: "test-2",
+     3: "ttt",
+     "user": '142'
 	 }
 	 const radioValue = ComputedValue<number>(form, 'test');
 	 const prettyPlaceholder = computed(() => {
