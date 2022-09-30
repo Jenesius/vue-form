@@ -22,6 +22,28 @@ independence on the part of the site design.
 
 *Where the spirit does not work with the hand there is no art.* @Leonardo da Vinci
 
+## Usage
+
+This example demonstrates a simple use of this library using the login form as an example.
+
+```vue
+<template>
+  <input-field name = "login"/>
+  <input-field name = "password" type = "password"/>
+  <button @click = "handleLogin">Login</button>
+</template>
+<script setup>
+import {InputField, Form} from "jenesius-vue-form";
+
+const form = new Form();
+
+function handleLogin() {
+  // { login: "", password: "" }
+  console.log(form.values) 
+}
+</script>
+```
+
 ## Main Form
 To create a form, you just need to create an instance. JenesiusVueForm will do
 most of the work for you.
