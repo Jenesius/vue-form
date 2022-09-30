@@ -6,7 +6,7 @@
                     'input-select_disabled': disabled,
                     'input-select_error': errors.length
                 }"
-                 tabindex="0"
+                 :tabindex="!disabled? 0 : null"
                  @focusout = "deactivate()"
                  @keyup.enter = "setActive()"
                  ref = "refInputSelect"
