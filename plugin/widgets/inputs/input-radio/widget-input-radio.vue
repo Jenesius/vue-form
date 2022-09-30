@@ -60,8 +60,8 @@
 
       refInputRadioContainer.value?.addEventListener("keydown", e => {
         switch (e.code) {
-          case "ArrowDown": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
-          case "ArrowUp": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
+          case "ArrowDown": e.preventDefault(); updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
+          case "ArrowUp": e.preventDefault(); updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
         }
       })
 
@@ -86,6 +86,7 @@
         width: 20px;
         border-radius: 50%;
         border: 1px solid #c8c8c8;
+        background-color: white;
 
         cursor: pointer;
         display: grid;

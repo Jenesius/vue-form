@@ -2,6 +2,9 @@ import {OptionRow} from "../types";
 
 /**
  * @description Method using for to move bottom/up options
+ * @param params.value Current value (modelValue)
+ * @param {Number} params.duration Duration to step (1, -1 or other)
+ *
  * */
 export default function updateInputPosition(params: {options: OptionRow[], value: any, onInput: any, duration: number}) {
 

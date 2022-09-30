@@ -7,7 +7,7 @@
                     'input-select_error': errors.length
                 }"
                  tabindex="0"
-                 @focusout = "deactivate"
+                 @focusout = "deactivate()"
                  @keyup.enter = "setActive()"
                  ref = "refInputSelect"
 
@@ -57,8 +57,6 @@
 
 
     function setActive(v = !active.value) {
-
-      console.log('set-active', v)
         if (props.disabled) return active.value = false;
         active.value = v;
     }
@@ -82,15 +80,17 @@
     })
 
     function deactivate() {
+      console.log('+')
       setActive(false);
     }
 
     onMounted(() => {
 
       refInputSelect.value?.addEventListener("keydown", e => {
+
         switch (e.code) {
-          case "ArrowDown": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
-          case "ArrowUp": updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
+          case "ArrowDown": e.preventDefault(); updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: 1}); break;
+          case "ArrowUp": e.preventDefault(); updateInputPosition({options: props.options, value: props.modelValue, onInput, duration: -1}); break;
         }
       })
 
