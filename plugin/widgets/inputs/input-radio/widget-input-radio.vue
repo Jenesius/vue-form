@@ -1,9 +1,10 @@
 <template>
     <input-wrap :label = "label" :errors = "errors">
 
-        <div class = "input-radio-container"
-          tabindex="0"
-             ref = "refInputRadioContainer"
+        <div
+            class = "input-radio-container"
+            :tabindex="disabled? -1 : 0"
+            ref = "refInputRadioContainer"
         >
             <div class = "input-radio"
                  v-for = "item in options"
@@ -75,6 +76,12 @@
         flex-direction: column;
         gap: 14px;
     }
+    .input-radio-container:focus{
+      outline: none;
+    }
+    .input-radio-container:focus .input-radio-button{
+      border-color: #b2b2b2;
+    }
     .input-radio{
         display: flex;
         gap: 13px;
@@ -88,7 +95,6 @@
         border: 1px solid #c8c8c8;
         background-color: white;
 
-        cursor: pointer;
         display: grid;
         place-items: center;
     }
