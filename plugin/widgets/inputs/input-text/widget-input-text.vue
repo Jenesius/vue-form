@@ -27,10 +27,12 @@
 		disabled: boolean,
 		autofocus: boolean,
 		pretty?: (a: string) => string,
+    modify?: (a: string) => string,
 		placeholder?: string,
     maxLength?: string | number
 	}>(), {
-		pretty: (a: string) => a
+		pretty: (a: string) => a,
+    modify: (a: string) => a
 	})
 
     const refInput = ref(props.modelValue);
@@ -41,6 +43,13 @@
     function onInput(v: unknown) {
       if (props.maxLength && typeof v === "string")
         v = v.slice(0, Number(props.maxLength))
+
+      try {
+        // @ts-ignore
+        v = props.modify(v);
+      } catch (e) {
+        console.log(`[input-text] modify value error.`, e);
+      }
 
       refInput.value.value = v;
       emit('update:modelValue', v);
