@@ -11,6 +11,8 @@ import STORE from "./config/store";
 import InputField from "./widgets/input-field.vue";
 import ComputedValue from "./methods/ComputedValue";
 
+import utils from "./utils/utils";
+
 export {
 	Form,
 	FormProxy,
@@ -22,5 +24,6 @@ export {
 	InputField,
 	config,
 	STORE,
-	ComputedValue
+	ComputedValue,
+	utils
 }
