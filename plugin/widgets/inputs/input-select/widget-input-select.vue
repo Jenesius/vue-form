@@ -80,7 +80,6 @@
     })
 
     function deactivate() {
-      console.log('+')
       setActive(false);
     }
 
