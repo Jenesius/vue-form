@@ -12,6 +12,7 @@ import WidgetInputPassword
 import WidgetInputTel from "../widgets/inputs/input-tel/widget-input-tel.vue";
 import WidgetInputNumber from "../widgets/inputs/input-number/widget-input-number.vue";
 import WidgetInputRange from "../widgets/inputs/input-range/widget-input-range.vue";
+import WidgetInputTextarea from "../widgets/inputs/input-textarea/widget-input-textarea.vue";
 
 const STORE: IStore = {
 	inputTypes: {
@@ -23,11 +24,12 @@ const STORE: IStore = {
 		password: WidgetInputPassword,
 		tel     : WidgetInputTel,
 		number  : WidgetInputNumber,
-		range   : WidgetInputRange
+		range   : WidgetInputRange,
+		textarea: WidgetInputTextarea
 	}
 }
 
-type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range';
+type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
 interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any

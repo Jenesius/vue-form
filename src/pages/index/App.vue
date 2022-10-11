@@ -1,10 +1,15 @@
 <template>
   <div class = "wrap-app">
     <input-field label="test" name="test" autofocus max-length="10"/>
-    <input-field label="test" name="test" autofocus type="radio" :options="radio"/>
     <input-field label="Pretty" :pretty="test" name="pretty" autofocus :placeholder="prettyPlaceholder"/>
     <input-field label="test" name="test" autofocus type="select" :options="radio" required/>
     <input-field type="file" name="file"/>
+    <input-field  name="test" autofocus />
+
+    <input-field type="textarea" name="textarea" label = "Description" autoresize />
+    <input-field type="textarea" name="textareaa" label = "Description" autoresize = "6" />
+    <input-field  name="test" autofocus />
+
     <input-field type="inside"/>
     <p>Changed: {{ state.changed }}</p>
 
@@ -27,6 +32,22 @@ const {state} = useFormState(form);
 
 window.form = form;
 
+form.setValues({
+  textarea: `1
+  2
+  3
+  4
+  5
+  6
+  7`,
+  textareaa: `1
+  2
+  3
+  4
+  5
+  6
+  7`
+})
 
 function onValidate() {
   console.log(form.validate());
@@ -72,18 +93,9 @@ function init() {
   })
 }
 
-onMounted(() => {
-
-  const file = new File([], "test");
-
-
-  const values = {file: file};
-
-  console.log('Replace', replaceValues(values))
-
-})
 
 const disable = form.disable.bind(form)
+
 </script>
 
 <style>
