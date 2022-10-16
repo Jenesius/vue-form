@@ -26,11 +26,16 @@ import {Form, useFormState} from "../../../plugin";
 import {computed, onMounted} from "vue";
 import replaceValues from "../../../plugin/utils/replace-values";
 import ComputedValue from "../../../plugin/methods/ComputedValue";
+import plainObject from "../../../plugin/utils/plain-object";
 
 const form = new Form();
 const {state} = useFormState(form);
 
 window.form = form;
+
+form.oninput('test', (a, b) => {
+  console.log('Test prop:', a, b);
+})
 
 form.setValues({
   textarea: `1
@@ -48,6 +53,16 @@ form.setValues({
   6
   7`
 })
+
+console.log(plainObject({
+  data: "123",
+  address: {
+    city: "123",
+    description: 1,
+    value: null
+  }
+}))
+
 
 function onValidate() {
   console.log(form.validate());

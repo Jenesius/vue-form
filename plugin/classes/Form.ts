@@ -1,7 +1,7 @@
 import EventEmitter from "jenesius-event-emitter";
 import {inject as injectVue, provide as provideVue} from "vue";
 import FormErrors from "./FormErrors";
-import {FormDependence, FunctionHandleData, Values} from "../types";
+import {FormDependence, FunctionHandleData, Value, Values} from "../types";
 
 import mergeObjects from "../utils/merge-objects";
 import runPromiseQueue from "../utils/run-promise-queue";
@@ -12,6 +12,7 @@ import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
+import searchChangesByComparison, {IComparisonResult} from "../utils/search-changes-by-comparison";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -25,6 +26,10 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 	static EVENT_VALUE			 = 'value';
 	static EVENT_UPDATE_ABILITY  = 'ability:update';
+	static EVENT_INPUT			 = `input`;
+	static GET_EVENT_FIELD_INPUT(name: string) {
+		return `${Form.EVENT_INPUT}:${name}`;
+	}
 	
 	/**
 	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
@@ -114,10 +119,36 @@ export default class Form extends EventEmitter implements FormDependence{
 	get values() {
 		return this.#values;
 	}
+	private notifyInputs(inputValues: any) {
+		console.log(this.values, inputValues);
+		const arrayChanges = searchChangesByComparison(this.values, inputValues);
+
+		arrayChanges.forEach(changePoint => {
+			this.emit(Form.GET_EVENT_FIELD_INPUT(changePoint.name), changePoint);
+		})
+	}
 	set values(a: any) {
+		this.notifyInputs(a);
 		this.#values = a;
 	}
+	/**
+	 * @description Method used for set values. New values don't overwrite previous, Mixing, GrandValues used for this.
+	 * */
+	setValues(values?: Values){
 
+		if (!values) return;
+
+		const prettyData = grandObject(values);
+		this.notifyInputs(prettyData);
+		this.mergeValues(prettyData);
+
+
+
+		this.emit(Form.EVENT_VALUE, prettyData); // Emit about new data.
+		this.setValuesOfItem(this.values);
+
+
+	}
 	get debug(){
 		return this.#debug
 	}
@@ -159,7 +190,17 @@ export default class Form extends EventEmitter implements FormDependence{
 			[name]: v
 		})
 	}
-	
+
+	/**
+	 * @description Callback triggers each time when input[name] was changed. Callback function get just one parameter:
+	 * newValue.
+	 * */
+	oninput(name: string, callback: (newValue?: Value, oldValue?: Value) => void) {
+
+		return this.on(Form.GET_EVENT_FIELD_INPUT(name), (data: IComparisonResult) => callback(data.newValue, data.oldValue))
+
+	}
+
 	/**
 	 * Рекурсивное изменение значений.
 	 * В конечной реализации оно нихуя не рекурсивное.
@@ -228,16 +269,8 @@ export default class Form extends EventEmitter implements FormDependence{
 			[name]: value
 		});
 	}
-	/**
-	 * @description Установка новых значений формы.
-	 * */
-	setValues(values?: Values){
 
-		if (values) this.mergeValues(grandObject(values));
-		this.emit(Form.EVENT_VALUE, values);
 
-		this.setValuesOfItem(this.values)
-	}
 	/**
 	 * @description Method using for clear field. Dont set NULL. Remove field
 	 * from values.
@@ -254,7 +287,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Clean all values, values equal {}, after that if new values was provided set them like current.
 	 * */
 	cleanValues(values?: Values) {
-		this.#values = {};
+		this.values = {};
 		this.setValues(values || {});
 	}
 	
