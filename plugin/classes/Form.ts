@@ -12,7 +12,7 @@ import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
-import searchChangesByComparison, {IComparisonResult} from "../utils/search-changes-by-comparison";
+import searchChangesByComparison, {IComparisonResult, searchByComparison} from "../utils/search-changes-by-comparison";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -120,7 +120,6 @@ export default class Form extends EventEmitter implements FormDependence{
 		return this.#values;
 	}
 	private notifyInputs(inputValues: any) {
-		console.log(this.values, inputValues);
 		const arrayChanges = searchChangesByComparison(this.values, inputValues);
 
 		arrayChanges.forEach(changePoint => {
@@ -128,7 +127,12 @@ export default class Form extends EventEmitter implements FormDependence{
 		})
 	}
 	set values(a: any) {
-		this.notifyInputs(a);
+		const arrayChanges = searchByComparison(this.values, a);
+
+		arrayChanges.forEach(changePoint => {
+			this.emit(Form.GET_EVENT_FIELD_INPUT(changePoint.name), changePoint);
+		})
+
 		this.#values = a;
 	}
 	/**

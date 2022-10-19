@@ -1,5 +1,6 @@
 <template>
   <div class = "wrap-app">
+    {{computedTest}}
     <input-field label="test" name="test" autofocus max-length="10"/>
     <input-field label="Pretty" :pretty="test" name="pretty" autofocus :placeholder="prettyPlaceholder"/>
     <input-field label="test" name="test" autofocus type="select" :options="radio" required/>
@@ -33,9 +34,9 @@ const {state} = useFormState(form);
 
 window.form = form;
 
-form.oninput('test', (a, b) => {
-  console.log('Test prop:', a, b);
-})
+
+
+const computedTest = ComputedValue(form, 'test');
 
 form.setValues({
   textarea: `1
@@ -54,14 +55,7 @@ form.setValues({
   7`
 })
 
-console.log(plainObject({
-  data: "123",
-  address: {
-    city: "123",
-    description: 1,
-    value: null
-  }
-}))
+
 
 
 function onValidate() {

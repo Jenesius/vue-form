@@ -14,9 +14,13 @@ function ComputedValue<T>(form: Form | string, name?: string): Ref<T>{
 
 	const value = ref(form?.getValueByName(name));
 
+	form?.oninput(name, (x) => {
+		value.value = x;
+	})
+	/*
 	form?.on(Form.EVENT_VALUE, x => {
 		value.value = (form as Form).getValueByName(name as string);
-	})
+	})*/
 
 	return value;
 }

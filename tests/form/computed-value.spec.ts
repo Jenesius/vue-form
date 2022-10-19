@@ -23,4 +23,24 @@ describe("ComputedValue of Form", () => {
 		})
 		expect(test.value).toBe(1998)
 	})
+
+	test("Hard computed name", () => {
+		const form = new Form();
+		const test = ComputedValue(form, "address.name");
+		form.change({
+			address: {
+				city: "1"
+			}
+		})
+		form.setValues({
+			address: {
+				name: {
+					code: 1
+				}
+			}
+		})
+
+		expect(test.value).toEqual({code: 1})
+	})
+
 })

@@ -35,6 +35,55 @@ function resetEachValue(object: Record<string, any>, array: IComparisonResult[] 
     })
     return array;
 }
+export function searchByComparison(oldValues: any, newValues: any, array: IComparisonResult[] = [], subName = '') {
+    if (checkPrimitiveType(oldValues) || checkPrimitiveType(newValues)) {
+        add(array, subName, newValues, oldValues);
+
+        return array;
+    }
+
+    if (subName.length) {
+        add(array, subName, newValues, oldValues);
+    }
+
+    let arrayOld = Object.keys(oldValues) || [],
+        arrayNew = Object.keys(newValues) || [],
+        indexOld = 0,
+        indexNew = 0;
+
+    while (indexOld !== arrayOld.length || indexNew !== arrayNew.length) {
+        const keyOld = arrayOld[indexOld],
+              keyNew = arrayNew[indexNew],
+              valueOld = oldValues[keyOld],
+              valueNew = newValues[keyNew];
+
+        if (keyOld === undefined) {
+            searchByComparison(valueOld, valueNew, array, concatName(subName, keyNew) );
+            indexNew++;
+        }
+        if (keyNew === undefined) {
+            searchByComparison(valueOld, valueNew, array, concatName(subName, keyOld) );
+            indexOld++;
+        }
+
+        if (keyOld === keyNew && keyOld !== undefined) {
+            // add(array, concatName(subName, keyOld), valueNew, valueOld);
+            searchByComparison(valueOld, valueNew, array, concatName(subName, keyOld));
+            indexNew++; indexOld++;
+        }
+
+        if (keyOld < keyNew) {
+            searchByComparison(valueOld, undefined, array, concatName(subName, keyOld));
+            indexOld++;
+        }
+        if (keyNew < keyOld) {
+            searchByComparison(undefined, valueNew, array, concatName(subName, keyNew) );
+            indexNew++;
+        }
+    }
+
+    return array;
+}
 
 export default function searchChangesByComparison(mainObject: any, changes: unknown, array: IComparisonResult[] = [], subName = '') {
     // if (typeof mainObject !== "object" || mainObject === null) throw FormErrors.ProvidedValueNotObject(mainObject);
