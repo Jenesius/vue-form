@@ -25,4 +25,7 @@ export default class FormErrors extends Error{
 	static ProvidedValueNotObject(object: any) {
 		return new FormErrors(`Provided value ${object} is not object.`);
 	}
+	static CallbackIsNotProvided() {
+		return new FormErrors(`Callback is not provided to listener.`);
+	}
 }

@@ -85,7 +85,7 @@ export function searchByComparison(oldValues: any, newValues: any, array: ICompa
     return array;
 }
 
-export default function searchChangesByComparison(mainObject: any, changes: unknown, array: IComparisonResult[] = [], subName = '') {
+export function searchChangesByComparison(mainObject: any, changes: unknown, array: IComparisonResult[] = [], subName = '') {
     // if (typeof mainObject !== "object" || mainObject === null) throw FormErrors.ProvidedValueNotObject(mainObject);
     if (typeof changes !== "object" || changes === null) return [];
 

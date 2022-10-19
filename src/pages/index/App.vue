@@ -1,6 +1,6 @@
 <template>
   <div class = "wrap-app">
-    {{computedTest}}
+    {{values}} - {{state}}
     <input-field label="test" name="test" autofocus max-length="10"/>
     <input-field label="Pretty" :pretty="test" name="pretty" autofocus :placeholder="prettyPlaceholder"/>
     <input-field label="test" name="test" autofocus type="select" :options="radio" required/>
@@ -24,15 +24,20 @@
 <script setup lang='ts'>
 import InputField from "../../../plugin/widgets/input-field.vue";
 import {Form, useFormState} from "../../../plugin";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, reactive} from "vue";
 import replaceValues from "../../../plugin/utils/replace-values";
 import ComputedValue from "../../../plugin/methods/ComputedValue";
 import plainObject from "../../../plugin/utils/plain-object";
+import mergeObjects from "../../../plugin/utils/merge-objects";
+import grandObject from "../../../plugin/utils/grand-object";
+import useFormValues from "../../../plugin/hooks/use-form-values";
 
 const form = new Form();
 const {state} = useFormState(form);
 
 window.form = form;
+
+const values = useFormValues(form);
 
 
 
@@ -72,7 +77,6 @@ const radioValue = ComputedValue<number>(form, 'test');
 const prettyPlaceholder = computed(() => {
   switch (radioValue.value) {
     case "1": {
-      console.log('Identiy number')
       return "Identity number";
     }
     case "2":

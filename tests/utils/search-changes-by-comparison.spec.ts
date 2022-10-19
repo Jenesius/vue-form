@@ -1,4 +1,4 @@
-import findChanges from "../../plugin/utils/search-changes-by-comparison";
+import {searchChangesByComparison} from "../../plugin/utils/search-changes-by-comparison";
 
 const values = {
     a: 1,
@@ -24,11 +24,11 @@ const values = {
 
 describe("find changes", () => {
     it("Result should be empty array. Provided empty changes", () => {
-        const result = findChanges(values, {});
+        const result = searchChangesByComparison(values, {});
         expect(result).toEqual([]);
     })
     it("Result should be array with one item, after providing simple changes", () => {
-        const result = findChanges(values, {b: 2});
+        const result = searchChangesByComparison(values, {b: 2});
         expect(result).toEqual([
             {
                 name: 'b',
@@ -38,17 +38,22 @@ describe("find changes", () => {
         ])
     })
     it("Result should be array with one item, after providing simple changes", () => {
-        const result = findChanges(values, {address: { city: 1 }});
+        const result = searchChangesByComparison(values, {address: { city: 1 }});
         expect(result).toEqual([
             {
                 name: 'address',
                 newValue: { city: 1 },
                 oldValue: undefined
+            },
+            {
+                name: 'address.city',
+                newValue: 1,
+                oldValue: undefined
             }
         ])
     })
     it("Primitive value ot composite", () => {
-        const result = findChanges(values, {a: { name: 123 }})
+        const result = searchChangesByComparison(values, {a: { name: 123 }})
         expect(result).toEqual([
             {
                 name: 'a', oldValue: 1, newValue: {name: 123}
@@ -59,7 +64,7 @@ describe("find changes", () => {
         ])
     })
     it("Changes not exist in OldValues", () => {
-        const result = findChanges(values, {b: {name: 'b'}})
+        const result = searchChangesByComparison(values, {b: {name: 'b'}})
         expect(result).toEqual([
             {
                 name: 'b', oldValue: undefined, newValue: {name: 'b'}
@@ -70,7 +75,7 @@ describe("find changes", () => {
         ])
     })
     it("Depp changes. Result should be full heavy object.", () => {
-        const result = findChanges(values, {deep: {city: 'Mogilev', name: 'Burdin'}});
+        const result = searchChangesByComparison(values, {deep: {city: 'Mogilev', name: 'Burdin'}});
         expect(result).toEqual([
             {
                 name: 'deep',
@@ -92,7 +97,7 @@ describe("find changes", () => {
         ])
     })
     it("Array should includes changes from source object if was provided primitive value.", () => {
-        const result = findChanges(values, {info: {population: undefined}});
+        const result = searchChangesByComparison(values, {info: {population: undefined}});
         expect(result).toEqual([
             {
                 name: "info", newValue: { population: undefined }, oldValue: values.info

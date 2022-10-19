@@ -12,7 +12,7 @@ import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
-import searchChangesByComparison, {IComparisonResult, searchByComparison} from "../utils/search-changes-by-comparison";
+import  {IComparisonResult, searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -119,21 +119,18 @@ export default class Form extends EventEmitter implements FormDependence{
 	get values() {
 		return this.#values;
 	}
-	private notifyInputs(inputValues: any) {
-		const arrayChanges = searchChangesByComparison(this.values, inputValues);
-
-		arrayChanges.forEach(changePoint => {
+	/**
+	 * @description Notify about input event all provided changes.
+	 */
+	private notifyInputs(changes: IComparisonResult[]) {
+		changes.forEach(changePoint => {
 			this.emit(Form.GET_EVENT_FIELD_INPUT(changePoint.name), changePoint);
+			this.emit(Form.EVENT_INPUT, changePoint);
 		})
 	}
-	set values(a: any) {
-		const arrayChanges = searchByComparison(this.values, a);
-
-		arrayChanges.forEach(changePoint => {
-			this.emit(Form.GET_EVENT_FIELD_INPUT(changePoint.name), changePoint);
-		})
-
-		this.#values = a;
+	set values(newValues: any) {
+		this.notifyInputs(searchByComparison(this.values, newValues));
+		this.#values = newValues;
 	}
 	/**
 	 * @description Method used for set values. New values don't overwrite previous, Mixing, GrandValues used for this.
@@ -143,14 +140,11 @@ export default class Form extends EventEmitter implements FormDependence{
 		if (!values) return;
 
 		const prettyData = grandObject(values);
-		this.notifyInputs(prettyData);
+		this.notifyInputs(searchChangesByComparison(this.values, prettyData));
 		this.mergeValues(prettyData);
-
-
 
 		this.emit(Form.EVENT_VALUE, prettyData); // Emit about new data.
 		this.setValuesOfItem(this.values);
-
 
 	}
 	get debug(){
@@ -199,9 +193,17 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Callback triggers each time when input[name] was changed. Callback function get just one parameter:
 	 * newValue.
 	 * */
-	oninput(name: string, callback: (newValue?: Value, oldValue?: Value) => void) {
+	oninput(callback: (state: IComparisonResult) => void): any
+	oninput(name: string, callback: (newValue?: Value, oldValue?: Value) => void): any
+	oninput(arg: string | ((state: IComparisonResult) => void), callback?: (newValue?: Value, oldValue?: Value) => void )
+	{
+		if (typeof arg === "string") {
+			const fieldName = arg;
+			if (!callback) throw FormErrors.CallbackIsNotProvided();
+			return this.on(Form.GET_EVENT_FIELD_INPUT(fieldName), (data: IComparisonResult) => callback(data.newValue, data.oldValue))
+		}
 
-		return this.on(Form.GET_EVENT_FIELD_INPUT(name), (data: IComparisonResult) => callback(data.newValue, data.oldValue))
+		return this.on(Form.EVENT_INPUT, (data: IComparisonResult) => arg(data))
 
 	}
 
