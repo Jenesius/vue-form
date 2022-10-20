@@ -1,6 +1,8 @@
 <template>
   <div class = "wrap-app">
     {{values}} - {{state}}
+    {{computedAddress}}
+    <input-field type = "address" name = "address"/>
     <input-field label="test" name="test" autofocus max-length="10"/>
     <input-field label="Pretty" :pretty="test" name="pretty" autofocus :placeholder="prettyPlaceholder"/>
     <input-field label="test" name="test" autofocus type="select" :options="radio" required/>
@@ -41,7 +43,7 @@ const values = useFormValues(form);
 
 
 
-const computedTest = ComputedValue(form, 'test');
+const computedAddress = ComputedValue(form, 'address');
 
 form.setValues({
   textarea: `1

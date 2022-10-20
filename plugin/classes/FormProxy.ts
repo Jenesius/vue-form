@@ -40,7 +40,11 @@ export default class FormProxy extends Form{
 	input(name: string, v: any) {
 		const value = {[name]: v};
 		
-		this.parentForm?.input(this.name, value)
+		// this.parentForm?.input(this.name, value)
+		this.parentForm?.input(this.name, {
+			...this.values,
+			...value
+		})
 	}
 }
 

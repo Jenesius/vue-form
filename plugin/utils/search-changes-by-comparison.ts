@@ -5,6 +5,8 @@ import getPropFromObject from "./get-prop-from-object";
 import checkPrimitiveType from "./check-primitive-type";
 import concatName from "./concat-name";
 import iteratePoints from "./iterate-points";
+import copyObject from "./copy-object";
+import mergeObjects from "./merge-objects";
 
 /**
  * @description Pushing ComparisonResult to array.
@@ -34,6 +36,9 @@ function resetEachValue(object: Record<string, any>, array: IComparisonResult[] 
     return array;
 }
 
+/**
+ * @description Compares all points of oldValue/newValue
+ * */
 export function searchByComparison(oldValues: any, newValues: any, array: IComparisonResult[] = [], subName = '') {
     function addOld() {
         add(array, concatName(subName, oldPoints[oldIndex].name), oldPoints[oldIndex].value, undefined);
@@ -65,6 +70,10 @@ export function searchByComparison(oldValues: any, newValues: any, array: ICompa
     return array;
 }
 
+/**
+ * @description Function the same with searchByComparison, but check only changes
+ * @param {Object} changes Only changes. Not an output object
+ * */
 export function searchChangesByComparison(mainObject: any, changes: unknown, array: IComparisonResult[] = [], subName = '') {
     // if (typeof mainObject !== "object" || mainObject === null) throw FormErrors.ProvidedValueNotObject(mainObject);
     if (typeof changes !== "object" || changes === null) return [];
@@ -76,7 +85,13 @@ export function searchChangesByComparison(mainObject: any, changes: unknown, arr
         let oldValue = checkPrimitiveType(mainObject) ?  undefined : mainObject[key];
         const compositeName = concatName(subName, key);
 
-        add(array, compositeName, getPropFromObject(mainObject, key), newValue);
+        /**
+         * Добавить работу с array
+         * */
+        const copyOldValue = copyObject(oldValue); // Copy old object. We don't need to changed it
+        const mergedValue = !checkPrimitiveType(copyOldValue) && !checkPrimitiveType(newValue)? mergeObjects(copyOldValue, newValue) : newValue; // Merging copy with values
+
+        add(array, compositeName, getPropFromObject(mainObject, key), mergedValue);
 
 
         if (checkPrimitiveType(newValue) && !checkPrimitiveType(oldValue)) {
@@ -87,9 +102,6 @@ export function searchChangesByComparison(mainObject: any, changes: unknown, arr
             resetEachValue(oldValue, array, compositeName);
         }
         if (!checkPrimitiveType(newValue)) {
-            /**
-             * Добавить работу с array
-             * */
             searchChangesByComparison(oldValue, newValue, array, compositeName);
         }
     })

@@ -137,7 +137,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * */
 	setValues(values?: Values){
 
-		if (!values) return;
 
 		const prettyData = grandObject(values);
 		this.notifyInputs(searchChangesByComparison(this.values, prettyData));
@@ -145,7 +144,6 @@ export default class Form extends EventEmitter implements FormDependence{
 
 		this.emit(Form.EVENT_VALUE, prettyData); // Emit about new data.
 		this.setValuesOfItem(this.values);
-
 	}
 	get debug(){
 		return this.#debug

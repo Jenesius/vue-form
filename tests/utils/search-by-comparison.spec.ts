@@ -101,4 +101,19 @@ describe("test", () => {
             },
         ])
     })
+
+    it('should 5', function () {
+        const source = {
+            address: { city: "Berlin", country: "german" }
+        }
+        const output = {address: {country: "German"}}
+
+        expect(searchByComparison(source, output)).toEqual([
+            { name: "address", newValue: {country: "German"}, oldValue: { city: "Berlin", country: "german" } },
+            { name: "address.city", newValue: undefined, oldValue: "Berlin"  },
+            { name: "address.country", newValue: "German", oldValue: 'german' },
+
+        ])
+    });
+
 })

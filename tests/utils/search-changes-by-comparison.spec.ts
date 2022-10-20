@@ -131,4 +131,41 @@ describe("find changes", () => {
             }
         ]);
     })
+    it('should be ', function () {
+        const source = {
+            address: {city: {code: "A1"} },
+            name: "Jenesius"
+        }
+        const changes = {
+            address: null
+        }
+
+        expect(searchChangesByComparison(source, changes)).toEqual([
+            { name: "address", newValue: null, oldValue: {city: {code: "A1"} } },
+            { name: "address.city", newValue: undefined, oldValue: {code: "A1"} },
+            { name: "address.city.code", newValue: undefined, oldValue: "A1" },
+        ])
+    });
+    it('should ', function () {
+        const source = {
+            address: {
+                city: "Berlin",
+                country: "german"
+            }
+        }
+        const changes = {
+            address: {
+                country: "German"
+            }
+        }
+
+        expect(searchChangesByComparison(source, changes)).toEqual([
+            { name: "address",
+                newValue: {city: "Berlin", country: "German"},
+                oldValue: { city: "Berlin", country: "german" }
+            },
+            { name: "address.country", newValue: "German", oldValue: 'german' },
+
+        ])
+    });
 })
