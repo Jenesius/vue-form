@@ -32,6 +32,11 @@ describe("test", () => {
                 oldValue: 1,
             },
             {
+                name: "a.a",
+                oldValue: undefined,
+                newValue: 1
+            },
+            {
                 name: "b",
                 newValue: undefined,
                 oldValue: 2
