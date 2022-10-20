@@ -6,6 +6,7 @@
             }"
         >Address</p>
         <input-field name = "city" label = "City"/>
+        <input-field name = "country" label = "Country"/>
     </div>
 </template>
 
