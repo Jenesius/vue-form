@@ -77,3 +77,18 @@ interface IComparisonResult {
     oldValue: any
 }
 ```
+
+## Hook useFormState
+This hook returns a reactive object that stores the state of the Form in itself. Currently, has the following
+interface:
+```ts
+interface FormReactiveState {
+    changed: boolean,
+    disabled: boolean
+}
+```
+To use this reactive state, you need to pass an instance of the form to the hook:
+```ts
+const form = new Form();
+const state = useFormState(form); // { changed, disabled }
+```

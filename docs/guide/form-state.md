@@ -1,10 +1,8 @@
-# State
-Relying on the state of the form, we can rebuild the interface, update the data
-user, etc.
-
-## Form State
-The form instance has a set of properties with which the user can
-to interact.
+# Form State
+В данном артикле будет описано полное состояние Формы. Прошу отметить, что здесь идёт речь лишь о значениях и для чего
+они могут использоваться, они написаны на **typescript** и не являются реактивными. По этому их следует использовать для
+логической работы с формой. Если вам интересен **Reactive** подход необходимо перейти на
+[эту статью](/guide/form-reactivity).
 
 ## values
 Is a getter property, will return a set of all values of the given form. Important to remember,
@@ -66,7 +64,7 @@ reactive and has neither reactive, nor ref, nor
 computed properties. However, the following hook can be used for reactivity:
 ```js
 // import {useFormState} from "jenesius-vue-form"
-const {state} = useFormState(form);
+const state = useFormState(form);
 ```
 
 State is a reactive object and has the following properties:
