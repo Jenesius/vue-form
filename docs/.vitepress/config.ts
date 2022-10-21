@@ -43,6 +43,7 @@ function sidebar() {
 				{ text: 'State', link: '/guide/form-state' },
 				{ text: 'Methods', link: '/guide/form-methods' },
 				{ text: 'Events', link: '/guide/form-events' },
+				{ text: "Reactivity", link: '/guide/form-reactivity' }
 			]
 		},
 
