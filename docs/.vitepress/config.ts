@@ -21,6 +21,7 @@ export default defineConfig({
 function nav() {
 	return [
 		{ text: 'Guide', link: '/guide/installation', activeMatch: '/guide/' },
+		{ text: 'Examples', link: '/examples/list', activeMatch: '/examples/' },
 		{ text: 'Found mistake?', link: 'https://github.com/Jenesius/vue-form/issues/new?assignees=&labels=docs+report&template=documentation-mistake.md'},
 	]
 }

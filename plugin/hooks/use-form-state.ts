@@ -15,7 +15,7 @@ export default function useFormState(form: Form) {
 		state.changed = form.changed
 		state.state.changed = form.changed
 	});
-	form.on(Form.EVENT_DISABLED, v => {
+	form.on(Form.EVENT_UPDATE_ABILITY, v => {
 		state.disabled = v
 		state.state.disabled = v;
 	});

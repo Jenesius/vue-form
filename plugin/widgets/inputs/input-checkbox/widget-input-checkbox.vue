@@ -70,6 +70,7 @@
         height: 18px;
         margin: 0;
         border: 1px solid #c8c8c8;
+        background-color: white;
         border-radius: 3px;
         display: grid;
         place-content: center;
