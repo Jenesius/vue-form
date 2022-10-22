@@ -6,7 +6,10 @@ module.exports = defineConfig({
       entry: './src/pages/index/main.ts'
     },
     "simple-form": {
-      entry: './examples/simple-form.md/main.ts'
+      entry: './examples/simple-form/main.ts'
+    },
+    "disable-form": {
+      entry: './examples/disable-enable-form/main.ts'
     }
   }
 })

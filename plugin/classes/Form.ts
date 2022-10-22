@@ -393,6 +393,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * */
 	set disabled(value: boolean){
 		this.#disabled = value;
+		this.emit(Form.EVENT_UPDATE_ABILITY, this.#disabled);
 		this.abilities = this.getProxyAbilities();
 		
 		if (value)
