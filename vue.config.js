@@ -5,5 +5,8 @@ module.exports = defineConfig({
     index: {
       entry: './src/pages/index/main.ts'
     },
+    "simple-form": {
+      entry: './examples/simple-form.md/main.ts'
+    }
   }
 })
