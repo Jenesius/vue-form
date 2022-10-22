@@ -4,7 +4,7 @@ functionality and interaction with form elements.
 
 ## Links
 - [Documentation](https://form.jenesius.com/)
-- [Examples](form.jenesius.com/examples/list.html)
+- [Examples](https://form.jenesius.com/examples/list.html)
 - [GitHub](https://github.com/Jenesius/vue-form)
 ## Reason For Use
 
