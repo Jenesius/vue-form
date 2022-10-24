@@ -16,6 +16,9 @@ module.exports = defineConfig({
     },
     "form-proxy": {
       entry: "./examples/form-proxy/main.ts"
+    },
+    "input-country": {
+      entry: "./examples/input-country/main.ts"
     }
   }
 })

@@ -5,6 +5,7 @@
     <p><a href = "/disable-form" class = "example-link">Disable Form</a></p>
     <p><a href = "/form-changes" class = "example-link">Form Changes</a></p>
     <p><a href = "/form-proxy" class = "example-link">Form Proxy</a></p>
+    <p><a href = "/input-country" class = "example-link">Input Country</a></p>
   </div>
 
 </template>
