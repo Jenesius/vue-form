@@ -6,6 +6,7 @@
     <p><a href = "/form-changes" class = "example-link">Form Changes</a></p>
     <p><a href = "/form-proxy" class = "example-link">Form Proxy</a></p>
     <p><a href = "/input-country" class = "example-link">Input Country</a></p>
+    <p><a href = "/input-otp" class = "example-link">Input One-Time Password</a></p>
   </div>
 
 </template>

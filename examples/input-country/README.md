@@ -1,6 +1,6 @@
 # Input Country
 
-1. Необходимо создать новый файл input-country.vue и разместить туда следующий код:
+1. You need to create a new input-country.vue file and place the following code there:
 ```vue
 <template>
   <div>
@@ -13,13 +13,15 @@
   </div>
 </template>
 ```
-**Не забудьте** про то, что v-bind должен идти в начале.
-**Не забудьте** обернуть input-field в div. Необходимо сделать так, чтобы он не был единственным дочерним элементом.
 
-В данном примере мы передали все props в input-field используя v-bind.
-Далее передаём options, их мы рассмотрим на втором шаге. Устанавливаем type и label по умолчанию.
+**Don't forget** v-bind must come first.
 
-2. Далее нам необходимо создать optionsCountries:
+**Don't forget** to wrap the input-field in a div. You need to make sure that it is not the only child element.
+
+In this example, we passed all the props to the input-field using v-bind.
+
+Next, we pass options, we will consider them in the second step. Set the default type and label.
+2. Next, we need to create optionsCountries:
 ```vue
 <script setup>
   const optionsCountries = {
@@ -29,7 +31,7 @@
   }
 </script>
 ```
-3. Последний шаг: добавить input в хранилище
+3. Last step: add input to storage
 ```ts
 // import InputCountry from "./input-country.vue"
 import {config} from "jenesius-vue-form"
@@ -40,11 +42,9 @@ config({
 })
 ```
 
-Данный пример демонстрирует, как легко можно создавать новые inputs поверх существующих, а затем
-их удобно переиспользовать через хранилище.
-
+This example demonstrates how easy it is to create new inputs on top of existing ones and then
+it is convenient to reuse them through storage.
 
 This example uses the following functions:
 
-- [Form Proxy](https://form.jenesius.com/guide/form-proxy.html#initialization)
 - [Config](https://form.jenesius.com/guide/configuration.html#inputtypes)

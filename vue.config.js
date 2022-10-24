@@ -19,6 +19,9 @@ module.exports = defineConfig({
     },
     "input-country": {
       entry: "./examples/input-country/main.ts"
+    },
+    "input-otp": {
+      entry: "./examples/input-otp/main.ts"
     }
   }
 })
