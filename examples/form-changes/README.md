@@ -1,39 +1,39 @@
 # Form changes
 
-Данный пример демонстрирует работу со значениями, а именно с изменениями. При работах с формами нужно отслеживать, какие
-значения были изменённые. Для этого в библиотеке предусмотрен механизм пометки поля, как изменённое.
-Как это работает:
-1. Представим, что в форме у нас находятся значения
+This example demonstrates working with values, namely with changes. When working with forms, you need to keep track of which
+values have been changed. To do this, the library provides a mechanism for marking a field as changed.
+How it works:
+1. Imagine that in the form we have the values
 ```json
 {
     "name": "Jenesius",
     "age": 23
 }
 ```
-2. Мы решили изменить значение age на 24.
+2. We decided to change the value of age to 24.
 ```ts
 form.change({age: 24})
 ```
-3. В данном случае, значения примут следующий вид:
+3. In this case, the values will take the following form:
  ```json
 {
     "name": "Jenesius",
     "age": 24
 }
 ```
-При этом будет изменён слепок меток изменений:
+This will change the change mark snapshot:
 
 ```json
 {
     "age": true
 }
 ```
-4. Теперь при получении form.changes, мы будем видеть только те значения, которые помечены как true.
+4. Now when receiving form.changes, we will only see those values that are marked as true.
 ```ts
 form.changes // { age: 24 }
 ```
 
-В Данном примере используются:
+This example uses:
 - [form.changes](https://form.jenesius.com/guide/form-state.html#changes)
 - [form.change](https://form.jenesius.com/guide/form-methods.html#change)
 - [form.setValues](https://form.jenesius.com/guide/form-methods.html#setvalues)
