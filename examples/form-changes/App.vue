@@ -8,7 +8,7 @@
     </div>
 
     <div class = "wrap-app">
-      <h2>Simple Form</h2>
+      <h2>Form Changes</h2>
       <input-field name = "username" label = "Username"/>
       <input-field name = "about" label = "About yourself" type = "textarea"/>
       <input-field name = "gender" label = "Gender" type = "radio" :options = "sexOptions"/>

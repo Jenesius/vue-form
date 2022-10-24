@@ -13,6 +13,9 @@ module.exports = defineConfig({
     },
     "form-changes": {
       entry: "./examples/form-changes/main.ts"
+    },
+    "form-proxy": {
+      entry: "./examples/form-proxy/main.ts"
     }
   }
 })
