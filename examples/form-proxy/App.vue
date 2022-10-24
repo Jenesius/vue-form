@@ -16,7 +16,13 @@
 </template>
 
 <script setup lang='ts'>
-import {Form, InputField, useFormValues} from "../../plugin";
+import {config, Form, InputField, useFormValues} from "../../plugin";
+import InputAddress from "./input-address.vue";
+config({
+  inputTypes: {
+    address: InputAddress
+  }
+})
 
 const form = new Form();
 const values = useFormValues(form);
