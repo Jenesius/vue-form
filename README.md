@@ -22,8 +22,9 @@ independence on the part of the site design.
 
 *Where the spirit does not work with the hand there is no art.* @Leonardo da Vinci
 
-## Usage
+![Alt Text](./gif-example.gif)
 
+## Usage
 This example demonstrates a simple use of this library using the login form as an example.
 
 ```vue
@@ -36,10 +37,8 @@ This example demonstrates a simple use of this library using the login form as a
 import {InputField, Form} from "jenesius-vue-form";
 
 const form = new Form();
-
 function handleLogin() {
-  // { login: "", password: "" }
-  console.log(form.values) 
+  console.log(form.values)  // { login: "", password: "" }
 }
 </script>
 ```
@@ -53,58 +52,20 @@ const form = new Form()
 ```
 
 ### Main Form state
-The reactive form state can be obtained from the **useFormState** hook:
+The reactive form state can be obtained from the **useFormState** hook, and reactive values from 
+**useFormValues**:
 ```js
-import {useFormState} from "jenesius-vue-form"
-const {state} = useFormState(form) // disabled changed
+import {useFormState, useFormValues} from "jenesius-vue-form"
+const state = useFormState(form) // disabled changed
+const state = useFormValues(form) // disabled changed
 ```
 
 ## Proxy Form
-Composite objects (For example, Address, which contains country, city etc.)
-can be created by calling the **useProxyState** hook.
-```ts
-import {useProxyState} from "jenesius-vue-form"
-const {state} = useProxyState(name);
-```
-In this example, the Composite field will automatically subscribe to the parent form,
-and will also serve as a bridge for all its child elements.
+You can flexibly create complex inputs (compound) using FormProxy.
+[More Information](https://github.com/Jenesius/vue-form/tree/main/examples/form-proxy)
 
-## Input
-When using the built-in input field, the library will do everything for you.
-You don't need to sign it on the form yourself.
-```vue
-<template>
-    <input-field type = "text" name = "user" label = "Username"/>
-    <input-field type = "text" name = "age" label = "Age"/>
-</template>
-<script setup>
-    import {Form, InputField} from "jenesius-vue-form"
-    
-    const form = new Form();
-</script>
-```
-
-### Custom Input
-In most cases, you will use your own input fields.
-In this case, you need to implement a small layer:
-
-```vue
-<input type = "text" 
-    @input = "input.change($event.target.value)" 
-    :value="state.value"
-    :disabled = "state.disabled"
->
-```
-```js
-import {useInputState} from "jenesius-vue-form"
-const {state, input} = useInputState(props.name)
-// state - {value, disabled, errors}
-```
-- **input** - an instance of Input which has several methods to work with
-  form interaction.
 
 ## Example
-
 The current example shows the simplest binding of two fields to a form and working with them
 ```vue
 <template>
