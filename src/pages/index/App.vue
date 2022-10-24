@@ -3,6 +3,7 @@
     <h3 class = "container-examples-title">Examples:</h3>
     <p><a href = "/simple-form" class = "example-link">Simple Form</a></p>
     <p><a href = "/disable-form" class = "example-link">Disable Form</a></p>
+    <p><a href = "/form-changes" class = "example-link">Form Changes</a></p>
   </div>
 
 </template>

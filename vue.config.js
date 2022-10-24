@@ -10,6 +10,9 @@ module.exports = defineConfig({
     },
     "disable-form": {
       entry: './examples/disable-enable-form/main.ts'
+    },
+    "form-changes": {
+      entry: "./examples/form-changes/main.ts"
     }
   }
 })
