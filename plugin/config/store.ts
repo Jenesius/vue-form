@@ -26,14 +26,16 @@ const STORE: IStore = {
 		number  : WidgetInputNumber,
 		range   : WidgetInputRange,
 		textarea: WidgetInputTextarea
-	}
+	},
+	debug: false
 }
 
 type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
 interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any
-	}
+	},
+	debug: boolean
 }
 export default STORE;
 

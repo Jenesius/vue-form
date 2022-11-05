@@ -13,6 +13,7 @@ import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
 import  {IComparisonResult, searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
+import debug from "../debug/debug";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -79,11 +80,6 @@ export default class Form extends EventEmitter implements FormDependence{
 	#changes = {};
 	
 	/**
-	 * @description Property for displaying warns. On current time don't use.
-	 */
-	readonly #debug:boolean = false;
-	
-	/**
 	 * @description If true - all elements by default will be blocked.
 	 */
 	#disabled: boolean = false;
@@ -136,31 +132,28 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Method used for set values. New values don't overwrite previous, Mixing, GrandValues used for this.
 	 * */
 	setValues(values?: Values){
-
-
 		const prettyData = grandObject(values);
+		debug.msg(`New Values:`, prettyData);
+
 		this.notifyInputs(searchChangesByComparison(this.values, prettyData));
 		this.mergeValues(prettyData);
 
 		this.emit(Form.EVENT_VALUE, prettyData); // Emit about new data.
 		this.setValuesOfItem(this.values);
 	}
-	get debug(){
-		return this.#debug
-	}
-	
+
 	constructor(params: FormParams = {}) {
 		super();
 		
 		if (params.name)
 			this.name = params.name;
+		debug.msg(`Creating new Form${this.name? `[${this.name}]`: ''}`);
 
-		this.#debug = Boolean(params.debug);
 
 		// If params don't include parent: false, looking for a form, in case of success subscribe current form to parent.
 		if (params.parent !== false) {
 			this.parentForm = Form.getParentForm();
-			if (this.parentForm) this.parentForm.depend(this);
+			if (this.parentForm) this.parentForm.subscribe(this);
 		}
 
 		provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
@@ -291,6 +284,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Clean all values, values equal {}, after that if new values was provided set them like current.
 	 * */
 	cleanValues(values?: Values) {
+		debug.msg('Cleaning values')
 		this.values = {};
 		this.setValues(values || {});
 	}
@@ -306,6 +300,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description subscribe is alice for depend. Subscribe element to Form.
 	 * */
 	subscribe(item: any) {
+		debug.msg(`New subscription${'name' in item ? `(${item.name})` : ''}`)
+
 		this.dependencies.push(item);
 		this.emit(Form.EVENT_SUBSCRIBE, item);
 
@@ -324,7 +320,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		}
 	}
 	/**
-	 * @deprecated
+	 * @deprecated Use form.subscribe
 	 * */
 	depend(item: any) {
 		return this.subscribe(item)
@@ -334,6 +330,8 @@ export default class Form extends EventEmitter implements FormDependence{
 			from.on(eventName, (...arg: any) => to.emit(eventName, ...arg));
 	}
 	unsubscribe(item: any){
+		debug.msg(`Unsubscribe${'name' in item ? `(${item.name})` : ''}`)
+
 		const index = this.dependencies.indexOf(item);
 		if (index === -1) return;
 		this.dependencies.splice(index, 1);
@@ -403,6 +401,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	disable(names?: string | string[]){
+		debug.msg(`Disabling ${names || ''}`);
+
 		if (typeof names === "string") names = [names];
 		
 		this.emit(Form.EVENT_DISABLE, names);
@@ -448,6 +448,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 
 	enable(names?: string | string[]) {
+		debug.msg(`Enabling ${names || ''}`);
 		if (typeof names === "string") names = [names];
 		
 		this.emit(Form.EVENT_ENABLE, names);
@@ -629,7 +630,6 @@ export default class Form extends EventEmitter implements FormDependence{
 }
 
 interface FormParams {
-	debug?: boolean,
 	name? : string,
 	parent?: boolean // Don't subscribe to parent form if FALSE
 	// cleanChangesAfterSave?: boolean,
