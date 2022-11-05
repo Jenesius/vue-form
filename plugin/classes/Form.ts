@@ -156,6 +156,8 @@ export default class Form extends EventEmitter implements FormDependence{
 			if (this.parentForm) this.parentForm.subscribe(this);
 		}
 
+
+
 		provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 	
@@ -164,7 +166,7 @@ export default class Form extends EventEmitter implements FormDependence{
 			console.log(`%cUndefined values%c`, 'color:red', 'color: black', this);
 			return;
 		}
-		
+
 		const v = grandObject(replaceValues(values));
 
 		mergeObjects(this.#changes, v);
@@ -555,12 +557,13 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * run it
 	 */
 	get read() {
+		debug.msg(`Reading data`);
 		const array: Array<FunctionHandleData> =
 			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
 				if (elemController.read) acc.push(elemController.read);
 				return acc;
 			}, []);
-		
+
 		array.push(() =>
 			runPromiseQueue([
 				() => this.#readData?.(),
@@ -579,6 +582,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description The same with read. After saving run cleanChanges.
 	 */
 	get save() {
+		debug.msg(`Saving data`);
 		const array: Array<FunctionHandleData> =
 			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
 				if (elemController.save) acc.push(elemController.save);
@@ -604,13 +608,17 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @return {Boolean} Current form was validated?
 	 */
 	validate() {
-		return this.dependencies.reduce((acc, dep) => {
+		const result = this.dependencies.reduce((acc, dep) => {
 			if (dep.validate) {
 				const result = dep.validate();
 				acc = acc && !!result;
 			}
 			return acc;
 		}, true);
+
+		debug.msg(`Validation ${result ? 'successful' : 'failed'}`);
+
+		return result;
 	}
 
 	/**
