@@ -38,6 +38,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	 */
 	static EVENT_CHANGED		 	 = 'changed';
 	static EVENT_DISABLED		 	 = 'disabled';
+	
+	static EVENT_WAIT				 = 'wait'
 
 	/**
 	 * @description. Find the parent Form. Using for subscribe elements.
@@ -83,6 +85,18 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description If true - all elements by default will be blocked.
 	 */
 	#disabled: boolean = false;
+	
+	/**
+	 * @description True if read or save stay in status progress. After save or read will execute, value will be false
+	 * */
+	#wait: boolean = false;
+	set wait(v: boolean) {
+		this.#wait = v;
+		this.emit(Form.EVENT_WAIT, this.#wait);
+	}
+	get wait() {
+		return this.#wait;
+	}
 
 	/**
 	 * @description Function for read data (For example from DataBase)
@@ -566,13 +580,18 @@ export default class Form extends EventEmitter implements FormDependence{
 
 		array.push(() =>
 			runPromiseQueue([
+				() => {
+					this.wait = true;
+				},
 				() => this.#readData?.(),
 				(data: any) => this.emit(Form.EVENT_READ, data)
 				]
 			)
 		)
 		
-		return () => Promise.all(array.map(c => c()));
+		return () => Promise.all(array.map(c => c())).finally(() => {
+			this.wait = false;
+		});
 	}
 	set read(callback: FunctionHandleData){
 		this.#readData = callback;
@@ -591,13 +610,18 @@ export default class Form extends EventEmitter implements FormDependence{
 		
 		array.push(() =>
 			runPromiseQueue([
+				() => {
+					this.wait = true
+				},
 				() => this.#saveData?.(),
 				(data: any) => this.emit(Form.EVENT_SAVE, data),
 				() => this.cleanChanges()
 			])
 		)
 		
-		return () => Promise.all(array.map(c => c()));
+		return () => Promise.all(array.map(c => c())).finally(() => {
+			this.wait = false;
+		});
 	}
 	set save(callback: FunctionHandleData) {
 		this.#saveData = callback;
