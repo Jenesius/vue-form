@@ -11,6 +11,7 @@
         :errors = "state.errors"
         :options = "parseOptions(options)"
 		:autofocus="autofocus"
+        :required = "required"
     />
 </template>
 
