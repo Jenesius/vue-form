@@ -70,24 +70,34 @@ Represents an element that allows you to select a value from the provided ones.
 <WidgetExampleInputSelect/>
 
 Passed parameters:
-- **options** A set of enumerated dimensions. There are two types of transfer
-possible:
-As Object:
+- **options** A set of enumerated dimensions. There are two types of transfer: Array and Object.
+Мы разберём каждый по подробнее, но мы рекомендуем использовать именно Array для недопущения ошибок и не понятных 
+моментов в вашем коде. 
+В случае с Option(Array) структура выглядит следующим образом:
+```ts
+[
+    { label: 'Green color', value: 'green' },
+    { label: 'Red color', value: 'red' }
+]
+```
+Поле **label** текстовая метка, отображаемая как заголовок. 
+
+Поле **value** принимает любое значение.
+:::tip Чем полезен Array
+Вы не запутаетесь, где находится метка, а где значение. В случае с объектом существует вероятность, что вам придётся
+постоянно заходить в документацию для уточнения местоположения label: справа или слева.
+:::
+
+Перейдём к options в качестве объекта. Запомните: слева значение, справа метка(title).  
 ```json
 {
-	"green": "Green color",
+    "green": "Green color",
     "red"  : "Red color"
 }
 ```
-Like Array:
-```ts
-[
-	{ title: 'Green color', value: 'green' },
-	{ title: 'Red color', value: 'red' }
-]
-```
-When passed as an object, the value will always be of type *string*. When
-*Array* value type can be any.
+Однако в таком случае мы сталкиваемся со следующей проблемой: Значение может быть **только** строкой. Даже число переданное
+в качестве значение - будет конвертировано автоматически JavaScript в строку. Одна бывает ситуации, когда удобно использовать
+или хранить значение в объекте. Для этого мы предусмотрели [функцию](utils/convert-options-object) конвертирования объекта в массив.
 
 ## Password
 Password entry field. It has the ability to switch the visibility mode.

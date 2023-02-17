@@ -22,6 +22,9 @@ module.exports = defineConfig({
     },
     "input-otp": {
       entry: "./examples/input-otp/main.ts"
+    },
+    "test": {
+      entry: "./src/pages/test/main.ts"
     }
   }
 })

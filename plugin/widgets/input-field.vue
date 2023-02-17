@@ -28,7 +28,7 @@
 		name?: string,
 		label?: string,
 		validation?: any[],
-		options?: OptionRow[] | Record<string, string>,
+		options?: OptionRow[] | Record<string, any>,
 	
 		required?: boolean,
 		
@@ -69,7 +69,7 @@
         if (!v) return [];
         if (Array.isArray(v)) return v;
 
-        return Object.entries(v).map(arr => ({ value: arr[0], title: arr[1] }));
+        return Object.entries(v).map(arr => ({ value: arr[0], title: arr[1], label: arr[1] }));
     }
 
 </script>

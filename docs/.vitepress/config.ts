@@ -61,6 +61,14 @@ function sidebar() {
 			items: [
 				{ text: "Depth information", link: "/guide/form-in-depth" }
 			]
+		},
+		{
+			text: "Utils",
+			items: [
+				{
+					text: "Convert options object", link: "/guide/utils/convert-options-object"
+				}
+			]
 		}
 	]
 }

@@ -13,6 +13,7 @@ import clickOutside from "./click-outside";
 import checkPrimitiveType from "./check-primitive-type";
 import checkCompositeName from "./check-composite-name";
 import bypassObject from "./bypass-object";
+import convertOptionsObject from "./convert-options-object";
 
 const utils = {
     updateInputPosition,
@@ -29,6 +30,7 @@ const utils = {
     clickOutside,
     checkPrimitiveType,
     checkCompositeName,
-    bypassObject
+    bypassObject,
+    convertOptionsObject
 }
 export default utils;
