@@ -1,9 +1,17 @@
-# Использование v-model
+# Using v-model
 
-Мы постарались сделать всё, чтобы использование данной библиотеки было комфортным. Одним из таких моментов
-является директива *v-model*. В описании формы сказано, что все зависимые элементы полагаются на состояние 
-именно формы, а не переданного modelValue. Однако в случае, если свойство *name* не указано для поля ввода
-input полагается именно на значение *model-value*:
+We tried to do everything to make the use of this library comfortable. One of those moments
+is a *v-model* directive. The form description says that all dependent elements rely on the state
+form, not the exact modelValue passed in. However, in case the *name* property is not specified for the input field
+input is fed exactly to the *model-value* value:
+
+::: warning Don't use modelValue with name
+Using v-model(:modelValue) and **name** at the same time causes the form state to be stored in two places:
+directly in the form and in the variable passed to modelValue. We do not recommend using both of these properties together.
+Instead, use [ComputedValue](/guide/form-reactivity.html#computedvalue)
+and [setValues](/guide/form-methods.html#setvalues) to access and change the field.
+:::
+
 
 ```vue
 
@@ -19,26 +27,28 @@ const input = ref("");
 </script>
 ```
 
-В данном примере мы регистрируем два поля для ввода. Одно будет прикрепляться к форме по имени *city*, а другое
-не будет зависеть от формы, в таком случае оно будет полагаться на значение из *modelValue*.
+In this example, we are registering two input fields. One will be attached to a form named *city* and the other
+will not depend on the form, in which case it will rely on the value from *modelValue*.
 
-Также не забывайте про использование ручных настроек *v-model*, данный пример отлично описан в 
-[документации](https://vuejs.org/guide/components/v-model.html) для Vue. Использование такого механизма
-можно добиться не редактируемого поля:
+Also don't forget to use manual *v-model* settings, this example is well described in
+[documentation](https://vuejs.org/guide/components/v-model.html) for Vue. Using such a mechanism
+you can achieve a non-editable field:
 ```vue
 <template>
     <input-field label = "City" v-model = "value"/>
     <input-field label = "City (Local)" :model-value = "value"/>
 </template>
 ```
-Достаточно просто пример, на котором даже при вводе или при выборе значения, состояние поля не будет изменяться.
-Однако, как только мы добавим свойство name, *model-value* будет игнорироваться
+A simple example is enough, on which even when entering or selecting a value, the state of the field will not change.
+However, as soon as we add the name property, *model-value* will be ignored, and you can also see in the console
+warning:
 ```vue
 <template>
     <input-field label = "City" v-model = "value"/>
     <input-field label = "City (Local)" :model-value = "value" name = "city"/>
 </template>
 ```
-Теперь второе поле полагается именно на состояние формы, а не на modelValue.
+
+Now the second field relies on the state of the form, and not on the modelValue.
 
 

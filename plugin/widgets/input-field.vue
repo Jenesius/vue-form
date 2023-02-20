@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, watch, withDefaults} from "vue";
+import {computed, onMounted, watch, withDefaults} from "vue";
 
 import useInputState from "../hooks/use-input-state";
 import {OptionRow} from "../types";
@@ -24,7 +24,7 @@ import {utils} from "../index";
 
 interface IProps {
 	type?: string,
-	name: string,
+	name?: string,
 	label?: string,
 	validation?: any[],
 	options?: OptionRow[] | Record<string, any>,
@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 const emits = defineEmits<{
 	(event: 'update:modelValue', value: any): void
+	(event: 'input', value: any): void
 }>()
 
 const inputsStore = STORE.inputTypes;
@@ -65,6 +66,13 @@ watch(() => props.modelValue, (a, b) => {
 }, {
 	immediate: true
 })
+onMounted(() => {
+	if (props.name && props.modelValue !== undefined)
+		if (process.env.NODE_ENV !== 'production') {
+			console.warn(`[jenesius-vue-form] The use of name(${props.name}) and modelValue results in bifurcation of the single state of the form. More information here https://form.jenesius.com/guide/model-value.html`)
+		}
+})
+
 
 /**
  * @description Parsing OptionsObject to ObjectRow[]
@@ -80,6 +88,7 @@ function parseOptions(v: typeof props.options) {
 function handleInput(v: any) {
 	input.change(v);
 	emits('update:modelValue', v)
+	emits('input', v)
 }
 
 </script>
