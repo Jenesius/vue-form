@@ -1,9 +1,14 @@
 <template>
 	<div class="container-examples">
+		{{country}}
+		<input-field v-model = "country" name="country"/>
+		<input-field v-model = "country" />
+
 		<input-field type = "select" label = "Country" :options = "optionsCountry" name = "Country"/>
 
-		<input-field type = "select" label = "City" :options = "optionsCity" name = "City" v-model = "inputModelValue"/>
+		<input-field type = "select" label = "City" :options = "optionsCity" name = "City" />
 		<input-field type = "select" label = "City" :options = "optionsCity"  v-model = "inputModelValue"/>
+		<input-field  label = "City"  :model-value = "inputModelValue"/>
 
 		<input-field type = "select" label = "City" :options = "longList" name = "City2" placeholder = "Select City"/>
 		<input-field type = "select" label = "City" :options = "[]" name = "City1" placeholder = "Select"/>
@@ -22,7 +27,7 @@ const form = new Form();
 const values = useFormValues(form)
 
 const inputModelValue = ref('')
-
+const country = ref('');
 const optionsCountry = {
 	1: 'USA',
 	2: 'Russia',

@@ -31,6 +31,7 @@ const emits=  defineEmits<{
 		outline: none;
 		border-radius: 4px;
 		color: #1c1c1c;
+		background-color: white;
 	}
 	.widget-select-search__input:focus {
 		border-color: #b2b2b2;

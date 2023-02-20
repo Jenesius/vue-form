@@ -3,7 +3,7 @@
 		:is="componentItem"
 		:name="name"
 
-		:modelValue="state.value"
+		:modelValue="props.name ? state.value : modelValue"
 		@update:modelValue="handleInput"
 
 		:label="props.label"
@@ -27,7 +27,7 @@ interface IProps {
 	name: string,
 	label?: string,
 	validation?: any[],
-	options: OptionRow[] | Record<string, any>,
+	options?: OptionRow[] | Record<string, any>,
 	required?: boolean,
 	autofocus?: boolean,
 	modelValue?: any

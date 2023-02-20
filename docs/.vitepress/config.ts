@@ -35,7 +35,8 @@ function sidebar() {
 				{ text: 'Form', link: '/guide/form' },
 				{ text: 'FormProxy', link: '/guide/form-proxy' },
 				{ text: 'Input', link: '/guide/input' },
-				{ text: 'Configuration', link: '/guide/configuration' }
+				{ text: 'Configuration', link: '/guide/configuration' },
+				{ text: 'Utils', link: '/guide/utils' },
 			]
 		},
 		{
@@ -53,7 +54,8 @@ function sidebar() {
 			items: [
 				{ text: 'Widgets', link: '/guide/input-widgets' },
 				{ text: 'Custom Widgets', link: '/guide/custom-widgets' },
-				{ text: "Input File", link: "/guide/input-file" }
+				{ text: "Input File", link: "/guide/input-file" },
+				{ text: "v-model", link: "/guide/model-value" }
 			]
 		},
 		{
@@ -62,13 +64,6 @@ function sidebar() {
 				{ text: "Depth information", link: "/guide/form-in-depth" }
 			]
 		},
-		{
-			text: "Utils",
-			items: [
-				{
-					text: "Convert options object", link: "/guide/utils/convert-options-object"
-				}
-			]
-		}
+
 	]
 }
