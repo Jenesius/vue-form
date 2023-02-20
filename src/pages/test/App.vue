@@ -1,8 +1,10 @@
 <template>
 	<div class="container-examples">
 		{{country}}
-		<input-field v-model = "country" name="country"/>
 		<input-field v-model = "country" />
+		<input-field v-model = "value" v-if = "isValue" />
+		<button @click = "() => isValue = !isValue">toggle</button>
+
 
 		<input-field type = "select" label = "Country" :options = "optionsCountry" name = "Country"/>
 
@@ -43,6 +45,9 @@ const optionsCity = {
 	7: 'Denmark',
 	8:'France',
 }
+
+const value = ref("");
+const isValue = ref(false);
 
 
 const longList = reactive<OptionRow[]>([]);
