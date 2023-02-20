@@ -14,6 +14,7 @@ import checkPrimitiveType from "./check-primitive-type";
 import checkCompositeName from "./check-composite-name";
 import bypassObject from "./bypass-object";
 import convertOptionsObject from "./convert-options-object";
+import copyObject from "./copy-object";
 
 const utils = {
     updateInputPosition,
@@ -31,6 +32,7 @@ const utils = {
     checkPrimitiveType,
     checkCompositeName,
     bypassObject,
-    convertOptionsObject
+    convertOptionsObject,
+    copyObject
 }
 export default utils;
