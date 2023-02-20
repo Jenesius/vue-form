@@ -15,6 +15,7 @@ import WidgetInputRange from "../widgets/inputs/input-range/widget-input-range.v
 import WidgetInputTextarea from "../widgets/inputs/input-textarea/widget-input-textarea.vue";
 
 const STORE: IStore = {
+	requiredMessage: 'Please fill in this field',
 	inputTypes: {
 		text	: WidgetInputText,
 		select	: WidgetInputSelect,
@@ -33,7 +34,8 @@ type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'p
 interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any
-	}
+	},
+	requiredMessage: string
 }
 export default STORE;
 

@@ -67,6 +67,7 @@
         outline: none;
         padding: 0 4px;
         color: #1c1c1c;
+		background-color: white;
     }
     .widget-input-text:focus{
         border-color: #b2b2b2;

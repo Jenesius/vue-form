@@ -6,8 +6,6 @@ export default function useInputState(name: string, validation: any[] = []) {
 	const input = new Input({name, validation});
 	const {state, updateName} = useInputController(input);
 
-
-
 	return {
 		state,
 		updateName,

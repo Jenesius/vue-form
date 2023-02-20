@@ -3,6 +3,7 @@
         <p class = "input-select-title">{{title}}</p>
 
         <i class="arrow down"
+		   v-if = "!disabled"
            :class = "{'arrow_active': active}"
         ></i>
     </div>
@@ -10,6 +11,7 @@
 
 <script setup lang = "ts">
     defineProps<{
+		disabled: boolean,
         active: boolean,
         title: string
     }>()

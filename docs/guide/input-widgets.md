@@ -70,25 +70,35 @@ Represents an element that allows you to select a value from the provided ones.
 <WidgetExampleInputSelect/>
 
 Passed parameters:
-- **options** A set of enumerated dimensions. There are two types of transfer
-possible:
-As Object:
+- **options** A set of enumerated dimensions. There are two types of transfer: Array and Object.
+We will analyze each in more detail, but we recommend using Array to avoid mistakes and incomprehensible
+moments in your code.
+
+In the case of Option(Array) the structure looks like this:
+```ts
+[
+    { label: 'Green color', value: 'green' },
+    { label: 'Red color', value: 'red' }
+]
+```
+Field **label** text label to be displayed as a title.
+
+The **value** field accepts any value.
+:::tip Why Array is useful
+You won't get confused where the label is and where the value is. In the case of an object, there is a possibility that you will have to
+constantly go to the documentation to clarify the location of the label: on the right or on the left.
+:::
+
+Let's pass to options as an object. Remember: on the left is the value, on the right is the label (title).
 ```json
 {
-	"green": "Green color",
+    "green": "Green color",
     "red"  : "Red color"
 }
 ```
-Like Array:
-```ts
-[
-	{ title: 'Green color', value: 'green' },
-	{ title: 'Red color', value: 'red' }
-]
-```
-When passed as an object, the value will always be of type *string*. When
-*Array* value type can be any.
-
+However, in this case, we run into the following problem: The value can be **only** a string. Even the number given
+as a value - will be automatically converted by JavaScript to a string. There is one situation where it is convenient to use
+or store the value in an object. To do this, we have provided a [function](utils/convert-options-object) for converting an object into an array.
 ## Password
 Password entry field. It has the ability to switch the visibility mode.
 ```html
