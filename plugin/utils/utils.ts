@@ -15,6 +15,7 @@ import checkCompositeName from "./check-composite-name";
 import bypassObject from "./bypass-object";
 import convertOptionsObject from "./convert-options-object";
 import copyObject from "./copy-object";
+import softReplaceObject from "./soft-replace-object";
 
 const utils = {
     updateInputPosition,
@@ -33,6 +34,7 @@ const utils = {
     checkCompositeName,
     bypassObject,
     convertOptionsObject,
-    copyObject
+    copyObject,
+    softReplaceObject
 }
 export default utils;
