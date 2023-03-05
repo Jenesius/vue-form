@@ -2,6 +2,7 @@
 import WidgetExampleInputText from '../components/inputs/widget-example-input-text.vue';
 import WidgetExampleInputPassword from '../components/inputs/widget-example-input-password.vue';
 import WidgetExampleInputSelect from '../components/inputs/widget-example-input-select.vue';
+import WidgetExampleInputSingleCheckbox from '../components/inputs/widget-example-input-single-checkbox.vue';
 import WidgetExampleInputCheckbox from '../components/inputs/widget-example-input-checkbox.vue';
 import WidgetExampleInputSwitch from '../components/inputs/widget-example-input-switch.vue';
 import WidgetExampleInputRadio from '../components/inputs/widget-example-input-radio.vue';
@@ -23,6 +24,7 @@ For work, fields for entering the following type were developed:
 - [Select](#select)
 - [Password](#password)
 - [Checkbox](#checkbox)
+- [Single Checkbox](#single-checkbox)
 - [Switch](#switch)
 - [Radio](#radio)
 - [Tel](#tel)
@@ -115,6 +117,16 @@ Elements of type checkbox are rendered by default as boxes that are checked
 - **options** - similar with InputSelect
 
 <WidgetExampleInputCheckbox />
+
+## Single Checkbox
+В случае, если на интерфейсе checkbox будет только в одном экземпляре (как switch), можно использовать
+**single-checkbox**. Работает идентично, как и [switch](#switch).
+```html
+<input-field type = "single-checkbox" name = "use-password" />
+```
+
+<WidgetExampleInputSingleCheckbox />
+
 
 ## Switch
 Switch element. Has two states turn on / turn off, which corresponds to **true** / **false**

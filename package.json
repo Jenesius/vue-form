@@ -1,6 +1,6 @@
 {
   "name": "jenesius-vue-form",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "Heavy form system for Vue.js",
   "author": "Jenesius",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "test": "jest",
     "build": "rollup -c rollup.config.js",
     "full": "rollup -c rollup.config.js && npm publish",
-    "docs:dev": "vitepress dev docs",
+    "docs:dev": "vitepress dev docs --port 8090",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"
   },

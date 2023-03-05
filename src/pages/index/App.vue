@@ -11,6 +11,7 @@
 	<div class = "container-examples">
 		<h3 class = "container-examples-title">Test:</h3>
 		<p><a href = "/test" class = "example-link">Test Page</a></p>
+		<p><a href = "/inputs" class = "example-link">Inputs</a></p>
 	</div>
 </template>
 
