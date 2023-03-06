@@ -1,6 +1,8 @@
 <template>
 	<div class="container-examples">
 		<input-field type = "single-checkbox" name = "test" label = "Test" 	/>
+		<input-field type = "text" name = "test" label = "Test" prefix = "V89"	required/>
+		<input-field type = "text" name = "test" label = "Test" prefix = "V89"	disabled/>
 	</div>
 </template>
 
@@ -11,9 +13,11 @@ import {Form} from "../../../plugin";
 const form = new Form();
 
 form.setValues({
-	test: false
 })
-form.disable()
+
+form.validate()
+
+window.form = form;
 
 </script>
 

@@ -10,6 +10,8 @@ import config from "./config/config";
 import STORE from "./config/store";
 
 import InputField from "./widgets/input-field.vue";
+import FormField from "./widgets/input-field.vue";
+import InputWrap from "./widgets/inputs/input-wrap.vue";
 import ComputedValue from "./methods/ComputedValue";
 
 import utils from "./utils/utils";
@@ -24,6 +26,8 @@ export {
 	useFormValues,
 	
 	InputField,
+	FormField,
+	InputWrap,
 	config,
 	STORE,
 	ComputedValue,

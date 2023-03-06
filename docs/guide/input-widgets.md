@@ -49,7 +49,7 @@ By the way, the *:type* parameter in the case of the Text field can be omitted.
 
 - `max-length`: Limits the content length.
 - `pretty`: Function used for prettify input. It can be simple used for modify view of modalValue, not itself.
-
+- `prefix`: String(can't be changed by user) witch will stay before input.
 ```vue
 
 <template>
