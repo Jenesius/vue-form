@@ -13,6 +13,9 @@ import clickOutside from "./click-outside";
 import checkPrimitiveType from "./check-primitive-type";
 import checkCompositeName from "./check-composite-name";
 import bypassObject from "./bypass-object";
+import convertOptionsObject from "./convert-options-object";
+import copyObject from "./copy-object";
+import softReplaceObject from "./soft-replace-object";
 
 const utils = {
     updateInputPosition,
@@ -29,6 +32,9 @@ const utils = {
     clickOutside,
     checkPrimitiveType,
     checkCompositeName,
-    bypassObject
+    bypassObject,
+    convertOptionsObject,
+    copyObject,
+    softReplaceObject
 }
 export default utils;

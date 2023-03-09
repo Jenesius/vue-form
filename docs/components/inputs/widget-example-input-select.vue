@@ -10,21 +10,33 @@
     const value = ref(null);
     const array = [
         {
-            title: 'Red color',
+            label: 'Red color',
             value: 'red'
         },
         {
-            title: 'Green color',
+            label: 'Green color',
             value: 'green'
         },
         {
-            title: 'Blue color',
+            label: 'Blue color',
             value: 'blue'
         },
         {
-            title: 'Transparent',
+            label: 'Transparent',
             value: null
-        }
+        },
+		{
+			label: 'Back color',
+			value: 'black'
+		},
+		{
+			label: 'White color',
+			value: 'white'
+		},
+		{
+			label: "Yellow color",
+			value: 'yellow'
+		}
     ]
 
 </script>

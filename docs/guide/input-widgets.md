@@ -2,6 +2,7 @@
 import WidgetExampleInputText from '../components/inputs/widget-example-input-text.vue';
 import WidgetExampleInputPassword from '../components/inputs/widget-example-input-password.vue';
 import WidgetExampleInputSelect from '../components/inputs/widget-example-input-select.vue';
+import WidgetExampleInputSingleCheckbox from '../components/inputs/widget-example-input-single-checkbox.vue';
 import WidgetExampleInputCheckbox from '../components/inputs/widget-example-input-checkbox.vue';
 import WidgetExampleInputSwitch from '../components/inputs/widget-example-input-switch.vue';
 import WidgetExampleInputRadio from '../components/inputs/widget-example-input-radio.vue';
@@ -23,8 +24,10 @@ For work, fields for entering the following type were developed:
 - [Select](#select)
 - [Password](#password)
 - [Checkbox](#checkbox)
+- [Single Checkbox](#single-checkbox)
 - [Switch](#switch)
 - [Radio](#radio)
+- [Single Radio](#single-radio)
 - [Tel](#tel)
 - [Range](#range)
 - [Number](#number)
@@ -47,7 +50,7 @@ By the way, the *:type* parameter in the case of the Text field can be omitted.
 
 - `max-length`: Limits the content length.
 - `pretty`: Function used for prettify input. It can be simple used for modify view of modalValue, not itself.
-
+- `prefix`: String(can't be changed by user) witch will stay before input.
 ```vue
 
 <template>
@@ -70,25 +73,35 @@ Represents an element that allows you to select a value from the provided ones.
 <WidgetExampleInputSelect/>
 
 Passed parameters:
-- **options** A set of enumerated dimensions. There are two types of transfer
-possible:
-As Object:
+- **options** A set of enumerated dimensions. There are two types of transfer: Array and Object.
+We will analyze each in more detail, but we recommend using Array to avoid mistakes and incomprehensible
+moments in your code.
+
+In the case of Option(Array) the structure looks like this:
+```ts
+[
+    { label: 'Green color', value: 'green' },
+    { label: 'Red color', value: 'red' }
+]
+```
+Field **label** text label to be displayed as a title.
+
+The **value** field accepts any value.
+:::tip Why Array is useful
+You won't get confused where the label is and where the value is. In the case of an object, there is a possibility that you will have to
+constantly go to the documentation to clarify the location of the label: on the right or on the left.
+:::
+
+Let's pass to options as an object. Remember: on the left is the value, on the right is the label (title).
 ```json
 {
-	"green": "Green color",
+    "green": "Green color",
     "red"  : "Red color"
 }
 ```
-Like Array:
-```ts
-[
-	{ title: 'Green color', value: 'green' },
-	{ title: 'Red color', value: 'red' }
-]
-```
-When passed as an object, the value will always be of type *string*. When
-*Array* value type can be any.
-
+However, in this case, we run into the following problem: The value can be **only** a string. Even the number given
+as a value - will be automatically converted by JavaScript to a string. There is one situation where it is convenient to use
+or store the value in an object. To do this, we have provided a [function](utils/convert-options-object) for converting an object into an array.
 ## Password
 Password entry field. It has the ability to switch the visibility mode.
 ```html
@@ -105,6 +118,16 @@ Elements of type checkbox are rendered by default as boxes that are checked
 - **options** - similar with InputSelect
 
 <WidgetExampleInputCheckbox />
+
+## Single Checkbox
+В случае, если на интерфейсе checkbox будет только в одном экземпляре (как switch), можно использовать
+**single-checkbox**. Работает идентично, как и [switch](#switch).
+```html
+<input-field type = "single-checkbox" name = "use-password" />
+```
+
+<WidgetExampleInputSingleCheckbox />
+
 
 ## Switch
 Switch element. Has two states turn on / turn off, which corresponds to **true** / **false**
@@ -123,6 +146,9 @@ Only one radio button in a given group can be selected at the same time.
 ```
 - **options** - similar with InputSelect
 <WidgetExampleInputRadio/>
+
+## Single Radio
+Аналогично *single-checkbox*, но для **radio** поля ввода.
 
 ## Tel
 Input elements of type tel are used to let the user enter and edit a telephone number.

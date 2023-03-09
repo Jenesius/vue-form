@@ -9,10 +9,17 @@ export type FunctionHandleData = () => Promise<any> | any | void;
 
 export type ValidationGuard = () => void
 
-export interface OptionRow {
+export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
+
+interface IOptionRowWithLabel {
+	label: string,
+	value: any
+}
+interface IOptionRowWithTitle {
 	title: string,
 	value: any
 }
+
 
 export interface FormDependence {
 	name?: string,

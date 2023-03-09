@@ -1,81 +1,107 @@
 <template>
-    <input-wrap :label = "label" :errors = "errors">
-        <input
-            ref = "refInput"
-            class = "widget-input-text"
-            type = "text"
-            :value = "pretty(modelValue)"
-            @input = "onInput($event.target.value)"
-            :disabled = "disabled"
-            :class = "{
-				'input-text_error': errors.length !== 0
-            }"
-			:autofocus="autofocus"
-			:placeholder="placeholder"
-        >
-    </input-wrap>
+	<input-wrap :label="label" :errors="errors">
+		<div
+			class = "widget-input-text"
+			:class="{
+					'input-text_error': errors.length !== 0,
+					'input-text_disabled': disabled
+			}"
+		>
+			<span
+				class = "widget-input-text-prefix"
+				v-if = "prefix"
+
+			>{{prefix}}</span>
+			<input
+				ref="refInput"
+				class="widget-input-text-self"
+				type="text"
+				:value="pretty(modelValue)"
+				@input="onInput($event.target.value)"
+				:disabled="disabled"
+
+				:autofocus="autofocus"
+				:placeholder="placeholder"
+			>
+		</div>
+	</input-wrap>
 </template>
 
-<script setup lang = "ts">
-    import InputWrap from "../input-wrap.vue";
-    import {ref, watch} from "vue";
+<script setup lang="ts">
+import InputWrap from "../input-wrap.vue";
+import {ref, watch} from "vue";
 
-	const props = withDefaults(defineProps<{
-		label?: string,
-		errors: string[],
-		modelValue: any,
-		disabled: boolean,
-		autofocus: boolean,
-		pretty?: (a: string) => string,
-    modify?: (a: string) => string,
-		placeholder?: string,
-    maxLength?: string | number
-	}>(), {
-		pretty: (a: string) => a,
-    modify: (a: string) => a
-	})
+const props = withDefaults(defineProps<{
+	label?: string,
+	errors: string[],
+	modelValue: any,
+	disabled: boolean,
+	autofocus: boolean,
+	pretty?: (a: string) => string,
+	modify?: (a: string) => string,
+	placeholder?: string,
+	maxLength?: string | number,
+	prefix?: string
+}>(), {
+	pretty: (a: string) => a,
+	modify: (a: string) => a
+})
 
-    const refInput = ref(props.modelValue);
-    const emit = defineEmits<{
-        (e: 'update:modelValue', value: any): void
-    }>()
+const refInput = ref(props.modelValue);
+const emit = defineEmits<{
+	(e: 'update:modelValue', value: any): void
+}>()
 
-    function onInput(v: unknown) {
-      if (props.maxLength && typeof v === "string")
-        v = v.slice(0, Number(props.maxLength))
+function onInput(v: unknown) {
+	if (props.maxLength && typeof v === "string")
+		v = v.slice(0, Number(props.maxLength))
 
-      try {
-        // @ts-ignore
-        v = props.modify(v);
-      } catch (e) {
-        console.log(`[input-text] modify value error.`, e);
-      }
+	try {
+		// @ts-ignore
+		v = props.modify(v);
+	} catch (e) {
+		console.log(`[input-text] modify value error.`, e);
+	}
 
-      refInput.value.value = v;
-      emit('update:modelValue', v);
-    }
+	refInput.value.value = v;
+	emit('update:modelValue', v);
+}
 
-    watch(() => props.maxLength, () => onInput(props.modelValue));
+watch(() => props.maxLength, () => onInput(props.modelValue));
 
 </script>
 
 <style scoped>
-    .widget-input-text{
-        height: 35px;
-        border-radius: 4px;
-        border: 1px solid #c8c8c8;
-        outline: none;
-        padding: 0 4px;
-        color: #1c1c1c;
-    }
-    .widget-input-text:focus{
-        border-color: #b2b2b2;
-    }
+.widget-input-text {
+	display: flex;
+	height: 35px;
+	border-radius: 4px;
+	border: 1px solid #c8c8c8;
+	outline: none;
+	padding: 0 4px;
+	color: #1c1c1c;
+	background-color: white;
+}
 
-    .widget-input-text:disabled{
-        background-color: #e9e9e9;
-    }
-    .input-text_error{
-	    border: 1px solid #fa5c5c;
-    }
+.widget-input-text:focus {
+	border-color: #b2b2b2;
+}
+
+.input-text_disabled {
+	background-color: #e9e9e9;
+}
+
+.input-text_error {
+	border: 1px solid #fa5c5c;
+}
+.widget-input-text-self {
+	outline: none;
+	background-color: transparent;
+	border:0;
+}
+.widget-input-text-prefix {
+	color: #505050;
+	line-height: 35px;
+	font-size: 14px;
+}
 </style>

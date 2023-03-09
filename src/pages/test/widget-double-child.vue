@@ -1,0 +1,13 @@
+<template>
+	<p>{{label}} - {{label}}</p>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+	label: string
+}>()
+</script>
+
+<style scoped>
+
+</style>
