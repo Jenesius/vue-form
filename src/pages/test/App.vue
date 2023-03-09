@@ -1,17 +1,18 @@
 <template>
 	<div class="container-examples">
-		<widget-mother/>
-		<widget-daughter label="1"/>
-		<!--
-		<br/>
-		<br/>
-		<br/>
 
+		<div class = "test">
+			<element-input-radio :model-value="true" :disabled="false" label="Check?" :error="true"/>
+			<element-input-radio :model-value="true" :disabled="true" label="Check?" :error="true"/>
+			<element-input-radio :model-value="true" :disabled="true" label="Check?" :error="false"/>
+			<element-input-radio :model-value="false" :disabled="true" label="Check?" :error="false"/>
+			<element-input-radio :model-value="false" :disabled="false" label="Check?" :error="true"/>
+			<element-input-radio :model-value="false" :disabled="false" label="Check?" :error="false"/>
+		</div>
 
-		<input-field type = "account-type" name = "new-acc-type" label = "New Account Type"/>
-		<widget-input-account-type name = "test"/>
-
--->
+		<div>
+			<input-field type = "single-radio" name = "test" :errors = "['test']"/>
+		</div>
 
 		{{values}}
 	</div>
@@ -20,22 +21,16 @@
 <script setup lang='ts'>
 import InputField from "../../../plugin/widgets/input-field.vue";
 import {Form, useFormValues} from "../../../plugin";
-import {reactive, ref} from "vue";
-import WidgetInputAccountType from "@/pages/test/widget-input-account-type.vue";
-import WidgetField from "./widget-field.vue";
-import WidgetParent from "@/pages/test/widget-parent.vue";
-import WidgetGrandmother from "@/pages/test/widget-grandmother.vue";
-import WidgetMother from "@/pages/test/widget-mother.vue";
-import WidgetDaughter from "@/pages/test/widget-daughter.vue";
-
-
+import ElementInputRadio from "../../../plugin/widgets/inputs/input-radio/element-input-radio.vue";
 
 const form = new Form();
 const values = useFormValues(form)
 
-const country = ref('');
-
-window.form = form
+const options = [
+	{ label: "London", value: "L"},
+	{ label: "Moscow", value: "M"},
+	{ label: "Minsk" , value: "Minsk" }
+]
 
 </script>
 
@@ -44,4 +39,8 @@ window.form = form
 .example-link {
 	color: blue;
 }
+	.test {
+		display: grid;
+		gap: 15px;
+	}
 </style>

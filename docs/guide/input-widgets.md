@@ -27,6 +27,7 @@ For work, fields for entering the following type were developed:
 - [Single Checkbox](#single-checkbox)
 - [Switch](#switch)
 - [Radio](#radio)
+- [Single Radio](#single-radio)
 - [Tel](#tel)
 - [Range](#range)
 - [Number](#number)
@@ -145,6 +146,9 @@ Only one radio button in a given group can be selected at the same time.
 ```
 - **options** - similar with InputSelect
 <WidgetExampleInputRadio/>
+
+## Single Radio
+Аналогично *single-checkbox*, но для **radio** поля ввода.
 
 ## Tel
 Input elements of type tel are used to let the user enter and edit a telephone number.

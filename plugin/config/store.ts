@@ -14,6 +14,7 @@ import WidgetInputNumber from "../widgets/inputs/input-number/widget-input-numbe
 import WidgetInputRange from "../widgets/inputs/input-range/widget-input-range.vue";
 import WidgetInputTextarea from "../widgets/inputs/input-textarea/widget-input-textarea.vue";
 import WidgetInputSingleCheckbox from "../widgets/inputs/input-single-checkbox/widget-input-single-checkbox.vue";
+import WidgetInputSingleRadio from "../widgets/inputs/input-single-radio/widget-input-single-radio.vue";
 
 const STORE: IStore = {
 	requiredMessage: 'Please fill in this field',
@@ -28,7 +29,8 @@ const STORE: IStore = {
 		number  : WidgetInputNumber,
 		range   : WidgetInputRange,
 		textarea: WidgetInputTextarea,
-		'single-checkbox': WidgetInputSingleCheckbox
+		'single-checkbox': WidgetInputSingleCheckbox,
+		'single-radio'	: WidgetInputSingleRadio
 	}
 }
 
