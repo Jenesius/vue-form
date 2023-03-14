@@ -28,6 +28,9 @@ export default class Form extends EventEmitter implements FormDependence{
 	static EVENT_VALUE			 = 'value';
 	static EVENT_UPDATE_ABILITY  = 'ability:update';
 	static EVENT_INPUT			 = `input`;
+	/**
+	 * @
+	 * */
 	static GET_EVENT_FIELD_INPUT(name: string) {
 		return `${Form.EVENT_INPUT}:${name}`;
 	}
@@ -170,14 +173,12 @@ export default class Form extends EventEmitter implements FormDependence{
 			if (this.parentForm) this.parentForm.subscribe(this);
 		}
 
-
-
 		provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 	
 	private markChanges(values: any) {
 		if (!values) {
-			console.log(`%cUndefined values%c`, 'color:red', 'color: black', this);
+			console.warn('Provided values is undefined(null).', this);
 			return;
 		}
 
@@ -211,7 +212,6 @@ export default class Form extends EventEmitter implements FormDependence{
 		}
 
 		return this.on(Form.EVENT_INPUT, (data: IComparisonResult) => arg(data))
-
 	}
 
 	/**
@@ -241,19 +241,7 @@ export default class Form extends EventEmitter implements FormDependence{
 			dep.setValues?.(getPropFromObject(values, dep.name));
 		})
 	}
-	// На данный момент не используется. Подсвечивается поскольку рекурсивная
-	protected recursiveChangeItem(values:any, path: string = '') {
-		Object.keys(values).forEach(key => {
-			const stepName = `${path}${key}`;
-			const v = values[key];
-			
-			this.getDependenciesByName(stepName).forEach(i => i.change?.(v));
-			
-			if (typeof v === 'object' && v !== null) {
-				this.recursiveChangeItem(v, `${stepName}.`);
-			}
-		})
-	}
+
 	/**
 	 * @description Clean changes (Not revert Values!). Rewrite changes If new values provided
 	 * */
@@ -327,12 +315,8 @@ export default class Form extends EventEmitter implements FormDependence{
 		} catch (e) {
 
 		}
-		// Из-за того, что мы эмитим чужое значение!
-		// Form.proxyEvent(item, this, Form.EVENT_CHANGED);
-
 		return () => {
 			this.unsubscribe(item)
-
 		}
 	}
 	/**
