@@ -12,6 +12,7 @@
 		<h3 class = "container-examples-title">Test:</h3>
 		<p><a href = "/test" class = "example-link">Test Page</a></p>
 		<p><a href = "/inputs" class = "example-link">Inputs</a></p>
+		<p><a href = "/input-select" class = "example-link">Input Select</a></p>
 	</div>
 </template>
 

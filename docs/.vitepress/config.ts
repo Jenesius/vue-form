@@ -55,7 +55,8 @@ function sidebar() {
 				{ text: 'Widgets', link: '/guide/input-widgets' },
 				{ text: 'Custom Widgets', link: '/guide/custom-widgets' },
 				{ text: "Input File", link: "/guide/input-file" },
-				{ text: "v-model", link: "/guide/model-value" }
+				{ text: "v-model", link: "/guide/model-value" },
+				{ text: "Input Select", link: "/inputs/input-select" }
 			]
 		},
 		{

@@ -4,15 +4,14 @@
 			<div class="input-select"
 				 :class="{
                     'input-select_disabled': disabled,
-                    'input-select_error': errors.length
-                }"
-				 @focusout = "deactivate('main')"
+                    'input-select_error': errors.length,
+            		'input-select_active': active
+				}"
+				 @focusout = "deactivate()"
 				 :tabindex="!disabled? 0 : null"
 				 @keyup.enter="setActive()"
 				 ref="refInputSelect"
-
 			>
-
 				<widget-input-select-current
 					:title="title"
 					:active="active"
@@ -26,7 +25,7 @@
 							v-model = "filter"
 
 							@focusin = "setActive(true)"
-							@focusout = "deactivate('input')"
+							@focusout = "deactivate()"
 						/>
 
 						<div class = "widget-input-select__options-list">
@@ -37,12 +36,11 @@
 								class="widget-select-options-item"
 
 								@click = "onInput(option.value), setActive(false)"
-							>{{option.label || option.title}}</p>
+							>{{getLabelFromOptionRow(option)}}</p>
 						</div>
 
 					</div>
 				</transition>
-
 			</div>
 		</div>
 	</input-wrap>
@@ -51,12 +49,12 @@
 <script setup lang="ts">
 
 import {OptionRow} from "../../../types";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref} from "vue";
 import InputWrap from "../input-wrap.vue";
 import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
 import updateInputPosition from "../../../utils/update-input-position";
 import WidgetInputSelectSearch from "./widget-input-select-search.vue";
-import clickOutside from "../../../utils/click-outside";
+import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 
 const props = defineProps<{
 	label?: string,
@@ -65,30 +63,15 @@ const props = defineProps<{
 	options: OptionRow[],
 	placeholder?: string,
 	errors: string[],
+	hiddenValues?: OptionRow['value'][]
 }>()
 
 const refInputSelect = ref<HTMLElement>()
 const inputSelectWrap = ref();
 const active = ref(false);
 
-/*
-let off: null | (() => void) = null;
-
-watch(() => active.value, (value) => {
-	if (!value && off) {
-		off();
-		off = null;
-		return;
-	}
-	if (refInputSelect.value)
-	off = clickOutside(refInputSelect.value, deactivate)
-})*/
-
 function setActive(v = !active.value) {
-
-	if (v === false) {
-		filter.value = '';
-	}
+	if (!v) filter.value = '';
 
 	if (props.disabled) return active.value = false;
 	active.value = v;
@@ -104,32 +87,26 @@ function onInput(v: any) {
 }
 
 const title = computed(() => {
-
 	const selected = props.options.find(x => x.value === props.modelValue);
-	if (selected) return selected.label || selected.title;
+	if (selected) return getLabelFromOptionRow(selected);
 
 	if (props.disabled) return '';
 
 	return props.placeholder || '';
-
 })
 
-function deactivate(msg?: string) {
+function deactivate() {
 	const elem = refInputSelect.value;
 	if (!elem) return;
 
-	let hasFocused = elem.matches(':focus-within:not(:focus)');
 	let focusedOrHasFocused = elem.matches(':focus-within');
-
 	if (focusedOrHasFocused) return;
 
 	setActive(false);
 }
 
 onMounted(() => {
-
 	refInputSelect.value?.addEventListener("keydown", e => {
-
 		switch (e.code) {
 			case "ArrowDown":
 				e.preventDefault();
@@ -141,17 +118,16 @@ onMounted(() => {
 				break;
 		}
 	})
-
 })
+
 
 const filter = ref('');
 const filteredOptions = computed(() => {
 	const _search = filter.value.toLowerCase();
-	if (_search.length === 0) return props.options;
-	return props.options.filter(option => {
-
-		return option.title?.toLowerCase?.().includes(_search) || option.label?.toLowerCase?.().includes(_search)
-	})
+	return props.options.filter(option =>
+		!props.hiddenValues?.includes(option.value) &&
+		getLabelFromOptionRow(option)?.toLowerCase?.().includes(_search)
+	)
 })
 
 </script>
@@ -181,7 +157,7 @@ const filteredOptions = computed(() => {
 .input-select_error {
 	border: 1px solid red;
 }
-.input-select:has(.widget-input-select__list) {
+.input-select_active {
 	z-index: 1	;
 }
 

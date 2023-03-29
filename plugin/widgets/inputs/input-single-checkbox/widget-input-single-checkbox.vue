@@ -8,6 +8,8 @@
                         'input-checkbox_disabled': disabled,
                     }"
 				@click = "onInput"
+				:tabindex="!disabled? 0 : null"
+				@keyup.enter="onInput()"
 			>
 				<i class = "check"/>
 			</div>
@@ -54,6 +56,10 @@
 
 		cursor: pointer;
     }
+	.input-checkbox:focus {
+		border-color: #b2b2b2;
+		outline: none;
+	}
     .input-checkbox_active {
 		background-color: #4e74ff;
 	}
