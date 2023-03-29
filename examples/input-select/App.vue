@@ -8,7 +8,7 @@
 		<div class="wrap-app ">
 			<input-field type="select" name = "sex" :options = "sexOptions"/>
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
-			<input-field type= "select" name="programming-language" :options = "programLanguageOptions"/>
+			<input-field type= "select" name="programming-language" :options = "programLanguageOptions" :hidden-values = "['2','1']"/>
 			<button class="button" @click="form.cleanValues()">Clean Form</button>
 		</div>
 	</div>

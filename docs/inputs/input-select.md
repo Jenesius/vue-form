@@ -58,5 +58,30 @@ const arrayPets = [
 В случае, если список значений включает больше количество значений в элемент select добавляет строка для поиска:
 <ExampleInputSelectSearch/>
 
+## Hidden Values
+Для удобства работы было добавлено свойство **hidden-values** принимающее массив значений, которые не должны
+показываться в списке. Это можно реализовать самостоятельно используя конструкцию *computed*, но мы добавили этот
+функционал для более чистого кода:
+
+```vue
+
+<template>
+	<input-field
+        type = "select"
+        :options = "options"
+        :hidden-values = "['js', 'ts']"
+    />
+</template>
+<script setup>
+    const options = [
+        { value: "js", label: "JavaScript" },
+        { value: "ts", label: "TypeScript" },
+        { value: "py", label: "Python"},
+        { value: "ass", label: "Assembler" }
+    ]
+</script>
+```
+В данном примере будут показываться только **Python** и **Assembler**.
+
 ## Интерактивность
 Также данное поле для ввода поддерживает использование клавиатуры: Tab, Key Down, Key Up, Enter, Escape.

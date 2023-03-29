@@ -63,6 +63,7 @@ const props = defineProps<{
 	options: OptionRow[],
 	placeholder?: string,
 	errors: string[],
+	hiddenValues?: OptionRow['value'][]
 }>()
 
 const refInputSelect = ref<HTMLElement>()
@@ -123,8 +124,10 @@ onMounted(() => {
 const filter = ref('');
 const filteredOptions = computed(() => {
 	const _search = filter.value.toLowerCase();
-	if (_search.length === 0) return props.options;
-	return props.options.filter(option => getLabelFromOptionRow(option)?.toLowerCase?.().includes(_search))
+	return props.options.filter(option =>
+		!props.hiddenValues?.includes(option.value) &&
+		getLabelFromOptionRow(option)?.toLowerCase?.().includes(_search)
+	)
 })
 
 </script>
