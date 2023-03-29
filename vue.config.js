@@ -28,6 +28,9 @@ module.exports = defineConfig({
     },
     "inputs": {
       entry: "./src/pages/inputs/main.ts"
+    },
+    "input-select": {
+      entry: "./examples/input-select/main.ts"
     }
   }
 })
