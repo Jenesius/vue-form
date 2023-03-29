@@ -101,7 +101,7 @@ Let's pass to options as an object. Remember: on the left is the value, on the r
 ```
 However, in this case, we run into the following problem: The value can be **only** a string. Even the number given
 as a value - will be automatically converted by JavaScript to a string. There is one situation where it is convenient to use
-or store the value in an object. To do this, we have provided a [function](utils/convert-options-object) for converting an object into an array.
+or store the value in an object. To do this, we have provided a [function](./../utils/convert-options-object) for converting an object into an array.
 ## Password
 Password entry field. It has the ability to switch the visibility mode.
 ```html
