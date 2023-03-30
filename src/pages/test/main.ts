@@ -9,7 +9,8 @@ config({
 	inputTypes: {
 		country,
 		"account-type": accountType
-	}
+	},
+	debug: true
 })
 
 createApp(App).mount('#app')

@@ -5,10 +5,12 @@ export default function useFormState(form: Form) {
 	const state = reactive<FormReactiveState & {state: FormReactiveState}>({
 		changed: form.changed,
 		disabled: form.disabled,
+		// @ts-ignore
 		state: {
 			changed: form.changed,
 			disabled: form.disabled
-		}
+		},
+		wait: form.wait
 	})
 	
 	form.on(Form.EVENT_CHANGED, () => {
@@ -20,6 +22,9 @@ export default function useFormState(form: Form) {
 		state.state.disabled = v;
 	});
 
+	form.on(Form.EVENT_WAIT, v => {
+		state.wait = v;
+	})
 
 
 
@@ -27,5 +32,6 @@ export default function useFormState(form: Form) {
 }
 interface FormReactiveState {
 	changed: boolean,
-	disabled: boolean
+	disabled: boolean,
+	wait: boolean
 }

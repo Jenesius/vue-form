@@ -13,7 +13,8 @@ config({
 		file: InputFile,
 		test: InputFile,
 		inside: InputInside
-	}
+	},
+	debug: true
 })
 
 createApp(App).mount('#app')

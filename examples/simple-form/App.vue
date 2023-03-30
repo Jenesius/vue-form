@@ -12,7 +12,7 @@
       <input-field name = "gender" label = "Gender" type = "radio" :options = "sexOptions"/>
       <input-field name = "language" label = "Language" type = "select" :options = "languageOptions" />
       <input-field name = "age" label = "Age" type = "number"/>
-      <input-field name = "mobile" type = "tel" label = "Mobile phone"/>
+      <input-field name = "mobile" type = "tel" label = "Mobile phone" required/>
       <input-field name = "range" type = "range" label = "Volume"/>
       <input-field name = "isProgrammer" label = "You are programmer" type = "switch" class="padding_10"/>
 
@@ -27,7 +27,8 @@
 
 import {ComputedValue, Form, InputField, useFormValues} from "../../plugin";
 
-const form = new Form();
+const form = new Form({name: "Simple Form"});
+window.form = form;
 const computedIsProgrammer = ComputedValue(form, 'isProgrammer');
 const values = useFormValues(form);
 

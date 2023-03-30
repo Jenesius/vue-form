@@ -32,16 +32,18 @@ const STORE: IStore = {
 		'single-checkbox': WidgetInputSingleCheckbox,
 		'single-radio'	: WidgetInputSingleRadio
 	},
-	typeNotCaseSensitive: true
+	typeNotCaseSensitive: true,
+	debug: false
 }
 
-type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea' |'single-checkbox' | 'single-radio';
+type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
 export interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any
 	},
 	requiredMessage: string,
 	typeNotCaseSensitive: boolean
+	debug: boolean
 }
 export default STORE;
 

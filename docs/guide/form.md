@@ -131,6 +131,13 @@ from the input field, as well as a widget, with its own logic (For example, a ta
 which can be modified). This table can be implemented based on form
 and link to the parent.
 
+## Form.wait
+Данное свойство показывается, находится ли форма в прцоессе сохранения или изменения данных.
+```ts
+const form = new Form()
+form.wait // false
+```
+
 ## Automatic Dependencies
 When a form is created, it will automatically notify all child elements:
 ```ts

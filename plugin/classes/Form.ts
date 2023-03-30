@@ -13,6 +13,7 @@ import checkCompositeName from "../utils/check-composite-name";
 import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
 import  {IComparisonResult, searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
+import debug from "../debug/debug";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -27,6 +28,9 @@ export default class Form extends EventEmitter implements FormDependence{
 	static EVENT_VALUE			 = 'value';
 	static EVENT_UPDATE_ABILITY  = 'ability:update';
 	static EVENT_INPUT			 = `input`;
+	/**
+	 * @
+	 * */
 	static GET_EVENT_FIELD_INPUT(name: string) {
 		return `${Form.EVENT_INPUT}:${name}`;
 	}
@@ -37,6 +41,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	 */
 	static EVENT_CHANGED		 	 = 'changed';
 	static EVENT_DISABLED		 	 = 'disabled';
+	
+	static EVENT_WAIT				 = 'wait'
 
 	/**
 	 * @description. Find the parent Form. Using for subscribe elements.
@@ -79,14 +85,21 @@ export default class Form extends EventEmitter implements FormDependence{
 	#changes = {};
 	
 	/**
-	 * @description Property for displaying warns. On current time don't use.
-	 */
-	readonly #debug:boolean = false;
-	
-	/**
 	 * @description If true - all elements by default will be blocked.
 	 */
 	#disabled: boolean = false;
+	
+	/**
+	 * @description True if read or save stay in status progress. After save or read will execute, value will be false
+	 * */
+	#wait: boolean = false;
+	set wait(v: boolean) {
+		this.#wait = v;
+		this.emit(Form.EVENT_WAIT, this.#wait);
+	}
+	get wait() {
+		return this.#wait;
+	}
 
 	/**
 	 * @description Function for read data (For example from DataBase)
@@ -136,31 +149,28 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Method used for set values. New values don't overwrite previous, Mixing, GrandValues used for this.
 	 * */
 	setValues(values?: Values){
-
-
 		const prettyData = grandObject(values);
+		debug.msg(`New Values:`, prettyData);
+
 		this.notifyInputs(searchChangesByComparison(this.values, prettyData));
 		this.mergeValues(prettyData);
 
 		this.emit(Form.EVENT_VALUE, prettyData); // Emit about new data.
 		this.setValuesOfItem(this.values);
 	}
-	get debug(){
-		return this.#debug
-	}
-	
+
 	constructor(params: FormParams = {}) {
 		super();
 		
 		if (params.name)
 			this.name = params.name;
+		debug.msg(`Creating new Form${this.name? `[${this.name}]`: ''}`);
 
-		this.#debug = Boolean(params.debug);
 
 		// If params don't include parent: false, looking for a form, in case of success subscribe current form to parent.
 		if (params.parent !== false) {
 			this.parentForm = Form.getParentForm();
-			if (this.parentForm) this.parentForm.depend(this);
+			if (this.parentForm) this.parentForm.subscribe(this);
 		}
 
 		provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
@@ -168,10 +178,10 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 	private markChanges(values: any) {
 		if (!values) {
-			console.log(`%cUndefined values%c`, 'color:red', 'color: black', this);
+			console.warn('Provided values is undefined(null).', this);
 			return;
 		}
-		
+
 		const v = grandObject(replaceValues(values));
 
 		mergeObjects(this.#changes, v);
@@ -202,7 +212,6 @@ export default class Form extends EventEmitter implements FormDependence{
 		}
 
 		return this.on(Form.EVENT_INPUT, (data: IComparisonResult) => arg(data))
-
 	}
 
 	/**
@@ -232,19 +241,7 @@ export default class Form extends EventEmitter implements FormDependence{
 			dep.setValues?.(getPropFromObject(values, dep.name));
 		})
 	}
-	// На данный момент не используется. Подсвечивается поскольку рекурсивная
-	protected recursiveChangeItem(values:any, path: string = '') {
-		Object.keys(values).forEach(key => {
-			const stepName = `${path}${key}`;
-			const v = values[key];
-			
-			this.getDependenciesByName(stepName).forEach(i => i.change?.(v));
-			
-			if (typeof v === 'object' && v !== null) {
-				this.recursiveChangeItem(v, `${stepName}.`);
-			}
-		})
-	}
+
 	/**
 	 * @description Clean changes (Not revert Values!). Rewrite changes If new values provided
 	 * */
@@ -291,6 +288,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Clean all values, values equal {}, after that if new values was provided set them like current.
 	 * */
 	cleanValues(values?: Values) {
+		debug.msg('Cleaning values')
 		this.values = {};
 		this.setValues(values || {});
 	}
@@ -306,6 +304,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description subscribe is alice for depend. Subscribe element to Form.
 	 * */
 	subscribe(item: any) {
+		debug.msg(`New subscription${'name' in item ? `(${item.name})` : ''}`)
+
 		this.dependencies.push(item);
 		this.emit(Form.EVENT_SUBSCRIBE, item);
 
@@ -315,16 +315,12 @@ export default class Form extends EventEmitter implements FormDependence{
 		} catch (e) {
 
 		}
-		// Из-за того, что мы эмитим чужое значение!
-		// Form.proxyEvent(item, this, Form.EVENT_CHANGED);
-
 		return () => {
 			this.unsubscribe(item)
-
 		}
 	}
 	/**
-	 * @deprecated
+	 * @deprecated Use form.subscribe
 	 * */
 	depend(item: any) {
 		return this.subscribe(item)
@@ -334,6 +330,8 @@ export default class Form extends EventEmitter implements FormDependence{
 			from.on(eventName, (...arg: any) => to.emit(eventName, ...arg));
 	}
 	unsubscribe(item: any){
+		debug.msg(`Unsubscribe${'name' in item ? `(${item.name})` : ''}`)
+
 		const index = this.dependencies.indexOf(item);
 		if (index === -1) return;
 		this.dependencies.splice(index, 1);
@@ -403,6 +401,8 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 	
 	disable(names?: string | string[]){
+		debug.msg(`Disabling ${names || ''}`);
+
 		if (typeof names === "string") names = [names];
 		
 		this.emit(Form.EVENT_DISABLE, names);
@@ -448,6 +448,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	
 
 	enable(names?: string | string[]) {
+		debug.msg(`Enabling ${names || ''}`);
 		if (typeof names === "string") names = [names];
 		
 		this.emit(Form.EVENT_ENABLE, names);
@@ -554,21 +555,27 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * run it
 	 */
 	get read() {
+		debug.msg(`Reading data`);
 		const array: Array<FunctionHandleData> =
 			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
 				if (elemController.read) acc.push(elemController.read);
 				return acc;
 			}, []);
-		
+
 		array.push(() =>
 			runPromiseQueue([
+				() => {
+					this.wait = true;
+				},
 				() => this.#readData?.(),
 				(data: any) => this.emit(Form.EVENT_READ, data)
 				]
 			)
 		)
 		
-		return () => Promise.all(array.map(c => c()));
+		return () => Promise.all(array.map(c => c())).finally(() => {
+			this.wait = false;
+		});
 	}
 	set read(callback: FunctionHandleData){
 		this.#readData = callback;
@@ -578,6 +585,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description The same with read. After saving run cleanChanges.
 	 */
 	get save() {
+		debug.msg(`Saving data`);
 		const array: Array<FunctionHandleData> =
 			this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
 				if (elemController.save) acc.push(elemController.save);
@@ -586,13 +594,18 @@ export default class Form extends EventEmitter implements FormDependence{
 		
 		array.push(() =>
 			runPromiseQueue([
+				() => {
+					this.wait = true
+				},
 				() => this.#saveData?.(),
 				(data: any) => this.emit(Form.EVENT_SAVE, data),
 				() => this.cleanChanges()
 			])
 		)
 		
-		return () => Promise.all(array.map(c => c()));
+		return () => Promise.all(array.map(c => c())).finally(() => {
+			this.wait = false;
+		});
 	}
 	set save(callback: FunctionHandleData) {
 		this.#saveData = callback;
@@ -603,13 +616,17 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @return {Boolean} Current form was validated?
 	 */
 	validate() {
-		return this.dependencies.reduce((acc, dep) => {
+		const result = this.dependencies.reduce((acc, dep) => {
 			if (dep.validate) {
 				const result = dep.validate();
 				acc = acc && !!result;
 			}
 			return acc;
 		}, true);
+
+		debug.msg(`Validation ${result ? 'successful' : 'failed'}`);
+
+		return result;
 	}
 
 	/**
@@ -629,7 +646,6 @@ export default class Form extends EventEmitter implements FormDependence{
 }
 
 interface FormParams {
-	debug?: boolean,
 	name? : string,
 	parent?: boolean // Don't subscribe to parent form if FALSE
 	// cleanChangesAfterSave?: boolean,
