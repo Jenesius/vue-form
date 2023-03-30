@@ -32,6 +32,7 @@ const STORE: IStore = {
 		'single-checkbox': WidgetInputSingleCheckbox,
 		'single-radio'	: WidgetInputSingleRadio
 	},
+	typeNotCaseSensitive: true,
 	debug: false
 }
 
@@ -41,6 +42,7 @@ interface IStore {
 		[name: defineInputTypes | string]: any
 	},
 	requiredMessage: string,
+	typeNotCaseSensitive: boolean
 	debug: boolean
 }
 export default STORE;

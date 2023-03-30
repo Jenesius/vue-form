@@ -45,7 +45,10 @@ const emits = defineEmits<{
 const inputsStore = STORE.inputTypes;
 
 // By default, used text component in the store.
-const componentItem = computed(() => inputsStore[props.type] || inputsStore.text);
+const componentItem = computed(() => {
+	const type = STORE.typeNotCaseSensitive ? props.type?.toLowerCase() : props.type;
+	return inputsStore[type] || inputsStore.text
+});
 
 /**
  * @description Extend validation array with default validation rules, like: Required
