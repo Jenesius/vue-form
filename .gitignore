@@ -3,6 +3,8 @@ node_modules
 dist
 .vite_opt_cache
 
+docs/.vitepress/cache
+
 # local env files
 .env.local
 .env.*.local
