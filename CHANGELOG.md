@@ -1,3 +1,9 @@
+#### 2.3.14 (2023-03-31)
+
+##### Bug Fixes
+
+*  remove 14 version of Node ([1c5091f5](https://github.com/Jenesius/vue-form/commit/1c5091f51ae8538416889018ab610bddc00768f9))
+
 #### 2.3.13 (2023-03-31)
 
 ##### Build System / Dependencies
