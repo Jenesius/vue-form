@@ -10,8 +10,7 @@
     "webuild": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "jest",
-    "build": "rollup -c rollup.config.js",
-    "_full": "rollup -c rollup.config.js && npm publish",
+    "build": "vite build --config vite.config.js",
     "full": "vite build --config vite.config.js && npm publish",
     "docs:dev": "vitepress dev docs --port 8090",
     "docs:build": "vitepress build docs",
@@ -51,11 +50,11 @@
     "vue": "^3.0.0"
   },
   "dependencies": {
-    "jenesius-event-emitter": "^1.0.4",
-    "vite-plugin-css-injected-by-js": "^3.1.0",
+    "jenesius-event-emitter": "1.0.4",
     "libphonenumber-js": "^1.10.7"
   },
   "devDependencies": {
+    "vite-plugin-css-injected-by-js": "^3.1.0",
     "@babel/core": "^7.21.3",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/plugin-proposal-optional-chaining": "^7.18.6",
