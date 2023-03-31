@@ -51,13 +51,16 @@ const emit = defineEmits<{
 }>()
 
 function onInput(v: string) {
-	if ("maxlength" in props || "maxLength" in props) v = v.slice(0, Number(props.maxlength || props.maxLength))
+	if (
+		("maxlength" in props && props.maxlength !== undefined) ||
+		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
 
 	try {
 		v = props.modify(v);
 	} catch (e) {
 		warn(`input-text${props.name ? ` (${props.name})` : ''}`, `Modify handler throw the error`, e)
 	}
+
 
 	refInput.value.value = v;
 	emit('update:modelValue', v);

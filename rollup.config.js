@@ -6,6 +6,8 @@ import postcss from 'rollup-plugin-postcss';
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript';
 import {getBabelOutputPlugin} from "@rollup/plugin-babel";
+import changelog from "generate-changelog";
+import fs from "fs";
 
 const NAME = pkg.name;
 const VERSION = pkg.version;
@@ -22,6 +24,13 @@ const outputConfig = {
 		format: `cjs`,
 	},
 }
+
+
+
+changelog.generate({ patch: true, repoUrl: /(.*)(\.git)/.exec(pkg.repository.url)[1] })
+.then(function (changelog) {
+	fs.writeFileSync('./CHANGELOG.md', changelog);
+});
 
 function createConfig(format, output) {
 	if (!output) {

@@ -7,7 +7,7 @@
 
 		<input-field type = "text" name = "sun" label = "Username"/>
 
-		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM" :modify = "test" max-length = 4 />
+		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM"  :pretty = "splitPoint"/>
 		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM" :modify = "test" maxlength = 2 />
 
 
@@ -28,7 +28,9 @@ function test() {
 	throw new Error('test')
 }
 
-
+function splitPoint(a: string) {
+	return (a || '').replaceAll('.', '').split('').join('.');
+}
 window.form = form
 
 </script>
