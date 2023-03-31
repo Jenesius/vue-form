@@ -97,6 +97,7 @@ function handleInput(v: any) {
 </script>
 
 <style>
+@import "./../styles/main.css";
 .arrow {
 	border: solid #8f8f8f;
 	border-width: 0 2px 2px 0;

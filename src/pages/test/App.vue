@@ -1,46 +1,38 @@
 <template>
 	<div class="container-examples">
 
-		<div class = "test">
-			<element-input-radio :model-value="true" :disabled="false" label="Check?" :error="true"/>
-			<element-input-radio :model-value="true" :disabled="true" label="Check?" :error="true"/>
-			<element-input-radio :model-value="true" :disabled="true" label="Check?" :error="false"/>
-			<element-input-radio :model-value="false" :disabled="true" label="Check?" :error="false"/>
-			<element-input-radio :model-value="false" :disabled="false" label="Check?" :error="true"/>
-			<element-input-radio :model-value="false" :disabled="false" label="Check?" :error="false"/>
-		</div>
+		<input-field type = "text" name = "sun" required label = "Username" disabled/>
 
-		<div>
-			<input-field type = "single-radio" name = "test" :errors = "['test']"/>
-		</div>
+		<input-field type = "text" name = "sun" required label = "Username"/>
 
-		{{values}}
+		<input-field type = "text" name = "sun" label = "Username"/>
+
+		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM" :modify = "test" max-length = 4 />
+		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM" :modify = "test" maxlength = 2 />
+
+
 	</div>
 </template>
 
 <script setup lang='ts'>
 import InputField from "../../../plugin/widgets/input-field.vue";
-import {Form, useFormValues} from "../../../plugin";
-import ElementInputRadio from "../../../plugin/widgets/inputs/input-radio/element-input-radio.vue";
+import {Form} from "../../../plugin";
+import {onMounted, ref} from "vue";
 
 const form = new Form();
-const values = useFormValues(form)
 
-const options = [
-	{ label: "London", value: "L"},
-	{ label: "Moscow", value: "M"},
-	{ label: "Minsk" , value: "Minsk" }
-]
+
+onMounted(() => setTimeout(() => form.validate(), 1000))
+
+function test() {
+	throw new Error('test')
+}
+
+
+window.form = form
 
 </script>
 
 <style>
 
-.example-link {
-	color: blue;
-}
-	.test {
-		display: grid;
-		gap: 15px;
-	}
 </style>
