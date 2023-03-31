@@ -1,3 +1,9 @@
+#### 2.3.13 (2023-03-31)
+
+##### Build System / Dependencies
+
+*  removing rollup, build by vite ([57de6cf4](https://github.com/Jenesius/vue-form/commit/57de6cf404b312f45d9b1ab0c4a4798163bcfa33))
+
 #### 2.3.12 (2023-03-31)
 
 ##### Documentation Changes
