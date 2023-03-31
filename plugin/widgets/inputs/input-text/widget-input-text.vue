@@ -1,27 +1,22 @@
 <template>
 	<input-wrap :label="label" :errors="errors">
 		<div
-			class = "widget-input-text"
+			class = "container-widget-input-text"
 			:class="{
-					'input-text_error': errors.length !== 0,
-					'input-text_disabled': disabled
+					'container-widget-input-text_error': errors.length !== 0,
+					'container-widget-input-text_disabled': disabled
 			}"
 		>
-			<span
-				class = "widget-input-text-prefix"
-				v-if = "prefix"
-
-			>{{prefix}}</span>
+			<span class = "widget-input-text-prefix" v-if = "prefix">{{prefix}}</span>
 			<input
 				ref="refInput"
-				class="widget-input-text-self"
+				class="widget-input-text"
 				type="text"
 				:value="pretty(modelValue)"
-				@input="onInput($event.target.value)"
 				:disabled="disabled"
-
 				:autofocus="autofocus"
 				:placeholder="placeholder"
+				@input="onInput($event.target.value)"
 			>
 		</div>
 	</input-wrap>
@@ -30,6 +25,7 @@
 <script setup lang="ts">
 import InputWrap from "../input-wrap.vue";
 import {ref, watch} from "vue";
+import warn from "../../../debug/warn";
 
 const props = withDefaults(defineProps<{
 	label?: string,
@@ -38,30 +34,33 @@ const props = withDefaults(defineProps<{
 	disabled: boolean,
 	autofocus: boolean,
 	pretty?: (a: string) => string,
-	modify?: (a: string) => string,
+	modify?: (a: any) => string,
 	placeholder?: string,
 	maxLength?: string | number,
-	prefix?: string
+	maxlength?: string | number,
+	prefix?: string,
+	name?: string
 }>(), {
 	pretty: (a: string) => a,
-	modify: (a: string) => a
+	modify: (a: any) => a
 })
 
-const refInput = ref(props.modelValue);
+const refInput = ref<HTMLInputElement>(props.modelValue);
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 
-function onInput(v: unknown) {
-	if (props.maxLength && typeof v === "string")
-		v = v.slice(0, Number(props.maxLength))
+function onInput(v: string) {
+	if (
+		("maxlength" in props && props.maxlength !== undefined) ||
+		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
 
 	try {
-		// @ts-ignore
 		v = props.modify(v);
 	} catch (e) {
-		console.log(`[input-text] modify value error.`, e);
+		warn(`input-text${props.name ? ` (${props.name})` : ''}`, `Modify handler throw the error`, e)
 	}
+
 
 	refInput.value.value = v;
 	emit('update:modelValue', v);
@@ -72,36 +71,33 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 </script>
 
 <style scoped>
-.widget-input-text {
+.container-widget-input-text {
 	display: flex;
 	height: 35px;
 	border-radius: 4px;
-	border: 1px solid #c8c8c8;
-	outline: none;
-	padding: 0 4px;
-	color: #1c1c1c;
+	border: 1px solid var(--input-gray-light);
 	background-color: white;
 }
-
-.widget-input-text:focus {
-	border-color: #b2b2b2;
+.container-widget-input-text:focus-within {
+	border-color: var(--input-gray-dark);
 }
-
-.input-text_disabled {
-	background-color: #e9e9e9;
+.container-widget-input-text_disabled {
+	background-color: var(--input-disabled);
 }
-
-.input-text_error {
-	border: 1px solid #fa5c5c;
+.container-widget-input-text_error {
+	border: 1px solid var(--input-error);
 }
-.widget-input-text-self {
+.widget-input-text-prefix {
+	color: #646363;
+	line-height: 35px;
+	font-size: 14px;
+	padding: 0 0 0 4px;
+}
+.widget-input-text {
+	flex-grow: 1;
 	outline: none;
 	background-color: transparent;
 	border:0;
-}
-.widget-input-text-prefix {
-	color: #505050;
-	line-height: 35px;
-	font-size: 14px;
+	padding: 0 4px;
 }
 </style>
