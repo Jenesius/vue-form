@@ -74,23 +74,23 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 .container-widget-input-text {
 	display: flex;
 	height: 35px;
-	border-radius: 4px;
-	border: 1px solid var(--input-gray-light);
+	border-radius: var(--vf-input-border-radius);
+	border: 1px solid var(--vf-input-border-color);
 	background-color: white;
 }
 .container-widget-input-text:focus-within {
-	border-color: var(--input-gray-dark);
+	border-color: var(--vf-input-gray-dark);
 }
 .container-widget-input-text_disabled {
-	background-color: var(--input-disabled);
+	background-color: var(--vf-input-background-disabled);
 }
 .container-widget-input-text_error {
-	border: 1px solid var(--input-error);
+	border: 1px solid var(--vf-input-error);
 }
 .widget-input-text-prefix {
 	color: #646363;
 	line-height: 35px;
-	font-size: 14px;
+	font-size: var(--vf-input-font-size);
 	padding: 0 0 0 4px;
 }
 .widget-input-text {
@@ -99,5 +99,7 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	background-color: transparent;
 	border:0;
 	padding: 0 4px;
+	color: var(--vf-input-color);
+	font-size: var(--vf-input-font-size);
 }
 </style>

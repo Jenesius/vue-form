@@ -78,23 +78,24 @@ function onInput(e: any) {
         height: 35px;
         max-height: 35px;
 
-	    border-radius: 4px;
-	    border: 1px solid #c8c8c8;
+	    border-radius: var(--vf-input-border-radius);
+	    border: 1px solid var(--vf-input-border-color);
         background-color: white;
     }
     .input-tel_disabled{
-	    background-color: #e9e9e9;
+	    background-color: var(--vf-input-background-disabled);
     }
     .input-tel{
         border: 0;
         outline: none;
         background-color: transparent;
 
-	    color: #1c1c1c;
+	    color: var(--vf-input-color);
         flex-grow: 1;
 		width: 100%;
+		font-size: var(--vf-input-font-size);
     }
 	.input-tel_error{
-		border: 1px solid red;
+		border: 1px solid var(--vf-input-error);
 	}
 </style>

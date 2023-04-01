@@ -39,7 +39,7 @@ const props = defineProps<IProps>()
 		height: 20px;
 		aspect-ratio: 1/1;
 		border-radius: 50%;
-		border: 1px solid #c8c8c8;
+		border: 1px solid var(--vf-input-border-color);
 		background-color: white;
 
 		display: grid;
@@ -50,7 +50,7 @@ const props = defineProps<IProps>()
 		aspect-ratio: 1/1;
 
 		border-radius: 50%;
-		background-color: #4e74ff;
+		background-color: var(--vf-input-active);
 		border: 1px solid #f0f0f0;
 	}
 	.element-input-radio-label{
@@ -61,13 +61,13 @@ const props = defineProps<IProps>()
 		cursor: default;
 	}
 	.element-input-radio_disabled .element-input-radio-button{
-		background-color: #e9e9e9;
+		background-color: var(--vf-input-background-disabled);
 	}
 	.element-input-radio_disabled .element-input-radio-button_active{
-		background-color: #bac7f8
+		background-color: var(--vf-input-active-disabled);
 	}
 	.element-input-radio_error .element-input-radio-button{
-		border: 1px solid red;
+		border: 1px solid var(--vf-input-error);
 	}
 	.fade-enter-active,
 	.fade-leave-active {

@@ -40,6 +40,6 @@
 		padding: 0 0 8px 0;
 	}
 	.step-container:active>.arrow{
-		border-color: #4e74ff;
+		border-color: var(--vf-input-active);
 	}
 </style>

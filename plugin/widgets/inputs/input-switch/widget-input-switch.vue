@@ -49,7 +49,7 @@
     .input-switch {
         width: 38px;
         border-radius: 11px;
-        border: 1px solid #c8c8c8;
+        border: 1px solid var(--vf-input-border-color);
         height: 21px;
         outline: none;
         box-sizing: border-box;
@@ -61,13 +61,13 @@
     .input-switch-button{
         height: 15px;
         width: 15px;
-        background-color: #c8c8c8;
+        background-color: var(--vf-input-gray-light);
         border-radius: 50%;
         transform: translateX(3px);
         transition: transform 0.1s, color 0.1s;
     }
     .input-switch-button_active{
-        background-color: #4e74ff;
+        background-color: var(--vf-input-active);
         transform: translateX(18px);
     }
     .input-switch-title{
@@ -75,10 +75,10 @@
         color: #333;
     }
     .input-switch_disabled{
-        background-color: #e9e9e9;
+        background-color: var(--vf-input-background-disabled);
         cursor: default;
     }
     .input-switch_disabled .input-switch-button_active{
-        background-color: #bac7f8;
+        background-color: var(--vf-input-active-disabled)
     }
 </style>

@@ -48,7 +48,7 @@
         width: 18px;
         height: 18px;
         margin: 0;
-        border: 1px solid #c8c8c8;
+        border: 1px solid var(--vf-input-border-color);
         background-color: white;
         border-radius: 3px;
         display: grid;
@@ -57,17 +57,17 @@
 		cursor: pointer;
     }
 	.input-checkbox:focus {
-		border-color: #b2b2b2;
+		border-color: var(--vf-input-border-color-focus);
 		outline: none;
 	}
     .input-checkbox_active {
-		background-color: #4e74ff;
+		background-color: var(--vf-input-active)
 	}
     .input-checkbox_disabled{
-        background-color: #e9e9e9;
+        background-color: var(--vf-input-background-disabled)
     }
     .input-checkbox_disabled.input-checkbox_active{
-        background-color: #bac7f8;
+        background-color: var(--vf-input-active-disabled);
     }
 
     .input-checkbox_disabled{

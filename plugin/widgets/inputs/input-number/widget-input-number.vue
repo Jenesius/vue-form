@@ -69,18 +69,18 @@ function onStep(v: boolean) {
 	.input-number{
 		display: grid;
 		grid-template-columns: 30px 1fr;
-		border: 1px solid #c8c8c8;
+		border: 1px solid var(--vf-input-border-color);
 		height: 35px;
-		border-radius: 4px;
+		border-radius: var(--vf-input-border-radius);
 		background-color: white;
 	}
 
 	.input-number_disabled{
-		background-color: #e9e9e9;
+		background-color: var(--vf-input-background-disabled);
 		position: relative;
 	}
 	.input-number_error{
-		border: 1px solid #fa5c5c;
+		border: 1px solid var(--vf-input-error)
 	}
 
 	.input-number:focus-within {

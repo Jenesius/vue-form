@@ -64,16 +64,16 @@
         align-items: center;
 
         height: 35px;
-        border-radius: 4px;
-        border: 1px solid #c8c8c8;
+        border-radius: var(--vf-input-font-size);
+        border: 1px solid var(--vf-input-border-color);
 		background-color: white;
     }
     .input-password-container:focus-within{
-        border-color: #b2b2b2;
+        border-color: var(--vf-input-border-color-focus);
     }
 
     .input-password-container_disabled{
-        background-color: #e9e9e9;
+        background-color: var(--vf-input-background-disabled)
     }
     .input-password{
         outline: none;
@@ -83,6 +83,7 @@
         flex-grow: 1;
 		width: 100%;
         padding: 0 4px;
+		font-size: var(--vf-input-font-size);
     }
 
     .input-password__toggle{
@@ -123,6 +124,6 @@
         top: 48%;
     }
 	.input-password_error{
-		border: 1px solid red;
+		border: 1px solid var(--vf-input-error)
 	}
 </style>

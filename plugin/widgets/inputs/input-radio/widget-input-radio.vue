@@ -72,9 +72,4 @@
     .input-radio-container:focus{
       outline: none;
     }
-    .input-radio-container:focus .input-radio-button{
-      border-color: #b2b2b2;
-    }
-
-
 </style>
