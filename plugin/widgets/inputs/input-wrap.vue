@@ -1,6 +1,6 @@
 <template>
     <div class = "container-input-wrap">
-        <p v-if = "label" class = "container-input-wrap-label">{{label}}</p>
+        <p v-if = "label" class = "container-input-wrap-label vf-input-label">{{label}}</p>
         <slot/>
         <!--Errors-->
         <div class = "container-error-wrap" v-if = "errors && errors.length > 0">
@@ -26,8 +26,6 @@
         flex-direction: column;
     }
     .container-input-wrap-label{
-        color: var(--vf-input-label-color);
-        font-size: 13px;
         margin: 4px 0;
     }
     .container-error-wrap{

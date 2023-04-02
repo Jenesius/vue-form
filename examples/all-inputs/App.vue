@@ -25,6 +25,12 @@
 		<input-field name = "phone" type = "tel" label = "Disabled" disabled/>
 		<input-field name = "phone" type = "tel" label = "With Error" :errors = "['Some mistake']"/>
 		<input-field name = "phone" type = "tel" label = "Placeholder" placeholder = "Add information about user." />
+
+		<h2>Input Switch</h2>
+		<input-field name = "switch" type = "switch"/>
+		<input-field name = "switch" type = "switch" label = "With label"/>
+		<input-field name = "switch" type = "switch" label = "Disabled" disabled/>
+		<input-field name = "switch" type = "switch" label = "With Error" :errors = "['Some mistake']"/>
 	</div>
 </template>
 

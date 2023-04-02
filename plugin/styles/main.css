@@ -35,3 +35,7 @@
     display: grid;
     place-content: center;
 }
+.vf-input-label {
+    color: var(--vf-input-label-color);
+    font-size: 13px;
+}
