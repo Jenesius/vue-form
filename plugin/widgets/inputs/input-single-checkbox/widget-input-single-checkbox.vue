@@ -1,25 +1,18 @@
 <template>
     <input-wrap >
-		<div class = "container-input-single-checkbox">
-			<div
-				class = "input-checkbox"
-				:class = "{
-                        'input-checkbox_active': modelValue,
-                        'input-checkbox_disabled': disabled,
-                    }"
-				@click = "onInput"
-				:tabindex="!disabled? 0 : null"
-				@keyup.enter="onInput()"
-			>
-				<i class = "check"/>
-			</div>
-			<p class = "widget-input__label">{{label}}</p>
-		</div>
+		<element-input-checkbox
+			:model-value="modelValue"
+			:disabled="disabled"
+			:label = "label"
+			@click = "onInput"
+			@keyup.enter="onInput()"
+		/>
     </input-wrap>
 </template>
 
 <script setup lang = "ts">
     import InputWrap from "../input-wrap.vue";
+	import ElementInputCheckbox from "../input-checkbox/element-input-checkbox.vue";
 
     const props = defineProps<{
         label?: string,
@@ -39,51 +32,5 @@
 </script>
 
 <style scoped>
-	.container-input-single-checkbox {
-		display: flex;
-		gap: 10px;
-		align-items: center;
-	}
-    .input-checkbox{
-        width: 18px;
-        height: 18px;
-        margin: 0;
-        border: 1px solid var(--vf-input-border-color);
-        background-color: white;
-        border-radius: 3px;
-        display: grid;
-        place-content: center;
 
-		cursor: pointer;
-    }
-	.input-checkbox:focus {
-		border-color: var(--vf-input-border-color-focus);
-		outline: none;
-	}
-    .input-checkbox_active {
-		background-color: var(--vf-input-active)
-	}
-    .input-checkbox_disabled{
-        background-color: var(--vf-input-background-disabled)
-    }
-    .input-checkbox_disabled.input-checkbox_active{
-        background-color: var(--vf-input-active-disabled);
-    }
-
-    .input-checkbox_disabled{
-        cursor: default;
-    }
-
-    i.check {
-        display: none;
-        width: 4px;
-        height: 7px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate( 45deg);
-        margin: 1px 1px 4px 1px;
-    }
-    .input-checkbox_active>i{
-        display: inline-block;
-    }
 </style>

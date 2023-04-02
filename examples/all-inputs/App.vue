@@ -31,6 +31,20 @@
 		<input-field name = "switch" type = "switch" label = "With label"/>
 		<input-field name = "switch" type = "switch" label = "Disabled" disabled/>
 		<input-field name = "switch" type = "switch" label = "With Error" :errors = "['Some mistake']"/>
+
+		<h2>Input Single Checkbox</h2>
+
+		<input-field name = "single-checkbox" type = "single-checkbox"/>
+		<input-field name = "single-checkbox" type = "single-checkbox" label = "With label"/>
+		<input-field name = "single-checkbox" type = "single-checkbox" label = "Disabled" disabled/>
+		<input-field name = "single-checkbox" type = "single-checkbox" label = "With Error" :errors = "['Some mistake']"/>
+
+		<h2>Input Checkbox</h2>
+
+		<input-field name = "checkbox" type = "checkbox" :options = "optionsCheckbox"/>
+		<input-field name = "checkbox" type = "checkbox" label = "With label" :options = "optionsCheckbox"/>
+		<input-field name = "checkbox" type = "checkbox" label = "Disabled" disabled :options = "optionsCheckbox"/>
+		<input-field name = "checkbox" type = "checkbox" label = "With Error" :errors = "['Some mistake']" :options = "optionsCheckbox"/>
 	</div>
 </template>
 
@@ -49,6 +63,21 @@ function addPrettySymbol(symbol: string) {
 		return `${value} ${symbol}`;
 	}
 }
+
+const optionsCheckbox = [
+	{
+		label: 'test',
+		value: 1
+	},
+	{
+		label: 'test 2',
+		value: 2
+	},
+	{
+		label: 'test 3',
+		value: 3
+	}
+]
 
 </script>
 
