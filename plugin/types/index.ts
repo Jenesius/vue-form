@@ -49,3 +49,4 @@ export type IPropsInput = {
 	disabled: boolean,
 	autofocus: boolean
 }
+

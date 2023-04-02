@@ -110,3 +110,11 @@ Value: {{values.prettySplit}}
 ::: warning Value
 Remember that the value that goes into modify is equal to the one that is in the input field (in the HTML input).
 :::
+
+## numeric
+The attribute prohibits entering a non-number into the field.
+```html
+<input-field numeric />
+```
+
+<input-field  label = "Only Numeric" name = "numeric" numeric />
