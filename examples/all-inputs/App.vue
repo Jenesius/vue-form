@@ -74,6 +74,13 @@
 		<input-field name = "single-radio" type = "single-radio" label = "With label"/>
 		<input-field name = "single-radio" type = "single-radio" label = "Disabled" disabled/>
 		<input-field name = "single-radio" type = "single-radio" label = "With Error" :errors = "['Some mistake']"/>
+
+		<h2>Input Single Range</h2>
+
+		<input-field name = "range" type = "range"/>
+		<input-field name = "range" type = "range" label = "With label"/>
+		<input-field name = "range" type = "range" label = "Disabled" disabled/>
+		<input-field name = "range" type = "range" label = "With Error" :errors = "['Some mistake']"/>
 	</div>
 </template>
 
