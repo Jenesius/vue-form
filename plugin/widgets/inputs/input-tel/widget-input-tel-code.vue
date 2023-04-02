@@ -1,10 +1,10 @@
 <template>
-    <div class = "container-code">
-        <img class = "tel-code" alt = "current tel code" :src = "`https://flagcdn.com/${countryCode}.svg`" width="24"
+    <div class = "container-input-tel-code vf-grid-center">
+        <img class = "input-tel-code" alt = "current tel code" :src = "`https://flagcdn.com/${countryCode}.svg`" width="24"
             v-if = "countryCode"
         />
-        <div class = "container-default-code tel-code" v-else>
-            <span>?</span>
+        <div class = "container-input-tel-code-default vf-grid-center" v-else>
+			<span>&#63;</span>
         </div>
     </div>
 </template>
@@ -16,26 +16,21 @@
 </script>
 
 <style scoped>
-    .container-code{
+    .container-input-tel-code{
         padding: 0 10px;
-        display: grid;
-        place-content: center;
     }
-    .container-default-code{
-        width:  24px;
-        height: 16px;
-		display: grid;
-
-        background-color: #dadada;
-        text-align: center;
-    }
-
-    .tel-code{
+    .input-tel-code{
         user-select: none;
-        border: 1px solid #f6f6f6;
+        border: 1px solid var(--vf-input-white-light);
     }
-	.container-default-code>span{
-		color: gray;
+	.container-input-tel-code-default{
+		width:  24px;
+		height: 16px;
+
+		background-color: var(--vf-input-white-dark);
+	}
+	.container-input-tel-code-default>span{
+		color: var(--vf-input-black-light);
 		font-size: 11px;
 		line-height: 13px;
 	}

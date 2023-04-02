@@ -1,5 +1,5 @@
 <template>
-	<input-wrap :label = "label">
+	<input-wrap :label = "label" :errors = "errors">
 		<input class = "input-range" type = "range" :max="max" :min="min" :step = "step" :disabled = "disabled"
 			   :value = "modelValue"
 			   @input = "$emit('update:modelValue', $event.target.value)"
@@ -53,32 +53,34 @@ const progressCount = computed(() => Number(props.modelValue) / (Number(props.ma
 		height: 8px;
 		border-radius: 4px;
 		appearance: none;
-		border: 1px solid #c8c8c8;
+		border: var(--vf-input-border);
 		margin: 0;
 		outline: none;
 	}
 	.input-range:disabled {
 		appearance: none;
-		background: #e9e9e9 !important;
+		background: var(--vf-input-background-disabled) !important;
 	}
-
+	.input-range:focus {
+		border: var(--vf-input-border-focus);
+	}
 	/* Special styling for WebKit/Blink */
 	.input-range::-webkit-slider-thumb {
 		appearance: none;
 		width: 18px;
 		height: 18px;
 		border-radius: 10px;
-		border: 1px solid #c8c8c8;
+		border: var(--vf-input-border);
 		background-color: white;
 		overflow: visible;
 		cursor: pointer;
 	}
 	.input-range:disabled::-webkit-slider-thumb{
-		background-color: #e0e0e0;
+		background-color: var(--vf-input-background-disabled);
 		cursor: default;
 	}
 	.input-range_error::-webkit-slider-thumb{
-		border-color: red;
+		border: var(--vf-input-border-error);
 	}
 
 </style>

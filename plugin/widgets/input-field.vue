@@ -117,9 +117,4 @@ function handleInput(v: any) {
 	-webkit-transform: rotate(-135deg);
 }
 
-.widget-input__label {
-	color: #333;
-	font-size: 13px;
-	margin: 4px 0;
-}
 </style>

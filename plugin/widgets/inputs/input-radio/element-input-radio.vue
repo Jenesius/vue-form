@@ -6,6 +6,9 @@
         	'element-input-radio_disabled'	: disabled,
             'element-input-radio_error'	: error
         }"
+		:tabindex = "disabled ? 'none' : 0"
+		@click = "emits('input')"
+		@keyup.enter = "emits('input')"
 	>
 		<div class = "element-input-radio-button">
 			<transition name = "fade">
@@ -13,7 +16,7 @@
 			</transition>
 		</div>
 
-		<p class = "element-input-radio-label" v-if = "label">{{label}}</p>
+		<p class = "element-input-radio-label vf-input-label" v-if = "label">{{label}}</p>
 	</div>
 </template>
 
@@ -26,6 +29,9 @@ interface IProps {
 }
 
 const props = defineProps<IProps>()
+const emits = defineEmits<{
+	(event: 'input'): void
+}>()
 </script>
 
 <style scoped>
@@ -34,40 +40,43 @@ const props = defineProps<IProps>()
 		gap: 10px;
 		align-items: center;
 		cursor: pointer;
+		outline: none;
 	}
+
 	.element-input-radio-button {
 		height: 20px;
 		aspect-ratio: 1/1;
 		border-radius: 50%;
-		border: 1px solid #c8c8c8;
-		background-color: white;
-
+		border: var(--vf-input-border);
+		background-color: var(--vf-input-background);
 		display: grid;
 		place-items: center;
+	}
+	.element-input-radio:focus .element-input-radio-button {
+		border: var(--vf-input-border-focus);
 	}
 	.element-input-radio-button_active {
 		height: 12px;
 		aspect-ratio: 1/1;
 
 		border-radius: 50%;
-		background-color: #4e74ff;
-		border: 1px solid #f0f0f0;
+		background-color: var(--vf-input-active);
+		border: 1px solid var(--vf-input-white-light)
 	}
 	.element-input-radio-label{
-		color: #1c1c1c;
 		margin: 0;
 	}
 	.element-input-radio_disabled{
 		cursor: default;
 	}
 	.element-input-radio_disabled .element-input-radio-button{
-		background-color: #e9e9e9;
+		background-color: var(--vf-input-background-disabled);
 	}
 	.element-input-radio_disabled .element-input-radio-button_active{
-		background-color: #bac7f8
+		background-color: var(--vf-input-active-disabled);
 	}
 	.element-input-radio_error .element-input-radio-button{
-		border: 1px solid red;
+		border: var(--vf-input-border-error);
 	}
 	.fade-enter-active,
 	.fade-leave-active {

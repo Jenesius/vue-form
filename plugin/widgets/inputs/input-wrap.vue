@@ -1,20 +1,15 @@
 <template>
-    <div class = "widget-input-wrap">
-
-        <p v-if = "label" class = "widget-input__label">{{label}}</p>
-
+    <div class = "container-input-wrap">
+        <p v-if = "label" class = "container-input-wrap-label vf-input-label">{{label}}</p>
         <slot/>
         <!--Errors-->
-
-        <div class = "input-errors" v-if = "errors && errors.length > 0">
+        <div class = "container-error-wrap" v-if = "errors && errors.length > 0">
             <p
-                class = "input-error-label"
+                class = "container-error-wrap-label"
                 v-for = "(str, index) in errors"
                 :key = "index"
             >{{str}}</p>
-
         </div>
-
     </div>
 </template>
 
@@ -26,23 +21,21 @@
 </script>
 
 <style scoped>
-    .widget-input-wrap{
+    .container-input-wrap{
         display: flex;
         flex-direction: column;
     }
-    .widget-input__label{
-        color: #333;
-        font-size: 13px;
+    .container-input-wrap-label{
         margin: 4px 0;
     }
-    .input-errors{
+    .container-error-wrap{
         display: flex;
         flex-direction: column;
         gap: 5px;
         padding: 5px 0;
     }
-    .input-error-label{
-        color: red;
+    .container-error-wrap-label{
+        color: var(--vf-input-error);
         margin: 0;
         font-size: 15px;
     }
