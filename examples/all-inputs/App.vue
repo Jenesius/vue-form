@@ -45,6 +45,21 @@
 		<input-field name = "checkbox" type = "checkbox" label = "With label" :options = "optionsCheckbox"/>
 		<input-field name = "checkbox" type = "checkbox" label = "Disabled" disabled :options = "optionsCheckbox"/>
 		<input-field name = "checkbox" type = "checkbox" label = "With Error" :errors = "['Some mistake']" :options = "optionsCheckbox"/>
+
+
+		<h2>Input Password</h2>
+
+		<input-field name = "password" type = "password" />
+		<input-field name = "password" type = "password" label = "With label" />
+		<input-field name = "password" type = "password" label = "Disabled" disabled />
+		<input-field name = "password" type = "password" label = "With Error" :errors = "['Some mistake']" />
+
+		<h2>Input Number</h2>
+
+		<input-field name = "number" type = "number" />
+		<input-field name = "number" type = "number" label = "With label" />
+		<input-field name = "number" type = "number" label = "Disabled" disabled />
+		<input-field name = "number" type = "number" label = "With Error" :errors = "['Some mistake']" />
 	</div>
 </template>
 

@@ -1,9 +1,9 @@
 <template>
 	<input-wrap :label = "label">
-		<div class = "input-number"
+		<div class = "container-input-number"
 			:class = "{
-				'input-number_disabled': disabled,
-				'input-number_error': errors.length !== 0
+				'container-input-number_disabled': disabled,
+				'container-input-number_error': errors.length !== 0
 			}"
 		>
 			
@@ -11,12 +11,16 @@
 				@step = "onStep"
 			/>
 			<input
-				class = "widget-input-text"
+				ref = "refInput"
+				class = "input-number"
 				type = "text"
 				:value = "modelValue"
 				@input = "onInput($event.target.value)"
 				:disabled = "disabled"
 				:autofocus="autofocus"
+
+				@keyup.up = "onStep(true)"
+				@keyup.down.prevent = "onStep(false)"
 			>
 		</div>
 	</input-wrap>
@@ -25,7 +29,7 @@
 <script setup lang = "ts">
 import InputWrap from "../input-wrap.vue";
 import WidgetNumberStep from "./widget-number-step.vue";
-import {withDefaults} from "vue";
+import {ref, withDefaults} from "vue";
 
 interface Props{
 	step?: number,
@@ -42,55 +46,57 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
+const refInput = ref<HTMLInputElement>()
+function onInput(v: string | number) {
 
-function onInput(v: number) {
+	if (typeof v === "string") {
+		v = v.replace(/\D/g, '');
+	}
 	emits("update:modelValue", Number(v));
+	if (refInput.value)
+		refInput.value.value = String(v);
 }
 
 function onStep(v: boolean) {
 	onInput(Number(props.modelValue || 0) + (Number(props.step) * (v?1:-1)))
 }
 
-
 </script>
 
 <style scoped>
-	.widget-input-text{
-		border: 0;
-		outline: none;
-		padding: 0 4px;
-		color: #1c1c1c;
-		text-align: right;
-		background-color: transparent;
-	}
-	.widget-input-text:focus{
-		border-color: #b2b2b2;
-	}
-	.input-number{
+
+	.container-input-number{
 		display: grid;
 		grid-template-columns: 30px 1fr;
 		border: 1px solid var(--vf-input-border-color);
-		height: 35px;
+		height: var(--vf-input-height);
 		border-radius: var(--vf-input-border-radius);
-		background-color: white;
+		background-color: var(--vf-input-background);
 	}
-
-	.input-number_disabled{
+	.container-input-number_disabled{
 		background-color: var(--vf-input-background-disabled);
 		position: relative;
 	}
-	.input-number_error{
-		border: 1px solid var(--vf-input-error)
+	.container-input-number_error{
+		border: var(--vf-input-border-error);
 	}
 
-	.input-number:focus-within {
-		border-color: #b2b2b2;
+	.container-input-number:focus-within {
+		border: var(--vf-input-border-focus);
 	}
-	.input-number_disabled>div:nth-child(1) {
-		background-color: #e0e0e0;
+	.input-number{
+		border: 0;
+		outline: none;
+		padding: 0 4px;
+		color: var(--vf-input-color);
+		text-align: right;
+		background-color: transparent;
+	}
+	.container-input-number_disabled>div:nth-child(1) {
+		background-color: var(--vf-input-white-dark);
 		cursor: default;
 	}
-	.input-number_disabled>div:nth-child(1):after{
+	.container-input-number_disabled>div:nth-child(1):after{
 		content: "";
 		position: absolute;
 		height: 100%;

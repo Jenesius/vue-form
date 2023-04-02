@@ -1,9 +1,9 @@
 <template>
     <input-wrap :label = "label" :errors = "errors">
-        <div class = "input-password-container"
+        <div class = "container-input-password"
             :class = "{
-			'input-password-container_disabled': disabled,
-			'input-password_error': errors.length
+			'container-input-password_disabled': disabled,
+			'container-input-password_error': errors.length
 		}"
         >
             <input
@@ -14,11 +14,11 @@
                 :disabled = "disabled"
 				:autofocus="autofocus"
             />
-            <div class = "input-password__toggle" @click = "toggleType()">
+            <div class = "input-password-toggle" @click = "toggleType()">
                 <div
-                    class = "password-eye"
+                    class = "input-password-toggle-eye"
                     :class = "{
-                    'password-eye_cross': typeInput === 'text'
+                    'input-password-toggle-eye_cross': typeInput === 'text'
                 }"
                 ></div>
             </div>
@@ -59,20 +59,19 @@
 </script>
 
 <style scoped>
-    .input-password-container{
+    .container-input-password{
         display: flex;
         align-items: center;
 
-        height: 35px;
-        border-radius: var(--vf-input-font-size);
-        border: 1px solid var(--vf-input-border-color);
-		background-color: white;
+        height: var(--vf-input-height);
+        border-radius: var(--vf-input-border-radius);
+        border: var(--vf-input-border);
+		background-color: var(--vf-input-background);
     }
-    .input-password-container:focus-within{
+    .container-input-password:focus-within{
         border-color: var(--vf-input-border-color-focus);
     }
-
-    .input-password-container_disabled{
+    .container-input-password_disabled{
         background-color: var(--vf-input-background-disabled)
     }
     .input-password{
@@ -86,14 +85,14 @@
 		font-size: var(--vf-input-font-size);
     }
 
-    .input-password__toggle{
+    .input-password-toggle{
         padding: 0 10px;
         height: 100%;
         display: grid;
         place-content: center;
         cursor: pointer;
     }
-    .password-eye{
+    .input-password-toggle-eye{
 		box-sizing: content-box;
         width: 13px;
         height: 13px;
@@ -102,7 +101,7 @@
         position: relative;
         transform: rotate(45deg);
     }
-    .password-eye:before {
+    .input-password-toggle-eye:before {
         content: '';
         display: block;
         position: absolute;
@@ -113,7 +112,7 @@
         left: 3px;
         top: 3px;
     }
-    .password-eye_cross:after {
+    .input-password-toggle-eye_cross:after {
         content: '';
         display: block;
         position: absolute;
@@ -123,7 +122,7 @@
         left: -21%;
         top: 48%;
     }
-	.input-password_error{
-		border: 1px solid var(--vf-input-error)
+	.container-input-password_error{
+		border: var(--vf-input-border-error);
 	}
 </style>
