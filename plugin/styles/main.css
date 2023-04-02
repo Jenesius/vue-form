@@ -3,6 +3,8 @@
     --vf-input-gray-light:     #c8c8c8;
     --vf-input-gray-dark:      #b2b2b2;
     --vf-input-background-disabled:       #e9e9e9;
+    --vf-input-black-dark: #333;
+    --vf-input-black-light: #646363;
     --vf-input-border-color: var(--vf-input-gray-light);
     --vf-input-border-color-focus: var(--vf-input-gray-dark);
     --vf-input-color: #1c1c1c;
@@ -10,4 +12,9 @@
     --vf-input-border-radius: 4px;
     --vf-input-active: #4e74ff;
     --vf-input-active-disabled: #bac7f8;
+    --vf-input-height: 35px;
+    --vf-input-background: #fff;
+    --vf-input-border: 1px solid var(--vf-input-border-color);
+    --vf-input-border-error: 1px solid var(--vf-input-error);
+    --vf-input-label-color: var(--vf-input-black-dark);
 }

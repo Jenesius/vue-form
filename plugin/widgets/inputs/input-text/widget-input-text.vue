@@ -54,7 +54,6 @@ function onInput(v: string) {
 	if (
 		("maxlength" in props && props.maxlength !== undefined) ||
 		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
-
 	try {
 		v = props.modify(v);
 	} catch (e) {
@@ -73,10 +72,10 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 <style scoped>
 .container-widget-input-text {
 	display: flex;
-	height: 35px;
+	height: var(--vf-input-height);
 	border-radius: var(--vf-input-border-radius);
-	border: 1px solid var(--vf-input-border-color);
-	background-color: white;
+	border: var(--vf-input-border);
+	background-color: var(--vf-input-background);
 }
 .container-widget-input-text:focus-within {
 	border-color: var(--vf-input-gray-dark);
@@ -85,19 +84,19 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	background-color: var(--vf-input-background-disabled);
 }
 .container-widget-input-text_error {
-	border: 1px solid var(--vf-input-error);
+	border: var(--vf-input-border-error);
 }
 .widget-input-text-prefix {
 	color: #646363;
-	line-height: 35px;
+	line-height: var(--vf-input-height);
 	font-size: var(--vf-input-font-size);
 	padding: 0 0 0 4px;
 }
 .widget-input-text {
 	flex-grow: 1;
 	outline: none;
+	border: 0;
 	background-color: transparent;
-	border:0;
 	padding: 0 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
