@@ -1,6 +1,6 @@
 <template>
     <input-wrap :errors = "errors">
-		<element-input-radio :model-value="!!modelValue" :disabled="disabled" :label="label" :error="!!errors.length" @click = "onInput"/>
+		<element-input-radio :model-value="!!modelValue" :disabled="disabled" :label="label" :error="!!errors.length" @input = "onInput"/>
     </input-wrap>
 </template>
 
@@ -23,7 +23,6 @@
         if (props.disabled) return;
         emit('update:modelValue', !props.modelValue)
     }
-
 </script>
 
 <style scoped>

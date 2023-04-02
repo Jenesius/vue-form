@@ -60,6 +60,20 @@
 		<input-field name = "number" type = "number" label = "With label" />
 		<input-field name = "number" type = "number" label = "Disabled" disabled />
 		<input-field name = "number" type = "number" label = "With Error" :errors = "['Some mistake']" />
+
+		<h2>Input Radio</h2>
+
+		<input-field name = "radio" type = "radio" :options = "optionsCheckbox"/>
+		<input-field name = "radio" type = "radio" label = "With label" :options = "optionsCheckbox"/>
+		<input-field name = "radio" type = "radio" label = "Disabled" disabled :options = "optionsCheckbox"/>
+		<input-field name = "radio" type = "radio" label = "With Error" :errors = "['Some mistake']" :options = "optionsCheckbox"/>
+
+		<h2>Input Single Radio</h2>
+
+		<input-field name = "single-radio" type = "single-radio"/>
+		<input-field name = "single-radio" type = "single-radio" label = "With label"/>
+		<input-field name = "single-radio" type = "single-radio" label = "Disabled" disabled/>
+		<input-field name = "single-radio" type = "single-radio" label = "With Error" :errors = "['Some mistake']"/>
 	</div>
 </template>
 
