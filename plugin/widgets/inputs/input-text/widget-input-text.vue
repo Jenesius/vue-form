@@ -27,6 +27,8 @@ import InputWrap from "../input-wrap.vue";
 import {ref, watch} from "vue";
 import warn from "../../../debug/warn";
 
+type ModifyFunction = (a: string) => string
+
 const props = withDefaults(defineProps<{
 	label?: string,
 	errors: string[],
@@ -34,15 +36,15 @@ const props = withDefaults(defineProps<{
 	disabled: boolean,
 	autofocus: boolean,
 	pretty?: (a: string) => string,
-	modify?: (a: any) => string,
+	modify?: ModifyFunction | ModifyFunction[]
 	placeholder?: string,
 	maxLength?: string | number,
 	maxlength?: string | number,
 	prefix?: string,
 	name?: string
+	numeric?: boolean
 }>(), {
 	pretty: (a: string) => a,
-	modify: (a: any) => a
 })
 
 const refInput = ref<HTMLInputElement>(props.modelValue);
@@ -50,16 +52,39 @@ const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 
-function onInput(v: string) {
-	if (
-		("maxlength" in props && props.maxlength !== undefined) ||
-		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
+function onlyNumber(a: string) {
+	return a.replace(/[^0-9,]/,'')
+}
+
+/**
+ * @description Function for wrapping all modify callbacks.
+ * */
+function executeModify(v: string): string {
+	const arrayModifyCallback: ModifyFunction[] = [];
+
+	arrayModifyCallback.push(
+		...(!props.modify ? [] : Array.isArray(props.modify) ? props.modify : [props.modify])
+	);
+
+	if (props.numeric) arrayModifyCallback.unshift(onlyNumber)
+
 	try {
-		v = props.modify(v);
+		arrayModifyCallback.forEach(modify => {
+			v = modify(v)
+		})
 	} catch (e) {
 		warn(`input-text${props.name ? ` (${props.name})` : ''}`, `Modify handler throw the error`, e)
 	}
 
+	return v;
+}
+
+function onInput(v: string) {
+	if (
+		("maxlength" in props && props.maxlength !== undefined) ||
+		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
+
+	v = executeModify(v);
 
 	refInput.value.value = v;
 	emit('update:modelValue', v);

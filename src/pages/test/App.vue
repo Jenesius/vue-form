@@ -8,7 +8,7 @@
 		<input-field type = "text" name = "sun" label = "Username"/>
 
 		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM"  :pretty = "splitPoint"/>
-		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM" :modify = "test" maxlength = 2 />
+		<input-field type = "text" name = "sun" label = "numeric" prefix = "MMM" :modify = "[]" numeric />
 
 
 	</div>
@@ -23,6 +23,11 @@ const form = new Form();
 
 
 onMounted(() => setTimeout(() => form.validate(), 1000))
+
+function m1(a: string) {
+	return a.replace(/\D/,'')
+}
+
 
 function test() {
 	throw new Error('test')
