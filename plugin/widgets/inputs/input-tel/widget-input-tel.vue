@@ -1,11 +1,11 @@
 <template>
     <widget-wrap :label = "label" :errors = "errors">
         <div class = "container-input-tel" @click = "inputTel?.focus()"             :class = "{
-                    'input-tel_disabled': disabled,
-                    'input-tel_error': errors.length
+                    'container-input-tel_disabled': disabled,
+                    'container-input-tel_error': errors.length
                 }">
             <widget-input-tel-code :country-code="countryCode"/>
-            <input type = "text" class = "input-tel" ref = "inputTel"
+            <input type = "text" class = "vf-input_clean input-tel" ref = "inputTel"
                    @input = "onInput"
                    :value = "prettyValue"
                    :disabled = "disabled"
@@ -75,27 +75,24 @@ function onInput(e: any) {
 <style scoped>
     .container-input-tel{
         display: flex;
-        height: 35px;
-        max-height: 35px;
+        height: var(--vf-input-height);
 
 	    border-radius: var(--vf-input-border-radius);
-	    border: 1px solid var(--vf-input-border-color);
-        background-color: white;
+	    border: var(--vf-input-border);
+        background-color: var(--vf-input-background);
     }
-    .input-tel_disabled{
+    .container-input-tel_disabled{
 	    background-color: var(--vf-input-background-disabled);
     }
+	.container-input-tel:focus-within {
+		border: var(--vf-input-border-focus);
+	}
     .input-tel{
-        border: 0;
-        outline: none;
-        background-color: transparent;
-
+		font-size: var(--vf-input-font-size);
 	    color: var(--vf-input-color);
         flex-grow: 1;
-		width: 100%;
-		font-size: var(--vf-input-font-size);
     }
-	.input-tel_error{
-		border: 1px solid var(--vf-input-error);
+	.container-input-tel_error {
+		border: var(--vf-input-border-error);
 	}
 </style>

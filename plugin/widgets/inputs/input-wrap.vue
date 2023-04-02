@@ -22,7 +22,8 @@
 
 <style scoped>
     .container-input-wrap{
-
+        display: flex;
+        flex-direction: column;
     }
     .container-input-wrap-label{
         color: var(--vf-input-label-color);

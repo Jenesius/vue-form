@@ -1,16 +1,16 @@
 <template>
 	<input-wrap :label="label" :errors="errors">
 		<div
-			class = "container-widget-input-text"
+			class = "container-input-text"
 			:class="{
-					'container-widget-input-text_error': errors.length !== 0,
-					'container-widget-input-text_disabled': disabled
+					'container-input-text_error': errors.length !== 0,
+					'container-input-text_disabled': disabled
 			}"
 		>
-			<span class = "widget-input-text-prefix" v-if = "prefix">{{prefix}}</span>
+			<span class = "input-text-prefix" v-if = "prefix">{{prefix}}</span>
 			<input
 				ref="refInput"
-				class="widget-input-text"
+				class="vf-input_clean input-text"
 				type="text"
 				:value="pretty(modelValue)"
 				:disabled="disabled"
@@ -70,33 +70,30 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 </script>
 
 <style scoped>
-.container-widget-input-text {
+.container-input-text {
 	display: flex;
 	height: var(--vf-input-height);
 	border-radius: var(--vf-input-border-radius);
 	border: var(--vf-input-border);
 	background-color: var(--vf-input-background);
 }
-.container-widget-input-text:focus-within {
+.container-input-text:focus-within {
 	border-color: var(--vf-input-gray-dark);
 }
-.container-widget-input-text_disabled {
+.container-input-text_disabled {
 	background-color: var(--vf-input-background-disabled);
 }
-.container-widget-input-text_error {
+.container-input-text_error {
 	border: var(--vf-input-border-error);
 }
-.widget-input-text-prefix {
+.input-text-prefix {
 	color: #646363;
 	line-height: var(--vf-input-height);
 	font-size: var(--vf-input-font-size);
 	padding: 0 0 0 4px;
 }
-.widget-input-text {
+.input-text {
 	flex-grow: 1;
-	outline: none;
-	border: 0;
-	background-color: transparent;
 	padding: 0 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);

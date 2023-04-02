@@ -2,7 +2,7 @@
 	<input-wrap :label="label" :errors="errors">
     <textarea
 		ref="refInput"
-		class="widget-input-textarea"
+		class="input-textarea"
 		:value="modelValue"
 		@input="onInput($event.target.value)"
 		:disabled="disabled"
@@ -73,29 +73,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.widget-input-textarea {
+.input-textarea {
 	border-radius: var(--vf-input-border-radius);
-	border: 1px solid var(--vf-input-border-color);
-	transition: border-color 0.1s;
+	border: var(--vf-input-border);
+	transition: border-color var(--vf-input-transtion-fast);
 	outline: none;
 	max-width: 100%;
 	padding: 4px;
 	box-sizing: border-box;
 	min-height: 70px;
-	line-height: 20px;
 	font-size: var(--vf-input-font-size);
-	background-color: white;
+	background-color: var(--vf-input-background);
 	color: var(--vf-input-color);
 }
-
-.widget-input-textarea:focus {
+.input-textarea:focus {
 	border-color: var(--vf-input-border-color-focus);
 }
-
-.widget-input-textarea:disabled {
+.input-textarea:disabled {
 	background-color: var(--vf-input-background-disabled)
 }
-
 .input-textarea_error {
 	border-color: var(--vf-input-error);
 }
