@@ -1,3 +1,13 @@
+#### 2.3.15 (2023-04-02)
+
+##### Bug Fixes
+
+*  remove changelog-generate file ([0681f007](https://github.com/Jenesius/vue-form/commit/0681f007f23f31cfdc5a7e458804262618266a61))
+
+##### Other Changes
+
+*  numeric ([c7eba02e](https://github.com/Jenesius/vue-form/commit/c7eba02ea3853b2ff79af63d0426e068d2df42dc))
+
 #### 2.3.14 (2023-03-31)
 
 ##### Bug Fixes
