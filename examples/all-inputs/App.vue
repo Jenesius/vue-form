@@ -81,6 +81,19 @@
 		<input-field name = "range" type = "range" label = "With label"/>
 		<input-field name = "range" type = "range" label = "Disabled" disabled/>
 		<input-field name = "range" type = "range" label = "With Error" :errors = "['Some mistake']"/>
+
+		<h2>Input Select</h2>
+
+		<input-field name = "select" type = "select" :options = "optionsCheckbox"/>
+		<input-field name = "select" type = "select" label = "With label" :options = "optionsCheckbox"/>
+		<input-field name = "select" type = "select" label = "With Placeholder" :options = "optionsCheckbox" placeholder = "Add information about user." />
+		<input-field name = "select" type = "select" label = "Disabled" disabled :options = "optionsCheckbox"/>
+		<input-field name = "select" type = "select" label = "With Error" :errors = "['Some mistake']" :options = "optionsCheckbox"/>
+
+		<input-field name = "select1" type = "select" :options = "bigOptionsCheckbox"/>
+		<input-field name = "select1" type = "select" label = "With label" :options = "bigOptionsCheckbox"/>
+		<input-field name = "select1" type = "select" label = "Disabled" disabled :options = "bigOptionsCheckbox"/>
+		<input-field name = "select1" type = "select" label = "With Error" :errors = "['Some mistake']" :options = "bigOptionsCheckbox"/>
 	</div>
 </template>
 
@@ -114,6 +127,8 @@ const optionsCheckbox = [
 		value: 3
 	}
 ]
+
+const bigOptionsCheckbox = [0,1,2,3,4,5,6,7,8,9,10].map(value => ({value, label: `title ${value}`}))
 
 </script>
 
