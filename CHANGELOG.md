@@ -1,3 +1,20 @@
+#### 2.3.16 (2023-04-03)
+
+##### Refactors
+
+*  Update input-select, fix for input-number, add new page(all-inputs) to docs-example. ([c43f6a48](https://github.com/Jenesius/vue-form/commit/c43f6a48698c372e38e7929f43ea83ed827235b3))
+*  Update input-range. ([d28d49c8](https://github.com/Jenesius/vue-form/commit/d28d49c8b9ce45d6d1656105efe0d5c6656d46fd))
+*  Update tabindex for input-radio. Add inputs to all-inputs. ([87e3312b](https://github.com/Jenesius/vue-form/commit/87e3312b265a1093d3ffad4aa10402bd3b0e8c68))
+*  update input-password, input-number, Add key.up and key.down handles for input-number. ([9cf7fd58](https://github.com/Jenesius/vue-form/commit/9cf7fd58a2443daad2dd92c0daeca45fd3dba4ae))
+*  move checkbox to element-input-checkbox, update CSS for checkbox ([a957819c](https://github.com/Jenesius/vue-form/commit/a957819c462b8c35426e532bedc05d5510f99cfb))
+*  Update input-tel ([5b62e215](https://github.com/Jenesius/vue-form/commit/5b62e2151e455ef03c202e2faa8bc491592e89d1))
+*  Adding new variables, Update input-wrap.vue ([9f651fee](https://github.com/Jenesius/vue-form/commit/9f651fee13c06d871b798fd047861e38e777a94e))
+
+##### Code Style Changes
+
+*  update classes and styles for input-switch ([06f0422f](https://github.com/Jenesius/vue-form/commit/06f0422f8927e1a9783489018a6f119f43bce3f5))
+*  new vars, change font-size, border-color, background, disabled, active ([650c21fe](https://github.com/Jenesius/vue-form/commit/650c21febe70d9626fcf801489b50091da214987))
+
 #### 2.3.15 (2023-04-02)
 
 ##### Bug Fixes
