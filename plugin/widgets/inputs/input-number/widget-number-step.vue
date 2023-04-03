@@ -1,10 +1,10 @@
 <template>
 	<div class = "widget-number-step">
 		<div class = "step-container step_up" @click = "emits('step', true)">
-			<i class = "arrow up"></i>
+			<i class = "vf-arrow vf-arrow_up"></i>
 		</div>
 		<div class = "step-container step_down" @click = "emits('step', false)">
-			<i class = "arrow down"></i>
+			<i class = "vf-arrow vf-arrow_down"></i>
 		</div>
 	</div>
 </template>
@@ -23,7 +23,7 @@
 		grid-template-columns: 1fr;
 		gap: 1px;
 		cursor: pointer;
-		border-radius: 4px;
+		border-radius: var(--vf-input-border-radius);
 		transition: background-color 0.2s;
 	}
 	.widget-number-step:active{

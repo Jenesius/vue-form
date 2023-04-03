@@ -51,7 +51,7 @@ const progressCount = computed(() => Number(props.modelValue) / (Number(props.ma
 	.input-range {
 		width: calc(100% - 2px);
 		height: 8px;
-		border-radius: 4px;
+		border-radius: var(--vf-input-border-radius);
 		appearance: none;
 		border: var(--vf-input-border);
 		margin: 0;

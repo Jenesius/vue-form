@@ -19,6 +19,8 @@
     --vf-input-border-radius: 4px;
 
     --vf-input-height: 35px;
+    --vf-input-select-option-height:        240px;
+
 
     --vf-input-border: 1px solid var(--vf-input-border-color);
     --vf-input-border-error: 1px solid var(--vf-input-error);
@@ -38,4 +40,23 @@
 .vf-input-label {
     color: var(--vf-input-label-color);
     font-size: 13px;
+}
+
+
+
+.vf-arrow {
+    border: solid var(--vf-input-gray-dark);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transition: transform 150ms, background-color 0.2s;
+}
+.vf-arrow_down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.vf-arrow_up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
 }

@@ -98,23 +98,6 @@ function handleInput(v: any) {
 
 <style>
 @import "./../styles/main.css";
-.arrow {
-	border: solid #8f8f8f;
-	border-width: 0 2px 2px 0;
-	display: inline-block;
-	padding: 3px;
-	transition: transform 150ms, background-color 0.2s;
 
-}
-
-.down {
-	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-}
-
-.up {
-	transform: rotate(-135deg);
-	-webkit-transform: rotate(-135deg);
-}
 
 </style>
