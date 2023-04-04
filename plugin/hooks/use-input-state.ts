@@ -1,4 +1,4 @@
-import {onUnmounted, reactive, watch} from "vue";
+import {onUnmounted, reactive} from "vue";
 import Input from "../classes/Input";
 
 export default function useInputState(name: string, validation: any[] = []) {
@@ -18,16 +18,19 @@ function useInputController(input: Input) {
 	const state = reactive<{
 		value: any,
 		disabled: boolean,
-		errors: string[]
+		errors: string[],
+		changed: boolean
 	}>({
 		value: input.value,
 		disabled: input.disabled,
-		errors: []
+		errors: [],
+		changed: input.changed
 	})
 	
 	const controls = {
 		change: (v:any) => {
 			state.value = v;
+			state.changed = true
 		},
 		setValues(v: any) {
 			state.value = v;

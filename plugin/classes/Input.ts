@@ -40,7 +40,7 @@ export default class Input extends EventEmitter {
 	get changed() {
 		if (!this.name) return false;
 		if (!this.parentForm) return false;
-		return this.parentForm.changed
+		return this.parentForm.checkNameForChangedStatus(this.name);
 	}
 
 	/**
