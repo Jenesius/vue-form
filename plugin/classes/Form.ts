@@ -125,7 +125,14 @@ export default class Form extends EventEmitter implements FormDependence{
 	get changed() {
 		return !!Object.keys(this.#changes).length || !!this.dependencies.find(d => d.changed);
 	}
-	
+
+	/**
+	 * @description Method check name for including in changes.
+	 * */
+	checkNameForChangedStatus(dependenceName: string) {
+
+	}
+
 	/**
 	 * Getter/Setter for values.
 	 */
