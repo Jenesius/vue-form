@@ -14,6 +14,7 @@ import deletePropByName from "../utils/delete-prop-by-name";
 import getPropFromObject from "../utils/get-prop-from-object";
 import  {IComparisonResult, searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
 import debug from "../debug/debug";
+import checkNameInObject from "../utils/check-name-in-object";
 
 export default class Form extends EventEmitter implements FormDependence{
 	static PROVIDE_NAME			 = 'form-controller';
@@ -125,7 +126,14 @@ export default class Form extends EventEmitter implements FormDependence{
 	get changed() {
 		return !!Object.keys(this.#changes).length || !!this.dependencies.find(d => d.changed);
 	}
-	
+
+	/**
+	 * @description Method check name for including in changes.
+	 * */
+	checkDependenceForChangedStatus(dependenceName: string) {
+		return checkNameInObject(this.changes, dependenceName);
+	}
+
 	/**
 	 * Getter/Setter for values.
 	 */

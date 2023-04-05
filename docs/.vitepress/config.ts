@@ -63,7 +63,8 @@ function sidebar() {
 		{
 			text: "Best Practices",
 			items: [
-				{ text: "Depth information", link: "/guide/form-in-depth" }
+				{ text: "Depth information", link: "/guide/form-in-depth" },
+				{ text: 'Converting Options', link: "/utils/convert-options-object" }
 			]
 		},
 

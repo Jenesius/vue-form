@@ -10,34 +10,20 @@ overwrite part of it. This method is described [here](/guide/configuration#input
 Any *props* passed will also be passed to your component.
 But! There are some differences worth mentioning:
 
-### options
-Options will **always** be cast as follows:
+- **options** Array of options, used for select/radio. Read more [here](/utils/convert-options-object). The data undergoes additional transformation and always has a place to be:
 
-```json
-[
-  {
-    "title": "Title", "value": 1
-  },
-  {
-    "title": "Jenesius", "value": 2
-  }
-]
-```
-
-### disabled and errors
-These properties will be internal, they can be overridden, but then the form will not be able to
-influence them:
-```html
-<input-field disabled name = "input"/>
-```
 ```ts
-form.enable('input'); // Not working
-```
-Similarly, with `errors`, in this case the `validate` method will not be able to show errors.
+type Options = Array<{
+    label: string,
+    value: any
+}>
 
-----
-This is where the restrictions end. If this method or restrictions are not allowed
-for your project, you can use the following method.
+
+
+```
+- **disabled** Will be dynamically pulled from the form. Changed using *disable/enable* methods
+- **errors** Is an array of strings
+- **changed** Dynamically pulled out of the mold. True - if the field is marked as modified in the form.
 
 ## Own Components
 

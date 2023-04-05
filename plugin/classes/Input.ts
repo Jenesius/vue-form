@@ -35,6 +35,19 @@ export default class Input extends EventEmitter {
 	}
 
 	/**
+	 * @description Boolean value, true if parent form mark current field like changed.
+	 * */
+	get changed() {
+		if (!this.name) {
+			return false;
+		}
+		if (!this.parentForm) {
+			return false;
+		}
+		return this.parentForm.checkDependenceForChangedStatus(this.name);
+	}
+
+	/**
 	 * @description Run all validations. Input is not validated If on
 	 * e of guard don't return true.
 	 * @return Array {} Array of string messages.

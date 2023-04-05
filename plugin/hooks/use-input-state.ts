@@ -1,5 +1,6 @@
-import {onUnmounted, reactive, watch} from "vue";
+import {onUnmounted, reactive} from "vue";
 import Input from "../classes/Input";
+import debug from "../debug/debug";
 
 export default function useInputState(name: string, validation: any[] = []) {
 	
@@ -18,19 +19,32 @@ function useInputController(input: Input) {
 	const state = reactive<{
 		value: any,
 		disabled: boolean,
-		errors: string[]
+		errors: string[],
+		changed: boolean
 	}>({
 		value: input.value,
 		disabled: input.disabled,
-		errors: []
+		errors: [],
+		changed: input.changed
 	})
-	
+
+	/**
+	 * @description setTimeout used for wait short time after values will be marked like changed inside Form.
+	 * */
+	function updateChanged() {
+		setTimeout(() => {
+			state.changed = input.changed;
+		}, 0)
+	}
+
 	const controls = {
 		change: (v:any) => {
 			state.value = v;
+			updateChanged();
 		},
 		setValues(v: any) {
 			state.value = v;
+			updateChanged();
 		},
 		disable: () => {
 			state.disabled = true;
@@ -64,6 +78,7 @@ function useInputController(input: Input) {
 	function updateName(name: string) {
 		off?.();
 		input.name = name;
+		if (!input.parentForm) debug.msg(`input:${name}`, `Can't found parent form.`)
 		off = input.parentForm?.dependInput(name, controls);
 	}
 
