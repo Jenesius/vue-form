@@ -1,3 +1,15 @@
+#### 2.3.17 (2023-04-05)
+
+##### Documentation Changes
+
+*  add information about new prop 'changed'. Add info about converting options. ([edc8d091](https://github.com/Jenesius/vue-form/commit/edc8d091a054d03a5146ea83cadf28de556a03fc))
+
+##### New Features
+
+*  update name to checkDependenceForChangedStatus. add new test for it. ([e42b9364](https://github.com/Jenesius/vue-form/commit/e42b936473bac7937757e3799c6b3be98f411995))
+*  new prop in the input-state "changed" ([a1d2fcd8](https://github.com/Jenesius/vue-form/commit/a1d2fcd8975e45faf1b5411fbbaa9ad9ad498783))
+*  new until check-name-in-object ([96daed74](https://github.com/Jenesius/vue-form/commit/96daed748aab60fe75382d7708d35be8cff03e9c))
+
 #### 2.3.16 (2023-04-03)
 
 ##### Refactors
