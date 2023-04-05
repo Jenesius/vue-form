@@ -6,7 +6,7 @@
             :modelValue="props.name ? state.value : modelValue"
             @update:modelValue="handleInput"
 
-            :label="props.label"
+            :label="label"
             :disabled="state.disabled"
             :errors="state.errors"
             :options="parseOptions(options)"
