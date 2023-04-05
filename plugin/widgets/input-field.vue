@@ -1,17 +1,18 @@
 <template>
-	<component
-		:is="componentItem"
-		:name="name"
+    <component
+            :is="componentItem"
+            :name="name"
 
-		:modelValue="props.name ? state.value : modelValue"
-		@update:modelValue="handleInput"
+            :modelValue="props.name ? state.value : modelValue"
+            @update:modelValue="handleInput"
 
-		:label="props.label"
-		:disabled="state.disabled"
-		:errors="state.errors"
-		:options="parseOptions(options)"
-		:autofocus="autofocus"
-	/>
+            :label="props.label"
+            :disabled="state.disabled"
+            :errors="state.errors"
+            :options="parseOptions(options)"
+            :autofocus="autofocus"
+            :changed="state.changed"
+    />
 </template>
 
 <script setup lang="ts">
@@ -90,6 +91,9 @@ function parseOptions(v: typeof props.options) {
 
 function handleInput(v: any) {
 	input.change(v);
+	/**
+	 * Events for user interface. You can use both variant.
+	 * */
 	emits('update:modelValue', v)
 	emits('input', v)
 }

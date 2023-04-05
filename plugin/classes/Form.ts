@@ -130,7 +130,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	/**
 	 * @description Method check name for including in changes.
 	 * */
-	checkNameForChangedStatus(dependenceName: string) {
+	checkDependenceForChangedStatus(dependenceName: string) {
 		return checkNameInObject(this.changes, dependenceName);
 	}
 
