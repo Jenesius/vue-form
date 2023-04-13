@@ -10,7 +10,8 @@
 		<input-field name = "username" label = "Error array" :errors = "['Some mistake', 'Length more then 5']"/>
 		<input-field name = "username" label = "Prefix" prefix = "Login:"/>
 		<input-field name = "username" label = "Placeholder" placeholder = "Write something"/>
-
+		<input-field name = "username" label = "Numeric" numeric/>
+		<input type = "number"/>
 		<h2>Input Textarea</h2>
 		<input-field name = "description" type = "textarea"/>
 		<input-field name = "description" type = "textarea" label = "With label"/>
