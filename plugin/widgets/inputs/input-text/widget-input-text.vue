@@ -12,11 +12,13 @@
 				ref="refInput"
 				class="vf-input_clean input-text"
 				type="text"
-				:value="pretty(modelValue)"
+				:value="isFocused ? modelValue : pretty ? pretty(modelValue) : modelValue"
 				:disabled="disabled"
 				:autofocus="autofocus"
 				:placeholder="placeholder"
 				@input="onInput($event.target.value)"
+				@focusin = "isFocused = true"
+				@focusout = "isFocused = false"
 			>
 		</div>
 	</input-wrap>
@@ -47,13 +49,14 @@ const props = withDefaults(defineProps<{
 	pretty: (a: string) => a,
 })
 
+const isFocused = ref(false);
 const refInput = ref<HTMLInputElement>(props.modelValue);
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 
 function onlyNumber(a: string) {
-	return a.replace(/[^0-9,]/,'')
+	return a.replace(/[^\d,.+-]/,'')
 }
 
 /**
