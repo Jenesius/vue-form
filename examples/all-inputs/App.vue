@@ -60,6 +60,8 @@
 		<input-field name = "number" type = "number" label = "With label" />
 		<input-field name = "number" type = "number" label = "Disabled" disabled />
 		<input-field name = "number" type = "number" label = "With Error" :errors = "['Some mistake']" />
+		<input-field name = "number" type = "number" label = "With Unit"  :pretty="prettyUnit('meters')" />
+		<input-field name = "number" type = "number" label = "With Suffix" suffix = "MHz"   />
 
 		<h2>Input Radio</h2>
 
@@ -103,8 +105,13 @@ import {Form} from "../../plugin";
 
 const form = new Form();
 function modifyOnlyChar(a: string) {
-	return a.replace(/\D/g, '');
+	return a.replace(/\d/g, '');
 }
+let k = new Intl.NumberFormat("en-US", { style: "decimal"  });
+
+// Formatting Number
+
+
 function addPrettySymbol(symbol: string) {
 	return (value: unknown) => {
 		if (typeof value !== 'string') return '';
@@ -112,6 +119,20 @@ function addPrettySymbol(symbol: string) {
 		return `${value} ${symbol}`;
 	}
 }
+function prettyUnit(unit: string) {
+	return (v: unknown) => {
+		if (typeof v !== "string" && typeof v !== "number") {
+			return v;
+		}
+		v = String(v);
+		v = v.replace(/[^0-9.]/g, '')
+
+		v = k.format(Number(v));
+
+		return `${v} ${unit}`
+	}
+}
+
 
 const optionsCheckbox = [
 	{

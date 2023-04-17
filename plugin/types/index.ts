@@ -50,3 +50,7 @@ export type IPropsInput = {
 	autofocus: boolean
 }
 
+
+export type StringModify = (v: unknown) => string
+
+

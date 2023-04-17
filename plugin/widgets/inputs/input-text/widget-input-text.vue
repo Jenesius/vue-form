@@ -12,7 +12,7 @@
 				ref="refInput"
 				class="vf-input_clean input-text"
 				type="text"
-				:value="isFocused ? modelValue : pretty ? pretty(modelValue) : modelValue"
+				:value="isFocused ? modelValue : executePretty(modelValue)"
 				:disabled="disabled"
 				:autofocus="autofocus"
 				:placeholder="placeholder"
@@ -27,27 +27,25 @@
 <script setup lang="ts">
 import InputWrap from "../input-wrap.vue";
 import {ref, watch} from "vue";
-import warn from "../../../debug/warn";
+import useModify from "../../../local-hooks/use-modify";
+import {StringModify} from "../../../types";
+import onlyNumber from "../../../local-hooks/only-number";
 
-type ModifyFunction = (a: string) => string
-
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	label?: string,
 	errors: string[],
 	modelValue: any,
 	disabled: boolean,
 	autofocus: boolean,
-	pretty?: (a: string) => string,
-	modify?: ModifyFunction | ModifyFunction[]
+	pretty?: StringModify | StringModify[] | Function,
+	modify?: StringModify | StringModify[]| Function
 	placeholder?: string,
 	maxLength?: string | number,
 	maxlength?: string | number,
 	prefix?: string,
 	name?: string
-	numeric?: boolean
-}>(), {
-	pretty: (a: string) => a,
-})
+	numeric?: boolean,
+}>()
 
 const isFocused = ref(false);
 const refInput = ref<HTMLInputElement>(props.modelValue);
@@ -55,32 +53,13 @@ const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 
-function onlyNumber(a: string) {
-	return a.replace(/[^\d,.+-]/,'')
-}
-
-/**
- * @description Function for wrapping all modify callbacks.
- * */
-function executeModify(v: string): string {
-	const arrayModifyCallback: ModifyFunction[] = [];
-
-	arrayModifyCallback.push(
-		...(!props.modify ? [] : Array.isArray(props.modify) ? props.modify : [props.modify])
-	);
-
-	if (props.numeric) arrayModifyCallback.unshift(onlyNumber)
-
-	try {
-		arrayModifyCallback.forEach(modify => {
-			v = modify(v)
-		})
-	} catch (e) {
-		warn(`input-text${props.name ? ` (${props.name})` : ''}`, `Modify handler throw the error`, e)
-	}
-
-	return v;
-}
+const executePretty = useModify(() => props.pretty);
+const executeModify = useModify(
+	() => [
+		props.numeric ? onlyNumber : undefined,
+		...(Array.isArray(props.modify) ? props.modify : [props.modify])
+	]
+)
 
 function onInput(v: string) {
 	if (
@@ -115,7 +94,7 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	border: var(--vf-input-border-error);
 }
 .input-text-prefix {
-	color: #646363;
+	color: var(--vf-input-black-light);
 	line-height: var(--vf-input-height);
 	font-size: var(--vf-input-font-size);
 	padding: 0 0 0 4px;

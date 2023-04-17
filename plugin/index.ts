@@ -16,10 +16,12 @@ import ComputedValue from "./methods/ComputedValue";
 
 import utils from "./utils/utils";
 
+import Widgets from "./widgets";
+
 export {
 	Form,
 	FormProxy,
-	
+	Widgets,
 	useProxyState,
 	useInputState,
 	useFormState,
