@@ -1,3 +1,10 @@
+#### 2.3.18 (2023-04-17)
+
+##### New Features
+
+*  update input-number, add suffix ([b37e123f](https://github.com/Jenesius/vue-form/commit/b37e123f4bfac93248a40e3ce88e9420d0d3ef0b))
+*  fix pretty, update regex for text[numeric] ([839f6c7f](https://github.com/Jenesius/vue-form/commit/839f6c7fd449b62a5240c7077910bf45685bd6ce))
+
 #### 2.3.17 (2023-04-05)
 
 ##### Documentation Changes
