@@ -1,3 +1,21 @@
+#### 2.3.19 (2023-04-22)
+
+##### Documentation Changes
+
+*  add information about new prop 'changed'. Add info about converting options. ([edc8d091](https://github.com/Jenesius/vue-form/commit/edc8d091a054d03a5146ea83cadf28de556a03fc))
+
+##### New Features
+
+*  update input-number, add suffix ([b37e123f](https://github.com/Jenesius/vue-form/commit/b37e123f4bfac93248a40e3ce88e9420d0d3ef0b))
+*  fix pretty, update regex for text[numeric] ([839f6c7f](https://github.com/Jenesius/vue-form/commit/839f6c7fd449b62a5240c7077910bf45685bd6ce))
+*  update name to checkDependenceForChangedStatus. add new test for it. ([e42b9364](https://github.com/Jenesius/vue-form/commit/e42b936473bac7937757e3799c6b3be98f411995))
+*  new prop in the input-state "changed" ([a1d2fcd8](https://github.com/Jenesius/vue-form/commit/a1d2fcd8975e45faf1b5411fbbaa9ad9ad498783))
+*  new until check-name-in-object ([96daed74](https://github.com/Jenesius/vue-form/commit/96daed748aab60fe75382d7708d35be8cff03e9c))
+
+##### Bug Fixes
+
+*  update input-number disabled, add check-point in use-modify.ts ([ba812111](https://github.com/Jenesius/vue-form/commit/ba81211131ec5e64d92417940599d9c96bab0dba))
+
 #### 2.3.18 (2023-04-17)
 
 ##### New Features
