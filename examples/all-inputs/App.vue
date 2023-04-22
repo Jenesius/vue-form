@@ -62,6 +62,7 @@
 		<input-field name = "number" type = "number" label = "With Error" :errors = "['Some mistake']" />
 		<input-field name = "number" type = "number" label = "With Unit"  :pretty="prettyUnit('meters')" />
 		<input-field name = "number" type = "number" label = "With Suffix" suffix = "MHz"   />
+		<input-field name = "number" type = "number" disabled label = "With Suffix" suffix = "MHz"   />
 
 		<h2>Input Radio</h2>
 

@@ -8,6 +8,7 @@
 		>
 			<widget-number-step
 				@step = "onStep"
+				:disabled = "disabled"
 			/>
 			<input
 				ref = "refInput"
@@ -39,11 +40,11 @@ interface Props{
 	step?: number,
 	label?: string,
 	errors: string[],
-	modelValue: any,
+	modelValue?: number,
 	disabled: boolean,
 	autofocus: boolean,
 	name: string,
-	pretty?: StringModify | StringModify[] | Function,
+	pretty?: StringModify | StringModify[],
 	suffix?: string,
 	decimal?: boolean
 }
@@ -59,15 +60,24 @@ const emits = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 const refInput = ref<HTMLInputElement>()
-function onInput(v: string) {
-	v = v.replace(/[^0-9.]/g, '');
-	emits("update:modelValue", Number.parseFloat(v));
+function onInput(v: string | number) {
+
+	if (typeof v === "number") {
+		emits('update:modelValue', v);
+	}
+	else {
+		v = v.replace(/[^0-9.]/g, '');
+		emits("update:modelValue", Number.parseFloat(v));
+	}
+
 	if (refInput.value)
 		refInput.value.value = String(v);
 }
 
 function onStep(v: boolean) {
-	onInput(Number(props.modelValue || 0) + (Number(props.step) * (v?1:-1)))
+	if (typeof props.modelValue !== "number") return void onInput(0);
+
+	onInput(props.modelValue + (Number(props.step) * (v?1:-1)))
 }
 
 </script>
@@ -75,8 +85,7 @@ function onStep(v: boolean) {
 <style scoped>
 
 	.container-input-number{
-		display: grid;
-		grid-template-columns: 30px 1fr min-content;
+		display: flex;
 		border: 1px solid var(--vf-input-border-color);
 		height: var(--vf-input-height);
 		border-radius: var(--vf-input-border-radius);
@@ -94,6 +103,8 @@ function onStep(v: boolean) {
 		border: var(--vf-input-border-focus);
 	}
 	.input-number{
+		display: flex;
+		flex-grow: 1;
 		border: 0;
 		outline: none;
 		padding: 0 4px;
@@ -101,6 +112,7 @@ function onStep(v: boolean) {
 		text-align: right;
 		background-color: transparent;
 	}
+
 	.container-input-number_disabled>div:nth-child(1) {
 		background-color: var(--vf-input-white-dark);
 		cursor: default;

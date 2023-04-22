@@ -19,6 +19,6 @@ export default function useModify(callbackModifyProps: () => ModifyParam) {
 			warn('[modify]', `Error in modify callback with value ${v}`, e);
 		}
 
-		return !!v ? String(v) : '';
+		return (v !== undefined && v !== null) ? String(v) : '';
 	}
 }
