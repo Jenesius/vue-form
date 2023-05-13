@@ -1,6 +1,7 @@
 import {onUnmounted, reactive} from "vue";
 import Input from "../classes/Input";
 import debug from "../debug/debug";
+import copyObject from "../utils/copy-object";
 
 export default function useInputState(name: string, validation: any[] = []) {
 	
@@ -15,7 +16,6 @@ export default function useInputState(name: string, validation: any[] = []) {
 }
 
 function useInputController(input: Input) {
-	
 	const state = reactive<{
 		value: any,
 		disabled: boolean,
@@ -39,11 +39,13 @@ function useInputController(input: Input) {
 
 	const controls = {
 		change: (v:any) => {
-			state.value = v;
+			debug.msg(`New FormField(${input.name}) Value`, v);
+			state.value = (Object.isFrozen(v)) ? v :copyObject(v);
 			updateChanged();
 		},
 		setValues(v: any) {
-			state.value = v;
+			debug.msg(`New FormField(${input.name}) Value`, v);
+			state.value = (Object.isFrozen(v)) ? v :copyObject(v);
 			updateChanged();
 		},
 		disable: () => {
