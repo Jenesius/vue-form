@@ -1,3 +1,9 @@
+#### 2.3.22 (2023-05-14)
+
+##### Tests
+
+*  form-proxy subscribe to form. ([10892809](https://github.com/Jenesius/vue-form/commit/108928093661d75b9f7f21d784365ee5ab4d4368))
+
 #### 2.3.20 (2023-05-13)
 
 ##### Bug Fixes
