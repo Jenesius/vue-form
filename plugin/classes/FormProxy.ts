@@ -25,7 +25,7 @@ export default class FormProxy extends Form{
 	 * @description Get values just for current names from parent form.
 	 */
 	get values() {
-		return getPropFromObject(this.parentForm?.values, this.name);
+		return getPropFromObject(this.parentForm?.values, this.name) || {};
 	}
 
 	/**

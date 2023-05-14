@@ -1,5 +1,5 @@
 import EventEmitter from "jenesius-event-emitter";
-import {inject as injectVue, provide as provideVue} from "vue";
+import {getCurrentInstance, inject as injectVue, provide as provideVue} from "vue";
 import FormErrors from "./FormErrors";
 import {FormDependence, FunctionHandleData, Value, Values} from "../types";
 
@@ -124,6 +124,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @return true - if #changes includes some values or one of dependencies stay in changed status.
 	 */
 	get changed() {
+		if (this.parentForm && this.name) return this.parentForm.checkDependenceForChangedStatus(this.name);
 		return !!Object.keys(this.#changes).length || !!this.dependencies.find(d => d.changed);
 	}
 
@@ -157,6 +158,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Method used for set values. New values don't overwrite previous, Mixing, GrandValues used for this.
 	 * */
 	setValues(values?: Values){
+
 		const prettyData = grandObject(values);
 		debug.msg(`New Values:`, prettyData);
 
@@ -174,14 +176,17 @@ export default class Form extends EventEmitter implements FormDependence{
 			this.name = params.name;
 		debug.msg(`Creating new Form${this.name? `[${this.name}]`: ''}`);
 
+		const currentInstance = !!getCurrentInstance()
 
 		// If params don't include parent: false, looking for a form, in case of success subscribe current form to parent.
 		if (params.parent !== false) {
-			this.parentForm = Form.getParentForm();
+			if (currentInstance)
+				this.parentForm = Form.getParentForm();
 			if (this.parentForm) this.parentForm.subscribe(this);
 		}
 
-		provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
+		if (currentInstance)
+			provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 	
 	private markChanges(values: any) {
@@ -269,8 +274,19 @@ export default class Form extends EventEmitter implements FormDependence{
 	}
 
 	change(values?: Values){
+		if (this.parentForm && this.name) {
+			this.parentForm.change({
+					[this.name]: {
+						...this.values,
+						...values
+					}
+			})
+			return;
+		}
+
 		this.setValues(values);
 		if (values) this.markChanges(values);
+
 	}
 	
 	protected setValuesByName(name: string, value: any) {
@@ -305,6 +321,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description Merging values.
 	 * */
 	protected mergeValues(values: Values) {
+		console.log(this.values, values)
 		mergeObjects(this.values, values);
 	}
 
@@ -315,8 +332,15 @@ export default class Form extends EventEmitter implements FormDependence{
 		debug.msg(`New subscription${'name' in item ? `(${item.name})` : ''}`)
 
 		this.dependencies.push(item);
-		this.emit(Form.EVENT_SUBSCRIBE, item);
 
+		// Install parentForm to this
+		try {
+			item.parentForm = this;
+		} catch (e) {
+
+		}
+
+		this.emit(Form.EVENT_SUBSCRIBE, item);
 
 		try {
 			item.on(Form.EVENT_CHANGED, () => this.emit(Form.EVENT_CHANGED, this.changed));

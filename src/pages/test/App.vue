@@ -6,10 +6,6 @@
 
 		<input-field type = "coord" name = "coordinate"/>
 
-		<input-coord name="coordinate" />
-
-		<input-field name = "file" type = "file"/>
-
 	</div>
 </template>
 
@@ -21,7 +17,6 @@ import WidgetChild from "@/pages/test/widget-child.vue";
 import InputCoord from "@/pages/test/input-coord.vue";
 
 const form = new Form();
-
 
 
 
