@@ -12,5 +12,7 @@ export default function useProxyState(name: string) {
 		form.parentForm?.unsubscribe(form);
 	})
 	
-	return {}
+	return {
+		form
+	}
 }

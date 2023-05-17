@@ -4,7 +4,8 @@
 
 		<input-field type = "text" name = "sun" label = "Username" prefix = "MMM"  :modify = "splitPoint"/>
 
-		<widget-child/>
+		<input-field type = "coord" name = "coordinate"/>
+
 	</div>
 </template>
 
@@ -13,18 +14,10 @@ import InputField from "../../../plugin/widgets/input-field.vue";
 import {config, Form, useInputState} from "../../../plugin";
 import {onMounted, ref} from "vue";
 import WidgetChild from "@/pages/test/widget-child.vue";
+import InputCoord from "@/pages/test/input-coord.vue";
 
 const form = new Form();
 
-config({
-	debug: false
-})
-onMounted(() => setTimeout(() => form.validate(), 1000))
-
-
-function m1(a: string) {
-	return a.replace(/\D/,'')
-}
 
 
 function test() {

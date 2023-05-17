@@ -7,7 +7,7 @@ import {reactive} from "vue";
  * @description Return dynamic form values.
  * */
 export default function useFormValues(form: Form) {
-    const values = reactive(form.values);
+    const values = reactive(form.values || {});
     form.oninput(data => {
         const newValues = {
             [data.name]: data.newValue

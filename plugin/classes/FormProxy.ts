@@ -9,11 +9,14 @@ import getPropFromObject from "../utils/get-prop-from-object";
  * For example, it is used for the address composite element, which itself consists of child elements.
  * */
 export default class FormProxy extends Form{
+	/**
+	 * @override
+	 * */
 	name: string;
-	
+
 	constructor(p:any) {
 		super(p);
-		
+
 		this.name = p.name;
 	}
 
@@ -22,7 +25,7 @@ export default class FormProxy extends Form{
 	 * @description Get values just for current names from parent form.
 	 */
 	get values() {
-		return getPropFromObject(this.parentForm?.values, this.name);
+		return getPropFromObject(this.parentForm?.values, this.name) || {};
 	}
 
 	/**

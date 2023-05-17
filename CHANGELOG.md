@@ -1,3 +1,16 @@
+#### 2.3.22 (2023-05-14)
+
+##### Tests
+
+*  form-proxy subscribe to form. ([10892809](https://github.com/Jenesius/vue-form/commit/108928093661d75b9f7f21d784365ee5ab4d4368))
+
+#### 2.3.20 (2023-05-13)
+
+##### Bug Fixes
+
+*  add copy of object in use-input-state.ts ([07d02266](https://github.com/Jenesius/vue-form/commit/07d02266fe967793f77d4a8319cf0f1e51304e97))
+*  add copy of object in use-input-state.ts ([cca6ddd9](https://github.com/Jenesius/vue-form/commit/cca6ddd933cfbc4ceeb6b41c6a48b3cfe049abf6))
+
 #### 2.3.19 (2023-04-22)
 
 ##### Documentation Changes
