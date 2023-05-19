@@ -3,6 +3,9 @@ import Input from "../classes/Input";
 import debug from "../debug/debug";
 import copyObject from "../utils/copy-object";
 
+/**
+ * @deprecated
+ * */
 export default function useInputState(name: string, validation: any[] = []) {
 	
 	const input = new Input({name, validation});

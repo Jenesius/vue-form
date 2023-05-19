@@ -33,7 +33,8 @@ const STORE: IStore = {
 		'single-radio'	: WidgetInputSingleRadio
 	},
 	typeNotCaseSensitive: true,
-	debug: false
+	debug: false,
+	defaultType: 'text'
 }
 
 type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
@@ -43,7 +44,15 @@ export interface IStore {
 	},
 	requiredMessage: string,
 	typeNotCaseSensitive: boolean
-	debug: boolean
+	debug: boolean,
+	defaultType: string
 }
 export default STORE;
 
+
+export function getFieldType(type: any) {
+	if (typeof type !== 'string') return STORE.inputTypes[STORE.defaultType];
+
+	type = STORE.typeNotCaseSensitive ? type?.toLowerCase() : type;
+	return STORE.inputTypes[type] || STORE.inputTypes[STORE.defaultType];
+}

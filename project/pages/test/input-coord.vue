@@ -8,12 +8,16 @@
 </template>
 
 <script setup lang = "ts">
-import {InputField, useFormValues, useProxyState} from "../../../plugin";
+import {Form, InputField, useFormValues} from "../../../plugin";
 
 const props = defineProps<{
 	name: string,
 }>()
-const {form} = useProxyState(props.name)
+
+const form = new Form({
+	name: props.name
+})
+
 function random() {
 	form.change({
 		X: Math.random()

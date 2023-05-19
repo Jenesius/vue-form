@@ -1,6 +1,9 @@
 import EventEmitter from "jenesius-event-emitter";
 import Form from "./Form";
 
+/**
+ * @deprecated
+ * */
 export default class Input extends EventEmitter {
 
 	parentForm?: Form;

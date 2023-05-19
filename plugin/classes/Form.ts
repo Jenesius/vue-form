@@ -2,7 +2,6 @@ import EventEmitter from "jenesius-event-emitter";
 import {getCurrentInstance, inject as injectVue, provide as provideVue} from "vue";
 import FormErrors from "./FormErrors";
 import {FormDependence, FunctionHandleData, Value, Values} from "../types";
-
 import mergeObjects from "../utils/merge-objects";
 import runPromiseQueue from "../utils/run-promise-queue";
 import replaceValues from "../utils/replace-values";
@@ -16,35 +15,7 @@ import  {IComparisonResult, searchByComparison, searchChangesByComparison} from 
 import debug from "../debug/debug";
 import checkNameInObject from "../utils/check-name-in-object";
 
-export default class Form extends EventEmitter implements FormDependence{
-	static PROVIDE_NAME			 = 'form-controller';
-	static EVENT_READ			 = 'read';
-	static EVENT_SAVE			 = 'save';
-	static EVENT_DISABLE		 = 'disable';
-	static EVENT_ENABLE			 = 'enable';
-	
-	static EVENT_SUBSCRIBE		 = 'subscribe';
-	static EVENT_UNSUBSCRIBE	 = 'unsubscribe';
-	
-	static EVENT_VALUE			 = 'value';
-	static EVENT_UPDATE_ABILITY  = 'ability:update';
-	static EVENT_INPUT			 = `input`;
-	/**
-	 * @
-	 * */
-	static GET_EVENT_FIELD_INPUT(name: string) {
-		return `${Form.EVENT_INPUT}:${name}`;
-	}
-	
-	/**
-	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
-	 * Не установлено значение setValues, а изменена.
-	 */
-	static EVENT_CHANGED		 	 = 'changed';
-	static EVENT_DISABLED		 	 = 'disabled';
-	
-	static EVENT_WAIT				 = 'wait'
-
+export default class Form extends EventEmitter implements FormDependence {
 	/**
 	 * @description. Find the parent Form. Using for subscribe elements.
 	 * Bottleneck of current library: inject, provide should state outside classes.
@@ -52,7 +23,50 @@ export default class Form extends EventEmitter implements FormDependence{
 	static getParentForm(): Form | undefined {
 		return injectVue<Form | undefined>(Form.PROVIDE_NAME, undefined);
 	}
+	/**
+	 * @
+	 * */
+	static GET_EVENT_FIELD_INPUT(name: string) {
+		return `${Form.EVENT_INPUT}:${name}`;
+	}
+	static PROVIDE_NAME			 = 'form-controller';
+	static EVENT_READ			 = 'read';
+	static EVENT_SAVE			 = 'save';
+	static EVENT_DISABLE		 = 'disable';
+	static EVENT_ENABLE			 = 'enable';
+	static EVENT_SUBSCRIBE		 = 'subscribe';
+	static EVENT_UNSUBSCRIBE	 = 'unsubscribe';
+	static EVENT_VALUE			 = 'value';
+	static EVENT_UPDATE_ABILITY  = 'ability:update';
+	static EVENT_INPUT			 = `input`;
+	/**
+	 * @description Вызывается всякий раз, когда форма была изменена. Внимание!
+	 * Не установлено значение setValues, а изменена.
+	 */
+	static EVENT_CHANGED		 	 = 'changed';
+	static EVENT_DISABLED		 	 = 'disabled';
+	static EVENT_WAIT				 = 'wait'
 
+
+	constructor(params: FormParams = {}) {
+		super();
+
+		this.name = params.name;
+
+		// If Form was executed inside setup().
+		const currentInstance = !!getCurrentInstance();
+
+		// If params don't include parent: false, looking for a form, in case of success subscribe current form to parent.
+		if (params.parent !== false) {
+			if (currentInstance) this.parentForm = Form.getParentForm();
+			if (this.parentForm) this.parentForm.subscribe(this);
+		}
+
+		if (currentInstance)
+			provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
+
+		debug.newForm(this);
+	}
 	/**
 	 * @description Name of current entity. Can be undefined for parent Form.
 	 */
@@ -169,25 +183,7 @@ export default class Form extends EventEmitter implements FormDependence{
 		this.setValuesOfItem(this.values);
 	}
 
-	constructor(params: FormParams = {}) {
-		super();
-		
-		if (params.name)
-			this.name = params.name;
-		debug.msg(`Creating new Form${this.name? `[${this.name}]`: ''}`);
 
-		const currentInstance = !!getCurrentInstance()
-
-		// If params don't include parent: false, looking for a form, in case of success subscribe current form to parent.
-		if (params.parent !== false) {
-			if (currentInstance)
-				this.parentForm = Form.getParentForm();
-			if (this.parentForm) this.parentForm.subscribe(this);
-		}
-
-		if (currentInstance)
-			provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
-	}
 	
 	private markChanges(values: any) {
 		if (!values) {
@@ -329,7 +325,7 @@ export default class Form extends EventEmitter implements FormDependence{
 	 * @description subscribe is alice for depend. Subscribe element to Form.
 	 * */
 	subscribe(item: any) {
-		debug.msg(`New subscription${'name' in item ? `(${item.name})` : ''}`)
+		debug.newSubscription(this, item);
 
 		this.dependencies.push(item);
 
