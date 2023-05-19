@@ -40,7 +40,7 @@ function getComputedFieldValue<T extends {name: any}>(props: T) {
 		return form?.getValueByName(props.name);
 	}
 	function updateValue() {
-		console.log('update values', props.name);
+		console.log(`Set value for input(%c${props.name}%c)`, 'color: blue', 'color: black');
 		setTimeout(() => {
 			value.value = getValue()
 		}, 0)

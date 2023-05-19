@@ -5,19 +5,30 @@ import FormEvent from "./FormEvent";
 import {getCurrentInstance, inject as injectVue} from "vue";
 import getPropFromObject from "../../plugin/utils/get-prop-from-object";
 import {provide as provideVue} from "@vue/runtime-core";
-import checkNameInObject from "../utils/check-name-in-object";
+import iteratePoints from "../utils/iterate-points";
 /**
  * Main principe : GMN
  * G - Grand
  * M - Merge
  * N - Notify
- * */
+ * Важно помнить про данный принцип. Любой последующие этап не может быть вызван без предыдущего. Это значит, что перед
+ * Merge(M) всегда должен быть выполнен и Grand(G), для Notify(N) всегда должны быть выполнены M и G соответственно.
+ */
 export default class Form extends EventEmitter implements FormDependence {
 	static EVENT_NAME 				= 'form-event'
 	static PROVIDE_NAME			 	= 'form-controller';
+	static EVENT_CHANGE				= 'change';
+	static EVENT_VALUE				= 'value';
 
 	static getParentForm() {
 		return injectVue<Form | undefined>(Form.PROVIDE_NAME, undefined);
+	}
+	static getEventValueByName(name: string) {
+		return `${Form.EVENT_VALUE}:${name}`
+	}
+	static restoreFullName<T extends {name?: string, parent?: Form}>(elem: T): string {
+		if (elem.parent) return `${Form.restoreFullName(elem.parent)}.${elem.name}`;
+		return elem.name || '';
 	}
 	/**
 	 * @description Name of Entity.
@@ -43,14 +54,8 @@ export default class Form extends EventEmitter implements FormDependence {
 
 		this.parent.subscribe(this);
 
-		this.parent.on(Form.EVENT_NAME, (event: FormEvent) => {
-			console.group('%cnew-event', 'color: red');
-			console.log(event, this.name);
-
-			if (checkNameInObject(event.payload, this.name as string))
-				this.emit(Form.EVENT_NAME, getPropFromObject(event.payload, this.name as string))
-
-			console.groupEnd()
+		this.parent.oninput(this.name as string, (event: any) => {
+			this.notify('value', event)
 		})
 	}
 
@@ -60,7 +65,7 @@ export default class Form extends EventEmitter implements FormDependence {
 		this.name = params.name;
 		const currentInstance = !!getCurrentInstance();
 
-		console.log(this.name, Form.getParentForm());
+		console.log('%c[new-form]%c', 'color: blue', 'color:black',this.name, Form.getParentForm());
 		if (currentInstance) this.parent = Form.getParentForm();
 		if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
@@ -69,18 +74,33 @@ export default class Form extends EventEmitter implements FormDependence {
 		mergeObjects(this.values, data);
 	}
 	private notify(event: FormEvent['type'], model: any ) {
-		// - Генерация эвента для всей модели
-		console.log('Generation new event', model);
 
-		this.emit(Form.EVENT_NAME, FormEvent.newValue(model));
+		switch (event) {
+			case "value": {
+				console.log(`%c[${Form.restoreFullName(this)}]%c Generation new global event %c${event}%c`,'color: blue', 'color: black', 'color: red', 'color: black', model);
+				this.emit(Form.EVENT_VALUE, FormEvent.newValue(model)); // Generate global event
+
+				// Generate event-value for each point
+				iteratePoints(model).forEach(point => {
+					console.log(`Generation new event-value for %c${point.name}%c`, 'color: red', 'color: black');
+
+					this.emit(
+						Form.getEventValueByName(point.name),
+						getPropFromObject(this.values, point.name)
+					)
+				});
+
+				break;
+			}
+		}
 	}
+
 	setValues(data: any):void {
 		if (this.parent) {
 			return void this.parent.setValues({
 				[this.name as string]: data
 			});
 		}
-
 		const grandData = grandObject(data);
 		this.mergeValues(grandData);
 		this.notify('value', grandData);
@@ -90,7 +110,6 @@ export default class Form extends EventEmitter implements FormDependence {
 	}
 
 	change(data: any) {
-
 		// Mark changes
 		this.setValues(data);
 	}
@@ -98,11 +117,8 @@ export default class Form extends EventEmitter implements FormDependence {
 	subscribe<T extends {parent?: any}>(element: T) {
 		this.dependencies.push(element);
 	}
-
-	oninput(name: string, callback: (newValue: any, oldValue: any) => void) {
-		return this.on(Form.EVENT_NAME, data => {
-			callback(0, 0);
-		})
+	oninput(name: string, callback: (newValue: any) => void) {
+		return this.on(Form.getEventValueByName(name), callback)
 	}
 }
 

@@ -17,7 +17,6 @@ describe("Dynamic form values.", () => {
 			username: "Jenesius"
 		})
 	})
-
 	test("Input should get value from FormModel after mounted.", async () => {
 		const app = mount(App) as any;
 		const form = app.vm.form as Form;
@@ -41,7 +40,6 @@ describe("Dynamic form values.", () => {
 
 		expect(value).toEqual("1998")
 	})
-
 	test("The form should update the composite dependency after handle input.", async () => {
 		const app = mount(App) as any;
 		const form = app.vm.form;
@@ -50,7 +48,7 @@ describe("Dynamic form values.", () => {
 
 		expect(form.values).toEqual({
 			coordinate: {
-				x: 123
+				x: '123'
 			}
 		})
 	})
@@ -76,11 +74,11 @@ describe("Dynamic form values.", () => {
 		expect(mockCoordinate.mock.calls).toHaveLength(1);
 		expect(mockCoordinateX.mock.calls).toHaveLength(1);
 
-		expect(mockCoordinateX.mock.calls[0][0]).toBe(undefined);
-		expect(mockCoordinateX.mock.calls[0][1]).toBe(NEW_X_VALUE);
+		//expect(mockCoordinateX.mock.calls[0][0]).toBe(undefined);
+		expect(mockCoordinateX.mock.calls[0][0]).toBe(NEW_X_VALUE);
 
-		expect(mockCoordinate.mock.calls[0][1]).toBe(undefined);
-		expect(mockCoordinate.mock.calls[0][1]).toEqual({
+		//expect(mockCoordinate.mock.calls[0][1]).toBe(undefined);
+		expect(mockCoordinate.mock.calls[0][0]).toEqual({
 			x: NEW_X_VALUE
 		});
 	})

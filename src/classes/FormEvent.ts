@@ -1,6 +1,7 @@
 export default class FormEvent {
 	type: FormEventType
 	payload: any
+	oldPayload: any
 
 	constructor(type: FormEventType, payload: any) {
 		this.type = type;

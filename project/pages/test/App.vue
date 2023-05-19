@@ -16,7 +16,7 @@ import {ref} from "vue";
 import WidgetComposite from "./widget-composite.vue";
 
 const form = new Form({
-	name: "Main"
+	name: "main"
 });
 
 window.form = form
