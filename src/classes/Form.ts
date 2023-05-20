@@ -2,10 +2,13 @@ import grandObject from "../utils/grand-object";
 import mergeObjects from "../utils/merge-objects";
 import EventEmitter from "jenesius-event-emitter";
 import FormEvent from "./FormEvent";
-import {getCurrentInstance, inject as injectVue} from "vue";
-import getPropFromObject from "../../plugin/utils/get-prop-from-object";
-import {provide as provideVue} from "@vue/runtime-core";
+import {getCurrentInstance, inject as injectVue, provide as provideVue} from "vue";
+import getPropFromObject from "../utils/get-prop-from-object";
 import iteratePoints from "../utils/iterate-points";
+import debug from "../debug/debug";
+import getCastObject from "../utils/get-cast-object";
+import {searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
+import copyObject from "../utils/copy-object";
 /**
  * Main principe : GMN
  * G - Grand
@@ -42,6 +45,17 @@ export default class Form extends EventEmitter implements FormDependence {
 		}
 		return this.#values;
 	};
+	private set values(values: any) {
+
+		const oldValues = copyObject(this.values);
+
+		console.group('%csetting values', 'color: purple');
+		console.log(this.values, values)
+		console.log(searchByComparison(oldValues, values))
+		this.#values = values;
+
+		console.groupEnd()
+	}
 
 	dependencies: any[] = []
 
@@ -119,6 +133,24 @@ export default class Form extends EventEmitter implements FormDependence {
 	}
 	oninput(name: string, callback: (newValue: any) => void) {
 		return this.on(Form.getEventValueByName(name), callback)
+	}
+	cleanValues(values?: any) {
+		debug.msg('Cleaning values')
+		this.values = {};
+		this.setValues(values || {});
+	}
+	/**
+	 * @description Method return values in {[key]: value} format. If names provided return just values for names.
+	 */
+	getValues(...names: string[]) {
+		if (!names || !names.length) return this.values;
+
+		const cast = names.reduce((acc: {[key: string]: boolean}, name) => {
+			acc[name] = true
+			return acc;
+		}, {})
+
+		return getCastObject(this.values, grandObject(cast));
 	}
 }
 

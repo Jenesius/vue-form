@@ -1,4 +1,4 @@
-import {searchByComparison} from "../../plugin/utils/search-changes-by-comparison";
+import {searchByComparison} from "../../src/utils/search-changes-by-comparison";
 
 
 describe("test", () => {
@@ -115,5 +115,37 @@ describe("test", () => {
 
         ])
     });
+
+    test("Comparison two composite object with different child prop.", () => {
+        const oldV = {
+            address: {
+                city: "Mogilev",
+                country: "Belarus"
+            }
+        }
+
+        const newV = {
+            address: {
+                city: "Tower",
+                region: "planet"
+            }
+        }
+
+        expect(searchByComparison(oldV, newV)).toEqual([
+            {
+                name: 'address', newValue: {city: "Tower", region: 'planet'}, oldValue: {city: "Mogilev", country: "Belarus"}
+            },
+            {
+                name: "address.city", newValue: "Tower", oldValue: "Mogilev"
+            },
+            {
+                name: "address.country", newValue: undefined, oldValue: "Belarus"
+            },
+            {
+                name: "address.region", newValue: "planet", oldValue: undefined
+            }
+        ])
+
+    })
 
 })

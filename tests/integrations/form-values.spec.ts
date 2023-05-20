@@ -89,4 +89,22 @@ describe("Dynamic form values.", () => {
 	test("The form should update the composite dependency after parent-form execute setValues", async () => {
 
 	})
+	test('The input must be empty after executing cleanValues.', async () => {
+		const app = await mount(App) as any;
+		const form = app.vm.form;
+
+		const inputUsername = app.get('input[name=username]');
+
+		await inputUsername.setValue('Jenesius');
+
+		form.cleanValues();
+		expect(form.values).toEqual({});
+
+		const elementUsername = app.find('input[name=username]').element as HTMLInputElement;
+		const value = elementUsername.value;
+		expect(value).toBe("")
+
+	})
+
+
 })

@@ -3,7 +3,11 @@
 
 		<form-field :name="name" label = "Username"/>
 		<widget-composite/>
+		<widget-address/>
 		<button @click = "change">changed</button>
+		<button @click = "clean">clean values</button>
+
+		<button @click = "setDefaultValues">set default values</button>
 
 		<div :key = "count">{{values}}</div>
 	</div>
@@ -14,6 +18,7 @@ import Form from "../../../src/classes/Form";
 import FormField from "./../../../src/widgets/form-field.vue";
 import {ref} from "vue";
 import WidgetComposite from "./widget-composite.vue";
+import WidgetAddress from "./widget-address.vue"
 
 const form = new Form({
 	name: "main"
@@ -29,6 +34,22 @@ const name = ref('username');
 
 function change() {
 	name.value = name.value === 'username' ? 'age' : 'username';
+}
+function clean() {
+	form.cleanValues();
+}
+function setDefaultValues() {
+	return form.setValues({
+		username: "Jenesius",
+		coordinate: {
+			x: "1",
+			y: "2"
+		},
+		address: {
+			city: "Mogilev",
+			country: "Belarus"
+		}
+	})
 }
 
 </script>
