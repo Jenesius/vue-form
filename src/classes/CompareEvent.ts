@@ -1,12 +1,26 @@
 import compareChanges, {CompareItem} from "../utils/compare-changes";
 
 export default class CompareEvent {
-	constructor(newValue: unknown, oldValue: unknown) {
+	constructor(comparison: CompareItem[])
+	constructor(newValue: unknown, oldValue?: unknown)
+	constructor(param1: object | CompareItem[], oldValue?: unknown){
 
-		/**
-		 * Сохраняем результат выполнения.
-		 * */
-		this.comparison = compareChanges(newValue, oldValue);
+		// If first param is result of compareChanges
+		if (Array.isArray(param1)) {
+			this.comparison = param1;
+		} else {
+			this.comparison = compareChanges(param1, oldValue);
+		}
 	}
 	public comparison: CompareItem[] = []
+
+	/**
+	 * @description Статическая функция, формирующая новые compare объект(event), но фильтруя сравнения по имени.
+	 * Используется для передачи только части объекта изменений в дочерний элемент.
+	 * */
+	static restoreByName(compareEvent: CompareEvent, name: string) {
+		return new CompareEvent(
+			compareEvent.comparison.filter(comp => comp.name.startsWith(name))
+		)
+	}
 }

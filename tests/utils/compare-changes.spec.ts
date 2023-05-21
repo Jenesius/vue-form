@@ -1,6 +1,7 @@
-import compareChanges from "@/utils/compare-changes";
+import compareChanges from "./../../src/utils/compare-changes";
 
 describe("Testing compare changes", () => {
+	
 	test("Old value is empty object. It should return all props from new values.",() => {
 		const newValue = {
 			name: "Jenesius",
@@ -56,10 +57,35 @@ describe("Testing compare changes", () => {
 			{ name: "age", newValue: 24, oldValue: undefined }
 		])
 	})
+	test("Super recursive call.",() => {
+		const newValue = {
+			obj_1: {
+				obj_2: {
+					obj_3: {
+						obj_4: {
+							obj_5: {
+								obj_6: {
+									obj_7: "recursive"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
-	test("",() => {
+		expect(compareChanges(newValue, {})).toEqual([
+			{ name: "obj_1", newValue: newValue.obj_1, oldValue: undefined},
+			{ name: "obj_1.obj_2", newValue: newValue.obj_1.obj_2, oldValue: undefined},
+			{ name: "obj_1.obj_2.obj_3", newValue: newValue.obj_1.obj_2.obj_3, oldValue: undefined},
+			{ name: "obj_1.obj_2.obj_3.obj_4", newValue: newValue.obj_1.obj_2.obj_3.obj_4, oldValue: undefined},
+			{ name: "obj_1.obj_2.obj_3.obj_4.obj_5", newValue: newValue.obj_1.obj_2.obj_3.obj_4.obj_5, oldValue: undefined},
+			{ name: "obj_1.obj_2.obj_3.obj_4.obj_5.obj_6", newValue: newValue.obj_1.obj_2.obj_3.obj_4.obj_5.obj_6, oldValue: undefined},
+			{ name: "obj_1.obj_2.obj_3.obj_4.obj_5.obj_6.obj_7", newValue: newValue.obj_1.obj_2.obj_3.obj_4.obj_5.obj_6.obj_7, oldValue: undefined},
+		])
 
 	})
+
 	test("",() => {})
 	test("",() => {})
 	test("",() => {})
