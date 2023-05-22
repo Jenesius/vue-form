@@ -1,7 +1,6 @@
 import compareChanges from "./../../src/utils/compare-changes";
 
 describe("Testing compare changes", () => {
-	
 	test("Old value is empty object. It should return all props from new values.",() => {
 		const newValue = {
 			name: "Jenesius",
@@ -83,18 +82,68 @@ describe("Testing compare changes", () => {
 			{ name: "obj_1.obj_2.obj_3.obj_4.obj_5.obj_6", newValue: newValue.obj_1.obj_2.obj_3.obj_4.obj_5.obj_6, oldValue: undefined},
 			{ name: "obj_1.obj_2.obj_3.obj_4.obj_5.obj_6.obj_7", newValue: newValue.obj_1.obj_2.obj_3.obj_4.obj_5.obj_6.obj_7, oldValue: undefined},
 		])
+	})
+	test("Replacement value of composite object.",() => {
+		const newObject = {
+			address: {
+				city: "Mogilev",
+			}
+		};
+		const oldObject = {
+			address: {
+				country: "Belarus",
+				city: "Unknown"
+			}
+		}
+		expect(compareChanges(newObject, oldObject)).toEqual([
+			{
+				name: "address", newValue: {city: "Mogilev"}, oldValue: { country: "Belarus", city: "Unknown" }
+			},
+			{
+				name: "address.city", newValue: "Mogilev", oldValue: "Unknown"
+			},
+			{
+				name: "address.country", newValue: undefined, oldValue: "Belarus"
+			}
+		])
 
 	})
-
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-	test("",() => {})
-
+	test("Replacement composite object to null",() => {
+		const newValue = {
+			address: null
+		}
+		const oldValue = {
+			address: {
+				city: "Mogilev",
+				country: "Belarus"
+			}
+		}
+		expect(compareChanges(newValue, oldValue)).toEqual([
+			{ name: "address", newValue: null, oldValue: { city: "Mogilev", country: "Belarus" } },
+			{ name: "address.city", newValue: undefined, oldValue: "Mogilev" },
+			{ name: "address.country", newValue: undefined, oldValue: "Belarus" },
+		])
+	})
+	test("New value is null",() => {
+		const newValue = null;
+		const oldValue = {
+			name: "Jenesius"
+		}
+		expect(compareChanges(newValue, oldValue)).toEqual([
+			{
+				name: "name", newValue: undefined, oldValue: "Jenesius"
+			}
+		])
+	})
+	test("Old value is null",() => {
+		const newValue = {
+			age: 24
+		};
+		const oldValue = null
+		expect(compareChanges(newValue, oldValue)).toEqual([
+			{
+				name: "age", newValue: 24, oldValue: undefined
+			}
+		])
+	})
 })

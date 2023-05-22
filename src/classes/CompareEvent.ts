@@ -20,7 +20,12 @@ export default class CompareEvent {
 	 * */
 	static restoreByName(compareEvent: CompareEvent, name: string) {
 		return new CompareEvent(
-			compareEvent.comparison.filter(comp => comp.name.startsWith(name))
+			compareEvent.comparison
+			.filter(comp => comp.name.startsWith(name))
+			.map(comp => {
+				comp.name = comp.name.slice(name.length + 1);
+				return comp;
+			}) // Удаляем приставку + 1(символ '.')
 		)
 	}
 }

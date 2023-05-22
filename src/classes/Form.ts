@@ -115,6 +115,7 @@ export default class Form extends EventEmitter implements FormDependence {
 				[this.name as string]: data
 			});
 		}
+
 		const grandData = grandObject(data);
 		this.mergeValues(grandData);
 		this.notify('value', grandData);

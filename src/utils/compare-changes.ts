@@ -1,5 +1,8 @@
 import checkPrimitiveValue from "./check-primitive-value";
 import concatName from "./concat-name";
+import mergeObjects from "./merge-objects";
+import copyObject from "./copy-object";
+import checkDeepValue from "./check-deep-value";
 
 /**
  * @description Вернёт массив: результат сравнения. Результат сравнения из себя представляет название поля, которые
@@ -15,42 +18,79 @@ import concatName from "./concat-name";
  *
  * @param {Object} newValue объект новых(исходных) значений
  * @param {Object} oldValue объект старых значений
+ *
+ * COMPARE OBJECT
  */
 export default function compareChanges(newValue: unknown, oldValue: unknown): CompareItem[] {
 	return compare(newValue, oldValue)
 }
-function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[] {
-	function step(newValue: any, oldValue: any, name: string) {
-		if (checkPrimitiveValue(newValue) && checkPrimitiveValue(oldValue)) {
-			if (newValue !== oldValue)
-				array.push({ name, newValue, oldValue })
-		}
-		else {
-			const changes = compare(newValue, oldValue, name);
-			if (changes.length) {
-				array.push({
-					name: name,
-					newValue: newValue,
-					oldValue: oldValue
-				})
-				array.push(...changes);
-			}
+function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
+	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
+		if (newValue !== oldValue)
+			array.push({ name, newValue, oldValue })
+	}
+	else {
+		const changes = compare(newValue, oldValue, name);
+		if (changes.length) {
+			array.push({
+				name: name,
+				newValue: newValue,
+				oldValue: oldValue
+			})
+			array.push(...changes);
 		}
 	}
+}
+
+function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[] {
 
 	const array: CompareItem[] = [];
 
-	if (!checkPrimitiveValue(newValue))
+	if (checkDeepValue(newValue))
 		for(let key in newValue as any)
-			step(newValue?.[key], oldValue?.[key], concatName(name, key));
+			step(array, newValue?.[key], oldValue?.[key], concatName(name, key));
 
 	// Проходим по всем полям oldValue
 	// Т.к. часть полей мы уже отбросили в for...in для newValue, мы проверяем только те свойства, которых нет в новом
 	// объекте. Именно по этому первым параметром в step передаётся undefined
-	if (!checkPrimitiveValue(oldValue))
+	if (checkDeepValue(oldValue))
 		for(let key in oldValue as any)
 			if (!newValue?.hasOwnProperty(key))
-				step(undefined, oldValue?.[key], concatName(name, key));
+				step(array, undefined, oldValue?.[key], concatName(name, key));
+
+	return array;
+}
+
+/**
+ *
+ * COMPARE CHANGES
+ * @description В отличии от предыдущей функции, данная функция принимает изменения и объект, на который будут
+ * производиться изменения. Из этого можно сделать вывод, что второй объект необходим лишь для двух вещей:
+ * 1. Было ли поле изменено. В случае, если в изменениях пришло {name: "J"}, а в объекте и так было поле {name: "J"}, то
+ * данное поле не будет помечено, как изменённое.
+ * 2. Чтобы получить старое значение. (oldValue)
+ * То есть мы уже имеем набор изменений, на полноценное сравнивать два объекта не надо, а лишь надо спроецировать первый
+ * (изменения) на второй и сравнить, какие именно изменения будут произведены.
+ *
+ * Также нужно помнить, что изменения лишь проецируются на исходные значения. Иными словами, если
+ * исходные значения {coordinate: {x: 1}}
+ * изменения: {coordinate: {y: 2}}
+ * результирующий объект(который предполагается): { coordinate: { x: 1, y: 2 } }
+ * и в данном случае мы получаем, что у нас два изменения:
+ * [
+ *  { name: 'coordinate', newValue: { x: 1, y: 2 }, oldValue: { x: 1, y: 2 } },
+ *  { name: 'coordinate.y', newValue: 2, oldValue: undefined }
+ * ]
+ * */
+export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
+	const newObject = mergeObjects(copyObject(sourceValue), changes);
+	return compareChanges(newObject, sourceValue);
+
+	const array: CompareItem[] = [];
+
+	if (!checkPrimitiveValue(changes))
+		for(let key in changes as any)
+			step(array, changes?.[key], sourceValue?.[key], concatName(name, key));
 
 	return array;
 }
