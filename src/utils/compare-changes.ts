@@ -21,7 +21,7 @@ import checkDeepValue from "./check-deep-value";
  *
  * COMPARE OBJECT
  */
-export default function compareChanges(newValue: unknown, oldValue: unknown): CompareItem[] {
+export function compareDifference(newValue: unknown, oldValue: unknown): CompareItem[] {
 	return compare(newValue, oldValue)
 }
 function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
@@ -63,7 +63,9 @@ function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[]
 
 /**
  *
- * COMPARE CHANGES
+ *
+ * @param sourceValue Исходные объект
+ * @param changes Изменения, которые были внесены в исходный объект.
  * @description В отличии от предыдущей функции, данная функция принимает изменения и объект, на который будут
  * производиться изменения. Из этого можно сделать вывод, что второй объект необходим лишь для двух вещей:
  * 1. Было ли поле изменено. В случае, если в изменениях пришло {name: "J"}, а в объекте и так было поле {name: "J"}, то
@@ -84,7 +86,7 @@ function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[]
  * */
 export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
 	const newObject = mergeObjects(copyObject(sourceValue), changes);
-	return compareChanges(newObject, sourceValue);
+	return compareDifference(newObject, sourceValue);
 
 	const array: CompareItem[] = [];
 
