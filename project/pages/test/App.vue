@@ -9,7 +9,7 @@
 
 		<button @click = "setDefaultValues">set default values</button>
 
-		<div :key = "count">{{values}}</div>
+		<div :key = "count">{{count}}</div>
 	</div>
 </template>
 
@@ -19,6 +19,7 @@ import FormField from "./../../../src/widgets/form-field.vue";
 import {ref} from "vue";
 import WidgetComposite from "./widget-composite.vue";
 import WidgetAddress from "./widget-address.vue"
+import copyObject from "./../../../src/utils/copy-object";
 
 const form = new Form({
 	name: "main"
@@ -27,8 +28,9 @@ const form = new Form({
 window.form = form
 
 const count = ref(0);
-setInterval(() => count.value++, 50);
-const values = ref(form.values);
+setInterval(() => {
+	count.value = copyObject(form.values);
+}, 50);
 
 const name = ref('username');
 
@@ -41,6 +43,7 @@ function clean() {
 function setDefaultValues() {
 	return form.cleanValues({
 		username: "Jenesius",
+		"coordinate.x": "123"
 	})
 }
 

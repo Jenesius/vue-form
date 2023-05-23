@@ -1,5 +1,6 @@
 <template>
-	<div>
+	<div class = "widget-coordinate">
+		<p>Coordinate</p>
 		<input-field name = "X" label = "X"/>
 		<input-field name = "Y" label = "Y"/>
 		<button @click = "random">test</button>
@@ -28,5 +29,8 @@ const values = useFormValues(form)
 </script>
 
 <style scoped>
-
+	.widget-coordinate {
+		padding: 4px;
+		background-color: #eab0f5;
+	}
 </style>

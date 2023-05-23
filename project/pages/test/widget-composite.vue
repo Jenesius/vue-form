@@ -1,5 +1,6 @@
 <template>
-	<div>
+	<div class = "widget-composite">
+		<p>Coordinate</p>
 		<form-field name="x"/>
 		<form-field name="y"/>
 
@@ -29,5 +30,8 @@ const values = ref(form.values);
 </script>
 
 <style scoped>
-
+	.widget-composite{
+		padding: 5px;
+		background-color: rgba(194, 154, 49, 0.13);
+	}
 </style>

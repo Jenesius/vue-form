@@ -8,8 +8,9 @@ import iteratePoints from "../utils/iterate-points";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
-import {compareDifference} from "../utils/compare-changes";
+import {compareDifference, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
+import CompareEvent from "./CompareEvent";
 /**
  * Main principe : GMN
  * G - Grand
@@ -48,17 +49,15 @@ export default class Form extends EventEmitter implements FormDependence {
 	};
 	private set values(values: any) {
 
-		const oldValues = copyObject(this.values);
+		// const oldValues = copyObject(this.values);
 
 		console.group('%csetting values', 'color: purple');
-		console.log(this.values, values)
-		console.log(compareDifference(values, oldValues))
 
+		const grandValues = grandObject(values);
+		const event = new CompareEvent(grandValues, this.values);
+		this.dispatchEvent(event);
 
-		this.notify('value', )
-		this.setValues(values || {});
-
-		this.#values = values;
+		this.#values = grandValues;
 
 		console.groupEnd()
 	}
@@ -86,16 +85,13 @@ export default class Form extends EventEmitter implements FormDependence {
 		if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 
-	private mergeValues(data: any) {
-		mergeObjects(this.values, data);
-	}
 	private notify(event: FormEvent['type'], model: any ) {
 
 		switch (event) {
 			case "value": {
 				console.log('New changes', model); //Changes
 				console.log(`%c[${Form.restoreFullName(this)}]%c Generation new global event %c${event}%c`,'color: blue', 'color: black', 'color: red', 'color: black', model);
-				this.emit(Form.EVENT_VALUE, FormEvent.newValue(model)); // Generate global event
+				// this.emit(Form.EVENT_VALUE, FormEvent.newValue(model)); // Generate global event
 
 				// Generate event-value for each point
 				iteratePoints(model).forEach(point => {
@@ -112,19 +108,32 @@ export default class Form extends EventEmitter implements FormDependence {
 		}
 	}
 
-	setValues(data: any):void {
+	setValues(changes: any):void {
 		if (this.parent) {
+			console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
 			return void this.parent.setValues({
-				[this.name as string]: data
+				[this.name as string]: changes
 			});
 		}
 
-		const grandData = grandObject(data);
-		this.mergeValues(grandData);
-		this.notify('value', grandData);
+		console.group('[SET VALUES]');
+
+		changes = grandObject(changes);
+		console.log('%cGrand Object:', 'color: blue', changes);
+		console.log('%cValues Object(copied):', 'color: blue', copyObject(this.values));
+		console.log('%cCompare Merge Changes', 'color: blue', compareMergeChanges(this.values, changes))
+
+		const event = new CompareEvent(compareMergeChanges(this.values, changes));
+		mergeObjects(this.values, changes);
+
+		console.log('%cEvent:', 'color: blue', event);
+		console.log('%cNew Values', 'color: blue', this.values)
+
+		console.groupEnd();
+
+		this.dispatchEvent(event);
+
 	}
-
-
 
 	getValueByName(name: string) {
 		return getPropFromObject(this.values, name);
@@ -144,17 +153,28 @@ export default class Form extends EventEmitter implements FormDependence {
 	oninput(name: string, callback: (newValue: any) => void) {
 		return this.on(Form.getEventValueByName(name), callback)
 	}
-	cleanValues(values?: any) {
-		debug.msg('Cleaning values')
+	dispatchEvent<T extends FormEvent>(event: T) {
 
-		/**
-		 * WARNING WARNING WARNING WARNING WARNING
-		 * в данном случаем мы сперва устанавливаем пустое значение, а потому уже нужное.
-		 * Эффективнее сразу устанавливать нужно значение
-		 * WARNING WARNING WARNING WARNING WARNING
-		 * */
 
-		this.values = values || {};
+		if (event instanceof CompareEvent) {
+			console.log(`[%c${this.name}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
+
+			// Проходим по всем дочерним элементам и уведомляем их
+			this.dependencies.forEach(dep => {
+				if (dep.name) {
+					dep?.dispatchEvent(CompareEvent.restoreByName(event, dep.name));
+				}
+			})
+
+			event.comparison.forEach(item => {
+				console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
+				this.emit(Form.getEventValueByName(item.name), item.newValue);
+			})
+
+		}
+
+
+
 
 	}
 	/**
@@ -169,6 +189,19 @@ export default class Form extends EventEmitter implements FormDependence {
 		}, {})
 
 		return getCastObject(this.values, grandObject(cast));
+	}
+	cleanValues(values?: any) {
+		debug.msg('Cleaning values')
+
+		/**
+		 * WARNING WARNING WARNING WARNING WARNING
+		 * в данном случаем мы сперва устанавливаем пустое значение, а потому уже нужное.
+		 * Эффективнее сразу устанавливать нужно значение
+		 * WARNING WARNING WARNING WARNING WARNING
+		 * */
+
+		this.values = values || {};
+
 	}
 }
 

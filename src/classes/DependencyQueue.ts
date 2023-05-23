@@ -1,7 +1,7 @@
 import Form from "./Form";
 
 export default class DependencyQueue<T extends DependencyItem> {
-	private array: DependencyItem[] = []
+	private array: T[] = []
 	private readonly form: Form
 
 	constructor(form: Form) {
@@ -16,20 +16,19 @@ export default class DependencyQueue<T extends DependencyItem> {
 		object.parent = parentForm
 		this.array.push(object);
 
-
-
-		parentForm.oninput(object.name, (event: any) => {
-			object.notify('value', event)
-		})
 	}
 	remove(object: T) {
 		console.log('Псевдо удаление ')
 	}
 
+	forEach(callback: (elem: T) => void) {
+		this.array.forEach(callback);
+	}
 }
 
 export interface DependencyItem {
 	parent?: Form | undefined,
 	name?: string,
-	notify: any
+	notify: any,
+	dispatchEvent?: any
 }

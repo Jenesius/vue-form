@@ -22,6 +22,19 @@ export default class CompareEvent extends FormEvent{
 	 * Используется для передачи только части объекта изменений в дочерний элемент.
 	 * */
 	static restoreByName(compareEvent: CompareEvent, name: string) {
+
+		const array: CompareItem[] = [];
+
+		compareEvent.comparison.forEach(item => {
+			if (!item.name.startsWith(name)) return;
+
+			array.push({
+				...item,
+				name: item.name.slice(name.length + 1)
+			})
+		})
+		return new CompareEvent(array)
+
 		return new CompareEvent(
 			compareEvent.comparison
 			.filter(comp => comp.name.startsWith(name))
