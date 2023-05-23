@@ -39,16 +39,8 @@ function clean() {
 	form.cleanValues();
 }
 function setDefaultValues() {
-	return form.setValues({
+	return form.cleanValues({
 		username: "Jenesius",
-		coordinate: {
-			x: "1",
-			y: "2"
-		},
-		address: {
-			city: "Mogilev",
-			country: "Belarus"
-		}
 	})
 }
 

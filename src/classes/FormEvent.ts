@@ -1,16 +1,10 @@
 export default class FormEvent {
 	type: FormEventType
-	payload: any
-	oldPayload: any
 
-	constructor(type: FormEventType, payload: any) {
+	constructor(type: FormEventType) {
 		this.type = type;
-		this.payload = payload;
 	}
 
-	static newValue(values: any) {
-		return new FormEvent('value', values);
-	}
 }
 
 

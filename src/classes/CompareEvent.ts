@@ -1,15 +1,18 @@
-import compareChanges, {CompareItem} from "../utils/compare-changes";
+import {CompareItem, compareDifference} from "../utils/compare-changes";
+import FormEvent from "./FormEvent";
 
-export default class CompareEvent {
+export default class CompareEvent extends FormEvent{
 	constructor(comparison: CompareItem[])
 	constructor(newValue: unknown, oldValue?: unknown)
 	constructor(param1: object | CompareItem[], oldValue?: unknown){
+		super('value')
 
 		// If first param is result of compareChanges
 		if (Array.isArray(param1)) {
 			this.comparison = param1;
 		} else {
-			this.comparison = compareChanges(param1, oldValue);
+			this.comparison = compareDifference(param1, oldValue);
+
 		}
 	}
 	public comparison: CompareItem[] = []

@@ -7,8 +7,9 @@ import getPropFromObject from "../utils/get-prop-from-object";
 import iteratePoints from "../utils/iterate-points";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
-import {searchByComparison, searchChangesByComparison} from "../utils/search-changes-by-comparison";
 import copyObject from "../utils/copy-object";
+import {compareDifference} from "../utils/compare-changes";
+import DependencyQueue from "./DependencyQueue";
 /**
  * Main principe : GMN
  * G - Grand
@@ -51,26 +52,23 @@ export default class Form extends EventEmitter implements FormDependence {
 
 		console.group('%csetting values', 'color: purple');
 		console.log(this.values, values)
-		console.log(searchByComparison(oldValues, values))
+		console.log(compareDifference(values, oldValues))
+
+
+		this.notify('value', )
+		this.setValues(values || {});
+
 		this.#values = values;
 
 		console.groupEnd()
 	}
 
-	dependencies: any[] = []
+	dependencies = new DependencyQueue(this)
 
 	#parent: Form | undefined;
 	get parent() { return this.#parent };
 	set parent(parent: Form | undefined) {
 		this.#parent = parent;
-
-		if (!this.parent) return;
-
-		this.parent.subscribe(this);
-
-		this.parent.oninput(this.name as string, (event: any) => {
-			this.notify('value', event)
-		})
 	}
 
 	constructor(params: Partial<FormParams>) {
@@ -80,7 +78,11 @@ export default class Form extends EventEmitter implements FormDependence {
 		const currentInstance = !!getCurrentInstance();
 
 		console.log('%c[new-form]%c', 'color: blue', 'color:black',this.name, Form.getParentForm());
-		if (currentInstance) this.parent = Form.getParentForm();
+		if (currentInstance) {
+			const parent = Form.getParentForm();
+			if (parent)
+				parent.subscribe(this);
+		}
 		if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 
@@ -91,12 +93,13 @@ export default class Form extends EventEmitter implements FormDependence {
 
 		switch (event) {
 			case "value": {
+				console.log('New changes', model); //Changes
 				console.log(`%c[${Form.restoreFullName(this)}]%c Generation new global event %c${event}%c`,'color: blue', 'color: black', 'color: red', 'color: black', model);
 				this.emit(Form.EVENT_VALUE, FormEvent.newValue(model)); // Generate global event
 
 				// Generate event-value for each point
 				iteratePoints(model).forEach(point => {
-					console.log(`Generation new event-value for %c${point.name}%c`, 'color: red', 'color: black');
+					console.log(`Generation new event-value for %c${point.name}%c`, 'color: red', 'color: black', getPropFromObject(this.values, point.name));
 
 					this.emit(
 						Form.getEventValueByName(point.name),
@@ -120,6 +123,9 @@ export default class Form extends EventEmitter implements FormDependence {
 		this.mergeValues(grandData);
 		this.notify('value', grandData);
 	}
+
+
+
 	getValueByName(name: string) {
 		return getPropFromObject(this.values, name);
 	}
@@ -129,16 +135,27 @@ export default class Form extends EventEmitter implements FormDependence {
 		this.setValues(data);
 	}
 
-	subscribe<T extends {parent?: any}>(element: T) {
-		this.dependencies.push(element);
+	subscribe(element: any) {
+		this.dependencies.add(element);
+	}
+	unsubscribe(element: any) {
+		this.dependencies.remove(element);
 	}
 	oninput(name: string, callback: (newValue: any) => void) {
 		return this.on(Form.getEventValueByName(name), callback)
 	}
 	cleanValues(values?: any) {
 		debug.msg('Cleaning values')
-		this.values = {};
-		this.setValues(values || {});
+
+		/**
+		 * WARNING WARNING WARNING WARNING WARNING
+		 * в данном случаем мы сперва устанавливаем пустое значение, а потому уже нужное.
+		 * Эффективнее сразу устанавливать нужно значение
+		 * WARNING WARNING WARNING WARNING WARNING
+		 * */
+
+		this.values = values || {};
+
 	}
 	/**
 	 * @description Method return values in {[key]: value} format. If names provided return just values for names.

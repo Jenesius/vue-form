@@ -38,7 +38,9 @@ function resetEachValue(object: Record<string, any>, array: IComparisonResult[] 
 
 /**
  * @description Compares all points of oldValue/newValue
+ * @deprecated
  * */
+
 export function searchByComparison(oldValues: any, newValues: any, array: IComparisonResult[] = [], subName = '') {
     function addOld() {
         add(array, concatName(subName, oldPoints[oldIndex].name), oldPoints[oldIndex].value, undefined);
@@ -73,6 +75,7 @@ export function searchByComparison(oldValues: any, newValues: any, array: ICompa
 /**
  * @description Function the same with searchByComparison, but check only changes
  * @param {Object} changes Only changes. Not an output object
+ * @deprecated
  * */
 export function searchChangesByComparison(mainObject: any, changes: unknown, array: IComparisonResult[] = [], subName = '') {
     // if (typeof mainObject !== "object" || mainObject === null) throw FormErrors.ProvidedValueNotObject(mainObject);
