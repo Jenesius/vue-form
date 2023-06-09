@@ -4,13 +4,14 @@ import EventEmitter from "jenesius-event-emitter";
 import FormEvent from "./FormEvent";
 import {getCurrentInstance, inject as injectVue, provide as provideVue} from "vue";
 import getPropFromObject from "../utils/get-prop-from-object";
-import iteratePoints from "../utils/iterate-points";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
-import {compareDifference, compareMergeChanges} from "../utils/compare-changes";
+import {compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
+import replaceValues from "../../plugin/utils/replace-values";
+import {FormSetValuesOptions} from "../types";
 /**
  * Main principe : GMN
  * G - Grand
@@ -39,7 +40,14 @@ export default class Form extends EventEmitter implements FormDependence {
 	 * @description Name of Entity.
 	 * */
 	name?: string
-
+	/**
+	 * @description Внутренний объект изменений. Хранит в себе значения полей, которые были установлены, используя флаг
+	 * changes: true в методе setValues или используя метод change.
+	 * */
+	#changes = {};
+	get changes() {
+		return this.#changes;
+	}
 	#values = {}
 	get values(): any {
 		if (this.parent) {
@@ -85,46 +93,40 @@ export default class Form extends EventEmitter implements FormDependence {
 		if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 
-	private notify(event: FormEvent['type'], model: any ) {
-
-		switch (event) {
-			case "value": {
-				console.log('New changes', model); //Changes
-				console.log(`%c[${Form.restoreFullName(this)}]%c Generation new global event %c${event}%c`,'color: blue', 'color: black', 'color: red', 'color: black', model);
-				// this.emit(Form.EVENT_VALUE, FormEvent.newValue(model)); // Generate global event
-
-				// Generate event-value for each point
-				iteratePoints(model).forEach(point => {
-					console.log(`Generation new event-value for %c${point.name}%c`, 'color: red', 'color: black', getPropFromObject(this.values, point.name));
-
-					this.emit(
-						Form.getEventValueByName(point.name),
-						getPropFromObject(this.values, point.name)
-					)
-				});
-
-				break;
-			}
-		}
-	}
-
-	setValues(changes: any):void {
+	setValues(values: any, options?: Partial<FormSetValuesOptions>):void {
 		if (this.parent) {
 			console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
 			return void this.parent.setValues({
-				[this.name as string]: changes
+				[this.name as string]: values
 			});
 		}
 
 		console.group('[SET VALUES]');
 
-		changes = grandObject(changes);
-		console.log('%cGrand Object:', 'color: blue', changes);
+		const grandValues = grandObject(values);
+		console.log('%cGrand Object:', 'color: blue', grandValues);
 		console.log('%cValues Object(copied):', 'color: blue', copyObject(this.values));
-		console.log('%cCompare Merge Changes', 'color: blue', compareMergeChanges(this.values, changes))
+		console.log('%cCompare Merge Changes', 'color: blue', compareMergeChanges(this.values, grandValues))
 
-		const event = new CompareEvent(compareMergeChanges(this.values, changes));
-		mergeObjects(this.values, changes);
+
+		/**
+		 * @description Если в options передан флаг changes:true, в таком случае происходит процесс изменения состояния,
+		 * а не обновление данных формы.
+		 * */
+
+
+		if (options?.changes) {
+			console.group('CHANGES PROCESS');
+			const changeEvent = new CompareEvent(compareMergeChanges(this.changes, grandValues));
+			mergeObjects(this.changes, grandValues);
+			this.dispatchEvent(changeEvent);
+			console.groupEnd();
+			return;
+		}
+
+		const event = new CompareEvent(compareMergeChanges(this.values, grandValues));
+
+		mergeObjects(this.values, grandValues);
 
 		console.log('%cEvent:', 'color: blue', event);
 		console.log('%cNew Values', 'color: blue', this.values)
@@ -141,7 +143,9 @@ export default class Form extends EventEmitter implements FormDependence {
 
 	change(data: any) {
 		// Mark changes
-		this.setValues(data);
+		this.setValues(data, {
+			changes: true
+		});
 	}
 
 	subscribe(element: any) {
@@ -178,6 +182,7 @@ export default class Form extends EventEmitter implements FormDependence {
 
 	}
 	/**
+	 * НА ПОСЛЕДОК
 	 * @description Method return values in {[key]: value} format. If names provided return just values for names.
 	 */
 	getValues(...names: string[]) {
@@ -203,6 +208,15 @@ export default class Form extends EventEmitter implements FormDependence {
 		this.values = values || {};
 
 	}
+
+	/**
+	 * @description Метод используется для очистки changes. Иными словами происходит просто очистка всех changes.
+	 * */
+	revert() {
+		console.log('Form: %crevert changes', 'color: purple');
+		this.#changes = {};
+	}
+
 }
 
 interface FormParams {

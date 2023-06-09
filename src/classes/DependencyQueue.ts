@@ -1,5 +1,10 @@
 import Form from "./Form";
 
+/**
+ * @description Класс для работы с зависимыми элементами формы. Основная задача - поддержание целостности.
+ * При добавлении элемента устанавливается значение родителя, а также добавление в массив.
+ * При удалении значение родителя сбрасывается.
+ * */
 export default class DependencyQueue<T extends DependencyItem> {
 	private array: T[] = []
 	private readonly form: Form
@@ -29,6 +34,5 @@ export default class DependencyQueue<T extends DependencyItem> {
 export interface DependencyItem {
 	parent?: Form | undefined,
 	name?: string,
-	notify: any,
 	dispatchEvent?: any
 }

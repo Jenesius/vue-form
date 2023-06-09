@@ -58,4 +58,6 @@ export interface SimpleFormParams {
 	name?: string
 }
 
-
+export interface FormSetValuesOptions {
+	changes: boolean
+}
