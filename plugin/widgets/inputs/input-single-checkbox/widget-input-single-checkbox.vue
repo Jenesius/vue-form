@@ -1,7 +1,7 @@
 <template>
     <input-wrap >
 		<element-input-checkbox
-			:model-value="modelValue"
+			:model-value="values ? modelValue === values[0] : modelValue"
 			:disabled="disabled"
 			:label = "label"
 			@click = "onInput"
@@ -17,7 +17,8 @@
     const props = defineProps<{
         label?: string,
         modelValue: any,
-        disabled: boolean
+        disabled: boolean,
+		values?: [any, any]
     }>()
 
     const emit = defineEmits<{
@@ -26,7 +27,9 @@
 
     function onInput() {
         if (props.disabled) return;
-        emit('update:modelValue', !props.modelValue)
+
+		const value = props.values ? props.modelValue === props.values[0] ? props.values[1] : props.values[0] : !props.modelValue;
+        emit('update:modelValue', value)
     }
 
 </script>
