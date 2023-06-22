@@ -1,5 +1,5 @@
-import checkPrimitiveType from "./check-primitive-type";
 import concatName from "./concat-name";
+import checkPrimitiveValue from "./check-primitive-value";
 
 interface IPoint {
     name: string,
@@ -22,7 +22,7 @@ export default function iteratePoints(object: unknown, startWith = '', array: IP
         array.push({
             name, value
         })
-        if (!checkPrimitiveType(value)) iteratePoints(value, name, array)
+        if (!checkPrimitiveValue(value)) iteratePoints(value, name, array)
     })
     return array;
 }

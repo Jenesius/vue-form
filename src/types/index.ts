@@ -59,5 +59,13 @@ export interface SimpleFormParams {
 }
 
 export interface FormSetValuesOptions {
-	changes: boolean
+	changes: boolean,
+	/**
+	 * @description Имя целевого объекта для которого был вызван setValues
+	 * */
+	targetName: string,
+	/**
+	 * @description Полность заменяет предыдущее значение, а не добавляет(не используется примешивание)
+	 * */
+	clean: boolean
 }

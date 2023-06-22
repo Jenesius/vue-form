@@ -10,8 +10,8 @@ import copyObject from "../utils/copy-object";
 import {compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
-import replaceValues from "../../plugin/utils/replace-values";
 import {FormSetValuesOptions} from "../types";
+import iterateEndpoint from "../utils/iterate-endpoint";
 /**
  * Main principe : GMN
  * G - Grand
@@ -78,7 +78,7 @@ export default class Form extends EventEmitter implements FormDependence {
 		this.#parent = parent;
 	}
 
-	constructor(params: Partial<FormParams>) {
+	constructor(params: Partial<FormParams> = {}) {
 		super();
 
 		this.name = params.name;
@@ -93,17 +93,26 @@ export default class Form extends EventEmitter implements FormDependence {
 		if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
 	}
 
-	setValues(values: any, options?: Partial<FormSetValuesOptions>):void {
+	setValues(values: any, options: Partial<FormSetValuesOptions> = {}):void {
+		
+		// Добавляем целевое имя
+		if (!Object.prototype.hasOwnProperty.call(options, 'targetName')) options.targetName = this.name;
+		
+		// Текущий элемент имеет родителя - отправлем изменения наверх.
 		if (this.parent) {
 			console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
 			return void this.parent.setValues({
 				[this.name as string]: values
-			});
+			}, options);
 		}
 
 		console.group('[SET VALUES]');
 
+		/**
+		 * Первый этап: Приводим переданные значения в приведённы вид.
+		 * */
 		const grandValues = grandObject(values);
+		
 		console.log('%cGrand Object:', 'color: blue', grandValues);
 		console.log('%cValues Object(copied):', 'color: blue', copyObject(this.values));
 		console.log('%cCompare Merge Changes', 'color: blue', compareMergeChanges(this.values, grandValues))
@@ -114,8 +123,19 @@ export default class Form extends EventEmitter implements FormDependence {
 		 * а не обновление данных формы.
 		 * */
 
-
+		/**
+		 * @description А может лучше сперва сохранять изменения. А затем помечать их как изменённые?
+		 * */
 		if (options?.changes) {
+			console.group('CHANGES PROCESS');
+			
+			iterateEndpoint(values);
+			
+			console.groupEnd();
+		}
+		
+		
+		if (false && options?.changes) {
 			console.group('CHANGES PROCESS');
 			const changeEvent = new CompareEvent(compareMergeChanges(this.changes, grandValues));
 			mergeObjects(this.changes, grandValues);
@@ -157,8 +177,11 @@ export default class Form extends EventEmitter implements FormDependence {
 	oninput(name: string, callback: (newValue: any) => void) {
 		return this.on(Form.getEventValueByName(name), callback)
 	}
+	/**
+	 * @description Отправляет событие. Данный метод используется только для запуска события для себя и дочерних элементов.
+	 * Наша система построена так, что бы все значения идут от родителя к дочернему элементу (values, changes, event, other..)
+	 * */
 	dispatchEvent<T extends FormEvent>(event: T) {
-
 
 		if (event instanceof CompareEvent) {
 			console.log(`[%c${this.name}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
