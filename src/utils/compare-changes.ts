@@ -21,8 +21,8 @@ import checkDeepValue from "./check-deep-value";
  *
  * COMPARE OBJECT
  */
-export function compareDifference(newValue: unknown, oldValue: unknown): CompareItem[] {
-	return compare(newValue, oldValue)
+export function compareDifference(oldValue: unknown, newValue: unknown, name: string = ''): CompareItem[] {
+	return compare(newValue, oldValue, name)
 }
 function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
 	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
@@ -86,7 +86,7 @@ function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[]
  * */
 export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
 	const newObject = mergeObjects(copyObject(sourceValue), changes);
-	return compareDifference(newObject, sourceValue);
+	return compareDifference(sourceValue, newObject);
 
 	const array: CompareItem[] = [];
 

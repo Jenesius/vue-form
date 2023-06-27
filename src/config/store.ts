@@ -1,6 +1,5 @@
 import InputText from "./../widgets/input-text/input-text.vue";
 
-
 const STORE: IStore = {
 	requiredMessage: 'Please fill in this field',
 	inputTypes: {
@@ -8,7 +7,8 @@ const STORE: IStore = {
 	},
 	typeNotCaseSensitive: true,
 	debug: false,
-	defaultType: 'text'
+	defaultType: 'text',
+	cleanValue: null
 }
 
 type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
@@ -19,10 +19,10 @@ export interface IStore {
 	requiredMessage: string,
 	typeNotCaseSensitive: boolean
 	debug: boolean,
-	defaultType: string
+	defaultType: string,
+	cleanValue: any
 }
 export default STORE;
-
 
 export function getFieldType(type: any) {
 	if (typeof type !== 'string') return STORE.inputTypes[STORE.defaultType];

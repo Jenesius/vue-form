@@ -7,7 +7,7 @@ import getPropFromObject from "../utils/get-prop-from-object";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
-import {compareMergeChanges} from "../utils/compare-changes";
+import {compareMergeChanges, compareDifference} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
 import {FormSetValuesOptions} from "../types";
@@ -35,6 +35,16 @@ export default class Form extends EventEmitter implements FormDependence {
 	static restoreFullName<T extends {name?: string, parent?: Form}>(elem: T): string {
 		if (elem.parent) return `${Form.restoreFullName(elem.parent)}.${elem.name}`;
 		return elem.name || '';
+	}
+	static getTargetName<T extends {name?: string, parent?: any}>(elem: T): string {
+		const array = [];
+		let target = elem;
+		while(target.parent) {
+			array.unshift(target);
+			target = target.parent;
+		}
+
+		return array.join('.');
 	}
 	/**
 	 * @description Name of Entity.
@@ -96,7 +106,10 @@ export default class Form extends EventEmitter implements FormDependence {
 	setValues(values: any, options: Partial<FormSetValuesOptions> = {}):void {
 		
 		// Добавляем целевое имя
-		if (!Object.prototype.hasOwnProperty.call(options, 'targetName')) options.targetName = this.name;
+		if (!Object.prototype.hasOwnProperty.call(options, 'targetName')) {
+			options.targetName = Form.getTargetName(this);
+			console.log(`[%c${this.name}%c] setValues, ${options.targetName ? `target name eq ${options.targetName}` : 'target name is undefined.'}`, 'color: green', 'color: black')
+		}
 		
 		// Текущий элемент имеет родителя - отправлем изменения наверх.
 		if (this.parent) {
@@ -106,6 +119,8 @@ export default class Form extends EventEmitter implements FormDependence {
 			}, options);
 		}
 
+		// Дошли до родительской формы. Теперь данные нужно завернуть и отправить вниз
+
 		console.group('[SET VALUES]');
 
 		/**
@@ -114,39 +129,21 @@ export default class Form extends EventEmitter implements FormDependence {
 		const grandValues = grandObject(values);
 		
 		console.log('%cGrand Object:', 'color: blue', grandValues);
-		console.log('%cValues Object(copied):', 'color: blue', copyObject(this.values));
-		console.log('%cCompare Merge Changes', 'color: blue', compareMergeChanges(this.values, grandValues))
-
-
 		/**
 		 * @description Если в options передан флаг changes:true, в таком случае происходит процесс изменения состояния,
 		 * а не обновление данных формы.
 		 * */
 
-		/**
-		 * @description А может лучше сперва сохранять изменения. А затем помечать их как изменённые?
-		 * */
-		if (options?.changes) {
-			console.group('CHANGES PROCESS');
-			
-			iterateEndpoint(values);
-			
-			console.groupEnd();
-		}
-		
-		
-		if (false && options?.changes) {
-			console.group('CHANGES PROCESS');
-			const changeEvent = new CompareEvent(compareMergeChanges(this.changes, grandValues));
-			mergeObjects(this.changes, grandValues);
-			this.dispatchEvent(changeEvent);
-			console.groupEnd();
-			return;
-		}
+		// Если параметр clean, был передан, мы используем функцию полного сравнения, а не сравнения изменений.
+		const compareResult = (options.clean ? compareDifference : compareMergeChanges ) (this.values, grandValues);
 
-		const event = new CompareEvent(compareMergeChanges(this.values, grandValues));
+		console.log('%cCompare result', 'color: blue', compareResult)
 
-		mergeObjects(this.values, grandValues);
+		const event = new CompareEvent(compareResult);
+
+		if (options.change) {
+			
+		} else mergeObjects(this.values, grandValues);
 
 		console.log('%cEvent:', 'color: blue', event);
 		console.log('%cNew Values', 'color: blue', this.values)
@@ -161,11 +158,20 @@ export default class Form extends EventEmitter implements FormDependence {
 		return getPropFromObject(this.values, name);
 	}
 
-	change(data: any) {
-		// Mark changes
-		this.setValues(data, {
-			changes: true
-		});
+	/**
+	 * @description Method using for change form's values. Current function is mnemonic for
+	 * *form.setValues(value, {change: true})* and just using for shortest form.
+	 * */
+	change(data: any, options: Partial<Omit<FormSetValuesOptions, "change">> = {}) {
+		const changeOption: Partial<FormSetValuesOptions> = options
+		changeOption.change = true;
+		this.setValues(data, changeOption);
+	}
+	/**
+	 * @description Return true if form includes changes, otherwise false.
+	 * */
+	get changed() {
+		return this.changes && Object.keys(this.changes).length !== 0;
 	}
 
 	subscribe(element: any) {

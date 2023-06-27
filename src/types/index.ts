@@ -59,7 +59,7 @@ export interface SimpleFormParams {
 }
 
 export interface FormSetValuesOptions {
-	changes: boolean,
+	change: boolean,
 	/**
 	 * @description Имя целевого объекта для которого был вызван setValues
 	 * */
