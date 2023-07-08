@@ -7,11 +7,13 @@ import getPropFromObject from "../utils/get-prop-from-object";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
-import {compareMergeChanges, compareDifference} from "../utils/compare-changes";
+import {compareMergeChanges, compareDifference, CompareItem} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
 import {FormSetValuesOptions} from "../types";
-import iterateEndpoint from "../utils/iterate-endpoint";
+import isEndPointValue from "../utils/is-end-point-value";
+import splitName from "../utils/split-name";
+
 /**
  * Main principe : GMN
  * G - Grand
@@ -20,6 +22,12 @@ import iterateEndpoint from "../utils/iterate-endpoint";
  * Важно помнить про данный принцип. Любой последующие этап не может быть вызван без предыдущего. Это значит, что перед
  * Merge(M) всегда должен быть выполнен и Grand(G), для Notify(N) всегда должны быть выполнены M и G соответственно.
  */
+
+/**
+ * @description Необходимо пометить один принцип: данные передаваемые в CompareItem нужно только для сохранения изменений.
+ * Всё состояние формы лежит сугубо в форме.
+ * */
+
 export default class Form extends EventEmitter implements FormDependence {
 	static EVENT_NAME 				= 'form-event'
 	static PROVIDE_NAME			 	= 'form-controller';
@@ -63,8 +71,11 @@ export default class Form extends EventEmitter implements FormDependence {
 		if (this.parent) {
 			return this.parent.getValueByName(this.name as string);
 		}
-		return this.#values;
+		return mergeObjects({}, this.#values, this.#changes)
 	};
+	get TEST_PURE_VALUE() {
+		return this.#values;
+	}
 	private set values(values: any) {
 
 		// const oldValues = copyObject(this.values);
@@ -104,13 +115,11 @@ export default class Form extends EventEmitter implements FormDependence {
 	}
 
 	setValues(values: any, options: Partial<FormSetValuesOptions> = {}):void {
-		
 		// Добавляем целевое имя
 		if (!Object.prototype.hasOwnProperty.call(options, 'targetName')) {
 			options.targetName = Form.getTargetName(this);
 			console.log(`[%c${this.name}%c] setValues, ${options.targetName ? `target name eq ${options.targetName}` : 'target name is undefined.'}`, 'color: green', 'color: black')
 		}
-		
 		// Текущий элемент имеет родителя - отправлем изменения наверх.
 		if (this.parent) {
 			console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
@@ -136,24 +145,60 @@ export default class Form extends EventEmitter implements FormDependence {
 
 		// Если параметр clean, был передан, мы используем функцию полного сравнения, а не сравнения изменений.
 		const compareResult = (options.clean ? compareDifference : compareMergeChanges ) (this.values, grandValues);
-
 		console.log('%cCompare result', 'color: blue', compareResult)
 
-		const event = new CompareEvent(compareResult);
+		// В зависимости от того, есть ли параметр change, происходит изменение values, или changes
+		// При этом важно помнить, что при change: true, изменения касаются только this.changes
+		// В случае, когда change: false, изменения затрагивают как this.values, так и удаление полей из this.changes.
+		// Т.к. туда передаётся CompareItem[], то все изменения уже просчитаны и нам нужно их просто спроецировать на объект.
+		this.mergeValues(compareResult, options.change);
 
-		if (options.change) {
-			
-		} else mergeObjects(this.values, grandValues);
+		// После того как изменения были спроецированы на формы, происходит создание события и уведомления всех дочерних
+		// и выполнения внешних событий.
+
+		const event = new CompareEvent(compareResult);
 
 		console.log('%cEvent:', 'color: blue', event);
 		console.log('%cNew Values', 'color: blue', this.values)
 
+		console.group('DISPATCHING EVENT');
+		this.dispatchEvent(event);
 		console.groupEnd();
 
-		this.dispatchEvent(event);
+		console.groupEnd();
+
 
 	}
+	/**
+	 * @description Метод проецирует цепочку изменений на форму.
+	 * @param compareResult {CompareItem[]} массив изменений, которые необходимо спроецировать
+	 * @param isChange {Boolean} флаг, указывающий какого типа будут изменения. В случае, если true, то изменения
+	 * проецируются только на changes, в противно случае: проецируются на values, но стирают часть changes, которая была
+	 * затронута.
+	 * */
+	private mergeValues(compareResult: CompareItem[], isChange: boolean = false) {
+		// Как раз определить, какая часть changes была затронута - самое сложное
 
+		console.group('MERGE VALUEs PROCESS')
+		//if (isChange) return mergeObjects(this.changes, compareResult);
+
+		compareResult
+		.filter(a => a.isEndPoint)
+		.forEach(item => {
+			mergeObjects(isChange ? this.#changes : this.#values, grandObject({
+				[item.name]: item.newValue
+			}))
+			// Если происходит изменения значений(не изменений), то мы должно аннулировать поля изменений(очищать их) на
+			// которые было произведено влияние. Однако только на те, которые являются конечными точками, т.к. изменение
+			// может затронуть лишь одно поле объекта, но при этом этот объект будет полностью помечен, как изменённый.
+			if (!isChange) this.cleanChangesByField(item.name);
+		})
+
+		console.log(compareResult);
+
+		console.groupEnd()
+
+	}
 	getValueByName(name: string) {
 		return getPropFromObject(this.values, name);
 	}
@@ -203,12 +248,7 @@ export default class Form extends EventEmitter implements FormDependence {
 				console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
 				this.emit(Form.getEventValueByName(item.name), item.newValue);
 			})
-
 		}
-
-
-
-
 	}
 	/**
 	 * НА ПОСЛЕДОК
@@ -238,6 +278,26 @@ export default class Form extends EventEmitter implements FormDependence {
 
 	}
 
+	/**
+	 * @description Отменяет изменения для переданного поля. Данная функция работает только с объектом changes и не
+	 * затрагивает объект values. Если в дочернее свойство объекта changes является объектом, но при этом количество
+	 * дочерних ключей равно 0, данной свойство полностью удаляется из объекта changes.
+	 * @param {String} fieldName Имя поля, для которого необходимо убрать статус 'changed'. В данном случае, изменение
+	 * для данного поля будет стёрто из объекта changes.
+	 * */
+	cleanChangesByField(fieldName: string) {
+		const parsedName = splitName(fieldName);
+
+		let target:any = this.changes;
+
+		for(let i = 0; i < parsedName.length; i++) {
+			const name = parsedName[i];
+			if (i === parsedName.length - 1) return delete target[name];
+			if (!Object.prototype.hasOwnProperty.call(target, name)) return;
+			target = target[name];
+		}
+
+	}
 	/**
 	 * @description Метод используется для очистки changes. Иными словами происходит просто очистка всех changes.
 	 * */

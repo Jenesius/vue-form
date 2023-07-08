@@ -2,6 +2,7 @@
 	<div class="container-examples">
 
 		<form-field :name="name" label = "Username"/>
+		<form-field name="username.name.jenesius" label = "Username"/>
 		<widget-composite/>
 		<widget-address/>
 		<button @click = "change">changed</button>
@@ -9,7 +10,9 @@
 
 		<button @click = "setDefaultValues">set default values</button>
 
-		<div :key = "count">{{count}}</div>
+		<div :key = "values">Values: {{values}}</div>
+		<div :key = "changes">Changes: {{changes}}</div>
+		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 	</div>
 </template>
 
@@ -27,10 +30,15 @@ const form = new Form({
 
 window.form = form
 
-const count = ref(0);
+const values = ref(0);
 setInterval(() => {
-	count.value = copyObject(form.values);
+	values.value = copyObject(form.values);
+	changes.value = copyObject(form.changes);
+	pureValue.value = copyObject(form.TEST_PURE_VALUE);
 }, 50);
+
+const changes = ref({});
+const pureValue= ref({});
 
 const name = ref('username');
 

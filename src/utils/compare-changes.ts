@@ -27,7 +27,7 @@ export function compareDifference(oldValue: unknown, newValue: unknown, name: st
 function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
 	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
 		if (newValue !== oldValue)
-			array.push({ name, newValue, oldValue })
+			array.push({ name, newValue, oldValue, isEndPoint: true })
 	}
 	else {
 		const changes = compare(newValue, oldValue, name);
@@ -35,7 +35,8 @@ function step(array: CompareItem[], newValue: any, oldValue: any, name: string) 
 			array.push({
 				name: name,
 				newValue: newValue,
-				oldValue: oldValue
+				oldValue: oldValue,
+				isEndPoint: false
 			})
 			array.push(...changes);
 		}
@@ -100,5 +101,7 @@ export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
 export interface CompareItem {
 	name: string,
 	oldValue: any,
-	newValue: any
+	newValue: any,
+
+	isEndPoint: boolean
 }
