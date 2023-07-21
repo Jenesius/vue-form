@@ -18,7 +18,7 @@ describe("Form.setValues", () => {
         form.subscribe(childForm);
         form.setValues({ address: { country: { name: "German" }, test: 1 }, name: NAME })
         childForm.setValues({ country: { code: COUNTRY_CODE } }, {clean: true})
-        expect(form.values).toEqual({ address: { code: COUNTRY_CODE }, name: NAME })
+        expect(form.values).toEqual({ address: { country: { code: COUNTRY_CODE } }, name: NAME })
     })
     test("After treating changes, the data should mixed with values", () => {
         const form = new Form();
@@ -60,5 +60,41 @@ describe("Form.setValues", () => {
 
         // Is not change option. In this case filed address.country should be empty, not null.
         expect(form.values).toEqual({ address: { city: "Mogilev", country: "Belarus" }, name: "Jenesius" });
+    })
+    test("New value rewrite null by composite object.", () => {
+        const form = new Form();
+        form.setValues({address: {city: null}, a: "a"});
+        form.setValues({address: { city: { index: 0, platform: { planet: "Earth" } } } } );
+
+        expect(form.values).toEqual({address: { city: { index: 0, platform: { planet: "Earth" } } }, a: "a"})
+    })
+    test("Using change:true and after setValues, the name that provided in second setValues must clean 'changed' status field to false", () => {
+        const form = new Form();
+        form.setValues({name: "Jenesius"});
+        form.setValues({name: "Bur"}, {change: true} );
+        expect(form.changes).toEqual({name: "Bur"});
+        form.setValues({name: "Burdin"});
+        expect(form.changes).toEqual({});
+    })
+    test("Using change:true for rewriting null value", () => {
+        const form = new Form();
+        form.setValues({address: {city: null, index: 0}, a: "a"});
+        form.setValues({address: { city: { platform: { planet: "Earth" } } } }, {change: true});
+
+        expect(form.changes).toEqual({address: { city: { platform: { planet: "Earth" } } }})
+    })
+    test("After execution setValues without change param, form must clean changes fields that consist in setValues", () => {
+        const form = new Form();
+        form.setValues({address: {city: null, index: 0}, a: "a"});
+        form.setValues({address: { city: { platform: { planet: "Earth" } } } }, {change: true});
+        form.setValues({address: "0x000000"});
+        expect(form.changes).toEqual({address: "0x000000"})
+    })
+    test("After execution setValues for composite object without change param, form must clean changes fields that consist in setValues", () => {
+        const form = new Form();
+        form.setValues({address: null, a: "a"});
+        form.setValues({address: "0x000000"}, {change: true});
+        form.setValues({address: { country: { index: 0 } } });
+        expect(form.changes).toEqual({})
     })
 })

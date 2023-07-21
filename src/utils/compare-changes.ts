@@ -4,6 +4,16 @@ import mergeObjects from "./merge-objects";
 import copyObject from "./copy-object";
 import checkDeepValue from "./check-deep-value";
 
+export interface CompareItem {
+	name: string,
+	oldValue: any,
+	newValue: any,
+	/**
+	 * @description Принимает значение true, если данный узел является конечным, false - в противно случае.
+	 * */
+	isEndPoint: boolean
+}
+
 /**
  * @description Вернёт массив: результат сравнения. Результат сравнения из себя представляет название поля, которые
  * отличаются от исходного объекта. Если поле N присутствует в newValue и присутствует в объекте oldValue и его значение
@@ -23,43 +33,6 @@ import checkDeepValue from "./check-deep-value";
  */
 export function compareDifference(oldValue: unknown, newValue: unknown, name: string = ''): CompareItem[] {
 	return compare(newValue, oldValue, name)
-}
-function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
-	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
-		if (newValue !== oldValue)
-			array.push({ name, newValue, oldValue, isEndPoint: true })
-	}
-	else {
-		const changes = compare(newValue, oldValue, name);
-		if (changes.length) {
-			array.push({
-				name: name,
-				newValue: newValue,
-				oldValue: oldValue,
-				isEndPoint: false
-			})
-			array.push(...changes);
-		}
-	}
-}
-
-function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[] {
-
-	const array: CompareItem[] = [];
-
-	if (checkDeepValue(newValue))
-		for(let key in newValue as any)
-			step(array, newValue?.[key], oldValue?.[key], concatName(name, key));
-
-	// Проходим по всем полям oldValue
-	// Т.к. часть полей мы уже отбросили в for...in для newValue, мы проверяем только те свойства, которых нет в новом
-	// объекте. Именно по этому первым параметром в step передаётся undefined
-	if (checkDeepValue(oldValue))
-		for(let key in oldValue as any)
-			if (!newValue?.hasOwnProperty(key))
-				step(array, undefined, oldValue?.[key], concatName(name, key));
-
-	return array;
 }
 
 /**
@@ -98,10 +71,43 @@ export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
 	return array;
 }
 
-export interface CompareItem {
-	name: string,
-	oldValue: any,
-	newValue: any,
-
-	isEndPoint: boolean
+function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
+	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
+		if (newValue !== oldValue)
+			array.push({ name, newValue, oldValue, isEndPoint: true })
+	}
+	else {
+		const changes = compare(newValue, oldValue, name);
+		if (changes.length) {
+			array.push({
+				name: name,
+				newValue: newValue,
+				oldValue: oldValue,
+				isEndPoint: false
+			})
+			array.push(...changes);
+		}
+	}
 }
+
+function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[] {
+
+	const array: CompareItem[] = [];
+
+	if (checkDeepValue(newValue))
+		for(let key in newValue as any)
+			step(array, newValue?.[key], oldValue?.[key], concatName(name, key));
+
+	// Проходим по всем полям oldValue
+	// Т.к. часть полей мы уже отбросили в for...in для newValue, мы проверяем только те свойства, которых нет в новом
+	// объекте. Именно по этому первым параметром в step передаётся undefined
+	if (checkDeepValue(oldValue))
+		for(let key in oldValue as any)
+			if (!newValue?.hasOwnProperty(key))
+				step(array, undefined, oldValue?.[key], concatName(name, key));
+
+	return array;
+}
+
+
+
