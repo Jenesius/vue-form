@@ -1,4 +1,4 @@
-import {compareMergeChanges} from "./../../src/utils/compare-changes";
+import {compareMergeChanges} from "./../../../src/utils/compare-changes";
 
 const values = {
 	a: 1,
@@ -37,6 +37,16 @@ describe("find changes", () => {
 			}
 		])
 	})
+	it('should include empty object', function () {
+		const result = compareMergeChanges({}, {address: {}})
+		expect(result).toEqual([
+			{
+				name: "address",
+				newValue: {},
+				oldValue: undefined
+			}
+		])
+	});
 	it("Result should be array with one item, after providing simple changes", () => {
 		const result = compareMergeChanges(values, {address: { city: 1 }});
 		expect(result).toEqual([

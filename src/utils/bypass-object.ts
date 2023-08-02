@@ -23,7 +23,7 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
 	})
 }
 /**
- * @description Функция проходит по всем полям объекта.
+ * @description Функция проходит по всем конечным полям объекта.
  * @return Array of {path: string[], value: any}
  * @example
  * { person: { profile: { head: { mouth: 1, eyes: 2 } } } }

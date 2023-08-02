@@ -1,17 +1,20 @@
-import checkPrimitiveValue from "./check-primitive-value";
 import concatName from "./concat-name";
 import mergeObjects from "./merge-objects";
 import copyObject from "./copy-object";
 import checkDeepValue from "./check-deep-value";
+import isEndPointValue from "./is-end-point-value";
+import isEmptyObject from "./is-empty-object";
 
 export interface CompareItem {
 	name: string,
 	oldValue: any,
 	newValue: any,
 	/**
-	 * @description Принимает значение true, если данный узел является конечным, false - в противно случае.
+	 * @description Устанавливается в true, если при обработке объекта, поле name уже не существует для newValue.
+	 * Для примера, если новое значение является примитивом, а старое было: { name: "Jenesius" }, то поле name будет, по
+	 * мечено, как lost, т.к. оно уже перестало существовать.
 	 * */
-	isEndPoint: boolean
+	isLost?: boolean
 }
 
 /**
@@ -28,8 +31,7 @@ export interface CompareItem {
  *
  * @param {Object} newValue объект новых(исходных) значений
  * @param {Object} oldValue объект старых значений
- *
- * COMPARE OBJECT
+ * @param name
  */
 export function compareDifference(oldValue: unknown, newValue: unknown, name: string = ''): CompareItem[] {
 	return compare(newValue, oldValue, name)
@@ -57,57 +59,51 @@ export function compareDifference(oldValue: unknown, newValue: unknown, name: st
  *  { name: 'coordinate', newValue: { x: 1, y: 2 }, oldValue: { x: 1, y: 2 } },
  *  { name: 'coordinate.y', newValue: 2, oldValue: undefined }
  * ]
+ * @param name
  * */
 export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
 	const newObject = mergeObjects(copyObject(sourceValue), changes);
 	return compareDifference(sourceValue, newObject);
 
-	const array: CompareItem[] = [];
-
-	if (!checkPrimitiveValue(changes))
-		for(let key in changes as any)
-			step(array, changes?.[key], sourceValue?.[key], concatName(name, key));
-
-	return array;
+	// Сверху установлена более простая реализация. Упрощённый вариант проецирует изменения и сравнивает объекта: исходный
+	// и полученный.
 }
 
-function step(array: CompareItem[], newValue: any, oldValue: any, name: string) {
-	if (!checkDeepValue(newValue) && !checkDeepValue(oldValue)) {
+function step(this: CompareState, newValue: any, oldValue: any, name: string): any  {
+	// Если оба значения конечны.
+	if (
+		(isEndPointValue(newValue) || isEmptyObject(newValue)) &&
+		(isEndPointValue(oldValue) || isEmptyObject(oldValue))
+	){
 		if (newValue !== oldValue)
-			array.push({ name, newValue, oldValue, isEndPoint: true })
+			this.array.push({ name, newValue, oldValue})
 	}
 	else {
 		const changes = compare(newValue, oldValue, name);
+		
+		
 		if (changes.length) {
-			array.push({
-				name: name,
-				newValue: newValue,
-				oldValue: oldValue,
-				isEndPoint: false
-			})
-			array.push(...changes);
+			this.array.push({ name, newValue, oldValue })
+			this.array.push(...changes);
 		}
 	}
 }
-
-function compare(newValue: any, oldValue: any, name: string = ''): CompareItem[] {
-
-	const array: CompareItem[] = [];
-
-	if (checkDeepValue(newValue))
-		for(let key in newValue as any)
-			step(array, newValue?.[key], oldValue?.[key], concatName(name, key));
-
-	// Проходим по всем полям oldValue
-	// Т.к. часть полей мы уже отбросили в for...in для newValue, мы проверяем только те свойства, которых нет в новом
-	// объекте. Именно по этому первым параметром в step передаётся undefined
-	if (checkDeepValue(oldValue))
-		for(let key in oldValue as any)
-			if (!newValue?.hasOwnProperty(key))
-				step(array, undefined, oldValue?.[key], concatName(name, key));
-
-	return array;
+/**
+ * @description Получаем все ключи для двух объектов, сохраняем их и вызываем функцию step для каждого этого ключа с
+ * соответсвующим значением из newValue и oldValue.
+ * */
+function compare( newValue: any, oldValue: any, name: string = ''): CompareItem[] {
+	const addKeys = (data: any) => checkDeepValue(data) && Object.keys(data).map(keys.add, keys)
+	const state:CompareState = {
+		array: []
+	}
+	const keys = new Set<string>();
+	addKeys(newValue); addKeys(oldValue);
+	
+	keys.forEach(key => step.call(state, newValue?.[key], oldValue?.[key], concatName(name, key)))
+	return state.array;
 }
 
-
-
+interface CompareState {
+	array: CompareItem[]
+}

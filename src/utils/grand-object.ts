@@ -1,4 +1,11 @@
+
 import bypassObject from "./bypass-object";
+import isEndPointValue from "./is-end-point-value";
+import parseFirstName from "./parse-first-name";
+import splitName from "./split-name";
+import insertByName from "./insert-by-name";
+import checkNameInObject from "./check-name-in-object";
+import getPropFromObject from "./get-prop-from-object";
 
 
 /**
@@ -9,35 +16,23 @@ import bypassObject from "./bypass-object";
  * }                                        }
  * */
 
-export default function grandObject(object: any) {
+export default function grandObject(object: any, data: any = {}) {
+	if (isEndPointValue(object)) return ;
 	
-	return bypassObject(object)
-	.reduce((acc: any, {path, value}) => {
+	Object.entries(object)
+	.forEach(([key, value]) => {
 		
+		if (!checkNameInObject(data, key) && !isEndPointValue(value)) insertByName(data, key, {})
 		
-		let link = acc;
-		let index = 0;
-		
-		while (index !== path.length) {
-			const name = path[index];
-			
-			// last item
-			if (index === path.length - 1) {
-				
-				// value = JSON.parse(JSON.stringify(value))
-				link[name] = value;
-			}
-			else {
-				link = link[name] || (() => {
-					link[name] = {};
-					return link[name];
-				})()
-			}
-			index++;
+		if (isEndPointValue(value)) {
+			insertByName(data, key, value);
 		}
-		return acc;
-	}, {})
+		else {
+			grandObject(value, getPropFromObject(data, key))
+		}
+	})
 	
+	return data;
 }
 export function grandValue(name: string, value: any) {
 	return grandObject({

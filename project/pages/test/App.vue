@@ -5,6 +5,7 @@
 		<form-field name="username.name.jenesius" label = "Username"/>
 		<widget-composite/>
 		<widget-address/>
+        <form-field name="address.city.index" label = "City Index" />
 		<button @click = "change">changed</button>
 		<button @click = "clean">clean values</button>
 
