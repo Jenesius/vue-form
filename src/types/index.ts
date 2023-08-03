@@ -64,6 +64,11 @@ export interface FormSetValuesOptions {
 	 * @description Имя целевого объекта для которого был вызван setValues
 	 * */
 	target: string,
+	
+	/**
+	 * Место, откуда был event вызван. Является результатом работы функции getTargetName();
+	 * */
+	executedFrom: string
 	/**
 	 * @description Полность заменяет предыдущее значение, а не добавляет(не используется примешивание)
 	 * */

@@ -281,6 +281,53 @@ describe("Form.setValues", () => {
             }
         })
     })
+    test("Using target with child", () => {
+        const parent = new Form();
+        const child = new Form({name: "customer"});
+        parent.subscribe(child);
+        child.setValues({ city: "Berlin" }, {target: "address"});
+        
+        expect(parent.values).toEqual({
+            customer: {
+                address: {
+                    city: "Berlin"
+                }
+            }
+        })
+    })
+    test("Using multi child with target", () => {
+        const parent = new Form();
+        const child1 = new Form({
+            name: "address"
+        });
+        const child2 = new Form({
+            name: "planet"
+        });
+        const child3 = new Form({
+            name: "country"
+        });
+        
+        parent.subscribe(child1);
+        child1.subscribe(child2);
+        child2.subscribe(child3);
+        
+        
+        child3.setValues({ type: "default", value: 1 }, {target: "code"})
+        
+        expect(parent.values).toEqual({
+            address: {
+                planet: {
+                    country: {
+                        code: {
+                            type: "default",
+                            value: 1
+                        }
+                    }
+                }
+            }
+        })
+        
+    })
     test("Using target option with change and clean for clean just child position", () => {
         const form = new Form();
         form.setValues({ address: { country: "Belarus" }, name: "Jenesius" });
@@ -376,5 +423,27 @@ describe("Form.setValues", () => {
         })
         
         expect(form.values).toEqual({address: { city: {name: "Berlin"}, country: "DE", index: 1 }})
+    })
+    test("Using multi target object with child Form", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child)
+        child.setValues({
+            index: 1
+        }, {
+            target: "planet.city"
+        })
+        
+        expect(form.values).toEqual({
+            address: {
+                planet: {
+                    city: {
+                        index: 1
+                    }
+                }
+            }
+        })
     })
 })

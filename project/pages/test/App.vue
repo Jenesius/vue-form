@@ -38,6 +38,12 @@ setInterval(() => {
 	pureValue.value = copyObject(form.TEST_PURE_VALUE);
 }, 50);
 
+const address = new Form({
+    name: "address",
+    provide: false
+})
+form.subscribe(address)
+window.address = address;
 const changes = ref({});
 const pureValue= ref({});
 

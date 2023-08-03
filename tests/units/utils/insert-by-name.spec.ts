@@ -18,4 +18,11 @@ describe("Insert by name", () => {
         insertByName(data, "address.city.name", "Berlin");
         expect(data).toEqual({address: { city: { name: "Berlin" } }})
     })
+    test("Insert empty object", () => {
+        const data = {};
+        insertByName(data, "address", {});
+        expect(data).toEqual({
+            address: {}
+        })
+    })
 })

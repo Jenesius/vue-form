@@ -16,6 +16,9 @@ import splitName from "../utils/split-name";
 import checkPrimitiveValue from "../utils/check-primitive-value";
 import parseFirstName from "../utils/parse-first-name";
 import isEmptyObject from "../utils/is-empty-object";
+import concatName from "../utils/concat-name";
+import checkNameInObject from "../utils/check-name-in-object";
+import insertByName from "../utils/insert-by-name";
 
 /**
  * Main principe : GMN
@@ -125,7 +128,7 @@ export default class Form extends EventEmitter implements FormDependence {
             if (parent)
                 parent.subscribe(this);
         }
-        if (currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
+        if (params.provide !== false && currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
     }
     
     private isTargetOptions<T extends Pick<FormSetValuesOptions, "target">>(options: Partial<FormSetValuesOptions>): options is T {
@@ -134,20 +137,26 @@ export default class Form extends EventEmitter implements FormDependence {
     
     setValues(values: any, options: Partial<FormSetValuesOptions> = {}): void {
         
-        if (this.isTargetOptions(options)) {
-            values = {
-                [options.target]: values
-            };
-            // @ts-ignore
-            delete options.target;
+        /*
+        Неправильно!
+        В данном случае target используется только для значения, а затем удаляется.
+        С таким же успехом можно просто в values передавать {[target]: values}
+        Тем самым мы убираем ту мощь, которая была возложена на target.
+        Target должен оставаться в option и влиять на то, какие значения будут меняться.
+        
+        Так же будет полезен следующий метод:
+        if (!checkNameInObject(values, target)) insertByName(values, target)
+         */
+        
+        if (!options.executedFrom) {
+    
+            options.executedFrom = Form.getTargetName(this);
         }
         
         // Текущий элемент имеет родителя - отправляем изменения наверх.
         if (this.parent) {
             console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
-            return void this.parent.setValues({
-                [this.name as string]: values
-            }, options);
+            return void this.parent.setValues(values, options);
         }
         
         // Дошли до родительской формы. Теперь данные нужно завернуть и отправить вниз
@@ -163,13 +172,26 @@ export default class Form extends EventEmitter implements FormDependence {
         const grandValues = grandObject(values);
         
         console.log('%cGrand Object:', 'color: blue', grandValues);
-        /**
-         * @description Если в options передан флаг changes:true, в таком случае происходит процесс изменения состояния,
-         * а не обновление данных формы.
-         * */
+        
+        
+        function getTest(this: Form) {
+            const fieldName = concatName(options.executedFrom, options.target)
+            return fieldName ? getPropFromObject(this.values, concatName(options.executedFrom, options.target)) : this.values;
+        }
+        
+        const targetValues = getTest.call(this)
+        
+        console.log('%cTarget Values:', 'color: blue', targetValues)
         
         // Если параметр clean, был передан, мы используем функцию полного сравнения, а не сравнения изменений.
-        const compareResult = (options.clean ? compareDifference : compareMergeChanges)(this.values, grandValues);
+        const compareResult = (options.clean ? compareDifference : compareMergeChanges)(targetValues, grandValues)
+        .map(item => {
+            item.name = concatName(options.executedFrom, options.target, item.name);
+            return item;
+        })
+        
+        
+        
         console.log('%cCompare result', 'color: blue', compareResult)
         
         // В зависимости от того, есть ли параметр change, происходит изменение values, или changes
@@ -382,7 +404,8 @@ export default class Form extends EventEmitter implements FormDependence {
 }
 
 interface FormParams {
-    name: string
+    name: string,
+    provide: boolean
 }
 
 interface FormDependence {

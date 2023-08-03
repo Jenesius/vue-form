@@ -31,10 +31,9 @@ export interface CompareItem {
  *
  * @param {Object} newValue объект новых(исходных) значений
  * @param {Object} oldValue объект старых значений
- * @param name
  */
-export function compareDifference(oldValue: unknown, newValue: unknown, name: string = ''): CompareItem[] {
-	return compare(newValue, oldValue, name)
+export function compareDifference(oldValue: unknown, newValue: unknown): CompareItem[] {
+	return compare(newValue, oldValue)
 }
 
 /**
@@ -59,10 +58,9 @@ export function compareDifference(oldValue: unknown, newValue: unknown, name: st
  *  { name: 'coordinate', newValue: { x: 1, y: 2 }, oldValue: { x: 1, y: 2 } },
  *  { name: 'coordinate.y', newValue: 2, oldValue: undefined }
  * ]
- * @param name
  * */
-export function compareMergeChanges(sourceValue: any, changes: any, name = '') {
-	const newObject = mergeObjects(copyObject(sourceValue), changes);
+export function compareMergeChanges(sourceValue: any, changes: any) {
+	const newObject = mergeObjects(copyObject(sourceValue) || {}, changes);
 	return compareDifference(sourceValue, newObject);
 
 	// Сверху установлена более простая реализация. Упрощённый вариант проецирует изменения и сравнивает объекта: исходный
