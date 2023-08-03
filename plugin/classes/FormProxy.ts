@@ -1,6 +1,7 @@
 import Form from "./Form";
 import getPropFromObject from "../utils/get-prop-from-object";
 /**
+ * @deprecated
  * PROXY_FORM
  * This element is used for compound elements. It does not store state in itself, but is only a proxy between the parent
  * form and the child ones. However, this form overrides some methods, making the interaction logic more isolated. In

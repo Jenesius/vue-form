@@ -31,12 +31,14 @@ interface IProps {
 	options?: OptionRow[] | Record<string, any>,
 	required?: boolean,
 	autofocus?: boolean,
-	modelValue?: any
+	modelValue?: any,
+	composite?: boolean
 }
 
 const props = withDefaults(defineProps<IProps>(), {
 	validation: () => [],
 	type: 'text',
+	composite: false
 })
 const emits = defineEmits<{
 	(event: 'update:modelValue', value: any): void
@@ -59,6 +61,7 @@ const extendValidation = computed(() => {
 	if (props.required) arr.push((v: any) => !!v || STORE.requiredMessage)
 	return arr;
 })
+
 
 const {state, input, updateName} = useInputState(props.name, extendValidation.value);
 watch(() => props.name, () => {

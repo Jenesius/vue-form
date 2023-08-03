@@ -67,6 +67,13 @@ function sidebar() {
 				{ text: 'Converting Options', link: "/utils/convert-options-object" }
 			]
 		},
+		{
+			text: "Dev-Utils",
+			items: [
+				{ text: "Compare difference", link: "/dev-utils/compare-difference" },
+				{ text: "Compare merge changes", link: "/dev-utils/compare-merge-changes" },
+			]
+		}
 
 	]
 }

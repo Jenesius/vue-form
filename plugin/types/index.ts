@@ -54,3 +54,8 @@ export type IPropsInput = {
 export type StringModify = (v: unknown) => string
 
 
+export interface SimpleFormParams {
+	name?: string
+}
+
+

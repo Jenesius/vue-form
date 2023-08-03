@@ -1,4 +1,4 @@
-import grandObject from "../../plugin/utils/grand-object";
+import grandObject from "../../../src/utils/grand-object";
 
 describe("Grand Object", () => {
 	
@@ -15,6 +15,54 @@ describe("Grand Object", () => {
 		expect(grandObject({'name.test': {sub: null}})).toEqual(
 			{name: {test: {sub: null}}}
 		)
+	})
+	test("Parsing child fields.", () => {
+		expect(grandObject({
+			address: {
+				city: {
+					name: "Berlin"
+				},
+				"city.house": 23,
+				"city.street": {},
+			},
+			"address.city": {
+				index: 1
+			},
+			"address.city.type": "test"
+		})).toEqual({
+			address: {
+				city: {
+					name: "Berlin",
+					index: 1,
+					house: 23,
+					type: "test",
+					street: {}
+				}
+			}
+		})
+	})
+	test("Mixing object with truncate name", () => {
+		
+		expect(grandObject(
+			{
+				address: {
+					city: "Mogilev",
+					country: {
+						index: 1
+					}
+				},
+				"address.country.name": "RB"
+			}
+		)).toEqual({
+			address: {
+				city: "Mogilev",
+				country: {
+					index: 1,
+					name: "RB"
+				}
+			}
+		})
+		
 	})
 	test("Composite HARD value", () => {
 		expect(grandObject({'name.test': {
@@ -45,7 +93,15 @@ describe("Grand Object", () => {
 			}
 		})
 	})
-	
+	test("Parsing empty object", () => {
+		expect(
+			grandObject({
+				address: {}
+			})
+		).toEqual({
+			address: {}
+		})
+	})
 	test(`Composite values with HARD composite value's name`, () => {
 		expect(grandObject({'name.value': {
 			'sub.name': {

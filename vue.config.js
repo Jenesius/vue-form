@@ -1,9 +1,10 @@
 const { defineConfig } = require('@vue/cli-service')
+const path = require("path");
 module.exports = defineConfig({
   transpileDependencies: true,
   pages: {
     index: {
-      entry: './src/pages/index/main.ts'
+      entry: './project/pages/index/main.ts'
     },
     "simple-form": {
       entry: './examples/simple-form/main.ts'
@@ -24,16 +25,23 @@ module.exports = defineConfig({
       entry: "./examples/input-otp/main.ts"
     },
     "test": {
-      entry: "./src/pages/test/main.ts"
+      entry: "./project/pages/test/main.ts"
     },
     "inputs": {
-      entry: "./src/pages/inputs/main.ts"
+      entry: "./project/pages/inputs/main.ts"
     },
     "input-select": {
       entry: "./examples/input-select/main.ts"
     },
     "all-inputs": {
       entry: "./examples/all-inputs/main.ts"
+    }
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, 'project')
+      }
     }
   }
 })
