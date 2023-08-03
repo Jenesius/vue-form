@@ -1,3 +1,17 @@
+#### 2.3.23 (2023-06-14)
+
+##### New Features
+
+*  add values to single-checkbox ([b4081329](https://github.com/Jenesius/vue-form/commit/b40813295dc3e710b8580d1b2af5a6d8a8550c0f))
+
+##### Bug Fixes
+
+* update input-number disabled, add check-point in use-modify.ts ([ba812111](https://github.com/Jenesius/vue-form/commit/ba81211131ec5e64d92417940599d9c96bab0dba))
+
+##### Tests
+
+*  form-proxy subscribe to form. ([10892809](https://github.com/Jenesius/vue-form/commit/108928093661d75b9f7f21d784365ee5ab4d4368))
+
 #### 2.3.22 (2023-05-14)
 
 ##### Tests
