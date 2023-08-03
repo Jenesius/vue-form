@@ -25,4 +25,33 @@ describe("Insert by name", () => {
             address: {}
         })
     })
+    test("Simple path", () => {
+        const data = {};
+        insertByName(data, "name", "Jenesius")
+        expect(data).toEqual({name: "Jenesius"})
+    })
+    test("Deepen name", () => {
+        const data = {}
+        insertByName(data, "name.local", "JNSS")
+        expect(data).toEqual({name: { local: "JNSS"}})
+    })
+    test("Merge field", () => {
+        const data = {address: {city: "Berlin"}}
+        insertByName(data, "address.country", "German")
+        expect(data)
+        .toEqual({
+            address: {
+                city: "Berlin",
+                country: "German"
+            }
+        })
+    })
+
+    test("Override value", () => {
+        const data = {name: "Jenesius"}
+        insertByName(data, "name", "JNSS")
+        expect(data)
+        .toEqual({name: "JNSS"})
+    })
+    
 })

@@ -14,7 +14,7 @@ export default function deletePropByName(object: any, name: string) {
 		const currentName = splitName[index];
 		
 		// Name was not founded. Operation rejected.
-		if (!object.hasOwnProperty(currentName)) return false;
+		if (!Object.prototype.hasOwnProperty.call(object, currentName)) return false;
 		
 		// last item
 		if (index === splitName.length - 1) {

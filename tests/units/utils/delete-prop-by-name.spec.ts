@@ -1,4 +1,4 @@
-import deletePropByName from "../../plugin/utils/delete-prop-by-name";
+import deletePropByName from "../../../src/utils/delete-prop-by-name";
 
 describe("Delete prop by name", () => {
 	

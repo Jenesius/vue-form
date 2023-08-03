@@ -1,4 +1,4 @@
-import checkNameInObject from "../../plugin/utils/check-name-in-object";
+import checkNameInObject from "../../../src/utils/check-name-in-object";
 
 describe("Tests for check name in object", () => {
 

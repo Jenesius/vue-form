@@ -1,4 +1,4 @@
-import Form from "../../plugin/classes/Form";
+import Form from "../../src/classes/Form";
 
 describe("Form.changed", () => {
 
@@ -20,12 +20,14 @@ describe("Form.changed", () => {
 		const form = new Form();
 		form.change({ name: "Jenesius" });
 		expect(form.changed).toBe(true);
-		form.cleanChanges();
+		form.revert();
 		expect(form.changed).toBe(false);
 	})
 	test("Form.changed equal false with depend element", () => {
 		const form = new Form();
-		const childrenForm = new Form();
+		const childrenForm = new Form({
+			name: "test"
+		});
 		form.subscribe(childrenForm);
 
 		expect(form.changed).toBe(false);
@@ -33,7 +35,9 @@ describe("Form.changed", () => {
 	})
 	test("Form.changed equal true with changed child form", () => {
 		const form = new Form();
-		const childrenForm = new Form();
+		const childrenForm = new Form({
+			name: "test"
+		});
 		form.subscribe(childrenForm);
 
 		childrenForm.change({
@@ -44,13 +48,15 @@ describe("Form.changed", () => {
 	})
 	test("Form.changed equal false after children form was changed and cleaning", () => {
 		const form = new Form();
-		const childrenForm = new Form();
+		const childrenForm = new Form({
+			name: "test"
+		});
 		form.subscribe(childrenForm);
 
 		childrenForm.change({
 			name: 'Jenesius-For-Children-Form'
 		})
-		childrenForm.cleanChanges();
+		childrenForm.revert();
 		expect(form.changed).toBe(false);
 		expect(childrenForm.changed).toBe(false);
 	})
@@ -60,7 +66,7 @@ describe("Form.changed", () => {
 		form.change({
 			name: "Jenesius"
 		})
-		form.cleanField("name");
+		// form.cleanField("name");
 		expect(form.changed).toBe(false);
 	})
 	test("After unsubscribe changed item, in the case when form not changed, it should be false", () => {

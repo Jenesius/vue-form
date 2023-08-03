@@ -19,6 +19,8 @@ import isEmptyObject from "../utils/is-empty-object";
 import concatName from "../utils/concat-name";
 import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
+import deletePropByName from "../utils/delete-prop-by-name";
+import recursiveRemoveProp from "../utils/recursive-remove-prop";
 
 /**
  * Main principe : GMN
@@ -74,7 +76,8 @@ export default class Form extends EventEmitter implements FormDependence {
      * changes: true в методе setValues или используя метод change.
      * */
     #changes = {};
-    get changes() {
+    get changes(): any {
+        if (this.parent) return getPropFromObject(this.parent.changes, Form.getTargetName(this));
         return this.#changes;
     }
     
@@ -285,11 +288,12 @@ export default class Form extends EventEmitter implements FormDependence {
      * @description Return true if form includes changes, otherwise false.
      * */
     get changed() {
-        return this.changes && Object.keys(this.changes).length !== 0;
+        return !!(this.changes && Object.keys(this.changes).length !== 0);
     }
     
     subscribe(element: any) {
         this.dependencies.add(element);
+        return this.unsubscribe.bind(this, element);
     }
     
     unsubscribe(element: any) {
@@ -359,38 +363,9 @@ export default class Form extends EventEmitter implements FormDependence {
      * @param {String} fieldName Имя поля, для которого необходимо убрать статус 'changed'. В данном случае, изменение
      * для данного поля будет стёрто из объекта changes.
      * */
-    cleanChangesByField(fieldName: string) {
-        
-        function recursiveRemoveField(object: any, name: string) {
-            const [firstName, secondName] = parseFirstName(name);
-            
-            if (name.length === 0) return;
-            console.log(object, name)
-            
-            if (Object.prototype.hasOwnProperty.call(object, firstName)) {
-                
-                if (secondName.length === 0) {
-                    console.log('REMOVE', firstName)
-                    delete object[firstName];
-                } else {
-                    console.log('go down for', firstName);
-                    recursiveRemoveField(object[firstName], secondName);
-                }
-            }
-            try {
-                if (Object.keys(object[firstName]).length === 0) {
-                    delete object[firstName];
-                    console.log('remove', firstName)
-                }
-            } catch (e) {
-                console.log(firstName, '---')
-            }
-        }
-        
-        console.group('CLEAN CHANGES BY FIELD', fieldName)
-        recursiveRemoveField(this.changes, fieldName);
-        console.log('CHANGES:', JSON.parse(JSON.stringify(this.changes)))
-        console.groupEnd()
+    cleanChangesByField(fieldName: string): void {
+        if (this.parent) return void this.parent.cleanChangesByField(concatName(this.name, fieldName));
+        recursiveRemoveProp(this.#changes, fieldName);
     }
     
     /**
@@ -401,6 +376,12 @@ export default class Form extends EventEmitter implements FormDependence {
         this.#changes = {};
     }
     
+    /**
+     * @description Method check field on changed status. Return true if changes include some values for provided fieldName.
+     * */
+    checkFieldChange(fieldName: string) {
+        return checkNameInObject(this.changes, fieldName);
+    }
 }
 
 interface FormParams {

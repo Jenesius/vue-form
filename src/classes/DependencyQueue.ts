@@ -29,6 +29,12 @@ export default class DependencyQueue<T extends DependencyItem> {
 	forEach(callback: (elem: T) => void) {
 		this.array.forEach(callback);
 	}
+	get length() {
+		return this.array.length;
+	}
+	includes(elem: T) {
+		return this.array.includes(elem)
+	}
 }
 
 export interface DependencyItem {

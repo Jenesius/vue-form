@@ -1,4 +1,4 @@
-import {config, InputField, STORE} from "../../plugin";
+import {config, InputField, STORE} from "../../src/index";
 import {mount} from "@vue/test-utils";
 import {defineComponent} from "vue";
 
