@@ -1,5 +1,5 @@
-import ComputedValue from "../../plugin/methods/ComputedValue";
-import Form from "../../plugin/classes/Form";
+import ComputedValue from "../../src/classes/ComputedValue";
+import Form from "../../src/classes/Form";
 
 describe("ComputedValue of Form", () => {
 	test("By default Computed value should be undefined.", () => {

@@ -1,5 +1,5 @@
 import isEndPointValue from "./is-end-point-value";
-import FormErrors from "../classes/FormErrors";
+import FormError from "../classes/FormError";
 /**
  * @description By provided path and value create props of provided object
  * @example {}, ["address", "city"], Berlin -> { address: city: "Berlin" }
@@ -18,8 +18,9 @@ export default function generateFieldByPath(object: any, path: string[], value: 
 			object = object[key];
 			return;
 		}
-		if (isEndPointValue(object[key])) throw FormErrors.UnableExtendPrimitive(key);
+		if (isEndPointValue(object[key])) throw FormError.UnableExtendPrimitive(key);
 
+		
 		object = object[key];
 	})
 

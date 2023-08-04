@@ -7,19 +7,16 @@ import getPropFromObject from "../utils/get-prop-from-object";
 import debug from "../debug/debug";
 import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
-import {compareMergeChanges, compareDifference, CompareItem} from "../utils/compare-changes";
+import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
 import {FormSetValuesOptions} from "../types";
 import isEndPointValue from "../utils/is-end-point-value";
 import splitName from "../utils/split-name";
-import checkPrimitiveValue from "../utils/check-primitive-value";
-import parseFirstName from "../utils/parse-first-name";
 import isEmptyObject from "../utils/is-empty-object";
 import concatName from "../utils/concat-name";
 import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
-import deletePropByName from "../utils/delete-prop-by-name";
 import recursiveRemoveProp from "../utils/recursive-remove-prop";
 
 /**
@@ -176,13 +173,13 @@ export default class Form extends EventEmitter implements FormDependence {
         
         console.log('%cGrand Object:', 'color: blue', grandValues);
         
-        
-        function getTest(this: Form) {
+        // По options функция возвращает ссылку на объект, которые изменяется
+        function getTargetValue(this: Form) {
             const fieldName = concatName(options.executedFrom, options.target)
             return fieldName ? getPropFromObject(this.values, concatName(options.executedFrom, options.target)) : this.values;
         }
         
-        const targetValues = getTest.call(this)
+        const targetValues = getTargetValue.call(this)
         
         console.log('%cTarget Values:', 'color: blue', targetValues)
         
@@ -193,6 +190,35 @@ export default class Form extends EventEmitter implements FormDependence {
             return item;
         })
         
+        // Пока используется для того, чтобы добавить CompareResult для executedFrom и target
+        function superCompare(this: Form, compareResult: CompareItem[], superName: string): CompareItem[] {
+            const copy = copyObject(this.values);
+            compareResult.forEach(data => {
+                insertByName(copy, data.name, data.newValue);
+            })
+            // copy - end object.
+            return splitName(superName)
+            .map((name, index, arr) => {
+                const fieldName = concatName(...arr.slice(0, index + 1));
+    
+                return compareDTO(fieldName, getPropFromObject(copy, fieldName), this.getValueByName(fieldName))
+            });
+        }
+        
+        // Если существует target, необходимо также для него добавить изменения в compareResult.
+        // Для этого, мы разбиваем поле target и для каждого вложенного элемента вставляем CompareItem.
+        // Разумеется это всё делать надо только в том случае, если compareResult не пустой
+        if ((options.target || options.executedFrom) && compareResult.length) {
+            
+            console.group('SUPER COMPARE')
+            
+            const test = superCompare.call(this, compareResult, concatName(options.executedFrom, options.target));
+            compareResult.unshift(...test)
+            
+            console.log('SUPER COMPARE:', test);
+            console.groupEnd();
+    
+        }
         
         
         console.log('%cCompare result', 'color: blue', compareResult)
