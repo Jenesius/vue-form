@@ -105,3 +105,7 @@ function compare( newValue: any, oldValue: any, name: string = ''): CompareItem[
 interface CompareState {
 	array: CompareItem[]
 }
+
+export function compareDTO(name: string, newValue: any, oldValue: any): CompareItem {
+	return {name, newValue, oldValue}
+}

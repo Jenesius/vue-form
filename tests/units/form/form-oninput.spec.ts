@@ -63,4 +63,110 @@ describe("Form oninput handler", () => {
         expect(mockChange.mock.calls.length).toBe(1)
         expect(mockChange.mock.results[0].value).toEqual({city: "Minsk"})
     })
+    test("Using oninput for child item", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child)
+        const mockChange = jest.fn((value) => value);
+        
+        child.oninput('city', mockChange);
+        
+        form.setValues({
+            address: {
+                city: "Berlin"
+            }
+        })
+        child.setValues({
+            city: "Minsk"
+        })
+        
+        expect(mockChange.mock.calls.length).toBe(2);
+        expect(mockChange.mock.results[0].value).toBe("Berlin")
+        expect(mockChange.mock.results[1].value).toBe("Minsk")
+    })
+    
+    test("Using multi name for child item", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child)
+        const mockChange = jest.fn((value) => value);
+    
+        child.oninput('city.index', mockChange);
+        
+        form.setValues({
+            address: {
+                city: {
+                    index: 23
+                }
+            }
+        })
+        expect(mockChange.mock.calls.length).toBe(1);
+        expect(mockChange.mock.results[0].value).toBe(23)
+    })
+    test("Using child and target together", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address.city"
+        })
+        
+        form.subscribe(child)
+        const mockChange = jest.fn((value) => value);
+    
+        form.oninput('address.city.index.type', mockChange);
+        
+        child.setValues({
+            type: "A"
+        }, {
+            target: "index"
+        })
+    
+        expect(mockChange.mock.calls.length).toBe(1);
+        expect(mockChange.mock.results[0].value).toBe("A")
+    })
+    test("Should execute mock for each deep item with target", () => {
+        const form = new Form();
+        const mockChange = jest.fn(value => value);
+        form.oninput('address', mockChange)
+        form.oninput('address.city', mockChange)
+        form.oninput('address.city.index', mockChange)
+        form.oninput('address.city.index.type', mockChange)
+        
+        form.setValues({
+            type: "A"
+        }, {target: "address.city.index"})
+        
+        expect(mockChange.mock.results.length).toBe(4);
+        expect(mockChange.mock.results[0].value).toEqual({city: {index: {type: "A"}}});
+        expect(mockChange.mock.results[1].value).toEqual({index: {type: "A"}});
+        expect(mockChange.mock.results[2].value).toEqual({type: "A"});
+        expect(mockChange.mock.results[3].value).toBe("A");
+    })
+    test("Should execute mock for each deep item without target", () => {
+        const form = new Form();
+        const mockChange = jest.fn(value => value);
+        form.oninput('address', mockChange)
+        form.oninput('address.city', mockChange)
+        form.oninput('address.city.index', mockChange)
+        form.oninput('address.city.index.type', mockChange)
+        
+        form.setValues({
+            address: {
+                city: {
+                    index: {
+                        type: "B"
+                    }
+                }
+            }
+        })
+        
+        expect(mockChange.mock.results.length).toBe(4);
+        expect(mockChange.mock.results[0].value).toEqual({city: {index: {type: "B"}}});
+        expect(mockChange.mock.results[1].value).toEqual({index: {type: "B"}});
+        expect(mockChange.mock.results[2].value).toEqual({type: "B"});
+        expect(mockChange.mock.results[3].value).toBe("B");
+    })
 })

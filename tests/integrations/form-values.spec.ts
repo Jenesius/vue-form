@@ -52,46 +52,10 @@ describe("Dynamic form values.", () => {
 			}
 		})
 	})
-	test("The form must fire the event for each name has been updated.", async () => {
-		const app = mount(App) as any;
-		const form = app.vm.form;
-
-		await app.get('input[name=x]').setValue('123');
-
-		const mockCoordinate = jest.fn((...args) => args);
-		const mockCoordinateX = jest.fn((...args) => args);
-
-		form.oninput('coordinate', mockCoordinate);
-		form.oninput('coordinate.x', mockCoordinateX);
-
-		const NEW_X_VALUE = "123"
-		form.setValues({
-			coordinate: {
-				x: NEW_X_VALUE
-			}
-		})
-
-		expect(mockCoordinate.mock.calls).toHaveLength(1);
-		expect(mockCoordinateX.mock.calls).toHaveLength(1);
-
-		//expect(mockCoordinateX.mock.calls[0][0]).toBe(undefined);
-		expect(mockCoordinateX.mock.calls[0][0]).toBe(NEW_X_VALUE);
-
-		//expect(mockCoordinate.mock.calls[0][1]).toBe(undefined);
-		expect(mockCoordinate.mock.calls[0][0]).toEqual({
-			x: NEW_X_VALUE
-		});
-	})
-
-	test("The form should update the composite dependency after coordinate-form execute setValues", async () => {
-
-	})
-	test("The form should update the composite dependency after parent-form execute setValues", async () => {
-
-	})
+	
 	test('The input must be empty after executing cleanValues.', async () => {
 		const app = await mount(App) as any;
-		const form = app.vm.form;
+		const form = app.vm.form as Form;
 
 		const inputUsername = app.get('input[name=username]');
 
@@ -100,6 +64,8 @@ describe("Dynamic form values.", () => {
 		form.cleanValues();
 		expect(form.values).toEqual({});
 
+		await wait();
+		
 		const elementUsername = app.find('input[name=username]').element as HTMLInputElement;
 		const value = elementUsername.value;
 		expect(value).toBe("")
