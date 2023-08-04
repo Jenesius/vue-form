@@ -81,7 +81,7 @@ export default class Form extends EventEmitter implements FormDependence {
     #values = {}
     get values(): any {
         if (this.parent) {
-            return this.parent.getValueByName(this.name as string);
+            return this.parent.getValueByName(this.name as string) || {};
         }
         return mergeObjects({}, this.#values, this.#changes)
     };
@@ -90,19 +90,13 @@ export default class Form extends EventEmitter implements FormDependence {
         return this.#values;
     }
     
+    /**
+     * @warning НЕ РАБОТАЕТ С РОДИТЕЛЕМ. ПРИ РАБОТЕ ЧЕРЕЗ CHILD БУДУТ ВОЗНИКАТЬ ОШИБКИ!!!
+     * */
     private set values(values: any) {
-        
-        // const oldValues = copyObject(this.values);
-        
-        console.group('%csetting values', 'color: purple');
-        
-        const grandValues = grandObject(values);
-        const event = new CompareEvent(grandValues, this.values);
-        this.dispatchEvent(event);
-        
-        this.#values = grandValues;
-        
-        console.groupEnd()
+        this.setValues(values, {
+            clean: true
+        });
     }
     
     dependencies = new DependencyQueue(this)
@@ -399,6 +393,8 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     revert() {
         console.log('Form: %crevert changes', 'color: purple');
+    
+        if (this.parent) return void this.parent.cleanChangesByField(this.name as string);
         this.#changes = {};
     }
     

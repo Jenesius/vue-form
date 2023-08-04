@@ -64,5 +64,34 @@ describe("Form clean values", () => {
             country: "Belarus"
         });
     })
-    
+    test("Override values for child item", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child);
+        form.setValues({
+            address: {
+                city: 1
+            }
+        })
+        
+        expect(child.values).toEqual({city: 1})
+        form.cleanValues({
+            address: {
+                country: 2
+            }
+        })
+        
+        expect(form.values).toEqual({
+            address: {
+                country: 2
+            }
+        })
+        expect(child.values).toEqual({
+            country: 2
+        })
+        
+        
+    })
 })
