@@ -1,4 +1,4 @@
-import CompareEvent from "./../../src/classes/CompareEvent";
+import CompareEvent from "../../../src/classes/CompareEvent";
 
 describe("Compare Event", () => {
 	test("Should restore fields that bind with address", () => {
@@ -9,7 +9,7 @@ describe("Compare Event", () => {
 			name: "Jenesius",
 			age: 24
 		}
-		const event = new CompareEvent(newValue, {});
+		const event = new CompareEvent({}, newValue);
 		const addressEvent = CompareEvent.restoreByName(event, 'address');
 
 		expect(addressEvent.comparison).toEqual([
@@ -29,7 +29,7 @@ describe("Compare Event", () => {
 			name: "Jenesius",
 			age: 24
 		}
-		const event = new CompareEvent(newValue, {});
+		const event = new CompareEvent({} ,newValue);
 		const addressEvent = CompareEvent.restoreByName(event, 'coordinate');
 
 		expect(addressEvent.comparison).toEqual([])

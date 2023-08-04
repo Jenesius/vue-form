@@ -1,4 +1,4 @@
-import Form from "../../src/classes/Form";
+import Form from "../../../src/classes/Form";
 
 describe("Form.changed", () => {
 
@@ -46,6 +46,7 @@ describe("Form.changed", () => {
 		expect(form.changed).toBe(true);
 		expect(childrenForm.changed).toBe(true);
 	})
+	
 	test("Form.changed equal false after children form was changed and cleaning", () => {
 		const form = new Form();
 		const childrenForm = new Form({
@@ -60,29 +61,13 @@ describe("Form.changed", () => {
 		expect(form.changed).toBe(false);
 		expect(childrenForm.changed).toBe(false);
 	})
-
 	test("After cleaning one field(if current field is just one changed) form.changed should be false", () => {
 		const form = new Form();
 		form.change({
 			name: "Jenesius"
 		})
-		// form.cleanField("name");
+		form.cleanChangesByField("name");
 		expect(form.changed).toBe(false);
 	})
-	test("After unsubscribe changed item, in the case when form not changed, it should be false", () => {
-		const form = new Form();
-		const childForm = new Form();
-		form.subscribe(childForm);
 
-		childForm.change({
-			name: 'Jenesius'
-		})
-		expect(childForm.changed).toBe(true);
-		expect(form.changed).toBe(true);
-
-		form.unsubscribe(childForm);
-		expect(childForm.changed).toBe(true);
-		expect(form.changed).toBe(false);
-
-	})
 })

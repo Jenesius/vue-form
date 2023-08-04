@@ -30,4 +30,7 @@ export default class FormError extends Error{
 	static CallbackIsNotProvided() {
 		return new FormError(`Callback is not provided to listener.`);
 	}
+	static DependencyNotFounded() {
+		return new FormError(`Dependency was not subscribe on form or unsubscribed early.`)
+	}
 }

@@ -3,6 +3,7 @@
 
 		<form-field :name="name" label = "Username"/>
 		<form-field name="username.name.jenesius" label = "Username"/>
+		<form-field name="name" label = "Name"/>
 		<widget-composite/>
 		<widget-address/>
         <form-field name="address.city.index" label = "City Index" />

@@ -1,4 +1,4 @@
-import Form from "../../src/classes/Form";
+import Form from "../../../src/classes/Form";
 
 describe("Form.getValueByName", () => {
 	test("Undefined name", () => {

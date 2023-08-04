@@ -3,15 +3,15 @@ import FormEvent from "./FormEvent";
 
 export default class CompareEvent extends FormEvent{
 	constructor(comparison: CompareItem[])
-	constructor(newValue: unknown, oldValue?: unknown)
-	constructor(param1: object | CompareItem[], oldValue?: unknown){
+	constructor(oldValue: unknown, newValue?: unknown)
+	constructor(param1: object | CompareItem[], newValue?: unknown){
 		super('value')
 
 		// If first param is result of compareChanges
 		if (Array.isArray(param1)) {
 			this.comparison = param1;
 		} else {
-			this.comparison = compareDifference(param1, oldValue);
+			this.comparison = compareDifference(param1, newValue);
 
 		}
 	}
@@ -34,14 +34,5 @@ export default class CompareEvent extends FormEvent{
 			})
 		})
 		return new CompareEvent(array)
-
-		return new CompareEvent(
-			compareEvent.comparison
-			.filter(comp => comp.name.startsWith(name))
-			.map(comp => {
-				comp.name = comp.name.slice(name.length + 1);
-				return comp;
-			}) // Удаляем приставку + 1(символ '.')
-		)
 	}
 }

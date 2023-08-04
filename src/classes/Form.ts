@@ -18,6 +18,7 @@ import concatName from "../utils/concat-name";
 import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
 import recursiveRemoveProp from "../utils/recursive-remove-prop";
+import deletePropByName from "../../plugin/utils/delete-prop-by-name";
 
 /**
  * Main principe : GMN
@@ -81,28 +82,26 @@ export default class Form extends EventEmitter implements FormDependence {
     #values = {}
     get values(): any {
         if (this.parent) {
-            return this.parent.getValueByName(this.name as string);
+            return this.parent.getValueByName(this.name as string) || {};
         }
         return mergeObjects({}, this.#values, this.#changes)
     };
+    /**
+     * @description Чистые значения формы. Которые изменяются при помощи setValues без опции change.
+     * */
+    get pureValues():any {
+        if (this.parent) return getPropFromObject(this.parent.pureValues, this.name as string) || {}
+        return this.#values;
+    }
     
     get TEST_PURE_VALUE() {
         return this.#values;
     }
     
     private set values(values: any) {
-        
-        // const oldValues = copyObject(this.values);
-        
-        console.group('%csetting values', 'color: purple');
-        
-        const grandValues = grandObject(values);
-        const event = new CompareEvent(grandValues, this.values);
-        this.dispatchEvent(event);
-        
-        this.#values = grandValues;
-        
-        console.groupEnd()
+        this.setValues(values, {
+            clean: true
+        });
     }
     
     dependencies = new DependencyQueue(this)
@@ -175,8 +174,14 @@ export default class Form extends EventEmitter implements FormDependence {
         
         // По options функция возвращает ссылку на объект, которые изменяется
         function getTargetValue(this: Form) {
-            const fieldName = concatName(options.executedFrom, options.target)
-            return fieldName ? getPropFromObject(this.values, concatName(options.executedFrom, options.target)) : this.values;
+            const fieldName = concatName(options.executedFrom, options.target);
+            
+            // Если имеется change и clean - то мы не работаем с values, т.к. к нему примешены другие changes.
+            //const values = (options.change && options.clean) ? this.pureValues : this.values;
+            
+            const values = this.values;
+            
+            return fieldName ? getPropFromObject(values, concatName(options.executedFrom, options.target)) : values;
         }
         
         const targetValues = getTargetValue.call(this)
@@ -280,12 +285,31 @@ export default class Form extends EventEmitter implements FormDependence {
                 }))
             }
             
+            // Если при изменении новое значение совпадает со значением, находящимся в pureValues. Это означает, что
+            // Что новое значение эквивалентно значению по умолчанию.
+            // В таком случае рекурсивно чистим значение
+            if (isChange && isEndPointValue(item.newValue) && item.newValue === getPropFromObject(this.pureValues, item.name)) {
+                recursiveRemoveProp(this.#changes, item.name)
+            }
+            
+            // Если процесс изменения и значения для поля undefined, а такого значения нет в pureValue,
+            // то и смысла в этом поле - нет, т.к. оно не имеет значения и не определено в pureValues. Происходит
+            // рекурсивная очистка поля.
+            if (isChange && item.newValue === undefined && !checkNameInObject(this.pureValues, item.name)) {
+                console.log(`Removing useless field %c${item.name}%c from changes.`, 'color: green', 'color: black');
+                recursiveRemoveProp(this.#changes, item.name)
+            }
+            
             // Если происходит изменения значений(не изменений), то мы должно аннулировать поля изменений(очищать их) на
             // которые было произведено влияние. Однако только на те, которые являются конечными точками, т.к. изменение
             // может затронуть лишь одно поле объекта, но при этом этот объект будет полностью помечен, как изменённый.
-            if ((isEndPointValue(item.newValue) || isEndPointValue(item.oldValue)) && !isChange) {
+            if (
+                ((isEndPointValue(item.newValue) || isEndPointValue(item.oldValue)) && !isChange)
+                // || (item.newValue === undefined && isChange)
+            ) {
                 console.log(`%cReturn%c changes for %c${item.name}`, 'color: red', 'color: black', 'color: green');
-                this.cleanChangesByField(item.name);
+                // this.cleanChangesByField(item.name);
+                recursiveRemoveProp(this.#changes, item.name)
             }
             
         })
@@ -353,33 +377,10 @@ export default class Form extends EventEmitter implements FormDependence {
         }
     }
     
-    /**
-     * НА ПОСЛЕДОК
-     * @description Method return values in {[key]: value} format. If names provided return just values for names.
-     */
-    getValues(...names: string[]) {
-        if (!names || !names.length) return this.values;
-        
-        const cast = names.reduce((acc: { [key: string]: boolean }, name) => {
-            acc[name] = true
-            return acc;
-        }, {})
-        
-        return getCastObject(this.values, grandObject(cast));
-    }
-    
     cleanValues(values?: any) {
         debug.msg('Cleaning values')
         
-        /**
-         * WARNING WARNING WARNING WARNING WARNING
-         * в данном случаем мы сперва устанавливаем пустое значение, а потому уже нужное.
-         * Эффективнее сразу устанавливать нужно значение
-         * WARNING WARNING WARNING WARNING WARNING
-         * */
-        
         this.values = values || {};
-        
     }
     
     /**
@@ -391,7 +392,15 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     cleanChangesByField(fieldName: string): void {
         if (this.parent) return void this.parent.cleanChangesByField(concatName(this.name, fieldName));
-        recursiveRemoveProp(this.#changes, fieldName);
+        
+        // Если значение есть в pureValues - устанавливаем его
+        // Иначе undefined
+        this.setValues({
+            [fieldName]: checkNameInObject(this.pureValues, fieldName) ? getPropFromObject(this.pureValues, fieldName) : undefined
+        }, {
+            change: true,
+        })
+        
     }
     
     /**
@@ -399,7 +408,14 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     revert() {
         console.log('Form: %crevert changes', 'color: purple');
-        this.#changes = {};
+    
+        if (this.parent) return void this.parent.cleanChangesByField(this.name as string);
+        
+        this.setValues({}, {
+            change: true,
+            clean: true
+        })
+        
     }
     
     /**
@@ -407,6 +423,23 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     checkFieldChange(fieldName: string) {
         return checkNameInObject(this.changes, fieldName);
+    }
+    
+    /**
+     * @description Method using for clear field. Dont set NULL. Remove field from values.
+     * @example
+     * { address: { city: 'Some' }, name: 'jack' } clearField('address')
+     * {name: 'jack'}
+     * */
+    cleanField(fieldName: string) {
+        
+        this.setValues({
+            [fieldName]: undefined
+        })
+        
+        //deletePropByName(this.values, name);
+        //deletePropByName(this.#changes, name);
+        //this.cleanChanges(this.#changes);
     }
 }
 

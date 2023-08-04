@@ -169,4 +169,27 @@ describe("Form oninput handler", () => {
         expect(mockChange.mock.results[2].value).toEqual({type: "B"});
         expect(mockChange.mock.results[3].value).toBe("B");
     })
+    test("Revert should not execute field that not be effected", () => {
+        const form = new Form();
+        form.setValues({
+            name: "Jack"
+        })
+        const mockChange = jest.fn(v => v);
+        form.oninput('login', mockChange);
+        form.revert();
+        
+        expect(mockChange.mock.calls.length).toBe(0);
+    })
+    test("Revert should execute oninput", () => {
+        const form = new Form();
+        form.setValues({
+            name: "Jack"
+        })
+        const mockChange = jest.fn(v => v);
+        form.oninput('name', mockChange);
+        form.revert();
+        
+        expect(mockChange.mock.calls.length).toBe(1);
+        expect(mockChange.mock.results[0].value).toBe(undefined);
+    })
 })
