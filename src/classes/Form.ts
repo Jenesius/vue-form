@@ -347,21 +347,6 @@ export default class Form extends EventEmitter implements FormDependence {
         }
     }
     
-    /**
-     * НА ПОСЛЕДОК
-     * @description Method return values in {[key]: value} format. If names provided return just values for names.
-     */
-    getValues(...names: string[]) {
-        if (!names || !names.length) return this.values;
-        
-        const cast = names.reduce((acc: { [key: string]: boolean }, name) => {
-            acc[name] = true
-            return acc;
-        }, {})
-        
-        return getCastObject(this.values, grandObject(cast));
-    }
-    
     cleanValues(values?: any) {
         debug.msg('Cleaning values')
         
