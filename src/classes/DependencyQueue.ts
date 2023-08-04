@@ -1,4 +1,5 @@
 import Form from "./Form";
+import FormError from "./FormError";
 
 /**
  * @description Класс для работы с зависимыми элементами формы. Основная задача - поддержание целостности.
@@ -23,7 +24,13 @@ export default class DependencyQueue<T extends DependencyItem> {
 
 	}
 	remove(object: T) {
-		console.log('Псевдо удаление ')
+		if (!this.array.includes(object)) throw FormError.DependencyNotFounded();
+		
+		object.parent = undefined;
+		
+		this.array.splice(
+			this.array.indexOf(object), 1
+		)
 	}
 
 	forEach(callback: (elem: T) => void) {

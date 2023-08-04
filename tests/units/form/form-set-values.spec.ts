@@ -1,4 +1,4 @@
-import Form from "../../src/classes/Form";
+import Form from "../../../src/classes/Form";
 
 describe("Form.setValues", () => {
     test("Simple parsing values.", () => {
@@ -149,15 +149,42 @@ describe("Form.setValues", () => {
     /**
      * @description Тест используется для того, чтобы показать суть clean опции вместе с change. Если она указана, значения, которые
      * не входят в исходный объект - они должны не просто убираться, а замещаться значение cleanValue.
+     *
+     * @explain Если указана опция clean вместе с change, в таком случае происходит полное сравнение переданных значений
+     * со значениями в #values(Pure values). В данном примере в вызове setValues(clean: true) мы игнорируем значения
+     * записанные ранее в changes, а полностью полагаемся на #values.
      */
     test("Using clean options all fields that don't consist in changes must be setted to null", () => {
         const form = new Form();
         form.setValues({ address: { country: "Belarus" }, name: "Jenesius" });
+        form.setValues({address: {index: 1}, age: 24}, {change: true})
         form.setValues({ address: { city: "Mogilev" } }, { clean: true, change: true });
 
         expect(form.changed).toBe(true);
         expect(form.changes).toEqual({ address: { city: "Mogilev", country: undefined }, name: undefined })
         expect(form.values).toEqual( { address: { city: "Mogilev", country: undefined }, name: undefined })
+    })
+    test("Using clean with target should change field to undefined", () => {
+        const form = new Form();
+        form.setValues({
+            city: "Mogilev",
+            name: "123"
+        }, {target: "address", change: true});
+        
+        form.setValues({
+            country: "Minsk"
+        }, {
+            target: "address",
+            clean: true,
+            change: true
+        })
+        
+        expect(form.changes).toEqual({
+            address: {
+                country: "Minsk"
+            }
+        })
+        
     })
     test("Clean without change", () => {
         const form = new Form();
@@ -445,5 +472,36 @@ describe("Form.setValues", () => {
                 }
             }
         })
+    })
+    test("Using clean options with change", () => {
+        const form = new Form();
+        
+        form.change({
+            username: "Jack"
+        })
+        
+        form.setValues({}, {
+            change: true, clean: true
+        })
+        
+        expect(Object.keys(form.changes).length).toBe(0)
+    })
+    test("Reverting data after enter the same value", () => {
+        const form = new Form();
+        form.setValues({
+            name: "Jack"
+        })
+        form.change({
+            name: "Jack-1"
+        })
+        
+        expect(form.changes).toEqual({ name: "Jack-1" })
+        
+        form.change({
+            name: "Jack"
+        })
+        
+        expect(form.changes).toEqual({})
+        
     })
 })

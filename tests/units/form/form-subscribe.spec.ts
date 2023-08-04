@@ -1,4 +1,4 @@
-import Form from "../../src/classes/Form";
+import Form from "../../../src/classes/Form";
 
 describe("Form subscribe", () => {
 
@@ -46,6 +46,11 @@ describe("Form subscribe", () => {
 		})
 
 	})
-
+	test("Exception for unsubscribe item that was not subscribed", () => {
+		const form = new Form();
+		const child = new Form();
+		
+		expect(() => form.unsubscribe(child)).toThrow()
+	})
 
 })

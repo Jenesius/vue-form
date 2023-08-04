@@ -61,14 +61,16 @@ describe("Dynamic form values.", () => {
 
 		await inputUsername.setValue('Jenesius');
 
+		expect(form.values).toEqual({
+			username: "Jenesius"
+		})
+		
 		form.cleanValues();
 		expect(form.values).toEqual({});
 
 		await wait();
-		
-		const elementUsername = app.find('input[name=username]').element as HTMLInputElement;
-		const value = elementUsername.value;
-		expect(value).toBe("")
+
+		expect(inputUsername.value).toBe(undefined)
 
 	})
 

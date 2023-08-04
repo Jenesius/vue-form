@@ -70,7 +70,7 @@ export interface FormSetValuesOptions {
 	 * */
 	executedFrom: string
 	/**
-	 * @description Полность заменяет предыдущее значение, а не добавляет(не используется примешивание)
+	 * @description Полностью заменяет предыдущее значение, а не добавляет(не используется примешивание) к нему значений.
 	 * */
 	clean: boolean
 }
