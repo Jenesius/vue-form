@@ -1,4 +1,4 @@
-import Form from "../../src/classes/Form";
+import Form from "../../../src/classes/Form";
 
 describe("Check name for changed status", () => {
 
