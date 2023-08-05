@@ -5,7 +5,6 @@ import FormEvent from "./FormEvent";
 import {getCurrentInstance, inject as injectVue, provide as provideVue} from "vue";
 import getPropFromObject from "../utils/get-prop-from-object";
 import debug from "../debug/debug";
-import getCastObject from "../utils/get-cast-object";
 import copyObject from "../utils/copy-object";
 import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
@@ -18,7 +17,7 @@ import concatName from "../utils/concat-name";
 import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
 import recursiveRemoveProp from "../utils/recursive-remove-prop";
-import deletePropByName from "../../plugin/utils/delete-prop-by-name";
+import runPromiseQueue from "../utils/run-promise-queue";
 
 /**
  * Main principe : GMN
@@ -35,9 +34,7 @@ import deletePropByName from "../../plugin/utils/delete-prop-by-name";
  * */
 
 export default class Form extends EventEmitter implements FormDependence {
-    static EVENT_NAME = 'form-event'
     static PROVIDE_NAME = 'form-controller';
-    static EVENT_CHANGE = 'change';
     static EVENT_VALUE = 'value';
     
     static getParentForm() {
@@ -128,10 +125,6 @@ export default class Form extends EventEmitter implements FormDependence {
                 parent.subscribe(this);
         }
         if (params.provide !== false && currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
-    }
-    
-    private isTargetOptions<T extends Pick<FormSetValuesOptions, "target">>(options: Partial<FormSetValuesOptions>): options is T {
-        return Object.prototype.hasOwnProperty.call(options, 'target');
     }
     
     setValues(values: any, options: Partial<FormSetValuesOptions> = {}): void {
@@ -475,6 +468,69 @@ export default class Form extends EventEmitter implements FormDependence {
     get wait() {
         return this.#wait;
     }
+    
+    
+    static EVENT_READ = 'read'
+    /**
+     * @description Function for read data (For example from DataBase)
+     */
+    #readData: FunctionHandleData = () => Promise.resolve();
+
+    /**
+     * @description Method takes read functions from all children elements, and
+     * run it
+     */
+    get read() {
+        debug.msg(`Reading data`);
+        
+        const array: FunctionHandleData[] = [];
+        
+        array.push(() => this.wait = true);
+        array.push(
+            ...this.dependencies.reduce((acc:any[], elemController:any) => {
+                if (typeof elemController.read === 'function') acc.push(elemController.read.bind(elemController));
+                return acc;
+            }, [])
+        )
+        array.push(() => this.#readData?.());
+        array.push((data:any) => this.emit(Form.EVENT_READ, data));
+    
+        return () => runPromiseQueue(array).finally(() => this.wait = false);
+        
+    }
+    set read(callback: FunctionHandleData){
+        this.#readData = callback;
+    }
+    
+    static EVENT_SAVE = 'save'
+    /**
+     * @description Function for save data (Update/Create)
+     */
+    #saveData: FunctionHandleData = () => Promise.resolve();
+    /**
+     * @description The same with read. After saving run cleanChanges.
+     */
+    get save() {
+        debug.msg(`Saving data`);
+        const array: FunctionHandleData[] = [];
+        
+        array.push(() => this.wait = true);
+        array.push(...this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
+            if (typeof elemController.save === 'function') acc.push(elemController.save.bind(elemController));
+            return acc;
+        }, []))
+        
+        array.push(() => this.#saveData?.())
+        array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
+        array.push(() => this.revert());
+        
+        return () => runPromiseQueue(array).finally(() => this.wait = false);
+    }
+    set save(callback: FunctionHandleData) {
+        this.#saveData = callback;
+    }
+    
+    
 }
 
 interface FormParams {
@@ -488,3 +544,4 @@ interface FormDependence {
     setValues(data: any): void,
 }
 
+export type FunctionHandleData = (...params: any) => Promise<any> | any | void;

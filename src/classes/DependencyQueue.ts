@@ -42,6 +42,9 @@ export default class DependencyQueue<T extends DependencyItem> {
 	includes(elem: T) {
 		return this.array.includes(elem)
 	}
+	reduce<U>(callback: (acc: U, elem: T) => U, defaultAcc: U) {
+		return this.array.reduce(callback, defaultAcc)
+	}
 }
 
 export interface DependencyItem {
