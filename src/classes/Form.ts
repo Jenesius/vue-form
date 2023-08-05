@@ -441,6 +441,40 @@ export default class Form extends EventEmitter implements FormDependence {
         //deletePropByName(this.#changes, name);
         //this.cleanChanges(this.#changes);
     }
+    
+    
+    /**
+     * FRONT FORM LEVEL
+     * */
+    static EVENT_VERSION = 'form-version';
+    #version: any;
+    set version(data: any) {
+        this.#version = data;
+        this.emit(Form.EVENT_VERSION, this.version)
+    }
+    get version() {
+        return this.#version;
+    }
+    
+    static EVENT_ID = 'form-id'
+    #id: any;
+    set id(data: any) {
+        this.#id = data;
+        this.emit(Form.EVENT_ID, this.id)
+    }
+    get id() {
+        return this.#id;
+    }
+    
+    static EVENT_WAIT = 'wait'
+    #wait: boolean = false;
+    set wait(v: boolean) {
+        this.#wait = v;
+        this.emit(Form.EVENT_WAIT, this.#wait);
+    }
+    get wait() {
+        return this.#wait;
+    }
 }
 
 interface FormParams {
