@@ -233,7 +233,7 @@ describe("Form read/save", () => {
         form.subscribe(child)
         
         // Reject request
-        child.save = () => new Promise((resolve, reject) => setTimeout(reject, 20));
+        child.save = () => new Promise((resolve, reject) => setTimeout(reject.bind(null, "Error from Child"), 20));
     
         // Save execution
         const promise = form.save();
@@ -242,7 +242,7 @@ describe("Form read/save", () => {
         expect(child.wait).toBe(true);
         
         // Await until all save methods will be executed.
-        await promise;
+        await expect(promise).rejects.toBe("Error from Child");
         
         expect(form.wait).toBe(false)
         expect(child.wait).toBe(false)
@@ -261,17 +261,25 @@ describe("Form read/save", () => {
         })
         expect(form.changed).toBe(true)
     })
-    
     /**
      * Тест используется в том случае, когда дочерний элемент является обособленным от родителя. В таком случае он имеет
      * свой набор значений, которым пользуется самостоятельно.
      * */
-    test("Rejecting request at child will not execute child's revert function, but parent should be executed.", async () => {
+    test("Rejecting request at child will not execute child's revert function", async () => {
         
         const form = new Form();
-        const child = new Form();
+        const child = new Form({name: "test"});
+        form.change({
+            name: "Jack"
+        })
         form.subscribe(child);
-        
+    
+        // Reject request
+        child.save = () => new Promise((resolve, reject) => setTimeout(reject.bind(null, "Error from Child"), 20));
+    
+        // Save execution
+        await expect(form.save()).rejects.toBe("Error from Child")
+        expect(form.changes).toEqual({name: "Jack"})
         
     })
 })
