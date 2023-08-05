@@ -516,7 +516,7 @@ export default class Form extends EventEmitter implements FormDependence {
         
         array.push(() => this.wait = true);
         array.push(...this.dependencies.reduce((acc: Array<FunctionHandleData>, elemController: any) => {
-            if (elemController.save) acc.push(elemController.save);
+            if (typeof elemController.save === 'function') acc.push(elemController.save.bind(elemController));
             return acc;
         }, []))
         
@@ -524,9 +524,7 @@ export default class Form extends EventEmitter implements FormDependence {
         array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
         array.push(() => this.revert());
         
-        return () => Promise
-        .all(array.map(c => c()))
-        .finally(() => this.wait = false);
+        return () => runPromiseQueue(array).finally(() => this.wait = false);
     }
     set save(callback: FunctionHandleData) {
         this.#saveData = callback;
