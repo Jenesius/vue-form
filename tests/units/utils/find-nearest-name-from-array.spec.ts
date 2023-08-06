@@ -1,5 +1,5 @@
 import findNearestNameFromArray
-	from "../../plugin/utils/find-nearest-name-from-array";
+	from "../../../src/utils/find-nearest-name-from-array";
 
 describe("Nearest name", () => {
 	

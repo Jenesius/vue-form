@@ -18,6 +18,8 @@ import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
 import recursiveRemoveProp from "../utils/recursive-remove-prop";
 import runPromiseQueue from "../utils/run-promise-queue";
+import isPrefixName from "../utils/is-prefix-name";
+import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 
 /**
  * Main principe : GMN
@@ -362,7 +364,7 @@ export default class Form extends EventEmitter implements FormDependence {
                     dep?.dispatchEvent(CompareEvent.restoreByName(event, dep.name));
                 }
             })
-            
+            // Проходим по всем изменениям и уведомляем их
             event.comparison.forEach(item => {
                 console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
                 this.emit(Form.getEventValueByName(item.name), item.newValue);
@@ -531,6 +533,158 @@ export default class Form extends EventEmitter implements FormDependence {
     }
     
     
+    /**
+     * @description If true - all elements by default will be blocked.
+     */
+    #disabled: boolean = false;
+    /**
+     * @description The Boolean disabled attribute, when present, makes the element not mutable, focusable,
+     * or even submitted with the form.
+     * @return {Boolean} isDisabled
+     * */
+    get disabled() {
+        console.log(        this.events)
+        return this.#disabled;
+    }
+    /**
+     * @description Setter for toggle disabled prop. Current function will update disabled state of children elements.
+     * */
+    /*
+    set disabled(value: boolean){
+        this.#disabled = value;
+        this.emit(Form.EVENT_UPDATE_ABILITY, this.#disabled);
+        this.abilities = this.getProxyAbilities();
+        
+        if (value)
+            this.disableChildren()
+        else
+            this.enableChildren()
+    }
+    
+    enable(names?: string | string[]) {
+        debug.msg(`Enabling ${names || ''}`);
+        if (typeof names === "string") names = [names];
+        
+        this.emit(Form.EVENT_ENABLE, names);
+        
+        if (!names) return  this.disabled = false;
+        names.forEach(name => this.enableByName(name)) ;
+    }
+    */
+    /**
+     * @description Вернёт true, если переданное поле является disabled.
+     * */
+    /*
+    checkFieldDisable(fieldName: string): boolean {
+        const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
+        
+        if (!nearestName) return this.disabled;
+        
+        return !this.abilities[nearestName];
+    }
+    
+     */
+    set disabled(v: boolean) {
+        this.#disabled = v;
+    }
+    private getAvailableEventName(fieldName: string) {
+        return `available:${fieldName}`
+    }
+    onavailable(fieldName: string, callback: (disabled: boolean) => any) {
+        return this.on(this.getAvailableEventName(fieldName), callback);
+    }
+    disable(names?: string | string[]){
+        debug.msg(`Disabling ${names || ''}`);
+        this.available(false, names)
+    }
+    enable(names?: string | string[]) {
+        debug.msg(`Enabling ${names || ''}`);
+        this.available(true, names)
+    }
+    available(type: boolean, names?: string[] | string ) {
+        console.group(`AVAILABLE %c${type}`, 'color: purple')
+        if (typeof names === "string") names = [names];
+        if (!names) return this.disabled = type;
+        
+        // Чистка от бессмысленных полей. Если указаны address и address.name, то второй не имеет нагрузку, т.к. address
+        // и так будет полностью блокировать/разблокировать поля.
+        // Массив будет содержать только те поля, в блокировки которых есть смысл, и не присуще повторения.
+        let nameState: string[] = []
+        names.forEach(fieldName => {
+            // Если уже в сохранённых именах есть имя, которое является родительским для текущего. В таком случае
+            // нет смысла добавлять текущее, т.к. оно и так будет замещено.
+            if (nameState.find(name => isPrefixName(fieldName, name))) return;
+            
+            // Убираем ранее добавленные поля, но которые на данном шаге потеряли смысл, т.к. текущее поле является для
+            // них родительским.
+            nameState = nameState.filter(name => !isPrefixName(name, fieldName));
+            nameState.push(fieldName)
+        })
+        
+        const av = {
+            "address": false,
+            "address.city": true,
+            "address.city.type": false,
+            "address.city.type.index": true,
+            "name": false,
+            "user": false,
+            "user.application": true,
+            "user.customer.id": true
+        }
+        
+        console.log(nameState, type, av);
+        
+        const changes: any = []
+        
+        nameState.forEach(name => {
+            let _stateNames = Object.keys(av) as (keyof typeof av)[];
+            
+            console.group(`Update for ${name}`);
+            
+            const fieldForUpdate = [];
+    
+            // Если Disable, и такого поля у нас нет - добавляем его
+            if (type === false && !Object.prototype.hasOwnProperty.call(av, name)) {
+                
+                const nearestName = findNearestNameFromArray(name, _stateNames)
+                
+                if (!nearestName || av[nearestName] !== type) fieldForUpdate.push(name)
+            }
+            
+            fieldForUpdate.push(
+                ..._stateNames.filter((key => (isPrefixName(key, name) || key === name) && (av[key] !== type)))
+            )
+            console.log(fieldForUpdate)
+            console.groupEnd()
+        })
+        
+        
+        
+        // names.forEach(name => this.availableByName(name, type)) ;
+        console.groupEnd();
+    }
+    
+    #abilities: Record<string, boolean> = {}
+    /**
+     * @description Метод должен обработать fieldName, и пройтись по вложенностям и
+     * */
+    availableByName(fieldName: string, available: boolean) {
+        const parsedName = splitName(fieldName);
+        
+        function set(n: string, v: boolean) {
+            console.log('')
+        }
+        
+        for(let index = 0; index < parsedName.length; index ++) {
+            const searchName = concatName(...parsedName.slice(0, parsedName.length  - index));
+            
+            if (this.#abilities.hasOwnProperty(searchName)) {
+                if (this.#abilities[searchName] !== available) set(searchName, available)
+                break;
+            }
+        }
+        
+    }
 }
 
 interface FormParams {
