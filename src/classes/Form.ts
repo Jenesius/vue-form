@@ -20,6 +20,7 @@ import recursiveRemoveProp from "../utils/recursive-remove-prop";
 import runPromiseQueue from "../utils/run-promise-queue";
 import isPrefixName from "../utils/is-prefix-name";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
+import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array";
 
 /**
  * Main principe : GMN
@@ -601,6 +602,13 @@ export default class Form extends EventEmitter implements FormDependence {
         debug.msg(`Enabling ${names || ''}`);
         this.available(true, names)
     }
+    
+    /**
+     * Здесь принцип отличается от setValues. Он не является оптимизированным, однако является 100% рабочим.
+     * В будущем будем оптимизировать.
+     * Мы сперва строем выходной объект availability, а затем идём по dependencies и уведомляем их, если они были изменены.
+     * Далее передаём объект в dispatchEvent.
+     * */
     available(type: boolean, names?: string[] | string ) {
         console.group(`AVAILABLE %c${type}`, 'color: purple')
         if (typeof names === "string") names = [names];
@@ -632,7 +640,48 @@ export default class Form extends EventEmitter implements FormDependence {
             "user.customer.id": true
         }
         
-        console.log(nameState, type, av);
+        const copyAV = copyObject(av);
+        console.log('Old availability', copyAV)
+        
+        /**MERGIN DATA*/
+        
+        // @ts-ignore
+        nameState.forEach(name => av[name] = true)
+        
+        Object
+        .keys(av)
+        .forEach(key => {
+            if (nameState.find(name => isPrefixName(key, name) || name === key)) {
+                // @ts-ignore
+                av[key] = type;
+            }
+        })
+        
+        console.log("Merging:", copyObject(av));
+        /**MERGE END*/
+        
+        /**OPTIMIZATION*/
+        
+        const notOptimizeNames = Object.keys(av);
+        
+        notOptimizeNames
+        .forEach(key => {
+            const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
+            // @ts-ignore
+            if (!nearestAvailability && av[key] === true) return  delete av[key];
+            
+            if (nearestAvailability) {
+                // @ts-ignore
+                if (av[nearestAvailability] === av[key] || av[nearestAvailability] === undefined) return  delete av[key];
+    
+            }
+
+        })
+        
+        console.log("Optimization:", copyObject(av))
+        /**OPTIMIZATION END*/
+        
+        /*
         
         const changes: any = []
         
@@ -643,12 +692,14 @@ export default class Form extends EventEmitter implements FormDependence {
             
             const fieldForUpdate = [];
     
-            // Если Disable, и такого поля у нас нет - добавляем его
-            if (type === false && !Object.prototype.hasOwnProperty.call(av, name)) {
+            // Если для текущего поля нет информации - получаем ближайшее к этому поле родителя.
+            if (!Object.prototype.hasOwnProperty.call(av, name)) {
                 
                 const nearestName = findNearestNameFromArray(name, _stateNames)
-                
-                if (!nearestName || av[nearestName] !== type) fieldForUpdate.push(name)
+    
+                // Если нет родителя и поле блокируется (т.к. по умолчанию у нас все поля true)
+                // Если ближайшее поле есть, но тип у них не совпадает с новым
+                if ((!nearestName && type === false) || (nearestName && av[nearestName] !== type)) fieldForUpdate.push(name)
             }
             
             fieldForUpdate.push(
@@ -658,7 +709,11 @@ export default class Form extends EventEmitter implements FormDependence {
             console.groupEnd()
         })
         
+        */
         
+        // MERGING availability, и упрощение его если child === parent
+        // Было: address.city = false, address = true, address.city.index = false
+        // Стало: address = true, address.city = false
         
         // names.forEach(name => this.availableByName(name, type)) ;
         console.groupEnd();

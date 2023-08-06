@@ -5,5 +5,5 @@
  * @example position.city.type city -> false
  * */
 export default function isPrefixName(fieldName: string, prefix: string) {
-    return (new RegExp(`^${prefix}\.`)).test(fieldName);
+    return (new RegExp(`^${prefix}\\.`)).test(fieldName);
 }
