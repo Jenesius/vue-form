@@ -384,34 +384,16 @@ export default class Form extends EventEmitter implements FormDependence {
             })
             
             // ПРОХОД ПО СУЩЕСТВУЮЩИМ СОБЫТИЯМ
-            
-            // Сохраняем ключи для оптимизации
-            const sourceAvailabilityKeys = Object.keys(event.sourceAvailability);
-            const oldAvailabilityKeys = Object.keys(event.oldAvailability);
-            
             Object
             .keys(this.events)
             .forEach(eventName => {
-    
                 const eventFieldName = /^available:(.*)/.exec(eventName)?.[1]; // Имя поля для которого есть обработчик
                 if (!eventFieldName) return;
                 console.group("EVENT AVAILABILITY")
-    
-                console.log(`event field name: %c${eventFieldName}`, 'color: green')
-                
+                const [sourceAv, oldAv] = AvailabilityEvent.GetFieldAvailability(event, eventFieldName);
                 // Получаем ближайшее поле для текущего и его значение
-                const nearestSourceNameAvailability = findNearestNameFromArray(eventFieldName, sourceAvailabilityKeys);
-                const nearestOldNameAvailability = findNearestNameFromArray(eventFieldName, oldAvailabilityKeys);
-                
-                // Получаем состояние для ближайшего или текущее состояние события вцелом.
-                const sourceAv = nearestSourceNameAvailability ? event.sourceAvailability[nearestSourceNameAvailability] : event.currentAvailability
-                const oldAv = nearestOldNameAvailability ? event.oldAvailability[nearestOldNameAvailability] : event.currentAvailability
-                
-                console.log(`Source: %c${sourceAv}%c, %c${oldAv}`, 'color: red', 'color: black', 'color: red')
-                
-                // Если состояние поменялось - уведомляем об этом
-                if (sourceAv !== oldAv) this.emit(eventName, sourceAv)
-                
+                console.log(`For %c${eventFieldName}%c: %c${sourceAv}%c, %c${oldAv}`, 'color: green', 'color: black', 'color: red', 'color: black', 'color: red')
+                if (sourceAv !== oldAv) this.emit(eventName, sourceAv) // Если состояние поменялось - уведомляем об этом
                 console.groupEnd();
             })
         }
@@ -577,51 +559,19 @@ export default class Form extends EventEmitter implements FormDependence {
         this.#saveData = callback;
     }
     
-    
-    /**
-     * @description If true - all elements by default will be blocked.
-     */
-    #disabled: boolean = false;
     /**
      * @description The Boolean disabled attribute, when present, makes the element not mutable, focusable,
      * or even submitted with the form.
      * @return {Boolean} isDisabled
      * */
+    #isAvailable: boolean = true
     get disabled() {
-        return this.#disabled;
+        return !this.enabled;
     }
-    /**
-     * @description Setter for toggle disabled prop. Current function will update disabled state of children elements.
-     * */
-    /*
-    set disabled(value: boolean){
-        this.#disabled = value;
-        this.emit(Form.EVENT_UPDATE_ABILITY, this.#disabled);
-        this.abilities = this.getProxyAbilities();
-        
-        if (value)
-            this.disableChildren()
-        else
-            this.enableChildren()
+    get enabled() {
+        return this.#isAvailable;
     }
-   
-    */
-    /**
-     * @description Вернёт true, если переданное поле является disabled.
-     * */
-    /*
-    checkFieldDisable(fieldName: string): boolean {
-        const nearestName = findNearestNameFromArray(name, Object.keys(this.abilities));
-        
-        if (!nearestName) return this.disabled;
-        
-        return !this.abilities[nearestName];
-    }
-    
-     */
-    set disabled(v: boolean) {
-        this.#disabled = v;
-    }
+
     private getAvailableEventName(fieldName: string) {
         return `available:${fieldName}`
     }
@@ -645,9 +595,11 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     available(type: boolean, names: string[] | string = []) {
         console.group(`AVAILABLE %c${type}`, 'color: purple')
+        
+        const oldAvailable = this.#isAvailable;
         if (typeof names === "string") names = [names];
         if (names === undefined) names = [];
-        if (names.length === 0) this.disabled = type;
+        if (names.length === 0) this.#isAvailable = type;
         
         
         const copyAV = copyObject(this.#availabilities);
@@ -656,7 +608,8 @@ export default class Form extends EventEmitter implements FormDependence {
         /**MERGIN DATA*/
         
         // Помечаем новые поля
-        names.forEach(name => this.#availabilities[name] = true)
+        if (names.length) names.forEach(name => this.#availabilities[name] = true)
+        else this.#availabilities = {}
         
         Object
         .keys(this.#availabilities)
@@ -684,7 +637,7 @@ export default class Form extends EventEmitter implements FormDependence {
         console.log("Optimization:", copyObject(this.#availabilities))
         
         console.group('DISPATCHING EVENT');
-        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV));
+        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV, this.#isAvailable, oldAvailable));
         console.groupEnd();
         
         /**OPTIMIZATION END*/
@@ -696,6 +649,15 @@ export default class Form extends EventEmitter implements FormDependence {
     
     get TEST_PURE_AVAILABILITIES() {
         return this.#availabilities;
+    }
+    /**
+     * @description Вернёт true, если переданное поле является disabled.
+     * */
+    checkFieldDisable(fieldName: string): boolean {
+        const nearestName = findNearestNameFromArray(fieldName, Object.keys(this.#availabilities));
+        if (!nearestName) return this.disabled;
+        
+        return !this.#availabilities[nearestName];
     }
 
 }

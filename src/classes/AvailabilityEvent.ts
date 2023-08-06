@@ -4,13 +4,14 @@ import isPrefixName from "../utils/is-prefix-name";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 
 
-
 export default class AvailabilityEvent extends FormEvent{
     constructor(
-        public sourceAvailability: FormAvailability,
-        public oldAvailability: FormAvailability,
-        public currentAvailability: boolean = true
-        ) {
+        public sourceAvailabilities: FormAvailability,
+        public oldAvailabilities: FormAvailability,
+        
+        public newAvailability: boolean = true,
+        public oldAvailability: boolean = true
+    ) {
         super('availability')
 
     }
@@ -30,14 +31,32 @@ export default class AvailabilityEvent extends FormEvent{
             }, {} )
         }
         
-        // Получаем состояние для текущего name.
-        const nearestName = findNearestNameFromArray(name, Object.keys(event.sourceAvailability));
-        const currentAvailability = nearestName ? event.sourceAvailability[nearestName] : event.currentAvailability
-        
+        const source = event.sourceAvailabilities;
+        const old = event.oldAvailabilities;
+
         return new AvailabilityEvent(
-            get(event.sourceAvailability),
-            get(event.oldAvailability),
-            currentAvailability
+            get(source),
+            get(old),
+            AvailabilityEvent.GetAvailability(source, name, event.newAvailability),
+            AvailabilityEvent.GetAvailability(old, name, event.oldAvailability)
             )
+    }
+    /**
+     * @description По переданному availabilities для нужного поля получает значение доступности. Третий параметр -
+     * текущая доступность для целевого объекта.
+     * */
+    static GetAvailability(state: FormAvailability, name: string, defaultAvailability: boolean = true) {
+        const nearestName = findNearestNameFromArray(name, Object.keys(state));
+        return nearestName ? state[nearestName] : defaultAvailability;
+    }
+    
+    /**
+     * @description Более краткая форма для доступности. Используется для одного поля. Получает изменение доступности.
+     * [Доступно ли поле сейчас, было ли оно доступно ранее]
+     * */
+    static GetFieldAvailability(event: AvailabilityEvent, fieldName: string): [boolean, boolean] {
+        const sourceAv = AvailabilityEvent.GetAvailability(event.sourceAvailabilities, fieldName, event.newAvailability);
+        const oldAv = AvailabilityEvent.GetAvailability(event.oldAvailabilities, fieldName, event.oldAvailability);
+        return [sourceAv, oldAv]
     }
 }
