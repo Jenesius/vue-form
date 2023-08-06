@@ -74,3 +74,7 @@ export interface FormSetValuesOptions {
 	 * */
 	clean: boolean
 }
+
+export interface FormAvailability {
+	[name: string]: boolean
+}

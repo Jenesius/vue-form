@@ -9,7 +9,7 @@ import copyObject from "../utils/copy-object";
 import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
-import {FormSetValuesOptions} from "../types";
+import {FormAvailability, FormSetValuesOptions} from "../types";
 import isEndPointValue from "../utils/is-end-point-value";
 import splitName from "../utils/split-name";
 import isEmptyObject from "../utils/is-empty-object";
@@ -18,6 +18,10 @@ import checkNameInObject from "../utils/check-name-in-object";
 import insertByName from "../utils/insert-by-name";
 import recursiveRemoveProp from "../utils/recursive-remove-prop";
 import runPromiseQueue from "../utils/run-promise-queue";
+import isPrefixName from "../utils/is-prefix-name";
+import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
+import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array";
+import AvailabilityEvent from "./AvailabilityEvent";
 
 /**
  * Main principe : GMN
@@ -362,10 +366,35 @@ export default class Form extends EventEmitter implements FormDependence {
                     dep?.dispatchEvent(CompareEvent.restoreByName(event, dep.name));
                 }
             })
-            
+            // Проходим по всем изменениям и уведомляем их
             event.comparison.forEach(item => {
                 console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
                 this.emit(Form.getEventValueByName(item.name), item.newValue);
+            })
+        }
+        
+        if (event instanceof AvailabilityEvent) {
+            console.log(`[%c${Form.getTargetName(this)}%c]:`, 'color: red', 'color: black', 'Dispatch event', event)
+    
+            // Все dependencies
+            this.dependencies.forEach(dep => {
+                if (dep.name) {
+                    dep?.dispatchEvent(AvailabilityEvent.restoreByName(event, dep.name))
+                }
+            })
+            
+            // ПРОХОД ПО СУЩЕСТВУЮЩИМ СОБЫТИЯМ
+            Object
+            .keys(this.events)
+            .forEach(eventName => {
+                const eventFieldName = /^available:(.*)/.exec(eventName)?.[1]; // Имя поля для которого есть обработчик
+                if (!eventFieldName) return;
+                console.group("EVENT AVAILABILITY")
+                const [sourceAv, oldAv] = AvailabilityEvent.GetFieldAvailability(event, eventFieldName);
+                // Получаем ближайшее поле для текущего и его значение
+                console.log(`For %c${eventFieldName}%c: %c${sourceAv}%c, %c${oldAv}`, 'color: green', 'color: black', 'color: red', 'color: black', 'color: red')
+                if (sourceAv !== oldAv) this.emit(eventName, sourceAv) // Если состояние поменялось - уведомляем об этом
+                console.groupEnd();
             })
         }
     }
@@ -530,7 +559,107 @@ export default class Form extends EventEmitter implements FormDependence {
         this.#saveData = callback;
     }
     
+    /**
+     * @description The Boolean disabled attribute, when present, makes the element not mutable, focusable,
+     * or even submitted with the form.
+     * @return {Boolean} isDisabled
+     * */
+    #isAvailable: boolean = true
+    get disabled() {
+        return !this.enabled;
+    }
+    get enabled() {
+        return this.#isAvailable;
+    }
+
+    private getAvailableEventName(fieldName: string) {
+        return `available:${fieldName}`
+    }
+    onavailable(fieldName: string, callback: (disabled: boolean) => any) {
+        return this.on(this.getAvailableEventName(fieldName), callback);
+    }
+    disable(names?: string | string[]){
+        debug.msg(`Disabling ${names || ''}`);
+        this.available(false, names)
+    }
+    enable(names?: string | string[]) {
+        debug.msg(`Enabling ${names || ''}`);
+        this.available(true, names)
+    }
     
+    /**
+     * Здесь принцип отличается от setValues. Он не является оптимизированным, однако является 100% рабочим.
+     * В будущем будем оптимизировать.
+     * Мы сперва строем выходной объект availability, а затем идём по dependencies и уведомляем их, если они были изменены.
+     * Далее передаём объект в dispatchEvent.
+     * */
+    available(type: boolean, names: string[] | string = []) {
+        console.group(`AVAILABLE %c${type}`, 'color: purple')
+        
+        const oldAvailable = this.#isAvailable;
+        if (typeof names === "string") names = [names];
+        if (names === undefined) names = [];
+        if (names.length === 0) this.#isAvailable = type;
+        
+        
+        const copyAV = copyObject(this.#availabilities);
+        console.log('Old availability', copyAV)
+        
+        /**MERGIN DATA*/
+        
+        // Помечаем новые поля
+        if (names.length) names.forEach(name => this.#availabilities[name] = true)
+        else this.#availabilities = {}
+        
+        Object
+        .keys(this.#availabilities)
+        .forEach(key => {
+            if ((names as string[]).find(name => isPrefixName(key, name) || name === key)) this.#availabilities[key] = type;
+        })
+        
+        /**OPTIMIZATION*/
+        
+        const notOptimizeNames = Object.keys(this.#availabilities);
+        
+        notOptimizeNames
+        .forEach(key => {
+            const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
+            if (!nearestAvailability && this.#availabilities[key]) return  delete this.#availabilities[key];
+            
+            if (nearestAvailability) {
+                if (this.#availabilities[nearestAvailability] === this.#availabilities[key] || this.#availabilities[nearestAvailability] === undefined)
+                    return  delete this.#availabilities[key];
+    
+            }
+
+        })
+        
+        console.log("Optimization:", copyObject(this.#availabilities))
+        
+        console.group('DISPATCHING EVENT');
+        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV, this.#isAvailable, oldAvailable));
+        console.groupEnd();
+        
+        /**OPTIMIZATION END*/
+
+        console.groupEnd();
+    }
+    
+    #availabilities: FormAvailability = {}
+    
+    get TEST_PURE_AVAILABILITIES() {
+        return this.#availabilities;
+    }
+    /**
+     * @description Вернёт true, если переданное поле является disabled.
+     * */
+    checkFieldDisable(fieldName: string): boolean {
+        const nearestName = findNearestNameFromArray(fieldName, Object.keys(this.#availabilities));
+        if (!nearestName) return this.disabled;
+        
+        return !this.#availabilities[nearestName];
+    }
+
 }
 
 interface FormParams {
