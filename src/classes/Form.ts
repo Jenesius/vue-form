@@ -9,7 +9,7 @@ import copyObject from "../utils/copy-object";
 import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
-import {FormSetValuesOptions} from "../types";
+import {FormAvailability, FormSetValuesOptions} from "../types";
 import isEndPointValue from "../utils/is-end-point-value";
 import splitName from "../utils/split-name";
 import isEmptyObject from "../utils/is-empty-object";
@@ -21,6 +21,7 @@ import runPromiseQueue from "../utils/run-promise-queue";
 import isPrefixName from "../utils/is-prefix-name";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array";
+import AvailabilityEvent from "./AvailabilityEvent";
 
 /**
  * Main principe : GMN
@@ -371,6 +372,49 @@ export default class Form extends EventEmitter implements FormDependence {
                 this.emit(Form.getEventValueByName(item.name), item.newValue);
             })
         }
+        
+        if (event instanceof AvailabilityEvent) {
+            console.log(`[%c${Form.getTargetName(this)}%c]:`, 'color: red', 'color: black', 'Dispatch event', event)
+    
+            // Все dependencies
+            this.dependencies.forEach(dep => {
+                if (dep.name) {
+                    dep?.dispatchEvent(AvailabilityEvent.restoreByName(event, dep.name))
+                }
+            })
+            
+            // ПРОХОД ПО СУЩЕСТВУЮЩИМ СОБЫТИЯМ
+            
+            // Сохраняем ключи для оптимизации
+            const sourceAvailabilityKeys = Object.keys(event.sourceAvailability);
+            const oldAvailabilityKeys = Object.keys(event.oldAvailability);
+            
+            Object
+            .keys(this.events)
+            .forEach(eventName => {
+    
+                const eventFieldName = /^available:(.*)/.exec(eventName)?.[1]; // Имя поля для которого есть обработчик
+                if (!eventFieldName) return;
+                console.group("EVENT AVAILABILITY")
+    
+                console.log(`event field name: %c${eventFieldName}`, 'color: green')
+                
+                // Получаем ближайшее поле для текущего и его значение
+                const nearestSourceNameAvailability = findNearestNameFromArray(eventFieldName, sourceAvailabilityKeys);
+                const nearestOldNameAvailability = findNearestNameFromArray(eventFieldName, oldAvailabilityKeys);
+                
+                // Получаем состояние для ближайшего или текущее состояние события вцелом.
+                const sourceAv = nearestSourceNameAvailability ? event.sourceAvailability[nearestSourceNameAvailability] : event.currentAvailability
+                const oldAv = nearestOldNameAvailability ? event.oldAvailability[nearestOldNameAvailability] : event.currentAvailability
+                
+                console.log(`Source: %c${sourceAv}%c, %c${oldAv}`, 'color: red', 'color: black', 'color: red')
+                
+                // Если состояние поменялось - уведомляем об этом
+                if (sourceAv !== oldAv) this.emit(eventName, sourceAv)
+                
+                console.groupEnd();
+            })
+        }
     }
     
     cleanValues(values?: any) {
@@ -544,7 +588,6 @@ export default class Form extends EventEmitter implements FormDependence {
      * @return {Boolean} isDisabled
      * */
     get disabled() {
-        console.log(        this.events)
         return this.#disabled;
     }
     /**
@@ -561,16 +604,7 @@ export default class Form extends EventEmitter implements FormDependence {
         else
             this.enableChildren()
     }
-    
-    enable(names?: string | string[]) {
-        debug.msg(`Enabling ${names || ''}`);
-        if (typeof names === "string") names = [names];
-        
-        this.emit(Form.EVENT_ENABLE, names);
-        
-        if (!names) return  this.disabled = false;
-        names.forEach(name => this.enableByName(name)) ;
-    }
+   
     */
     /**
      * @description Вернёт true, если переданное поле является disabled.
@@ -609,137 +643,61 @@ export default class Form extends EventEmitter implements FormDependence {
      * Мы сперва строем выходной объект availability, а затем идём по dependencies и уведомляем их, если они были изменены.
      * Далее передаём объект в dispatchEvent.
      * */
-    available(type: boolean, names?: string[] | string ) {
+    available(type: boolean, names: string[] | string = []) {
         console.group(`AVAILABLE %c${type}`, 'color: purple')
         if (typeof names === "string") names = [names];
-        if (!names) return this.disabled = type;
+        if (names === undefined) names = [];
+        if (names.length === 0) this.disabled = type;
         
-        // Чистка от бессмысленных полей. Если указаны address и address.name, то второй не имеет нагрузку, т.к. address
-        // и так будет полностью блокировать/разблокировать поля.
-        // Массив будет содержать только те поля, в блокировки которых есть смысл, и не присуще повторения.
-        let nameState: string[] = []
-        names.forEach(fieldName => {
-            // Если уже в сохранённых именах есть имя, которое является родительским для текущего. В таком случае
-            // нет смысла добавлять текущее, т.к. оно и так будет замещено.
-            if (nameState.find(name => isPrefixName(fieldName, name))) return;
-            
-            // Убираем ранее добавленные поля, но которые на данном шаге потеряли смысл, т.к. текущее поле является для
-            // них родительским.
-            nameState = nameState.filter(name => !isPrefixName(name, fieldName));
-            nameState.push(fieldName)
-        })
         
-        const av = {
-            "address": false,
-            "address.city": true,
-            "address.city.type": false,
-            "address.city.type.index": true,
-            "name": false,
-            "user": false,
-            "user.application": true,
-            "user.customer.id": true
-        }
-        
-        const copyAV = copyObject(av);
+        const copyAV = copyObject(this.#availabilities);
         console.log('Old availability', copyAV)
         
         /**MERGIN DATA*/
         
-        // @ts-ignore
-        nameState.forEach(name => av[name] = true)
+        // Помечаем новые поля
+        names.forEach(name => this.#availabilities[name] = true)
         
         Object
-        .keys(av)
+        .keys(this.#availabilities)
         .forEach(key => {
-            if (nameState.find(name => isPrefixName(key, name) || name === key)) {
-                // @ts-ignore
-                av[key] = type;
-            }
+            if ((names as string[]).find(name => isPrefixName(key, name) || name === key)) this.#availabilities[key] = type;
         })
-        
-        console.log("Merging:", copyObject(av));
-        /**MERGE END*/
         
         /**OPTIMIZATION*/
         
-        const notOptimizeNames = Object.keys(av);
+        const notOptimizeNames = Object.keys(this.#availabilities);
         
         notOptimizeNames
         .forEach(key => {
             const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
-            // @ts-ignore
-            if (!nearestAvailability && av[key] === true) return  delete av[key];
+            if (!nearestAvailability && this.#availabilities[key]) return  delete this.#availabilities[key];
             
             if (nearestAvailability) {
-                // @ts-ignore
-                if (av[nearestAvailability] === av[key] || av[nearestAvailability] === undefined) return  delete av[key];
+                if (this.#availabilities[nearestAvailability] === this.#availabilities[key] || this.#availabilities[nearestAvailability] === undefined)
+                    return  delete this.#availabilities[key];
     
             }
 
         })
         
-        console.log("Optimization:", copyObject(av))
+        console.log("Optimization:", copyObject(this.#availabilities))
+        
+        console.group('DISPATCHING EVENT');
+        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV));
+        console.groupEnd();
+        
         /**OPTIMIZATION END*/
-        
-        /*
-        
-        const changes: any = []
-        
-        nameState.forEach(name => {
-            let _stateNames = Object.keys(av) as (keyof typeof av)[];
-            
-            console.group(`Update for ${name}`);
-            
-            const fieldForUpdate = [];
-    
-            // Если для текущего поля нет информации - получаем ближайшее к этому поле родителя.
-            if (!Object.prototype.hasOwnProperty.call(av, name)) {
-                
-                const nearestName = findNearestNameFromArray(name, _stateNames)
-    
-                // Если нет родителя и поле блокируется (т.к. по умолчанию у нас все поля true)
-                // Если ближайшее поле есть, но тип у них не совпадает с новым
-                if ((!nearestName && type === false) || (nearestName && av[nearestName] !== type)) fieldForUpdate.push(name)
-            }
-            
-            fieldForUpdate.push(
-                ..._stateNames.filter((key => (isPrefixName(key, name) || key === name) && (av[key] !== type)))
-            )
-            console.log(fieldForUpdate)
-            console.groupEnd()
-        })
-        
-        */
-        
-        // MERGING availability, и упрощение его если child === parent
-        // Было: address.city = false, address = true, address.city.index = false
-        // Стало: address = true, address.city = false
-        
-        // names.forEach(name => this.availableByName(name, type)) ;
+
         console.groupEnd();
     }
     
-    #abilities: Record<string, boolean> = {}
-    /**
-     * @description Метод должен обработать fieldName, и пройтись по вложенностям и
-     * */
-    availableByName(fieldName: string, available: boolean) {
-        const parsedName = splitName(fieldName);
-        
-        function set(n: string, v: boolean) {
-            console.log('')
-        }
-        
-        for(let index = 0; index < parsedName.length; index ++) {
-            const searchName = concatName(...parsedName.slice(0, parsedName.length  - index));
-            
-            if (this.#abilities.hasOwnProperty(searchName)) {
-                if (this.#abilities[searchName] !== available) set(searchName, available)
-                break;
-            }
-        }
-        
+    #availabilities: FormAvailability = {}
+    
+    get TEST_PURE_AVAILABILITIES() {
+        return this.#availabilities;
     }
+
 }
 
 interface FormParams {

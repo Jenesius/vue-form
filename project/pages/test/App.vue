@@ -15,6 +15,7 @@
 		<div :key = "values">Values: {{values}}</div>
 		<div :key = "changes">Changes: {{changes}}</div>
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
+		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 	</div>
 </template>
 
@@ -37,6 +38,7 @@ setInterval(() => {
 	values.value = copyObject(form.values);
 	changes.value = copyObject(form.changes);
 	pureValue.value = copyObject(form.TEST_PURE_VALUE);
+    pureAvailabilities.value = copyObject(form.TEST_PURE_AVAILABILITIES)
 }, 50);
 
 const address = new Form({
@@ -45,8 +47,12 @@ const address = new Form({
 })
 form.subscribe(address)
 window.address = address;
+
+
+
 const changes = ref({});
 const pureValue= ref({});
+const pureAvailabilities = ref({})
 
 const name = ref('username');
 
@@ -63,7 +69,19 @@ function setDefaultValues() {
 	})
 }
 
+form.onavailable("address.country.city.street", newAvailability => {
+    console.log("++++ address.country.city.street", newAvailability)
+})
+form.onavailable("address", newAvailability => {
+    console.log("++++ address", newAvailability)
+})
+form.onavailable("user.name", newAvailability => {
+    console.log("++++ user.name", newAvailability)
+})
 
+address.onavailable('city', newAvailability => {
+    console.log("FROM ADDRESS", '++++ city', newAvailability)
+})
 
 </script>
 

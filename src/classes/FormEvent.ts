@@ -9,4 +9,4 @@ export default class FormEvent {
 
 
 
-type FormEventType = 'value' | 'change' | 'available'
+type FormEventType = 'value' | 'change' | 'availability'
