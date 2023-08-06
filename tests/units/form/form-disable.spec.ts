@@ -54,20 +54,22 @@ describe("Test for check disabled/enabled state", () => {
         })
         form.subscribe(child)
     
-        expect(child.checkFieldDisable("location")).toBe(true)
+        expect(child.checkFieldDisable("location")).toBe(false)
     })
     it("Child form should disabled by name if in parent current name was marked like disabled", () => {
         const form = new Form();
         const child = new Form({name: "address.city"})
+        form.subscribe(child)
         form.disable("address");
         expect(child.disabled).toBe(true)
     })
     it("Child form should enabled by name if in parent current name was marked like enabled", () => {
         const form = new Form();
         const child = new Form({name: "address.city.name"})
+        form.subscribe(child)
         form.disable("address");
         form.enable("address.city");
-        expect(child.disabled).toBe(true)
+        expect(child.enabled).toBe(true)
     })
     it("Disable full form", () => {
         const form = new Form();
@@ -87,7 +89,9 @@ describe("Test for check disabled/enabled state", () => {
         form.subscribe(child);
         
         child.disable();
-        expect(form.checkFieldDisable("address.city")).toBe(false)
+        expect(form.checkFieldDisable("address.city")).toBe(true)
+        expect(child.disabled).toBe(true)
+        expect(form.disabled).toBe(false)
     })
     it("Enable child form", () => {
         const form = new Form();

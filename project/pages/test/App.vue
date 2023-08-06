@@ -48,7 +48,9 @@ const address = new Form({
 form.subscribe(address)
 window.address = address;
 
-
+const addressCity = new Form({name: "address.city"})
+form.subscribe(addressCity)
+window.addressCity = addressCity
 
 const changes = ref({});
 const pureValue= ref({});
