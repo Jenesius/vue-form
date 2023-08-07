@@ -44,6 +44,26 @@ describe("Form revert changes", () => {
         expect(form.values).toEqual({})
         expect(child.values).toEqual({})
     })
-    
+    test("Reverting changes that has default values.", () => {
+        const form = new Form();
+        form.setValues({
+            coordinate: {
+                x: "13"
+            }
+        })
+        form.change({
+            ["coordinate.x"]: "100"
+        })
+        
+        expect(form.values).toEqual({coordinate: {x: "100"}})
+        expect(form.changes).toEqual({coordinate: {x: "100"}})
+        
+        expect(form.changed).toBe(true)
+        
+        form.revert();
+        
+        expect(form.values).toEqual({coordinate: {x: "13"}})
+        expect(form.changes).toEqual({})
+    })
     
 })

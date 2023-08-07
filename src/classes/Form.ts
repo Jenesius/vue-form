@@ -145,7 +145,7 @@ export default class Form extends EventEmitter implements FormDependence {
          */
         
         if (!options.executedFrom) {
-    
+            console.log(`Executed from not founded in options, values will be %c${Form.getTargetName(this)}`, 'color: green')
             options.executedFrom = Form.getTargetName(this);
         }
         
@@ -357,13 +357,14 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     dispatchEvent<T extends FormEvent>(event: T) {
         
+        
         if (event instanceof CompareEvent) {
             console.log(`[%c${this.name}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
             
             // Проходим по всем дочерним элементам и уведомляем их
             this.dependencies.forEach(dep => {
                 if (dep.name) {
-                    dep?.dispatchEvent(CompareEvent.restoreByName(event, dep.name));
+                    dep?.dispatchEvent?.(CompareEvent.restoreByName(event, dep.name));
                 }
             })
             // Проходим по всем изменениям и уведомляем их
@@ -379,7 +380,7 @@ export default class Form extends EventEmitter implements FormDependence {
             // Все dependencies
             this.dependencies.forEach(dep => {
                 if (dep.name) {
-                    dep?.dispatchEvent(AvailabilityEvent.restoreByName(event, dep.name))
+                    dep?.dispatchEvent?.(AvailabilityEvent.restoreByName(event, dep.name))
                 }
             })
             
@@ -433,7 +434,7 @@ export default class Form extends EventEmitter implements FormDependence {
     
         if (this.parent) return void this.parent.cleanChangesByField(this.name as string);
         
-        this.setValues({}, {
+        this.setValues(this.pureValues, {
             change: true,
             clean: true
         })

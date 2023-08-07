@@ -3,7 +3,12 @@ export interface Values {
 }
 export type Value = Values | any;
 
-export type ValidationRule = (value: any) => boolean | string;
+/**
+ * @description Callback использующийся для валидации поля для ввода.
+ * */
+export type FormInputValidationCallback = (values: any) => boolean | string
+
+export type ValidationRule = () => boolean | string;
 
 export type FunctionHandleData = () => Promise<any> | any | void;
 

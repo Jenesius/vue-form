@@ -1,16 +1,16 @@
 <template>
-	<component
-		:is="componentItem"
-		:name="name"
-		:key = name
+    <component
+            :is="componentItem"
+            :name="name"
+            :key = name
 
-		:modelValue="input?.value"
-		@update:modelValue = "handleInput"
+            :modelValue="input.value"
+            @update:modelValue = "handleInput"
 
-        :disabled = "input?.disabled"
-        :changed  = "input?.changed"
-        :errors="input?.errors"
-	/>
+            :disabled = "input.disabled"
+            :changed  = "input.changed"
+            :errors="input.errors"
+    />
 </template>
 
 <script setup lang="ts">
@@ -20,8 +20,8 @@ import Form from "../classes/Form";
 import {FormInputValidationCallback} from "../types";
 
 interface IProps {
-	name: string,
-	type?: string,
+    name: string,
+    type?: string,
     validation?: FormInputValidationCallback[]
 }
 const props = defineProps<IProps>()
@@ -30,15 +30,14 @@ const componentItem = computed(() => getFieldType(props.type));
 
 
 function handleInput(value: any) {
-	parentForm?.change({ [props.name]: value });
+    console.log("++", value)
+    parentForm?.setValues({ [props.name]: value });
 }
 
 
 function useFormInput(name: string) {
 
-    const parentForm = Form.getParentForm();
-
-    if (!parentForm) return null;
+    const parentForm = Form.getParentForm() as Form
 
     let validation: FormInputValidationCallback[] = []
 
@@ -96,6 +95,7 @@ function useFormInput(name: string) {
 
 const input = useFormInput(props.name);
 
+window[`test-${props.name}`] = input
 
 </script>
 <style>

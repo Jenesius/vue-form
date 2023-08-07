@@ -2,8 +2,6 @@ import {config, InputField, STORE} from "../../src/index";
 import {mount} from "@vue/test-utils";
 import {defineComponent} from "vue";
 
-
-
 describe("Case Sensitive", () => {
 	test("By default it should set to true", () => {
 		expect(STORE.typeNotCaseSensitive).toEqual(true);
@@ -13,6 +11,24 @@ describe("Case Sensitive", () => {
 			typeNotCaseSensitive: false
 		})
 		expect(STORE.typeNotCaseSensitive).toEqual(false)
+	})
+	test("Using input-field without Form, don't reject the error", async () => {
+		const template = 'information'
+		const info = defineComponent({template})
+		config({
+			inputTypes: {info}
+		})
+		const wrap = () => mount(defineComponent({
+			template:
+				`
+					<div>
+					<input-field name="data" type = "info"/>
+					</div>`,
+			components: {InputField}
+		}))
+		
+		expect(wrap).not.toThrow();
+		expect(wrap().text()).toBe(template)
 	})
 	/**
 	 * @description Diffrence between two next test: first test check that Type provided to InputField will be converted

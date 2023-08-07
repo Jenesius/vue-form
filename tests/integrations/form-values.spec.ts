@@ -1,5 +1,5 @@
 import {mount} from "@vue/test-utils";
-import App from "./App.vue";
+import App from "./components/App.vue";
 import Form from "./../../src/classes/Form"
 
 function wait(n = 10) {
@@ -52,7 +52,6 @@ describe("Dynamic form values.", () => {
 			}
 		})
 	})
-	
 	test('The input must be empty after executing cleanValues.', async () => {
 		const app = await mount(App) as any;
 		const form = app.vm.form as Form;
@@ -73,6 +72,23 @@ describe("Dynamic form values.", () => {
 		expect(inputUsername.value).toBe(undefined)
 
 	})
-
+	test("Reverting changes", async () => {
+		const app = mount(App);
+		const form = (app.vm as any).form as Form;
+		
+		form.setValues({ coordinate: {x : "13"} })
+		await app.get('input[name=x]').setValue("100");
+		
+		expect(form.values).toEqual({ coordinate: {x: "100"} })
+		expect(form.changes).toEqual({ coordinate: {x: "100"} })
+		expect(form.pureValues).toEqual({ coordinate: {x: "13"} })
+		expect(form.changed).toBe(true)
+		
+		form.revert();
+		
+		expect(form.values).toEqual({ coordinate: {x: "13"} })
+		expect(form.changes).toEqual({ })
+		expect(form.changed).toBe(false)
+	})
 
 })

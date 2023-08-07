@@ -502,6 +502,6 @@ describe("Form.setValues", () => {
         })
         
         expect(form.changes).toEqual({})
-        
     })
+    
 })

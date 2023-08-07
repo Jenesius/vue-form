@@ -1,6 +1,8 @@
 <template>
 	<div class="container-examples">
 
+        <form-field name="address.city" label = "Address city" />
+
 		<form-field :name="name" label = "Username"/>
 		<form-field name="username.name.jenesius" label = "Username"/>
 		<form-field name="name" label = "Name"/>
@@ -48,7 +50,7 @@ const address = new Form({
 form.subscribe(address)
 window.address = address;
 
-const addressCity = new Form({name: "address.city"})
+const addressCity = new Form({name: "address.city", provide: false})
 form.subscribe(addressCity)
 window.addressCity = addressCity
 

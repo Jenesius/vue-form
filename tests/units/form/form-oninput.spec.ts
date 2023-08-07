@@ -182,7 +182,7 @@ describe("Form oninput handler", () => {
     })
     test("Revert should execute oninput", () => {
         const form = new Form();
-        form.setValues({
+        form.change({
             name: "Jack"
         })
         const mockChange = jest.fn(v => v);
@@ -191,5 +191,6 @@ describe("Form oninput handler", () => {
         
         expect(mockChange.mock.calls.length).toBe(1);
         expect(mockChange.mock.results[0].value).toBe(undefined);
+        expect(form.changes).toEqual({})
     })
 })

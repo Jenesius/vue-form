@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang = "ts">
-import FormField from "./../../src/widgets/form-field.vue";
-import Form from "./../../src/classes/Form";
+import FormField from "../../../src/widgets/form-field.vue";
+import Form from "../../../src/classes/Form";
 
 const form = new Form({
 	name: 'coordinate'
