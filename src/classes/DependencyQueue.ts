@@ -6,7 +6,7 @@ import FormError from "./FormError";
  * При добавлении элемента устанавливается значение родителя, а также добавление в массив.
  * При удалении значение родителя сбрасывается.
  * */
-export default class DependencyQueue<T extends DependencyItem> {
+export default class DependencyQueue<T extends (DependencyItem & Record<string, any>)> {
 	private array: T[] = []
 	private readonly form: Form
 

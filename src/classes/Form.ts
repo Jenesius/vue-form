@@ -661,6 +661,20 @@ export default class Form extends EventEmitter implements FormDependence {
         
         return !this.#availabilities[nearestName];
     }
+    
+    /**
+     * @description Method using for validate form and all child items.
+     * */
+    validate(): boolean {
+        const result = this.dependencies.reduce((acc, dep) => {
+            if (typeof dep.validate === "function") acc = acc && !!dep.validate();
+            return acc;
+        }, true);
+    
+        debug.msg(`Validation ${result ? 'successful' : 'failed'}`);
+    
+        return result;
+    }
 
 }
 
