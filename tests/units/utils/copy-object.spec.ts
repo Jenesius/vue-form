@@ -1,6 +1,9 @@
-import copyObject from "../../plugin/utils/copy-object";
+import copyObject from "../../../src/utils/copy-object";
 
 describe("Copy object test", () => {
+    it("Copy empty objects", () => {
+        expect(copyObject({a: {}, b: {}})).toEqual({a: {}, b: {}})
+    })
     it('should primitive', function () {
         expect(copyObject({a: 1})).toEqual({a: 1})
     });

@@ -595,10 +595,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * Далее передаём объект в dispatchEvent.
      * */
     available(type: boolean, names: string[]):void {
-        // WARNING WARNING WARNING WARNING
-        // Мы на верх передаём всё правильно. Но, если без параметров то мы будем блокировать всё родительскую форму
         if (this.parent) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
-        console.log(names)
         console.group(`AVAILABLE %c${type}`, 'color: purple')
         
         const oldAvailable = this.#isAvailable;
