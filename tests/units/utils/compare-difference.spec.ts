@@ -1,4 +1,4 @@
-import {compareDifference} from "./../../src/utils/compare-changes";
+import {compareDifference} from "../../../src/utils/compare-changes";
 
 describe("Testing compare changes", () => {
 	test("Old value is empty object. It should return all props from new values.",() => {

@@ -569,6 +569,7 @@ export default class Form extends EventEmitter implements FormDependence {
         return !this.enabled;
     }
     get enabled() {
+        if (this.parent) return !this.parent.checkFieldDisable(this.name as string);
         return this.#isAvailable;
     }
 
@@ -580,11 +581,11 @@ export default class Form extends EventEmitter implements FormDependence {
     }
     disable(names?: string | string[]){
         debug.msg(`Disabling ${names || ''}`);
-        this.available(false, names)
+        this.available(false, (typeof names === "string" ? [names] : names) || [])
     }
     enable(names?: string | string[]) {
         debug.msg(`Enabling ${names || ''}`);
-        this.available(true, names)
+        this.available(true, (typeof names === "string" ? [names] : names) || [])
     }
     
     /**
@@ -593,12 +594,11 @@ export default class Form extends EventEmitter implements FormDependence {
      * Мы сперва строем выходной объект availability, а затем идём по dependencies и уведомляем их, если они были изменены.
      * Далее передаём объект в dispatchEvent.
      * */
-    available(type: boolean, names: string[] | string = []) {
+    available(type: boolean, names: string[]):void {
+        if (this.parent) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
         console.group(`AVAILABLE %c${type}`, 'color: purple')
         
         const oldAvailable = this.#isAvailable;
-        if (typeof names === "string") names = [names];
-        if (names === undefined) names = [];
         if (names.length === 0) this.#isAvailable = type;
         
         
@@ -618,13 +618,14 @@ export default class Form extends EventEmitter implements FormDependence {
         })
         
         /**OPTIMIZATION*/
-        
         const notOptimizeNames = Object.keys(this.#availabilities);
+        
+        console.log("Before optimization:", copyObject(this.#availabilities));
         
         notOptimizeNames
         .forEach(key => {
             const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
-            if (!nearestAvailability && this.#availabilities[key]) return  delete this.#availabilities[key];
+            if (!nearestAvailability && this.#availabilities[key] === this.#isAvailable) return  delete this.#availabilities[key];
             
             if (nearestAvailability) {
                 if (this.#availabilities[nearestAvailability] === this.#availabilities[key] || this.#availabilities[nearestAvailability] === undefined)
@@ -654,6 +655,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * @description Вернёт true, если переданное поле является disabled.
      * */
     checkFieldDisable(fieldName: string): boolean {
+        if (this.parent) return this.parent.checkFieldDisable(concatName(this.name, fieldName));
         const nearestName = findNearestNameFromArray(fieldName, Object.keys(this.#availabilities));
         if (!nearestName) return this.disabled;
         
