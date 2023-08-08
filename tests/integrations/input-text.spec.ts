@@ -106,9 +106,9 @@ describe("Input text", () => {
         expect(form.checkFieldDisable('username')).toBe(false)
         expect(input.element.disabled).toBe(false)
     })
-    test("Input should has disabled class after form.disable", () => {
+    test("Input should has disabled class after form.disable", async () => {
         const component = defineComponent({
-            template: `<input-field name = "username"/>`,
+            template: `<div><input-field name = "username"/></div>`,
             components: {InputField}
         })
         const app = mount(EmptyApp, {
@@ -116,10 +116,15 @@ describe("Input text", () => {
                 default: component
             },
         });
+    
+        // update prop, and wait a tick to allow it to take effect
+        app.vm.loadingResource = true
+        await app.vm.$nextTick()
+        
         const form = (app.vm as any).form as Form;
         form.disable()
         
-        wait(100)
+        await wait(100)
         
         const input = app.get('input');
         
@@ -127,7 +132,7 @@ describe("Input text", () => {
         
         expect(input.element.disabled).toBe(true)
     })
-    test("Input should remove disable class after form.enable", () => {
+    test("Input should remove disable class after form.enable", async () => {
         const component = defineComponent({
             template: `<input-field name = "username"/>`,
             components: {InputField}
@@ -137,12 +142,38 @@ describe("Input text", () => {
                 default: component
             },
         });
+        // update prop, and wait a tick to allow it to take effect
+        app.vm.loadingResource = true
+        await app.vm.$nextTick()
+        
         const form = (app.vm as any).form as Form;
         const input = app.get('input');
     
         form.disable()
+        await app.vm.$nextTick()
         expect(input.element.disabled).toBe(true)
         form.enable()
+        await app.vm.$nextTick()
         expect(input.element.disabled).toBe(false)
+    })
+    test("Two fields must show the equal values", async () => {
+        const component = defineComponent({
+            template: `<div><input-field name = "username"/> <input-field name="username"/></div>`,
+            components: {InputField}
+        })
+        const app = mount(EmptyApp, {
+            slots: {
+                default: component
+            },
+        });
+        const form = (app.vm as any).form as Form;
+        form.setValues({
+            username: "T"
+        })
+    
+        await wait()
+    
+        const inputs = app.findAll('input');
+        expect(inputs.map(a => a.element.value)).toEqual(["T", "T"])
     })
 })
