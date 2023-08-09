@@ -11,8 +11,7 @@ export default function useModify(callbackModifyProps: () => ModifyParam) {
 
 	return function execute(v: unknown): string {
 		const arr = parse(callbackModifyProps()); // Getting array of handlers
-
-		arr.forEach(callback => v = callback(v));
+		
 		try {
 			arr.forEach(callback => v = callback(v));
 		} catch (e) {

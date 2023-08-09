@@ -28,11 +28,10 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import useModify from "./../../local-hooks/use-modify";
-import {StringModify} from "./../../types";
+import {FormInputValidationCallback, StringModify, ValidationError} from "./../../types";
 import onlyNumber from "./../../local-hooks/only-number";
 import FieldWrap from "../field-wrap.vue";
 
-const errors = [];
 
 const props = defineProps<{
 	label?: string,
@@ -47,6 +46,7 @@ const props = defineProps<{
 	prefix?: string,
 	name?: string
 	numeric?: boolean,
+    errors: ValidationError[]
 }>()
 
 const isFocused = ref(false);

@@ -668,7 +668,9 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     validate(): boolean {
         const result = this.dependencies.reduce((acc, dep) => {
-            if (typeof dep.validate === "function") acc = acc && !!dep.validate();
+            const depValidationResult = (typeof dep.validate === "function") ?  dep.validate() : true;
+            console.log("Dep validation result:", depValidationResult)
+            acc = acc && !!depValidationResult;
             return acc;
         }, true);
     

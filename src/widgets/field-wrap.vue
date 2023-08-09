@@ -14,9 +14,11 @@
 </template>
 
 <script setup lang="ts">
+    import {ValidationError} from "../types";
+
     defineProps<{
         label?: string,
-        errors?: string[]
+        errors?: ValidationError[]
     }>()
 </script>
 

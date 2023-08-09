@@ -7,6 +7,7 @@ export type Value = Values | any;
  * @description Callback использующийся для валидации поля для ввода.
  * */
 export type FormInputValidationCallback = (values: any) => boolean | string
+export type ValidationError = string | false
 
 export type ValidationRule = () => boolean | string;
 

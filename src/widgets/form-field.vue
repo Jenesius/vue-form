@@ -9,7 +9,7 @@
 
         :disabled = "input?.disabled"
         :changed  = "input?.changed"
-        :errors="input?.errors"
+        :errors="input?.errors || []"
 	/>
 </template>
 
@@ -18,11 +18,13 @@ import {computed, onMounted, onUnmounted, reactive} from "vue";
 import {getFieldType} from "../config/store";
 import Form from "../classes/Form";
 import {FormInputValidationCallback} from "../types";
+import STORE from "../../plugin/config/store";
 
 interface IProps {
 	name: string,
 	type?: string,
-    validation?: FormInputValidationCallback[]
+    validation?: FormInputValidationCallback[] | FormInputValidationCallback,
+    required?: boolean
 }
 const props = defineProps<IProps>()
 const parentForm = Form.getParentForm();
@@ -67,7 +69,9 @@ function useFormInput(name: string) {
 
     const InputDependency = {
         name,
-        validation() {
+        validate() {
+
+            console.log("Input validation:", validation, input.value);
             const result = validation.reduce((acc: (string | boolean)[], guard) => {
                 const guardResult = guard(input.value);
                 if (guardResult !== true) acc.push(guardResult);
@@ -75,7 +79,7 @@ function useFormInput(name: string) {
             }, []);
 
             input.errors = result;
-            return result.length
+            return result.length === 0
         }
     }
 
@@ -87,15 +91,28 @@ function useFormInput(name: string) {
         parentForm.unsubscribe(InputDependency);
     })
 
-    function setValidation(array: FormInputValidationCallback[]) {
-        validation = array;
+    function setValidation(array?: FormInputValidationCallback[] | FormInputValidationCallback) {
+        validation = typeof array === 'function' ? [array] : (array || []);
     }
 
     return input;
 }
 
-const input = useFormInput(props.name);
+function mergeValidation() {
+    const arr:FormInputValidationCallback[] = [];
+    if (props.validation) {
+        if (typeof props.validation === 'function') arr.push(props.validation);
+        else arr.push(...props.validation)
+    }
 
+    if (props.required) arr.unshift((v: any) => !!v || STORE.requiredMessage)
+
+    return arr;
+}
+
+const input = useFormInput(props.name)
+// @ts-ignore;
+input?.setValidation(mergeValidation())
 
 </script>
 <style>
