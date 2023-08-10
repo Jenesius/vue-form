@@ -15,9 +15,9 @@ export default function useModify(callbackModifyProps: () => ModifyParam) {
 		try {
 			arr.forEach(callback => v = callback(v));
 		} catch (e) {
-			warn('[modify]', `Error in modify callback with value ${v}`, e);
+			warn('[modify]', `Error in modify callback with value ${v}:`, e);
 		}
 
-		return (v !== undefined && v !== null) ? String(v) : '';
+		return v as any;
 	}
 }

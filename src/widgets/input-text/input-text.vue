@@ -28,9 +28,9 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import useModify from "./../../local-hooks/use-modify";
-import {FormInputValidationCallback, StringModify, ValidationError} from "./../../types";
-import onlyNumber from "./../../local-hooks/only-number";
+import {StringModify, ValidationError} from "./../../types";
 import FieldWrap from "../field-wrap.vue";
+import {parseNumber} from "../../utils/parse-number";
 
 
 const props = defineProps<{
@@ -58,7 +58,7 @@ const emit = defineEmits<{
 const executePretty = useModify(() => props.pretty);
 const executeModify = useModify(
 	() => [
-		props.numeric ? onlyNumber : undefined,
+		props.numeric ? parseNumber : undefined,
 		...(Array.isArray(props.modify) ? props.modify : [props.modify])
 	]
 )
@@ -68,8 +68,10 @@ function onInput(v: string) {
 		("maxlength" in props && props.maxlength !== undefined) ||
 		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
 
-	v = executeModify(v);
+    console.log(v)
 
+	v = executeModify(v);
+    console.log(v, typeof v, props.modify);
 	refInput.value.value = v;
 	emit('update:modelValue', v);
 }
