@@ -1,0 +1,11 @@
+describe("Input date", () => {
+    test("Default date", () => {})
+    test("Entering not full date dont has effect for form", () => {})
+    test("Entering full date should has effect for form", () => {})
+    test("Calendar should be opened after icon click", () => {})
+    test("Calendar should be closed if click was outside, or date was selected, or icon was press twice", () => {})
+    test("Calendar should show current date or selected date", () => {})
+    test("Input date should has disabled effect", () => {})
+    test("Input date should has error effect", () => {})
+    test("format='ISO' should modify date that was entered", () => {})
+})

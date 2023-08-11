@@ -1,9 +1,11 @@
 import InputText from "./../widgets/input-text/input-text.vue";
+import InputDate from "../widgets/input-date/input-date.vue"
 
 const STORE: IStore = {
 	requiredMessage: 'Please fill in this field',
 	inputTypes: {
 		text	: InputText,
+		date	: InputDate
 	},
 	typeNotCaseSensitive: true,
 	debug: false,

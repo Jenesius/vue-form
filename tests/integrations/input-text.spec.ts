@@ -321,7 +321,7 @@ describe("Input text", () => {
     test("Input that has pretty should prettify just view-value, not value in form", async () => {
 
         const app = mount(AppInputTextPretty)
-        const form = app.vm.form as Form;
+        const form = (app.vm as any).form as Form;
         
         //app.vm.loadingResource = true;
         await app.vm.$nextTick();
