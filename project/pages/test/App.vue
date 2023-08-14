@@ -1,7 +1,7 @@
 <template>
 	<div class="container-examples">
 
-        <form-field name="age" type = "date" />
+        <form-field name="created" type = "date" />
         <form-field name="address.city" label = "Address city" />
 
 		<form-field :name="name" label = "Username"/>

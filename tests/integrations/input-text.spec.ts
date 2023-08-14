@@ -119,7 +119,7 @@ describe("Input text", () => {
         });
     
         // update prop, and wait a tick to allow it to take effect
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
         
         const form = (app.vm as any).form as Form;
@@ -144,7 +144,7 @@ describe("Input text", () => {
             },
         });
         // update prop, and wait a tick to allow it to take effect
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
         
         const form = (app.vm as any).form as Form;
@@ -193,7 +193,7 @@ describe("Input text", () => {
             },
         });
         const form = (app.vm as any).form as Form;
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
         
         expect(form.validate()).toBe(true);
@@ -225,7 +225,7 @@ describe("Input text", () => {
             },
         });
         const form = (app.vm as any).form as Form;
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
         
         const validateResult = form.validate()
@@ -254,7 +254,7 @@ describe("Input text", () => {
             slots: { default: component },
         });
         const form = (app.vm as any).form as Form;
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
         
         expect(form.validate()).toBe(false);
@@ -278,7 +278,7 @@ describe("Input text", () => {
             slots: { default: component },
         });
         const form = (app.vm as any).form as Form;
-        app.vm.loadingResource = true
+        // app.vm.loadingResource = true
         await app.vm.$nextTick()
     
         expect(app.text()).toBe("Your name");
@@ -304,8 +304,8 @@ describe("Input text", () => {
                 default: component
             }
         })
-        const form = app.vm.form as Form;
-        app.vm.loadingResource = true;
+        const form = (app.vm as any).form as Form;
+        //app.vm.loadingResource = true;
         await app.vm.$nextTick();
         
         const input = app.get("input");
@@ -368,8 +368,8 @@ describe("Input text", () => {
                 default: component
             }
         })
-        const form = app.vm.form as Form;
-        app.vm.loadingResource = true;
+        const form = (app.vm as any).form as Form;
+        //app.vm.loadingResource = true;
         await app.vm.$nextTick()
         await wait()
         const input = app.get('input');
@@ -398,9 +398,9 @@ describe("Input text", () => {
                 default: component
             }
         })
-        app.vm.loadingResource = true;
+        //app.vm.loadingResource = true;
         await app.vm.$nextTick();
-        const form = app.vm.form as Form
+        const form = (app.vm as any).form as Form
         
         const input = app.get("input");
         await input.setValue("12345678910")
@@ -419,7 +419,7 @@ describe("Input text", () => {
                 default: component
             }
         })
-        app.vm.loadingResource = true;
+        // app.vm.loadingResource = true;
         await app.vm.$nextTick();
         
         
@@ -435,7 +435,7 @@ describe("Input text", () => {
                 default: component
             }
         })
-        app.vm.loadingResource = true;
+        // app.vm.loadingResource = true;
         const input = app.get("input");
     
         expect(input.element.placeholder).toBe("Testing")
@@ -450,9 +450,9 @@ describe("Input text", () => {
                 default: component
             }
         })
-        app.vm.loadingResource = true;
+        // app.vm.loadingResource = true;
         await app.vm.$nextTick();
-        const form = app.vm.form as Form
+        const form = (app.vm as any).form as Form
     
         const input = app.get("input");
         await input.setValue("Jenesius 24")
@@ -472,9 +472,9 @@ describe("Input text", () => {
                 default: component
             }
         })
-        app.vm.loadingResource = true;
+        // app.vm.loadingResource = true;
         await app.vm.$nextTick();
-        const form = app.vm.form as Form
+        const form = (app.vm as any).form as Form
         form.setValues({
             age: undefined
         })
