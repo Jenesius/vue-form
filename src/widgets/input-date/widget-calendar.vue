@@ -1,22 +1,19 @@
 <template>
 	<div class="widget-calendar">
-		<div class="widget-calendar-container-select">
-			<div class="widget-calendar-select widget-calendar-select-month">
-				<input-field name="month" type="select" :options="state.months" placeholder="Month"/>
-			</div>
-			<div class="widget-calendar-select">
-				<input-field name="year" type="select" :options="state.years" placeholder="Year"/>
-			</div>
+		<div class="widget-calendar-navigation">
+			<input-field name="month" type="select" :options="state.months" placeholder="Month"/>
+			<input-field name="year" type="select" :options="state.years" placeholder="Year"/>
 		</div>
-		<div class="widget-calendar-container">
-			<div class="widget-calendar-days-name">
-                <span class="widget-calendar-days-name-elem"
+		<div class="widget-calendar-board">
+			<div class="widget-calendar-board-header">
+                <span class="widget-calendar-board-label"
 					  v-for="(elem, index) in state.days"
 					  :key="index"
 				>{{ elem }}</span>
 			</div>
-			<div class="widget-calendar-main">
-				<div
+
+			<div class="widget-calendar-board-body">
+				<div class = "widget-calendar-board-card"
 					v-for="(elem, index) in arrayCalendar"
 					:key=index
 					:title="elem.value"
@@ -131,75 +128,42 @@ const currentDate = (new Date).toLocaleDateString()
 	border-radius: var(--vf-input-border-radius);
 	background-color: var(--vf-input-background);
 }
-.widget-calendar-container-select {
-	display: flex;
-	flex-direction: row;
-}
-
-.widget-calendar-select {
-	width: 100px;
-}
-
-.widget-calendar-select-month {
-	width: 120px;
-	margin-right: 30px;
-}
-
-.widget-calendar-days-name {
-	padding: 10px 0 0 0;
-	display: flex;
-	flex-direction: row;
-
+.widget-calendar-navigation {
+	display: grid;
+	grid-template-columns: 120px 100px;
 	justify-content: space-between;
-
 }
 
-.widget-calendar-days-name > span {
-	width: 33px;
+.widget-calendar-board-header{
+	display: flex;
+	justify-content: space-between;
+}
 
-	line-height: 20px;
+.widget-calendar-board-label {
 	font-weight: bold;
-	font-size: 14px;
-
-	text-align: center;
-
 }
 
 .widget-calendar-days-name > span:last-child {
 	margin-right: 0;
 }
 
-.widget-calendar-main {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-
-
+.widget-calendar-board-body {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
 }
-
-.widget-calendar-main > div {
+.widget-calendar-board-card {
 	cursor: pointer;
 	position: relative;
-	width: 14.2857%;
 
 	text-align: right;
 
-	margin-top: 10px;
-
-	padding-right: 3px;
-
 	font-size: 14px;
 	line-height: 20px;
-	transition: 0.2s;
-
+	transition: var(--vf-input-transtion-fast);
 }
-.widget-calendar-main > div:hover {
-	font-size: 13px;
 
-}
 
 .calendar-date_active {
-
 	color: white;
 }
 

@@ -7,6 +7,8 @@
         <form-field name="address.city" label = "Address city" />
 
 		<form-field :name="name" label = "Username"/>
+		<form-field label = "TEST" v-model = "test"/>
+		<p>Test: {{test}}</p>
 		<form-field name="username.name.jenesius" label = "Username"/>
 		<form-field name="name" label = "Name"/>
 		<widget-composite/>
@@ -46,6 +48,8 @@ setInterval(() => {
 	pureValue.value = copyObject(form.TEST_PURE_VALUE);
     pureAvailabilities.value = copyObject(form.TEST_PURE_AVAILABILITIES)
 }, 50);
+const test = ref("");
+window.test = test
 
 const address = new Form({
     name: "address",

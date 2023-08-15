@@ -15,6 +15,8 @@ const STORE: IStore = {
 	cleanValue: null,
 	date: {
 		dateMask: "dd/mm/yyyy",
+		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		daysWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sub"]
 	}
 }
 
@@ -29,7 +31,9 @@ export interface IStore {
 	defaultType: string,
 	cleanValue: any,
 	date: {
-		dateMask: string
+		dateMask: string,
+		months: string[],
+		daysWeek: string[]
 	}
 }
 export default STORE;

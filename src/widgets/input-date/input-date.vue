@@ -176,12 +176,9 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	position: absolute;
 	right: 0;
 	margin-top: 10px;
+	z-index: 2;
 }
 .container-date-calendar {
 	position: relative;
 }
-
-
-
-
 </style>

@@ -68,10 +68,8 @@ function onInput(v: string) {
 		("maxlength" in props && props.maxlength !== undefined) ||
 		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
 
-    console.log(v)
 
 	v = executeModify(v);
-    console.log(v, typeof v, props.modify);
 	refInput.value.value = v;
 	emit('update:modelValue', v);
 }
