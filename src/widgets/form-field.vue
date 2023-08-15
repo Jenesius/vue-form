@@ -7,7 +7,7 @@
 		:modelValue="input?.value"
 		@update:modelValue = "handleInput"
 
-        :disabled = "input?.disabled"
+        :disabled = "input?.disabled || false"
         :changed  = "input?.changed"
         :errors="input?.errors || []"
 	/>

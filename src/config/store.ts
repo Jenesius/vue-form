@@ -16,7 +16,11 @@ const STORE: IStore = {
 	date: {
 		dateMask: "dd/mm/yyyy",
 		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-		daysWeek: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sub"]
+		daysWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+		calendar: {
+			yearCount: 60,
+			yearStart: 1965
+		}
 	}
 }
 
@@ -33,7 +37,11 @@ export interface IStore {
 	date: {
 		dateMask: string,
 		months: string[],
-		daysWeek: string[]
+		daysWeek: string[],
+		calendar: {
+			yearCount: number,
+			yearStart: number
+		}
 	}
 }
 export default STORE;
