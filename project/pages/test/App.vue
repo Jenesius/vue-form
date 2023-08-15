@@ -1,7 +1,9 @@
 <template>
 	<div class="container-examples">
 
-        <form-field name="created" type = "date" />
+        <form-field name="created" type = "date" label = "Created" />
+        <form-field name="created" type = "date" mask = "mm-dd-yyyy" label = "Ceated English" />
+
         <form-field name="address.city" label = "Address city" />
 
 		<form-field :name="name" label = "Username"/>
@@ -14,6 +16,7 @@
 		<button @click = "clean">clean values</button>
 
 		<button @click = "setDefaultValues">set default values</button>
+
 
 		<div :key = "values">Values: {{values}}</div>
 		<div :key = "changes">Changes: {{changes}}</div>

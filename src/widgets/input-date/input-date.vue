@@ -1,79 +1,113 @@
 <template>
-    <div>
-        <!--INPUT-->
-        <div class = "input-date">
+	<field-wrap :label="label" :errors="errors">
+		<div class="container-input-date">
 
-            <div class = "test__input-wrap">
-				<p>{{prettyMask}}</p>
+			<div class="wrap-input-date">
+				<p class="input-date-mask">{{ prettyMask }}</p>
 				<input
-					type = "text"
-					:value = "pretty(insideValue)"
-					@input = "handleInput($event.target.value)"
-					@change = "handleChange($event.target.value)"
+					class="vf-input_clean input-date"
+					type="text"
+					:value="prettyValue"
+					@input="handleInput($event.target.value)"
+					@change="handleChange($event.target.value)"
 				>
 			</div>
-			<p>Inside: <b>{{insideValue}}</b></p>
-            <div>ICON</div>
-			{{defaultMask}}
-        </div>
-        <!--CALENDAR-->
-    </div>
+			<div class="input-date-icon"
+				 @click.stop="changeCalendarStatus(!calendarStatus)"
+				 :class="{
+					'input-date-icon_active': calendarStatus
+				}"
+			>
+				<icon-calendar/>
+			</div>
+		</div>
+		<!--CALENDAR-->
+		<transition name="slide">
+			<div ref="refCalendar" v-if="calendarStatus" class = "container-date-calendar">
+				<widget-calendar class="input-date-calendar"
+								 :model-value="modelValue"
+								 @update:modelValue="test" />
+			</div>
+		</transition>
+	</field-wrap>
 </template>
 
-<script setup lang = "ts">
-import {computed, ref, watch} from "vue";
-import DateController from "../../../plugin/controllers/date-controller";
+<script setup lang="ts">
+import {computed, nextTick, ref, watch} from "vue";
+import DateController from "../../controllers/date-controller";
+import WidgetCalendar from "./widget-calendar.vue";
+import clickOutside from "../../utils/click-outside";
+import IconCalendar from "../icons/icon-calendar.vue";
+import FieldWrap from "../field-wrap.vue";
+import {ValidationError} from "../../types";
+import STORE from "../../config/store";
 
-/**
- *
- */
-const defaultMask = "dd/mm/yyyy";
-/**
- *
- */
-
-const props = defineProps<{
-    modelValue: any
-}>()
-const insideValue = ref("")
-
+const props = withDefaults(defineProps<{
+	modelValue: any,
+	label?: string,
+	errors: ValidationError[],
+	mask?: string
+}>(), {
+	mask: () => STORE.date.dateMask
+})
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 
-function pretty(s: unknown) {
-    if (typeof s !== 'string') return ''
-	if (DateController.isUTCDate(s)) return DateController.GetPrettyDateByMask(new Date(s), defaultMask)
 
-	return s
+const insideValue = ref("")
+const refCalendar = ref();
+const calendarStatus = ref(false);
+
+
+function test(s: string) {
+	const date = new Date(s);
+
+	emit('update:modelValue', date?.toUTCString());
+}
+
+
+function changeCalendarStatus(status: boolean) {
+	calendarStatus.value = status;
+	nextTick(() => {
+		if (status) clickOutside(refCalendar.value, changeCalendarStatus.bind(null, false))
+	})
 }
 
 function handleInput(v: string) {
 	insideValue.value = v;
-	if (!DateController.CheckFullerMask(v, defaultMask)) return;
-	emitInput(v);
+	if (!DateController.CheckFullerMask(v, props.mask)) return;
+	setTimeout(() => emitInput(prettyValue.value), 40)
 }
+
 function handleChange(v: string) {
-	emitInput(v)
+	emitInput(v);
 }
 
 function emitInput(v: string) {
-	const r = DateController.ParseStringByMask(v, defaultMask);
+	const r = DateController.ConvertToDate(v, props.mask);
 	emit('update:modelValue', r?.toUTCString());
 }
 
+function pretty(s: unknown): string {
+	if (typeof s !== 'string') return ''
+	if (DateController.isUTCDate(s)) return DateController.GetPrettyDate(new Date(s), props.mask)
 
+	return DateController.SplitStringByMask(s, props.mask)
+	.map(a => a.input || (a.skipped ? a.part : ''))
+	.join('')
+}
+
+const prettyValue = computed(() => pretty(insideValue.value))
 const prettyMask = computed(() => {
-	if (!insideValue.value) return  defaultMask;
+	if (!insideValue.value) return props.mask;
 	if (DateController.isUTCDate(insideValue.value)) return '';
 
-	console.log(DateController.Parse(insideValue.value, defaultMask))
-
-	return insideValue.value + DateController.GetRestMask(insideValue.value, defaultMask);
+	return prettyValue.value + DateController.GetRestMask(prettyValue.value, props.mask);
 })
 
 // Контролируем валидацию маски.
-watch(() => defaultMask, () => {
+watch(() => props.mask, () => {
 	DateController.ValidateMask(prettyMask.value)
 }, {immediate: true})
 
@@ -82,36 +116,72 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 </script>
 
 <style scoped>
-	.test__input-wrap{
-		position: relative;
-		height: 40px;
-		width: 200px;
-	}
-	.test__input-wrap>input {
-		position: relative;
-		height: 100%;
-		width: 100%;
-		background-color: transparent;
-		padding: 0;
-		margin: 0;
-		border: 0;
-		outline: 1px solid red;
-		z-index: 1;
-	}
-	.test__input-wrap>p{
-		display: flex;
-		align-items: center;
-		position: absolute;
-		z-index: 0;
-		top: 0;
-		height: 100%;
-		left: 0;
-		margin: 0;
-		padding: 0;
-		user-select: none;
-		font-size: var(--vf-input-font-size);
-		color: gray;
 
-	}
-	input, textarea, select { font-family:inherit; }
+.container-input-date {
+	display: flex;
+	height: var(--vf-input-height);
+	border-radius: var(--vf-input-border-radius);
+	border: var(--vf-input-border);
+	background-color: var(--vf-input-background);
+}
+
+.container-input-date:focus-within {
+	border-color: var(--vf-input-gray-dark);
+}
+
+.input-date {
+	padding: 0 4px;
+	color: var(--vf-input-color);
+	font-size: var(--vf-input-font-size);
+	background-color: transparent;
+	outline: none;
+	position: relative;
+	z-index: 1;
+}
+
+.wrap-input-date {
+	display: grid;
+	position: relative;
+	flex-grow: 1;
+}
+
+.input-date-mask {
+	display: flex;
+	align-items: center;
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	height: 100%;
+	left: 0;
+	margin: 0;
+	padding: 0 4px;
+	user-select: none;
+	font-size: var(--vf-input-font-size);
+	color: var(--vf-input-gray-dark);
+}
+
+.input-date-icon {
+	cursor: pointer;
+	display: grid;
+	place-content: center;
+	stroke: var(--vf-input-gray-dark);
+	transition: var(--vf-input-transtion-fast);
+}
+
+.input-date-icon_active {
+	stroke: var(--vf-input-active);
+}
+
+.input-date-calendar {
+	position: absolute;
+	right: 0;
+	margin-top: 10px;
+}
+.container-date-calendar {
+	position: relative;
+}
+
+
+
+
 </style>

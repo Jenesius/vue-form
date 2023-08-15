@@ -1,16 +1,21 @@
 import InputText from "./../widgets/input-text/input-text.vue";
 import InputDate from "../widgets/input-date/input-date.vue"
+import InputSelect from "../widgets/input-select/input-select.vue"
 
 const STORE: IStore = {
 	requiredMessage: 'Please fill in this field',
 	inputTypes: {
 		text	: InputText,
-		date	: InputDate
+		date	: InputDate,
+		select  : InputSelect
 	},
 	typeNotCaseSensitive: true,
 	debug: false,
 	defaultType: 'text',
-	cleanValue: null
+	cleanValue: null,
+	date: {
+		dateMask: "dd/mm/yyyy",
+	}
 }
 
 type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
@@ -22,7 +27,10 @@ export interface IStore {
 	typeNotCaseSensitive: boolean
 	debug: boolean,
 	defaultType: string,
-	cleanValue: any
+	cleanValue: any,
+	date: {
+		dateMask: string
+	}
 }
 export default STORE;
 

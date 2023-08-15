@@ -35,6 +35,7 @@ import {parseNumber} from "../../utils/parse-number";
 
 const props = defineProps<{
 	label?: string,
+	errors: ValidationError[],
 	modelValue: any,
 	disabled?: boolean,
 	autofocus?: boolean,
@@ -46,7 +47,6 @@ const props = defineProps<{
 	prefix?: string,
 	name?: string
 	numeric?: boolean,
-    errors: ValidationError[]
 }>()
 
 const isFocused = ref(false);
