@@ -6,7 +6,7 @@
 		</div>
 		<div class="widget-calendar-board">
 			<div class="widget-calendar-board-header">
-                <span class="widget-calendar-board-label"
+                <span class="widget-calendar-board-header-label"
 					  v-for="(elem) in arrayDays"
 					  :key="elem.value"
 				>{{ elem.label }}</span>
@@ -25,7 +25,7 @@
               [functionDateClass?.(elem.value) || '']: true
             }"
 				>
-					<span>{{ elem.label }}</span>
+					<span class = "widget-calendar-board-card-label">{{ elem.label }}</span>
 				</div>
 			</div>
 		</div>
@@ -118,8 +118,9 @@ function isCurrentMonth(v: string) {
 	padding: 10px;
 	border-radius: var(--vf-input-border-radius);
 	background-color: var(--vf-input-background);
+	display: grid;
+	gap: 10px;
 }
-
 .widget-calendar-navigation {
 	display: grid;
 	grid-template-columns: 120px 100px;
@@ -127,63 +128,70 @@ function isCurrentMonth(v: string) {
 }
 
 .widget-calendar-board-header {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	text-align: center;
 }
 
-.widget-calendar-board-label {
+.widget-calendar-board-header-label {
 	font-weight: bold;
+	font-size: 13px;
 }
-
-.widget-calendar-days-name > span:last-child {
-	margin-right: 0;
-}
-
 .widget-calendar-board-body {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
+	text-align: center;
+
 }
 
 .widget-calendar-board-card {
+	display: grid;
+	place-content: center;
 	cursor: pointer;
 	position: relative;
+	width: 100%;
+	aspect-ratio: 1/1;
 
 	text-align: right;
 
-	font-size: 14px;
-	line-height: 20px;
+
 	transition: var(--vf-input-transtion-fast);
 	user-select: none;
+}
+.widget-calendar-board-card-label {
+	display: block;
+	width: 20px;
+	font-size: 14px;
+	line-height: 20px;
 }
 
 .calendar-date_active {
 	color: white;
 }
 
-.calendar-date_active:after {
-	position: absolute;
-	content: "";
-	background-color: var(--vf-input-active) !important;
-	width: 20px;
-	height: 18px;
-	right: 0;
-	z-index: -1;
-	border: 1px solid var(--vf-input-gray-dark);
-	border-radius: 2px;
-}
-
+.calendar-date_active:after,
 .calendar-date_current:after {
 	position: absolute;
 	content: "";
-
-	background: var(--vf-input-gray-light);
 	width: 20px;
-	height: 18px;
+	aspect-ratio: 1/1;
+	left: 6px;
 	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
 	z-index: -1;
-
 	border: 1px solid var(--vf-input-gray-dark);
 	border-radius: 2px;
+
+}
+
+.calendar-date_active:after {
+	background-color: var(--vf-input-active) !important;
+}
+
+.calendar-date_current:after {
+	background: var(--vf-input-gray-light);
 }
 
 .calendar-date_shadow {

@@ -107,4 +107,7 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
 }
+.input-text::placeholder{
+	color: var(--vf-input-placeholder-color);
+}
 </style>

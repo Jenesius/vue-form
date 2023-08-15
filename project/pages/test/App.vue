@@ -1,12 +1,12 @@
 <template>
 	<div class="container-examples">
 
-        <form-field name="created" type = "date" label = "Created" />
+        <form-field name="created" type = "date" label = "Created" placeholder = "Введите дату создания"/>
         <form-field name="created" type = "date" mask = "mm-dd-yyyy" label = "Ceated English" />
 
         <form-field name="address.city" label = "Address city" />
 
-		<form-field :name="name" label = "Username"/>
+		<form-field :name="name" label = "Username" placeholder = "Username"/>
 		<form-field label = "TEST" v-model = "test"/>
 		<p>Test: {{test}}</p>
 		<form-field name="username.name.jenesius" label = "Username"/>

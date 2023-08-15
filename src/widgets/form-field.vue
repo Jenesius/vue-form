@@ -125,5 +125,6 @@ input?.setValidation(mergeValidation())
 
 </script>
 <style>
+@import "./../styles/main.css";
 
 </style>

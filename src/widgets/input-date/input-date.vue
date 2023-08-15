@@ -3,7 +3,7 @@
 		<div class="container-input-date">
 
 			<div class="wrap-input-date">
-				<p class="input-date-mask">{{ prettyMask }}</p>
+				<p class="input-date-mask">{{(insideValue?.length || !placeholder) ? prettyMask : (placeholder) }}</p>
 				<input
 					class="vf-input_clean input-date"
 					type="text"
@@ -26,7 +26,7 @@
 			<div ref="refCalendar" v-if="calendarStatus" class = "container-date-calendar">
 				<widget-calendar class="input-date-calendar"
 								 :model-value="modelValue"
-								 @update:modelValue="test" />
+								 @update:modelValue="handleCalendarInput" />
 			</div>
 		</transition>
 	</field-wrap>
@@ -46,7 +46,8 @@ const props = withDefaults(defineProps<{
 	modelValue: any,
 	label?: string,
 	errors: ValidationError[],
-	mask?: string
+	mask?: string,
+	placeholder?: string
 }>(), {
 	mask: () => STORE.date.dateMask
 })
@@ -60,19 +61,22 @@ const refCalendar = ref();
 const calendarStatus = ref(false);
 
 
-function test(s: string) {
+function handleCalendarInput(s: string) {
 	const date = new Date(s);
 
 	emit('update:modelValue', date?.toUTCString());
 }
 
+let offCalendar: any;
 
 function changeCalendarStatus(status: boolean) {
 	calendarStatus.value = status;
 	nextTick(() => {
-		if (status) clickOutside(refCalendar.value, changeCalendarStatus.bind(null, false))
+		if (status) offCalendar = clickOutside(refCalendar.value, changeCalendarStatus.bind(null, false))
+		else offCalendar?.()
 	})
 }
+
 
 function handleInput(v: string) {
 	insideValue.value = v;
@@ -166,6 +170,7 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	place-content: center;
 	stroke: var(--vf-input-gray-dark);
 	transition: var(--vf-input-transtion-fast);
+	padding: 0 6px;
 }
 
 .input-date-icon_active {
