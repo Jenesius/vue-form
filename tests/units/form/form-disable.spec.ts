@@ -189,4 +189,34 @@ describe("Test for check disabled/enabled state", () => {
         expect(mockAvailability.mock.results.length).toBe(1);
         expect(mockAvailability.mock.results[0].value).toBe(false);
     })
+    it("Callback нацеленный на всю форму, должен быть вызван, когда блокируется форма", () => {
+        const form = new Form();
+
+        const mockDisable = jest.fn(v => v);
+        form.onavailable(mockDisable);
+
+        form.disable();
+        expect(mockDisable.mock.results.length).toBe(1);
+        expect(mockDisable.mock.results[0].value).toBe(false);
+        form.enable();
+        expect(mockDisable.mock.results.length).toBe(2);
+        expect(mockDisable.mock.results[1].value).toBe(true);
+    })
+    it("Callback нацеленный на всю форму, должен быть вызван в дочернем элементе, когда блокируется форма", () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address",
+        })
+        form.subscribe(child);
+
+        const mockDisable = jest.fn(v => v);
+        child.onavailable(mockDisable);
+
+        form.disable();
+        expect(mockDisable.mock.results.length).toBe(1);
+        expect(mockDisable.mock.results[0].value).toBe(false);
+        form.enable();
+        expect(mockDisable.mock.results.length).toBe(2);
+        expect(mockDisable.mock.results[1].value).toBe(true);
+    })
 })

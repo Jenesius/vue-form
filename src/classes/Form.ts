@@ -40,6 +40,7 @@ import AvailabilityEvent from "./AvailabilityEvent";
 export default class Form extends EventEmitter implements FormDependence {
     static PROVIDE_NAME = 'form-controller';
     static EVENT_VALUE = 'value';
+    static EVENT_AVAILABLE = 'available'
     
     static getParentForm() {
         return injectVue<Form | undefined>(Form.PROVIDE_NAME, undefined);
@@ -377,7 +378,11 @@ export default class Form extends EventEmitter implements FormDependence {
         
         if (event instanceof AvailabilityEvent) {
             console.log(`[%c${Form.getTargetName(this)}%c]:`, 'color: red', 'color: black', 'Dispatch event', event)
-    
+
+            if (event.newAvailability !== event.oldAvailability) {
+                this.emit(Form.EVENT_AVAILABLE, event.newAvailability);
+            }
+
             // Все dependencies
             this.dependencies.forEach(dep => {
                 if (dep.name) {
@@ -567,19 +572,33 @@ export default class Form extends EventEmitter implements FormDependence {
      * @return {Boolean} isDisabled
      * */
     #isAvailable: boolean = true
+    set isAvailable(v: boolean) {
+        this.#isAvailable = v;
+    }
+    get isAvailable() {
+        return this.#isAvailable
+    }
+
     get disabled() {
         return !this.enabled;
     }
     get enabled() {
         if (this.parent) return !this.parent.checkFieldDisable(this.name as string);
-        return this.#isAvailable;
+        return this.isAvailable;
     }
 
     private getAvailableEventName(fieldName: string) {
-        return `available:${fieldName}`
+        return `${Form.EVENT_AVAILABLE}:${fieldName}`
     }
-    onavailable(fieldName: string, callback: (disabled: boolean) => any) {
-        return this.on(this.getAvailableEventName(fieldName), callback);
+    onavailable(callback: (disabled: boolean) => any): any
+    onavailable(fieldName: string, callback: (disabled: boolean) => any): any
+    onavailable(arg1: ((disabled: boolean) => any) | string, arg2?: (disabled: boolean) => any):any {
+        if (typeof arg1 === 'string') {
+            if (!arg2) throw new Error('For named handler you need provided callback.');
+            return this.on(this.getAvailableEventName(arg1), arg2);
+        }
+
+        return this.on(Form.EVENT_AVAILABLE, arg1);
     }
     disable(names?: string | string[]){
         debug.msg(`Disabling ${names || ''}`);
@@ -600,8 +619,8 @@ export default class Form extends EventEmitter implements FormDependence {
         if (this.parent) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
         console.group(`AVAILABLE %c${type}`, 'color: purple')
         
-        const oldAvailable = this.#isAvailable;
-        if (names.length === 0) this.#isAvailable = type;
+        const oldAvailable = this.isAvailable;
+        if (names.length === 0) this.isAvailable = type;
         
         
         const copyAV = copyObject(this.#availabilities);
@@ -627,7 +646,7 @@ export default class Form extends EventEmitter implements FormDependence {
         notOptimizeNames
         .forEach(key => {
             const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
-            if (!nearestAvailability && this.#availabilities[key] === this.#isAvailable) return  delete this.#availabilities[key];
+            if (!nearestAvailability && this.#availabilities[key] === this.isAvailable) return  delete this.#availabilities[key];
             
             if (nearestAvailability) {
                 if (this.#availabilities[nearestAvailability] === this.#availabilities[key] || this.#availabilities[nearestAvailability] === undefined)
@@ -640,7 +659,7 @@ export default class Form extends EventEmitter implements FormDependence {
         console.log("Optimization:", copyObject(this.#availabilities))
         
         console.group('DISPATCHING EVENT');
-        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV, this.#isAvailable, oldAvailable));
+        this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV, this.isAvailable, oldAvailable));
         console.groupEnd();
         
         /**OPTIMIZATION END*/
