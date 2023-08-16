@@ -1,6 +1,7 @@
 <template>
 	<div class="container-examples">
 		<div :key = "values">Values: {{values}}</div>
+		<form-field type = "country" name = "a1" label = "tset"/>
         <form-field name="created" type = "date" label = "Created" />
 		<form-field name="created" type = "date"  format = "test" label = "Test Format" />
 

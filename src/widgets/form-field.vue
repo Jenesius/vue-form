@@ -7,7 +7,7 @@
 		:modelValue="input ? input.value : $attrs['modelValue']"
 		@update:modelValue = "handleInput"
 
-        :disabled = "input?.disabled || $attrs['disabled']"
+        :disabled = "input?.disabled || $attrs['disabled'] || false"
         :changed  = "input?.changed"
         :errors="input?.errors || []"
 		:options="parseOptions(options)"

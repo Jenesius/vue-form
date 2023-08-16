@@ -1,8 +1,10 @@
 <template>
-	<input-field
-		:options = "country"
-		type = "select"
-	/>
+	<div>
+		<input-field
+			:options = "country"
+			type = "select"
+		/>
+	</div>
 </template>
 
 <script setup lang = "ts">

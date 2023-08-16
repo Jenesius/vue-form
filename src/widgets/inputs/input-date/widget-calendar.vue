@@ -40,12 +40,13 @@ import STORE from "../../../config/store";
 import {IOptionRowWithLabel} from "../../../types";
 
 interface IProps {
-	modelValue: string, // Date correct parsed string
+	modelValue?: string, // Date correct parsed string
 	functionDateClass?: any
 }
 
 const props = defineProps<IProps>()
 const parsedModelValue = computed(() => {
+	if (!props.modelValue) return null;
 	const date = new Date(props.modelValue);
 	if (!isNaN(date.getTime()))
 		return date.toDateString()
@@ -56,7 +57,7 @@ const emits = defineEmits<{
 	(event: 'update:modelValue', value: string): void
 }>()
 
-const currentDate = parsedModelValue.value ? new Date(props.modelValue) : new Date();
+const currentDate = parsedModelValue.value && props.modelValue ? new Date(props.modelValue) : new Date();
 const month = ref(currentDate.getMonth())
 const year = ref(currentDate.getFullYear())
 const today = (new Date).toDateString()
