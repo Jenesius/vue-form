@@ -6,14 +6,8 @@ export type Value = Values | any;
 /**
  * @description Callback использующийся для валидации поля для ввода.
  * */
-export type FormInputValidationCallback = (values: any) => boolean | string
+export type FormInputValidationCallback = (values: any) => true | ValidationError
 export type ValidationError = string | false
-
-export type ValidationRule = () => boolean | string;
-
-export type FunctionHandleData = () => Promise<any> | any | void;
-
-export type ValidationGuard = () => void
 
 export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
 
@@ -26,25 +20,19 @@ interface IOptionRowWithTitle {
 	value: any
 }
 
-
-export interface FormDependence {
-	name?: string,
-	changed?: boolean
-	disable?: (name?: string | string[]) => void,
-	enable? : (name?: string | string[]) => void,
-	change ?: (v: any) => void,
-	setValues?: (v: any) => void,
-	validate?: () => boolean | string | string[],
-	cleanChanges?: (values?: any) => void
-}
-export interface NamedFormDependence extends FormDependence{
-	name: string
+export interface FormInput {
+	value: any,
+	changed: boolean,
+	disabled: boolean,
+	errors: ValidationError[],
+	setValidation(arr: FormInputValidationCallback[]): void,
+	setValue(v: any): void
 }
 
-export interface InputProps {
-
+export interface InputDependency {
+	name: string,
+	validate: FormInputValidationCallback
 }
-
 /**
  * @description Current interface using for special widget-inputs, not for InputField
  * */
@@ -58,11 +46,6 @@ export type IPropsInput = {
 
 
 export type StringModify = (v: unknown) => string
-
-
-export interface SimpleFormParams {
-	name?: string
-}
 
 export interface FormSetValuesOptions {
 	change: boolean,

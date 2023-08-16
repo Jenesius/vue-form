@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-    import {ValidationError} from "../types";
+    import {ValidationError} from "../../types";
 
     defineProps<{
         label?: string,

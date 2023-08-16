@@ -100,10 +100,8 @@ function handleInput(v: any) {
 	emits('update:modelValue', v)
 	emits('input', v)
 }
-
 </script>
 
 <style>
-
 
 </style>

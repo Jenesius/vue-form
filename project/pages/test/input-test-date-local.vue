@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang = "ts">
-import InputDate from "../../../src/widgets/input-date/input-date.vue";
+import InputDate from "../../../src/widgets/inputs/input-date/input-date.vue";
 import {computed} from "vue";
 
 const props = defineProps<{

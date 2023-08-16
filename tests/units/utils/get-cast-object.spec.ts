@@ -1,4 +1,4 @@
-import getCastObject from "../../plugin/utils/get-cast-object";
+import getCastObject from "../../../src/utils/get-cast-object";
 
 describe("Get cast object: utils", () => {
 	test("simple", () => {

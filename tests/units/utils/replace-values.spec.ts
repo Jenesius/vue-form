@@ -1,4 +1,4 @@
-import replaceValues from "../../plugin/utils/replace-values";
+import replaceValues from "./../../../src/utils/replace-values";
 
 describe("ReplaceValues util", () => {
 	

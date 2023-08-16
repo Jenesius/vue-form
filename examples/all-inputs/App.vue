@@ -101,8 +101,7 @@
 </template>
 
 <script setup lang = "ts">
-import InputField from "../../plugin/widgets/input-field.vue";
-import {Form} from "../../plugin";
+import {Form, InputField} from "../../src/index";
 
 const form = new Form();
 function modifyOnlyChar(a: string) {

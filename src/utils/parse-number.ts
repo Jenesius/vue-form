@@ -6,6 +6,5 @@ export function parseNumber(data: unknown, defaultValue: number = 0) {
     
     const parsedStr = data.replace(/[^\d,.+-]/g,'');
     if (parsedStr.length === 0) return defaultValue;
-    console.log('++', Number.parseFloat(parsedStr), typeof Number.parseFloat(parsedStr));
     return Number.parseFloat(parsedStr);
 }

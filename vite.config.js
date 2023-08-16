@@ -12,10 +12,11 @@ const banner = `/*!
   * (c) ${new Date().getFullYear()} Jenesius
   * @license MIT
   */`
+const srcFolder = 'src';
 export default defineConfig({
     plugins: [
         {
-           ...typescript({ tsconfig: resolve("plugin", "tsconfig.json"),  }),
+           ...typescript({ tsconfig: resolve(srcFolder, "tsconfig.json"),  }),
             apply: 'build'
         },
         cssInjectedByJsPlugin(),
@@ -26,7 +27,7 @@ export default defineConfig({
 
         outDir: resolve( "dist"),
         lib: {
-            entry: resolve(__dirname,"plugin", "index.ts"),
+            entry: resolve(__dirname, srcFolder, "index.ts"),
             name: "JenesiusVueForm",
             formats: [`cjs`, 'umd', 'es'],
 

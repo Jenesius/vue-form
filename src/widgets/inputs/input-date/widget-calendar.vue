@@ -34,10 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import {InputField} from "../../index";
+import {InputField} from "../../../index";
 import {computed, ref} from "vue";
-import STORE from "../../config/store";
-import {IOptionRowWithLabel} from "../../types";
+import STORE from "../../../config/store";
+import {IOptionRowWithLabel} from "../../../types";
 
 interface IProps {
 	modelValue: string, // Date correct parsed string

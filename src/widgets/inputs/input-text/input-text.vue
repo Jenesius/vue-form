@@ -27,10 +27,10 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import useModify from "./../../local-hooks/use-modify";
-import {StringModify, ValidationError} from "./../../types";
+import useModify from "../../../local-hooks/use-modify";
+import {StringModify, ValidationError} from "../../../types";
 import FieldWrap from "../field-wrap.vue";
-import {parseNumber} from "../../utils/parse-number";
+import {parseNumber} from "../../../utils/parse-number";
 
 
 const props = defineProps<{

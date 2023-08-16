@@ -1,4 +1,4 @@
-import iterateEndpoint from "../../plugin/utils/iterate-endpoint";
+import iterateEndpoint from "./../../../src/utils/iterate-endpoint";
 
 describe("Iterate endpoint", () => {
 	test("One field iteration", () => {

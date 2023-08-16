@@ -1,4 +1,4 @@
-import convertOptionsObject from "../../plugin/utils/convert-options-object";
+import convertOptionsObject from "../../../src/utils/convert-options-object";
 
 describe("Test for convertOptionsObject", () => {
 

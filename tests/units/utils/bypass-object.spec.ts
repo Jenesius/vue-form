@@ -1,4 +1,4 @@
-import bypassObject from "../../plugin/utils/bypass-object";
+import bypassObject from "../../../src/utils/bypass-object";
 
 describe("Bypass object", () => {
 	

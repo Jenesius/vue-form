@@ -4,127 +4,56 @@
 		:name="name"
 		:key = name
 
-		:modelValue="input?.value"
+		:modelValue="input ? input.value : $attrs['modelValue']"
 		@update:modelValue = "handleInput"
 
-        :disabled = "input?.disabled || false"
+        :disabled = "input?.disabled || $attrs['disabled']"
         :changed  = "input?.changed"
         :errors="input?.errors || []"
+		:options="parseOptions(options)"
 	/>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, reactive, ref} from "vue";
+import {computed, watch} from "vue";
 import {getFieldType} from "../config/store";
 import Form from "../classes/Form";
-import {FormInputValidationCallback} from "../types";
-import STORE from "../../plugin/config/store";
+import {FormInput, FormInputValidationCallback} from "../types";
+import useFormInput from "../hooks/use-form-input";
+import mergeValidation from "../local-hooks/merge-input-validation";
+import {OptionRow} from "../../plugin/types";
+import {parseOptions} from "../local-hooks/parse-options";
 
 interface IProps {
 	name?: string,
 	type?: string,
     validation?: FormInputValidationCallback[] | FormInputValidationCallback,
-    required?: boolean
+    required?: boolean,
+	options?: OptionRow[] | Record<string, any>
 }
 const props = defineProps<IProps>()
 const emit = defineEmits<{
 	(event: 'update:modelValue', value: any): void
 }>()
 const componentItem = computed(() => getFieldType(props.type));
-
+const parentForm = Form.getParentForm();
 
 function handleInput(value: any) {
-
 	if (input) input.setValue?.(value);
 	else emit('update:modelValue', value)
 }
 
+let input: FormInput | null = null;
+watch(() => props.name, initializeInput, {immediate: true});
 
-function useFormInput(name: string) {
-
-    const parentForm = Form.getParentForm();
-	if (!name) return null;
-    if (!parentForm) return null;
-
-    let validation: FormInputValidationCallback[] = []
-
-    const input = reactive<Partial<{
-        value?: any,
-        changed?: boolean,
-        disabled?: boolean,
-        errors: (string | boolean)[],
-        setValidation(arr: FormInputValidationCallback[]): void,
-		setValue(v: any): void
-    }>>({})
-
-    function updateInput() {
-        input.value = parentForm.getValueByName(name);
-        input.changed = parentForm.checkFieldChange(name);
-    }
-    function updateAvailability() {
-        input.disabled = parentForm.checkFieldDisable(name);
-    }
-
-    parentForm.oninput(name, updateInput)
-    parentForm.onavailable(name, updateAvailability)
-
-    updateInput();
-    updateAvailability();
-    input.setValidation = setValidation;
-    input.setValue = setValue;
-
-    const InputDependency = {
-        name,
-        validate() {
-
-            console.log("Input validation:", validation, input.value);
-            const result = validation.reduce((acc: (string | boolean)[], guard) => {
-                const guardResult = guard(input.value);
-                if (guardResult !== true) acc.push(guardResult);
-                return acc;
-            }, []);
-
-            input.errors = result;
-            return result.length === 0
-        }
-    }
-
-
-    onMounted(() => {
-        parentForm.subscribe(InputDependency)
-    })
-    onUnmounted(() => {
-        parentForm.unsubscribe(InputDependency);
-    })
-
-    function setValidation(array?: FormInputValidationCallback[] | FormInputValidationCallback) {
-        validation = typeof array === 'function' ? [array] : (array || []);
-    }
-	function setValue(value: any) {
-		parentForm?.change({ [name]: value });
-	}
-
-    return input;
+function initializeInput() {
+	if (!parentForm) return;
+	if (!props.name) return;
+	input = useFormInput(parentForm, props.name);
+	input.setValidation(mergeValidation(props))
 }
-
-function mergeValidation() {
-    const arr:FormInputValidationCallback[] = [];
-    if (props.validation) {
-        if (typeof props.validation === 'function') arr.push(props.validation);
-        else arr.push(...props.validation)
-    }
-
-    if (props.required) arr.unshift((v: any) => !!v || STORE.requiredMessage)
-
-    return arr;
-}
-
-const input = useFormInput(props.name)
-// @ts-ignore
-input?.setValidation(mergeValidation())
 
 </script>
 <style>
 @import "./../styles/main.css";
-
 </style>

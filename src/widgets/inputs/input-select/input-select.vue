@@ -47,13 +47,12 @@
 </template>
 
 <script setup lang="ts">
-
-import {OptionRow} from "../../types";
+import {OptionRow} from "../../../types";
 import {computed, onMounted, ref} from "vue";
 import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
-import updateInputPosition from "../../utils/update-input-position";
+import updateInputPosition from "../../../utils/update-input-position";
 import WidgetInputSelectSearch from "./widget-input-select-search.vue";
-import getLabelFromOptionRow from "../../utils/get-label-from-option-row";
+import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 import FieldWrap from "../field-wrap.vue";
 
 const props = defineProps<{

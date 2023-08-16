@@ -1,4 +1,4 @@
-import checkDeepValue from "./../../src/utils/check-deep-value";
+import checkDeepValue from "../../../src/utils/check-deep-value";
 
 describe("Check deep value", () => {
 	test("Array is not deep value", () => {

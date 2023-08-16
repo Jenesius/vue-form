@@ -1,4 +1,4 @@
-import iteratePoints from "../../plugin/utils/iterate-points";
+import iteratePoints from "./../../../src/utils/iterate-points";
 
 describe("iterate-points", () => {
     it('should be array of one point', function () {

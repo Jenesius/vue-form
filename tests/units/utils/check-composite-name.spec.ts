@@ -1,4 +1,4 @@
-import checkCompositeName from "../../plugin/utils/check-composite-name";
+import checkCompositeName from "../../../src/utils/check-composite-name";
 
 describe("Check composite name", () => {
 	

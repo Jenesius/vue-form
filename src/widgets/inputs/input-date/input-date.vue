@@ -35,13 +35,13 @@
 
 <script setup lang="ts">
 import {computed, nextTick, ref, watch} from "vue";
-import DateController from "../../controllers/date-controller";
+import DateController from "../../../controllers/date-controller";
 import WidgetCalendar from "./widget-calendar.vue";
-import clickOutside from "../../utils/click-outside";
-import IconCalendar from "../icons/icon-calendar.vue";
+import clickOutside from "../../../utils/click-outside";
+import IconCalendar from "../../icons/icon-calendar.vue";
 import FieldWrap from "../field-wrap.vue";
-import {ValidationError} from "../../types";
-import STORE, {IStore} from "../../config/store";
+import {ValidationError} from "../../../types";
+import STORE from "../../../config/store";
 
 const props = withDefaults(defineProps<{
 	modelValue: any,
