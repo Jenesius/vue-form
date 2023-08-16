@@ -14,7 +14,7 @@ export interface CompareItem {
 	 * Для примера, если новое значение является примитивом, а старое было: { name: "Jenesius" }, то поле name будет, по
 	 * мечено, как lost, т.к. оно уже перестало существовать.
 	 * */
-	isLost?: boolean
+	// isLost?: boolean
 }
 
 /**

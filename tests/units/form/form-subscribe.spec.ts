@@ -35,11 +35,18 @@ describe("Form subscribe", () => {
 	})
 	test("Form event", () => {
 		const form = new Form();
+
+		const equalObject = {
+			"name": "name",
+			"newValue": "Jack",
+			"oldValue": undefined
+		}
+
 		form.on(Form.EVENT_VALUE, v => {
-			expect(v).toEqual({name: 'Jack'})
+			expect(v).toEqual(equalObject)
 		})
 		form.on('value', v => {
-			expect(v).toEqual({ name: 'Jack'  })
+			expect(v).toEqual(equalObject)
 		})
 		form.setValues({
 			name: "Jack"

@@ -41,6 +41,12 @@ export default class Form extends EventEmitter implements FormDependence {
     static PROVIDE_NAME = 'form-controller';
     static EVENT_VALUE = 'value';
     static EVENT_AVAILABLE = 'available'
+
+    /**
+     * @description Событие срабатывает, когда форма была изменена или наоборот очищена. В таком случае отдаёт true/false
+     * в каком состоянии находится форма.
+     * */
+    static EVENT_CHANGED = 'changed'
     
     static getParentForm() {
         return injectVue<Form | undefined>(Form.PROVIDE_NAME, undefined);
@@ -352,7 +358,9 @@ export default class Form extends EventEmitter implements FormDependence {
     oninput(name: string, callback: (newValue: any) => void) {
         return this.on(Form.getEventValueByName(name), callback)
     }
-    
+    onvalue(callback: (data: CompareItem) => void) {
+        return this.on(Form.EVENT_VALUE, callback);
+    }
     /**
      * @description Отправляет событие. Данный метод используется только для запуска события для себя и дочерних элементов.
      * Наша система построена так, что бы все значения идут от родителя к дочернему элементу (values, changes, event, other..)
@@ -361,8 +369,10 @@ export default class Form extends EventEmitter implements FormDependence {
         
         
         if (event instanceof CompareEvent) {
-            console.log(`[%c${this.name}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
-            
+            console.log(`[%c${Form.restoreFullName(this)}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
+
+            if (event.comparison.length) this.emit(Form.EVENT_CHANGED, this.changed);
+
             // Проходим по всем дочерним элементам и уведомляем их
             this.dependencies.forEach(dep => {
                 if (dep.name) {
@@ -373,6 +383,7 @@ export default class Form extends EventEmitter implements FormDependence {
             event.comparison.forEach(item => {
                 console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
                 this.emit(Form.getEventValueByName(item.name), item.newValue);
+                this.emit(Form.EVENT_VALUE, item);
             })
         }
         

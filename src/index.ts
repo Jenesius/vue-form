@@ -1,6 +1,9 @@
 import STORE from "./config/store";
 import Form from "./classes/Form";
 
+import useFormState from "./hooks/use-form-state";
+import useFormValues from "./hooks/use-form-values";
+
 import InputField from "./widgets/form-field.vue";
 import FormField from "./widgets/form-field.vue";
 import InputWrap from "./widgets/field-wrap.vue";
@@ -17,5 +20,7 @@ export {
 	InputWrap,
 	config,
 	utils,
-	ComputedValue
+	ComputedValue,
+	useFormState,
+	useFormValues
 }

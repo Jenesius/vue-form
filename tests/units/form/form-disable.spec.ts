@@ -1,4 +1,5 @@
 import Form from "../../../src/classes/Form";
+import useFormState from "@/hooks/use-form-state";
 
 describe("Test for check disabled/enabled state", () => {
     it('should be enabled by default', function () {
@@ -202,6 +203,15 @@ describe("Test for check disabled/enabled state", () => {
         expect(mockDisable.mock.results.length).toBe(2);
         expect(mockDisable.mock.results[1].value).toBe(true);
     })
+    it('should be changed after enable/disable', function () {
+        const form = new Form();
+
+        expect(form.disabled).toBe(false)
+        form.disable()
+        expect(form.disabled).toBe(true)
+        form.enable()
+        expect(form.disabled).toBe(false)
+    });
     it("Callback нацеленный на всю форму, должен быть вызван в дочернем элементе, когда блокируется форма", () => {
         const form = new Form();
         const child = new Form({
@@ -219,4 +229,5 @@ describe("Test for check disabled/enabled state", () => {
         expect(mockDisable.mock.results.length).toBe(2);
         expect(mockDisable.mock.results[1].value).toBe(true);
     })
+
 })

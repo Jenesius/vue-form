@@ -8,11 +8,11 @@ import {reactive} from "vue";
  * */
 export default function useFormValues(form: Form) {
     const values = reactive(form.values || {});
-    /*form.oninput(data => {
+    form.onvalue(data => {
         const newValues = {
             [data.name]: data.newValue
         }
         mergeObjects(values, grandObject(newValues));
-    })*/
+    })
     return values;
 }
