@@ -40,16 +40,16 @@ import clickOutside from "../../utils/click-outside";
 import IconCalendar from "../icons/icon-calendar.vue";
 import FieldWrap from "../field-wrap.vue";
 import {ValidationError} from "../../types";
-import STORE from "../../config/store";
+import STORE, {IStore} from "../../config/store";
 
 const props = withDefaults(defineProps<{
 	modelValue: any,
 	label?: string,
 	errors: ValidationError[],
 	mask?: string,
-	placeholder?: string
+	placeholder?: string,
 }>(), {
-	mask: () => STORE.date.dateMask
+	mask: () => STORE.date.dateMask,
 })
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
@@ -60,15 +60,14 @@ const insideValue = ref("")
 const refCalendar = ref();
 const calendarStatus = ref(false);
 
-
-function handleCalendarInput(s: string) {
-	const date = new Date(s);
-
-	emit('update:modelValue', date?.toUTCString());
+/**
+ * @description Принимает дату в формате DateString (new Date().toDateString()).
+ * */
+function handleCalendarInput(calendarStringData: string) {
+	emitInput(new Date(calendarStringData))
 }
 
 let offCalendar: any;
-
 function changeCalendarStatus(status: boolean) {
 	calendarStatus.value = status;
 	nextTick(() => {
@@ -81,20 +80,33 @@ function changeCalendarStatus(status: boolean) {
 function handleInput(v: string) {
 	insideValue.value = v;
 	if (!DateController.CheckFullerMask(v, props.mask)) return;
-	setTimeout(() => emitInput(prettyValue.value), 40)
+	nextTick(() => handleUserHandInput(prettyValue.value))
 }
-
 function handleChange(v: string) {
-	emitInput(v);
+	handleUserHandInput(v);
 }
 
-function emitInput(v: string) {
-	const r = DateController.ConvertToDate(v, props.mask);
-	emit('update:modelValue', r?.toUTCString());
+/**
+ * @description Используется только для ручного ввода даты, т.к. далее использует конвертацию в дату по маске, а не
+ * объект Date
+ * */
+function handleUserHandInput(input: string) {
+	const date = DateController.ConvertToDate(input, props.mask);
+	emitInput(date);
 }
+function emitInput(date: Date | null) {
+	emit('update:modelValue', date ? date.toISOString() : date);
+}
+
+
 
 function pretty(s: unknown): string {
 	if (typeof s !== 'string') return ''
+
+	/**
+	 * Является ли дата конечной. В таком случае полученная строка уже не является исходником маски, а может иметь любой
+	 * вид. Для этого используется функция GetPrettyDate.
+	 * */
 	if (DateController.isUTCDate(s)) return DateController.GetPrettyDate(new Date(s), props.mask)
 
 	return DateController.SplitStringByMask(s, props.mask)
@@ -105,16 +117,13 @@ function pretty(s: unknown): string {
 const prettyValue = computed(() => pretty(insideValue.value))
 const prettyMask = computed(() => {
 	if (!insideValue.value) return props.mask;
-	if (DateController.isUTCDate(insideValue.value)) return '';
-
 	return prettyValue.value + DateController.GetRestMask(prettyValue.value, props.mask);
 })
 
-// Контролируем валидацию маски.
-watch(() => props.mask, () => {
-	DateController.ValidateMask(prettyMask.value)
-}, {immediate: true})
 
+// Контролируем валидацию маски.
+watch(() => props.mask, () => DateController.ValidateMask(prettyMask.value), {immediate: true})
+// Контролируем внутренне значение поля.
 watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 
 </script>

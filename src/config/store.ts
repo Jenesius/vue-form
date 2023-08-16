@@ -14,7 +14,7 @@ const STORE: IStore = {
 	defaultType: 'text',
 	cleanValue: null,
 	date: {
-		dateMask: "dd/mm/yyyy",
+		dateMask: "YYYY/MM/DD",
 		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 		daysWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 		calendar: {

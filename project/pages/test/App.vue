@@ -1,8 +1,15 @@
 <template>
 	<div class="container-examples">
+		<div :key = "values">Values: {{values}}</div>
+        <form-field name="created" type = "date" label = "Created" />
+		<form-field name="created" type = "date"  format = "test" label = "Test Format" />
 
-        <form-field name="created" type = "date" label = "Created" placeholder = "Введите дату создания"/>
-        <form-field name="created" type = "date" mask = "mm-dd-yyyy" label = "Ceated English" />
+		<div style = "background-color: #bac7f8; padding: 10px">
+			<p>Local date: {{localDate}}</p>
+			<input-field name = "created" type = "local-date" />
+		</div>
+
+        <form-field name="created" type = "date" mask = "YYYY-MM-DD" label = "Ceated English" placeholder = "Введите дату создания"/>
 
         <form-field name="address.city" label = "Address city" />
 
@@ -20,7 +27,7 @@
 		<button @click = "setDefaultValues">set default values</button>
 
 
-		<div :key = "values">Values: {{values}}</div>
+
 		<div :key = "changes">Changes: {{changes}}</div>
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
@@ -34,12 +41,15 @@ import {ref} from "vue";
 import WidgetComposite from "./widget-composite.vue";
 import WidgetAddress from "./widget-address.vue"
 import copyObject from "./../../../src/utils/copy-object";
+import InputField from "../../../src/widgets/form-field.vue";
 
 const form = new Form({
 	name: "main"
 });
 
 window.form = form
+
+const localDate = ref("");
 
 const values = ref(0);
 setInterval(() => {

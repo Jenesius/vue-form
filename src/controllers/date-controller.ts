@@ -1,7 +1,15 @@
+type AvailableMask = 'YYYY' | 'MM' | 'DD' | 'HH' | 'mm'
+/**
+ * @description На данный момент вся работа производится в UTC. Это было сделано для более лаконичного решения. Если
+ * на проекте есть необходимость записывать дату в другом формате -
+ * */
 export default class DateController {
 
-	static get ValidatedPrimaryMask() {
-		return ['yyyy', 'mm', 'dd', 'HH', 'MM']
+	/**
+	 * SPECIFICATION: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format
+	 * */
+	static get ValidatedPrimaryMask(): AvailableMask[] {
+		return ['YYYY', 'MM', 'DD', 'HH', 'mm']
 	}
 	/**
 	 * @description Функция предназначена для валидации маски. Вернёт true в случае успеха, или выкинет ошибку, если
@@ -15,7 +23,16 @@ export default class DateController {
 	static SplitStringByMask(input: string, primaryMask: string) {
 
 		let mask = primaryMask; // Копия маски, которая будем постепенно обрезать
-		const arr = []
+		const arr = [];
+		// Чтобы не зашивать отдельно для валидации, получаем символы, которые входят в состав primary mask construction.
+		// Мы помещаем все символы в один массив, затем помещаем всё в Set, чтобы убрать дубликаты, затем соединяем их.
+		const availableLetters = [...new Set(
+			DateController.ValidatedPrimaryMask.reduce((acc: string[], x) => {
+				acc.push(...x.split(''))
+				return acc;
+			}, []))
+		].join('');
+
 		while(mask.length) {
 
 			// Текущая маска начинается со значимого элемента
@@ -47,7 +64,7 @@ export default class DateController {
 			const char = mask.charAt(0);
 			const charOriginalPosition = mask.length - primaryMask.length;
 
-			if (/[ymdHM]/.test(char)) throw DateError.WrongConstruction(primaryMask, char, charOriginalPosition);
+			if (new RegExp(`[${availableLetters}]`).test(char)) throw DateError.WrongConstruction(primaryMask, char, charOriginalPosition);
 			if (/[a-zA-Z]/.test(char)) throw DateError.UsingUnknownSymbol(primaryMask, char, charOriginalPosition);
 
 			// Незначимый символ: * / - + или любой другой отличный от буквы и цифры.
@@ -74,13 +91,13 @@ export default class DateController {
 		if (typeof input !== 'string') throw new Error('Input is not string');
 		const parsedResult = DateController.SplitStringByMask(input, mask);
 
-		function get(key: string) {
+		function get(key: AvailableMask) {
 			return Number.parseInt(parsedResult.find(item => item.part === key)?.input || '0');
 		}
 
 		// Если какой-то part не закончен и не является последним.
 		if (parsedResult.find(a => a.construction && !( a.ended || (a.last && a.input.length)))) return null;
-		return new Date(get('yyyy'), get('mm') - 1, get('dd'), get('HH'), get('MM'))
+		return new Date(get('YYYY'), get('MM') - 1, get('DD'), get('HH'), get('mm'))
 	}
 
 	/**
@@ -98,16 +115,20 @@ export default class DateController {
 		.map(key => DateController.GetValueByMaskPart(date, key))
 		.join('')
 	}
-	static GetValueByMaskPart(date: Date, part: string) {
+	/**
+	 * @description Используется только для красивой записи. По этому не используется getUTCFullYear, getUTCMonth и т.д.
+	 * */
+	static GetValueByMaskPart(date: Date, part: AvailableMask | string) {
 		function pad(v: number, length = 2) {
 			return String(v).padStart(length, '0');
 		}
+
 		switch (part) {
-			case 'yyyy': return date.getFullYear()
-			case 'mm': return pad(date.getMonth() + 1)
-			case 'dd': return pad(date.getDate())
+			case 'YYYY': return date.getFullYear()
+			case 'MM': return pad(date.getMonth() + 1)
+			case 'DD': return pad(date.getDate())
 			case 'HH': return pad(date.getHours())
-			case 'MM': return pad(date.getMinutes())
+			case 'mm': return pad(date.getMinutes())
 			default: return part
 		}
 	}
@@ -130,20 +151,11 @@ export default class DateController {
 		.join('')
 	}
 
-	static isISODate(str: string) {
+	static isUTCDate(str: string) {
 		if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
 		const d = new Date(str);
 		return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str; // valid date
 	}
-	static isUTCDate(str: string) {
-		try {
-			const dateParsed = new Date(Date.parse(str))
-			return dateParsed.toUTCString() === str
-		} catch (e) {
-			return false;
-		}
-	}
-
 }
 
 class DateError extends Error {
@@ -154,7 +166,8 @@ class DateError extends Error {
 		return new DateError(
 			`
 			In mask You can use only constructions like: ${DateController.ValidatedPrimaryMask.join()}. 
-			The next symbol(construction) "${symbol}" is unknown.			
+			The next symbol(construction) "${symbol}" is unknown.		
+			Mask: ${mask}, Position: ${position}	
 			`)
 	}
 	static WrongConstruction(mask: string, symbol: string, position?: number) {
@@ -162,7 +175,7 @@ class DateError extends Error {
 			`
 			Not full construction was founded: ${symbol}.
 			You can use only ${DateController.ValidatedPrimaryMask.join()}.
-			Mask: ${mask}
+			Mask: ${mask}, Position: ${position}	
 			`
 		)
 	}
