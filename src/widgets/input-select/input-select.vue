@@ -156,9 +156,7 @@ const filteredOptions = computed(() => {
 .input-select_error {
 	border: var(--vf-input-border-error);
 }
-.input-select_active {
-	z-index: 1	;
-}
+
 .input-select_disabled {
 	background-color: var(--vf-input-background-disabled);
 	cursor: default;
@@ -172,6 +170,7 @@ const filteredOptions = computed(() => {
 
 	display: grid;
 	grid-template-rows: min-content minmax(0, 1fr);
+	z-index: 2;
 }
 
 .input-select-option-list-item {
@@ -202,12 +201,14 @@ const filteredOptions = computed(() => {
 
 .fade-enter-active,
 .fade-leave-active {
-	transition: max-height 0.3s;
+	transition: max-height var(--vf-input-transtion-medium);
 	overflow: hidden !important;
+	z-index: 3;
 }
 
 .fade-enter-from,
 .fade-leave-to {
 	max-height: 0;
+	z-index: 1;
 }
 </style>

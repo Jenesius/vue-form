@@ -4,6 +4,9 @@
         <form-field name="created" type = "date" label = "Created" />
 		<form-field name="created" type = "date"  format = "test" label = "Test Format" />
 
+		<form-field type = "country" name = "a1" label = "tset"/>
+		<form-field type = "country" name = "a2" label = "Super"/>
+
 		<div style = "background-color: #bac7f8; padding: 10px">
 			<p>Local date: {{localDate}}</p>
 			<input-field name = "created" type = "local-date" />

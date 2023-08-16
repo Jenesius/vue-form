@@ -14,7 +14,7 @@ config({
 		"account-type": accountType,
 		coord: InputCoord,
 		file: InputFile,
-		'local-date': InputTestDateLocal
+		'local-date': InputTestDateLocal,
 	},
 	debug: true
 })

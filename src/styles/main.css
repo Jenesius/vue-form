@@ -29,6 +29,7 @@
     --vf-input-border-focus: 1px solid var(--vf-input-border-color-focus);
     --vf-input-label-color: var(--vf-input-black-dark);
     --vf-input-transtion-fast: 0.1s;
+    --vf-input-transtion-medium: 0.3s;
 }
 .vf-input_clean {
     border: 0;

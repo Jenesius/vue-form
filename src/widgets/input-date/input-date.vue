@@ -202,5 +202,6 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 }
 .container-date-calendar {
 	position: relative;
+	z-index: 1;
 }
 </style>
