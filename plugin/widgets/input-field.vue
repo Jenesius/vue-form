@@ -104,7 +104,6 @@ function handleInput(v: any) {
 </script>
 
 <style>
-@import "./../styles/main.css";
 
 
 </style>

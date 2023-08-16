@@ -17,7 +17,7 @@ export type ValidationGuard = () => void
 
 export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
 
-interface IOptionRowWithLabel {
+export interface IOptionRowWithLabel {
 	label: string,
 	value: any
 }

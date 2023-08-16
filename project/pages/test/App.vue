@@ -1,9 +1,21 @@
 <template>
 	<div class="container-examples">
+		<div :key = "values">Values: {{values}}</div>
+        <form-field name="created" type = "date" label = "Created" />
+		<form-field name="created" type = "date"  format = "test" label = "Test Format" />
+
+		<div style = "background-color: #bac7f8; padding: 10px">
+			<p>Local date: {{localDate}}</p>
+			<input-field name = "created" type = "local-date" />
+		</div>
+
+        <form-field name="created" type = "date" mask = "YYYY-MM-DD" label = "Ceated English" placeholder = "Введите дату создания"/>
 
         <form-field name="address.city" label = "Address city" />
 
-		<form-field :name="name" label = "Username"/>
+		<form-field :name="name" label = "Username" placeholder = "Username"/>
+		<form-field label = "TEST" v-model = "test"/>
+		<p>Test: {{test}}</p>
 		<form-field name="username.name.jenesius" label = "Username"/>
 		<form-field name="name" label = "Name"/>
 		<widget-composite/>
@@ -14,7 +26,8 @@
 
 		<button @click = "setDefaultValues">set default values</button>
 
-		<div :key = "values">Values: {{values}}</div>
+
+
 		<div :key = "changes">Changes: {{changes}}</div>
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
@@ -28,12 +41,15 @@ import {ref} from "vue";
 import WidgetComposite from "./widget-composite.vue";
 import WidgetAddress from "./widget-address.vue"
 import copyObject from "./../../../src/utils/copy-object";
+import InputField from "../../../src/widgets/form-field.vue";
 
 const form = new Form({
 	name: "main"
 });
 
 window.form = form
+
+const localDate = ref("");
 
 const values = ref(0);
 setInterval(() => {
@@ -42,6 +58,8 @@ setInterval(() => {
 	pureValue.value = copyObject(form.TEST_PURE_VALUE);
     pureAvailabilities.value = copyObject(form.TEST_PURE_AVAILABILITIES)
 }, 50);
+const test = ref("");
+window.test = test
 
 const address = new Form({
     name: "address",

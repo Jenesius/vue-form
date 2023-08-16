@@ -35,6 +35,7 @@ import {parseNumber} from "../../utils/parse-number";
 
 const props = defineProps<{
 	label?: string,
+	errors: ValidationError[],
 	modelValue: any,
 	disabled?: boolean,
 	autofocus?: boolean,
@@ -46,7 +47,6 @@ const props = defineProps<{
 	prefix?: string,
 	name?: string
 	numeric?: boolean,
-    errors: ValidationError[]
 }>()
 
 const isFocused = ref(false);
@@ -68,10 +68,8 @@ function onInput(v: string) {
 		("maxlength" in props && props.maxlength !== undefined) ||
 		("maxLength" in props && props.maxlength !== undefined)) v = v.slice(0, Number(props.maxlength || props.maxLength))
 
-    console.log(v)
 
 	v = executeModify(v);
-    console.log(v, typeof v, props.modify);
 	refInput.value.value = v;
 	emit('update:modelValue', v);
 }
@@ -108,5 +106,8 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	padding: 0 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
+}
+.input-text::placeholder{
+	color: var(--vf-input-placeholder-color);
 }
 </style>

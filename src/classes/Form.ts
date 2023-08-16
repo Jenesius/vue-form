@@ -125,8 +125,9 @@ export default class Form extends EventEmitter implements FormDependence {
         console.log('%c[new-form]%c', 'color: blue', 'color:black', this.name, Form.getParentForm());
         if (currentInstance) {
             const parent = Form.getParentForm();
-            if (parent)
+            if (parent && !(params.parent === false || params.parent === null)) {
                 parent.subscribe(this);
+            }
         }
         if (params.provide !== false && currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
     }
@@ -683,7 +684,8 @@ export default class Form extends EventEmitter implements FormDependence {
 
 interface FormParams {
     name: string,
-    provide: boolean
+    provide: boolean,
+    parent: Form | null | false
 }
 
 interface FormDependence {

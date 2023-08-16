@@ -7,39 +7,43 @@
 		:modelValue="input?.value"
 		@update:modelValue = "handleInput"
 
-        :disabled = "input?.disabled"
+        :disabled = "input?.disabled || false"
         :changed  = "input?.changed"
         :errors="input?.errors || []"
 	/>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, reactive} from "vue";
+import {computed, onMounted, onUnmounted, reactive, ref} from "vue";
 import {getFieldType} from "../config/store";
 import Form from "../classes/Form";
 import {FormInputValidationCallback} from "../types";
 import STORE from "../../plugin/config/store";
 
 interface IProps {
-	name: string,
+	name?: string,
 	type?: string,
     validation?: FormInputValidationCallback[] | FormInputValidationCallback,
     required?: boolean
 }
 const props = defineProps<IProps>()
-const parentForm = Form.getParentForm();
+const emit = defineEmits<{
+	(event: 'update:modelValue', value: any): void
+}>()
 const componentItem = computed(() => getFieldType(props.type));
 
 
 function handleInput(value: any) {
-	parentForm?.change({ [props.name]: value });
+
+	if (input) input.setValue?.(value);
+	else emit('update:modelValue', value)
 }
 
 
 function useFormInput(name: string) {
 
     const parentForm = Form.getParentForm();
-
+	if (!name) return null;
     if (!parentForm) return null;
 
     let validation: FormInputValidationCallback[] = []
@@ -49,7 +53,8 @@ function useFormInput(name: string) {
         changed?: boolean,
         disabled?: boolean,
         errors: (string | boolean)[],
-        setValidation(arr: FormInputValidationCallback[]): void
+        setValidation(arr: FormInputValidationCallback[]): void,
+		setValue(v: any): void
     }>>({})
 
     function updateInput() {
@@ -66,6 +71,7 @@ function useFormInput(name: string) {
     updateInput();
     updateAvailability();
     input.setValidation = setValidation;
+    input.setValue = setValue;
 
     const InputDependency = {
         name,
@@ -94,6 +100,9 @@ function useFormInput(name: string) {
     function setValidation(array?: FormInputValidationCallback[] | FormInputValidationCallback) {
         validation = typeof array === 'function' ? [array] : (array || []);
     }
+	function setValue(value: any) {
+		parentForm?.change({ [name]: value });
+	}
 
     return input;
 }
@@ -111,10 +120,11 @@ function mergeValidation() {
 }
 
 const input = useFormInput(props.name)
-// @ts-ignore;
+// @ts-ignore
 input?.setValidation(mergeValidation())
 
 </script>
 <style>
+@import "./../styles/main.css";
 
 </style>
