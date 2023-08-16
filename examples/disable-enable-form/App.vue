@@ -15,7 +15,7 @@
 
 <script setup lang='ts'>
 
-import {Form, InputField, useFormState} from "../../plugin";
+import {Form, InputField, useFormState} from "../../src";
 import {computed} from "vue";
 
 const form = new Form();

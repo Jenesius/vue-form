@@ -16,7 +16,7 @@
 
 <script setup lang='ts'>
 
-import {Form, InputField, useFormValues} from "../../plugin";
+import {Form, InputField, useFormValues} from "../../src";
 
 const form = new Form();
 const values = useFormValues(form);

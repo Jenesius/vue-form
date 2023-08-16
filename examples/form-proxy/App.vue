@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang='ts'>
-import {config, Form, InputField, useFormValues} from "../../plugin";
+import {config, Form, InputField, useFormValues} from "../../src";
 import InputAddress from "./input-address.vue";
 config({
   inputTypes: {

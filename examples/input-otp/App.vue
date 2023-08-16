@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang='ts'>
-import {config, Form, InputField, useFormValues} from "../../plugin";
+import {config, Form, InputField, useFormValues} from "../../src";
 import InputOTP from "./input-otp.vue";
 config({
   inputTypes: {

@@ -9,8 +9,7 @@
 </template>
 
 <script setup lang='ts'>
-import InputField from "../../../plugin/widgets/input-field.vue";
-import {Form, useFormValues} from "../../../plugin";
+import {Form, useFormValues, InputField} from "../../../src";
 
 const form = new Form();
 

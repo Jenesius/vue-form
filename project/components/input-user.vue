@@ -7,14 +7,13 @@
 </template>
 
 <script setup lang = "ts">
-	import InputField from "../../plugin/widgets/input-field.vue";
-	import {useProxyState} from "../../plugin";
+	import {Form, InputField} from "../../src";
 
 	const props = defineProps<{
 		name: string
 	}>()
 	
-	useProxyState(props.name);
+	const form = new Form({name: props.name});
 
 </script>
 

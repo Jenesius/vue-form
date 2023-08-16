@@ -8,13 +8,13 @@
 </template>
 
 <script setup lang="ts">
-import {useProxyState, InputField} from "../../plugin";
+import {Form, InputField} from "../../src";
 
 const props = defineProps<{
   name: string,
 }>()
 
-useProxyState(props.name)
+const form = new Form({name: props.name})
 
 </script>
 
