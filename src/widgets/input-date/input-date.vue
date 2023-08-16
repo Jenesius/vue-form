@@ -1,6 +1,6 @@
 <template>
 	<field-wrap :label="label" :errors="errors">
-		<div class="container-input-date">
+		<div class="container-input-date" :class = "{'container-input-date_disabled': disabled, 'container-input-date_error': errors.length}">
 
 			<div class="wrap-input-date">
 				<p class="input-date-mask">{{(insideValue?.length || !placeholder) ? prettyMask : (placeholder) }}</p>
@@ -10,6 +10,7 @@
 					:value="prettyValue"
 					@input="handleInput($event.target.value)"
 					@change="handleChange($event.target.value)"
+					:disabled="disabled"
 				>
 			</div>
 			<div class="input-date-icon"
@@ -48,6 +49,7 @@ const props = withDefaults(defineProps<{
 	errors: ValidationError[],
 	mask?: string,
 	placeholder?: string,
+	disabled: boolean
 }>(), {
 	mask: () => STORE.date.dateMask,
 })
@@ -95,6 +97,7 @@ function handleUserHandInput(input: string) {
 	emitInput(date);
 }
 function emitInput(date: Date | null) {
+	if (props.disabled) return false;
 	emit('update:modelValue', date ? date.toISOString() : date);
 }
 
@@ -137,7 +140,12 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	border: var(--vf-input-border);
 	background-color: var(--vf-input-background);
 }
-
+.container-input-date_disabled {
+	background-color: var(--vf-input-background-disabled);
+}
+.container-input-date_error {
+	border: var(--vf-input-border-error);
+}
 .container-input-date:focus-within {
 	border-color: var(--vf-input-gray-dark);
 }
