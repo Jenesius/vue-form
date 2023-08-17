@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import {InputField} from "../../../plugin";
+import {InputField} from "../../../src";
 import {ref} from "vue";
 
 const value = ref(0);

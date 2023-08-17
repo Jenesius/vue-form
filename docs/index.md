@@ -18,8 +18,9 @@ hero:
 
 features:
   - title: So simple
-    details: A couple of lines of code, and you already control everything.
-  - title: Built-in and custom
-    details: Use built-in or custom input components.
-
+    details: A couple of lines of code, and you already control everything. 12124124124
+  - title: Отличная библиотека компонент
+    details: "Большой набор компонент для работы с формами: текст, дата, номер телефона и др."
+  - title: Интеграция
+    details: Система глубоко интегрирована со Vue, что позволяет использовать реактивность по максимуму
 ---

@@ -2,6 +2,10 @@
 	<div class="container-examples">
 		<div :key = "values">Values: {{values}}</div>
 		<form-field type = "country" name = "a1" label = "tset"/>
+		<button @click = "show = !show">test</button>
+
+		<test-form  v-if = "show"/>
+
         <form-field name="created" type = "date" label = "Created" />
 		<form-field name="created" type = "date"  format = "test" label = "Test Format" />
 
@@ -46,13 +50,15 @@ import WidgetComposite from "./widget-composite.vue";
 import WidgetAddress from "./widget-address.vue"
 import copyObject from "./../../../src/utils/copy-object";
 import InputField from "../../../src/widgets/form-field.vue";
+import TestForm from "./test-form.vue";
 
 const form = new Form({
-	name: "main"
+	name: "main",
+	parent:false
 });
 
 window.form = form
-
+const show = ref(false);
 const localDate = ref("");
 
 const values = ref(0);

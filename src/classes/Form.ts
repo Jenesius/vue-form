@@ -129,7 +129,7 @@ export default class Form extends EventEmitter implements FormDependence {
         this.name = params.name;
         const currentInstance = !!getCurrentInstance();
         
-        debug.msg(`new form %c${Form.restoreFullName(this)}%c`, debug.colorName, debug.colorDefault);
+        debug.msg(`new form %c${Form.restoreFullName(this)}%c`, debug.colorName, debug.colorDefault, this);
         if (currentInstance) {
             const parent = Form.getParentForm();
             if (parent && !(params.parent === false || params.parent === null)) {

@@ -42,5 +42,25 @@ describe("ComputedValue of Form", () => {
 
 		expect(test.value).toEqual({code: 1})
 	})
+	test("Computed Valued for Child", () => {
+		const form = new Form();
+		const child = new Form({name: "address"});
+		form.subscribe(child)
+		form.setValues({
+			address: {
+				city: "Test"
+			}
+		})
 
+
+		const cityValue = ComputedValue(child, "city");
+		expect(cityValue.value).toBe("Test")
+		form.setValues({
+			address: {
+				city: "Minsk"
+			}
+		})
+		expect(cityValue.value).toBe("Minsk")
+
+	})
 })

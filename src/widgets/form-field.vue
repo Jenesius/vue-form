@@ -21,7 +21,7 @@ import Form from "../classes/Form";
 import {FormInput, FormInputValidationCallback} from "../types";
 import useFormInput from "../hooks/use-form-input";
 import mergeValidation from "../local-hooks/merge-input-validation";
-import {OptionRow} from "../../plugin/types";
+import {OptionRow} from "../types";
 import {parseOptions} from "../local-hooks/parse-options";
 
 interface IProps {
@@ -40,7 +40,7 @@ const parentForm = Form.getParentForm();
 
 function handleInput(value: any) {
 	if (input) input.setValue?.(value);
-	else emit('update:modelValue', value)
+	emit('update:modelValue', value)
 }
 
 let input: FormInput | null = null;

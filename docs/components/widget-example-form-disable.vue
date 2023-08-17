@@ -27,7 +27,7 @@
 
 <script setup>
     import InputStreet from "./../../_src/components/input-street.vue";
-    import {Form, InputField} from "../../plugin";
+    import {Form, InputField} from "../../src";
     import {onUnmounted, ref} from "vue";
 
     const form = new Form();

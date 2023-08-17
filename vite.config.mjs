@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'node:path'
 import pkg from './package.json'
 import typescript from '@rollup/plugin-typescript';
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+
 const NAME = pkg.name;
 const VERSION = pkg.version;
 

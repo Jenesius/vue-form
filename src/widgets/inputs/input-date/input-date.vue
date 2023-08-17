@@ -155,8 +155,6 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	padding: 0 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
-	background-color: transparent;
-	outline: none;
 	position: relative;
 	/*z-index: 1;*/
 }

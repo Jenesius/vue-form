@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-    import InputField from "../../plugin/widgets/input-field.vue";
+    import InputField from "../../src/widgets/input-field.vue";
     import {Form} from "../../src";
 
     const props = defineProps<{

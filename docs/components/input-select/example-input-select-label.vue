@@ -5,7 +5,7 @@
 />
 </template>
 <script setup>
-import {InputField} from "./../../../plugin/index";
+import {InputField} from "./../../../src/index";
 
 const arrayPets = [
 	{ value: 'F', label: 'Fish' },

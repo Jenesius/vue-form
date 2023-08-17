@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import {ComputedValue, Form, InputField} from "../../plugin"
+import {ComputedValue, Form, InputField} from "../../src"
 
 const form = new Form();
 const cityCode = ComputedValue(form, "address.city.code"); // ComputedRef

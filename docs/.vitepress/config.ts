@@ -15,6 +15,16 @@ export default defineConfig({
 			{ icon: 'github', link: 'https://github.com/Jenesius/vue-form' },
 		]
 	},
+	locales: {
+		root: {
+			label: "English",
+			lang: 'en'
+		},
+		ru: {
+			label: "Русский",
+			lang: "ru",
+		}
+	}
 	
 })
 
