@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<input-field
+			v-bind = "$attrs"
 			:options = "country"
 			type = "select"
 		/>
