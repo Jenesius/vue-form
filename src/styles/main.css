@@ -74,3 +74,14 @@
 .slide-leave-active {
     transition: 0.2s;
 }
+
+
+.height-resize-enter-active,
+.height-resize-leave-active {
+    transition: max-height var(--vf-input-transtion-medium);
+    overflow: hidden !important;
+}
+.height-resize-enter-from,
+.height-resize-leave-to {
+    max-height: 0 !important;
+}

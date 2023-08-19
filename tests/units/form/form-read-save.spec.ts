@@ -285,4 +285,32 @@ describe("Form read/save", () => {
         expect(form.changes).toEqual({name: "Jack"})
         
     })
+    test("Объект сохранений должен доходить до родительского, если в дочернем нет save", async () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child);
+
+        const mockSave = jest.fn(() => {
+            return JSON.parse(JSON.stringify(form.changes))
+        });
+
+        child.change({
+            x: 1,
+            y: 2
+        })
+
+        form.save = mockSave
+
+        await form.save();
+
+        expect(mockSave.mock.results.length).toBe(1);
+        expect(mockSave.mock.results[0].value).toEqual({
+            address: {
+                x: 1, y: 2
+            }
+        });
+
+    })
 })

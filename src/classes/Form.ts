@@ -557,7 +557,7 @@ export default class Form extends EventEmitter implements FormDependence {
     /**
      * @description Function for save data (Update/Create)
      */
-    #saveData: FunctionHandleData = () => Promise.resolve();
+    #saveData: FunctionHandleData | null = null;
     /**
      * @description The same with read. After saving run cleanChanges.
      */
@@ -570,18 +570,21 @@ export default class Form extends EventEmitter implements FormDependence {
             if (typeof elemController.save === 'function') acc.push(elemController.save.bind(elemController));
             return acc;
         }, []))
-        
-        array.push(() => this.#saveData?.())
-        array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
-        /**
-         * After success saving changes will be merged(overwrite) with values.
-         * Is Bug: https://github.com/Jenesius/vue-form/issues/149
-         * */
-        array.push(() => {
-            const saveChanges = copyObject(this.changes);
-            this.revert();
-            this.setValues(saveChanges);
-        });
+
+        if (this.#saveData) {
+            array.push(() => this.#saveData?.())
+            array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
+            /**
+             * After success saving changes will be merged(overwrite) with values.
+             * Is Bug: https://github.com/Jenesius/vue-form/issues/149
+             * */
+            array.push(() => {
+                const saveChanges = copyObject(this.changes);
+                this.revert();
+                this.setValues(saveChanges);
+            });
+        }
+
         
         return () => runPromiseQueue(array).finally(() => this.wait = false);
     }
