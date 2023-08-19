@@ -23,6 +23,8 @@
 import {Form, InputField, useFormValues} from "../../src";
 
 const form = new Form();
+// @ts-ignore
+window.form = form
 const values = useFormValues(form);
 
 /*JUST ENUMS*/

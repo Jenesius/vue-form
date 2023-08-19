@@ -571,7 +571,7 @@ export default class Form extends EventEmitter implements FormDependence {
             return acc;
         }, []))
 
-        if (this.#saveData) {
+        if (this.#saveData || !this.parent) {
             array.push(() => this.#saveData?.())
             array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
             /**
