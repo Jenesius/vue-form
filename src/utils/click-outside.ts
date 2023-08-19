@@ -12,7 +12,6 @@ export default function clickOutside(el: HTMLElement, callback: any) {
 
 	function handleClickOutside(e: MouseEvent) {
 		// Clicked outside
-		console.log('+++', el.childNodes)
 		if (!el.contains(e.target as Node)) {
 			callback();
 			clean()
