@@ -573,7 +573,15 @@ export default class Form extends EventEmitter implements FormDependence {
         
         array.push(() => this.#saveData?.())
         array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
-        array.push(() => this.revert());
+        /**
+         * After success saving changes will be merged(overwrite) with values.
+         * Is Bug: https://github.com/Jenesius/vue-form/issues/149
+         * */
+        array.push(() => {
+            const saveChanges = copyObject(this.changes);
+            this.revert();
+            this.setValues(saveChanges);
+        });
         
         return () => runPromiseQueue(array).finally(() => this.wait = false);
     }

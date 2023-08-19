@@ -1,6 +1,10 @@
 <template>
 	<div class="container-examples">
 		<div :key = "values">Values: {{values}}</div>
+
+		<div :key = "changes">Changes: {{changes}}</div>
+		<div :key = "pureValue">Pure values: {{pureValue}}</div>
+		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 		<form-field type = "country" name = "a1" label = "tset"/>
 		<button @click = "show = !show">test</button>
 
@@ -36,9 +40,6 @@
 
 
 
-		<div :key = "changes">Changes: {{changes}}</div>
-		<div :key = "pureValue">Pure values: {{pureValue}}</div>
-		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 	</div>
 </template>
 

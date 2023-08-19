@@ -150,12 +150,15 @@ describe("Form read/save", () => {
         expect(mockSave.mock.calls.length).toBe(1);
         expect(mockSave.mock.results[0].value).toEqual({version: 4});
     })
-    test("Changes must be clean after save was success", async () => {
+    test("Changes must be clean after save was success, and values should be mixed with changes", async () => {
         const form = new Form();
         form.change({
             name: "Jack"
         })
         await form.save();
+        expect(form.values).toEqual({
+            name: "Jack"
+        })
         expect(form.changes).toEqual({})
         expect(form.changed).toBe(false)
     })

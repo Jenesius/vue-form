@@ -4,12 +4,15 @@
  * */
 export default function clickOutside(el: HTMLElement, callback: any) {
 
+	const globalItem = document;
+
 	function clean() {
-		window.removeEventListener('click', handleClickOutside);
+		globalItem.removeEventListener('click', handleClickOutside);
 	}
 
 	function handleClickOutside(e: MouseEvent) {
 		// Clicked outside
+		console.log('+++', el.childNodes)
 		if (!el.contains(e.target as Node)) {
 			callback();
 			clean()
@@ -17,7 +20,7 @@ export default function clickOutside(el: HTMLElement, callback: any) {
 	}
 	// SetTimeout Нужен для того, чтобы подождать, пока предыдущий event всплывёт полностью. В противном случае мы можем
 	// сразу начать обрабатывать клик, которые и инициировал добавление обработчика
-	setTimeout(() => window.addEventListener('click', handleClickOutside), 0)
+	setTimeout(() => globalItem.addEventListener('click', handleClickOutside), 0)
 	// Return off hook
 	return () => {
 		clean()

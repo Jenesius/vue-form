@@ -30,9 +30,9 @@
     "README.md",
     "dist/**/*.ts",
     "tests",
-    "babel.config.js",
+    "babel.config.cjs",
     "jest.config.cjs",
-    ".eslintrc.js",
+    ".eslintrc.cjs",
     "LICENSE"
   ],
   "main": "dist/jenesius-vue-form.js",
