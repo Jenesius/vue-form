@@ -9,7 +9,7 @@ import copyObject from "../utils/copy-object";
 import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from "../utils/compare-changes";
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
-import {FormAvailability, FormSetValuesOptions} from "../types";
+import {FormAvailability, FormSetValuesOptions, OnFunction} from "../types";
 import isEndPointValue from "../utils/is-end-point-value";
 import splitName from "../utils/split-name";
 import isEmptyObject from "../utils/is-empty-object";
@@ -499,6 +499,9 @@ export default class Form extends EventEmitter implements FormDependence {
     get version() {
         return this.#version;
     }
+    onversion(callback: OnFunction<Form['version']>) {
+        return this.on(Form.EVENT_VERSION, callback)
+    }
     
     static EVENT_ID = 'form-id'
     #id: any;
@@ -509,7 +512,10 @@ export default class Form extends EventEmitter implements FormDependence {
     get id() {
         return this.#id;
     }
-    
+    onid(callback: OnFunction<Form['id']>) {
+        return this.on(Form.EVENT_ID, callback)
+    }
+
     static EVENT_WAIT = 'wait'
     #wait: boolean = false;
     set wait(v: boolean) {
