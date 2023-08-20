@@ -21,12 +21,16 @@ interface IOptionRowWithTitle {
 }
 
 export interface FormInput {
+	name: string,
 	value: any,
 	changed: boolean,
 	disabled: boolean,
 	errors: ValidationError[],
 	setValidation(arr: FormInputValidationCallback[]): void,
-	setValue(v: any): void
+	setValue(v: any): void,
+	setName(name: string | null): void,
+	validationRules: FormInputValidationCallback[],
+	deactivate: () => void
 }
 
 export interface InputDependency {

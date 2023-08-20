@@ -192,6 +192,9 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 .input-date-icon_active {
 	stroke: var(--vf-input-active);
 }
+.container-input-date_disabled .input-date-icon{
+	stroke: var(--vf-input-gray-light);
+}
 
 .input-date-calendar {
 	position: absolute;

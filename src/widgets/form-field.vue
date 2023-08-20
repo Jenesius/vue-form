@@ -15,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import {computed, watch} from "vue";
+import {computed, onUnmounted, watch} from "vue";
 import {getFieldType} from "../config/store";
 import Form from "../classes/Form";
-import {FormInput, FormInputValidationCallback} from "../types";
+import {FormInputValidationCallback} from "../types";
 import useFormInput from "../hooks/use-form-input";
 import mergeValidation from "../local-hooks/merge-input-validation";
 import {OptionRow} from "../types";
@@ -43,15 +43,20 @@ function handleInput(value: any) {
 	emit('update:modelValue', value)
 }
 
-let input: FormInput | null = null;
-watch(() => props.name, initializeInput, {immediate: true});
+const input = parentForm ?  useFormInput(parentForm) : null;
 
 function initializeInput() {
 	if (!parentForm) return;
 	if (!props.name) return;
-	input = useFormInput(parentForm, props.name);
+
+	if (!input) return;
+
+	input.setName(props.name);
 	input.setValidation(mergeValidation(props))
 }
+
+onUnmounted(() => input?.deactivate())
+watch(() => props.name, initializeInput, {immediate: true});
 
 </script>
 <style>
