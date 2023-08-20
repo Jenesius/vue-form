@@ -7,7 +7,7 @@
     </div>
 </template>
 <script setup>
-    import {InputField, Form} from "../../plugin";
+    import {InputField, Form} from "../../src";
     import InputAddress from "./inputs/widget-example-input-address.vue";
     import {ref} from "vue";
 

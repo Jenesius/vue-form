@@ -129,7 +129,7 @@ export default class Form extends EventEmitter implements FormDependence {
         this.name = params.name;
         const currentInstance = !!getCurrentInstance();
         
-        console.log('%c[new-form]%c', 'color: blue', 'color:black', this.name, Form.getParentForm());
+        debug.msg(`new form %c${Form.restoreFullName(this)}%c`, debug.colorName, debug.colorDefault, this);
         if (currentInstance) {
             const parent = Form.getParentForm();
             if (parent && !(params.parent === false || params.parent === null)) {
@@ -153,29 +153,29 @@ export default class Form extends EventEmitter implements FormDependence {
          */
         
         if (!options.executedFrom) {
-            console.log(`Executed from not founded in options, values will be %c${Form.getTargetName(this)}`, 'color: green')
+            debug.msg(`Executed from not founded in options, values will be %c${Form.getTargetName(this)}`, debug.colorSuccess)
             options.executedFrom = Form.getTargetName(this);
         }
         
         // Текущий элемент имеет родителя - отправляем изменения наверх.
         if (this.parent) {
-            console.log(`[%c${this.name}%c] emit changes to parent [%c${this.parent.name}%c]`, 'color: red', 'color: black', 'color: red', 'color: black');
+            debug.msg(`%c${this.name}%c emit changes to parent [%c${this.parent.name}%c]`, debug.colorName, debug.colorDefault, debug.colorFocus,debug.colorDefault);
             return void this.parent.setValues(values, options);
         }
         
         // Дошли до родительской формы. Теперь данные нужно завернуть и отправить вниз
         
-        console.group('[SET VALUES]');
+        debug.group('SET VALUES');
         
-        console.log("%cOptions:", 'color: blue', options)
-        console.log("%cValues:", 'color: blue', values)
+        debug.msg("%cOptions:", debug.colorFocus, options)
+        debug.msg("%cValues:", debug.colorFocus, values)
         
         /**
          * Первый этап: Приводим переданные значения в приведённы вид.
          * */
         const grandValues = grandObject(values);
         
-        console.log('%cGrand Object:', 'color: blue', grandValues);
+        debug.msg('%cGrand Object:', debug.colorFocus, grandValues);
         
         // По options функция возвращает ссылку на объект, которые изменяется
         function getTargetValue(this: Form) {
@@ -191,7 +191,7 @@ export default class Form extends EventEmitter implements FormDependence {
         
         const targetValues = getTargetValue.call(this)
         
-        console.log('%cTarget Values:', 'color: blue', targetValues)
+        debug.msg('%cTarget Values:', debug.colorFocus, targetValues)
         
         // Если параметр clean, был передан, мы используем функцию полного сравнения, а не сравнения изменений.
         const compareResult = (options.clean ? compareDifference : compareMergeChanges)(targetValues, grandValues)
@@ -220,18 +220,18 @@ export default class Form extends EventEmitter implements FormDependence {
         // Разумеется это всё делать надо только в том случае, если compareResult не пустой
         if ((options.target || options.executedFrom) && compareResult.length) {
             
-            console.group('SUPER COMPARE')
-            
+            debug.group('SUPER COMPARE')
+
             const test = superCompare.call(this, compareResult, concatName(options.executedFrom, options.target));
             compareResult.unshift(...test)
             
-            console.log('SUPER COMPARE:', test);
-            console.groupEnd();
+            debug.msg('Result', test);
+            debug.groupEnd();
     
         }
-        
-        
-        console.log('%cCompare result', 'color: blue', compareResult)
+
+
+        debug.msg('%cCompare result', debug.colorFocus, compareResult)
         
         // В зависимости от того, есть ли параметр change, происходит изменение values, или changes
         // При этом важно помнить, что при change: true, изменения касаются только this.changes
@@ -243,15 +243,14 @@ export default class Form extends EventEmitter implements FormDependence {
         // и выполнения внешних событий.
         
         const event = new CompareEvent(compareResult);
-        
-        console.log('%cEvent:', 'color: blue', event);
-        console.log('%cNew Values', 'color: blue', this.values)
-        
-        console.group('DISPATCHING EVENT');
+
+        debug.msg('%cNew Values', debug.colorFocus, this.values)
+
+        debug.group('DISPATCHING EVENT');
         this.dispatchEvent(event);
-        console.groupEnd();
-        
-        console.groupEnd();
+        debug.groupEnd();
+
+        debug.groupEnd();
         
         
     }
@@ -266,7 +265,7 @@ export default class Form extends EventEmitter implements FormDependence {
     private mergeValues(compareResult: CompareItem[], isChange: boolean = false) {
         // Как раз определить, какая часть changes была затронута - самое сложное
         
-        console.group('MERGE VALUEs PROCESS')
+        debug.group('MERGE VALUES PROCESS')
         //if (isChange) return mergeObjects(this.changes, compareResult);
         
         // Упразднённым полем называется поле, которому установлено простое значение(конечное)
@@ -301,7 +300,7 @@ export default class Form extends EventEmitter implements FormDependence {
             // то и смысла в этом поле - нет, т.к. оно не имеет значения и не определено в pureValues. Происходит
             // рекурсивная очистка поля.
             if (isChange && item.newValue === undefined && !checkNameInObject(this.pureValues, item.name)) {
-                console.log(`Removing useless field %c${item.name}%c from changes.`, 'color: green', 'color: black');
+                debug.msg(`Removing useless field %c${item.name}%c from changes.`, debug.colorError, debug.colorDefault);
                 recursiveRemoveProp(this.#changes, item.name)
             }
             
@@ -312,16 +311,17 @@ export default class Form extends EventEmitter implements FormDependence {
                 ((isEndPointValue(item.newValue) || isEndPointValue(item.oldValue)) && !isChange)
                 // || (item.newValue === undefined && isChange)
             ) {
-                console.log(`%cReturn%c changes for %c${item.name}`, 'color: red', 'color: black', 'color: green');
+                debug.msg(`%cReturn%c changes for %c${item.name}%c`,
+                    debug.colorFocus, debug.colorDefault, debug.colorName, debug.colorDefault
+                    );
                 // this.cleanChangesByField(item.name);
                 recursiveRemoveProp(this.#changes, item.name)
             }
             
         })
         
-        console.log(compareResult);
-        
-        console.groupEnd()
+
+        debug.groupEnd()
         
     }
     
@@ -369,7 +369,11 @@ export default class Form extends EventEmitter implements FormDependence {
         
         
         if (event instanceof CompareEvent) {
-            console.log(`[%c${Form.restoreFullName(this)}%c]: %c${event?.comparison.length ? '' : 'NOT EFFECT'}%c`, 'color: red', 'color: black', 'color: purple', 'color: black', 'Dispatch event', event)
+            debug.msg(`[%c${Form.restoreFullName(this)}%c] %c${event?.comparison.length ? 'found updates' : 'not effect'}%c`,
+                debug.colorName, debug.colorDefault,
+                debug.colorFocus, debug.colorDefault,
+                event?.comparison.length ? event : ''
+                )
 
             if (event.comparison.length) this.emit(Form.EVENT_CHANGED, this.changed);
 
@@ -381,14 +385,14 @@ export default class Form extends EventEmitter implements FormDependence {
             })
             // Проходим по всем изменениям и уведомляем их
             event.comparison.forEach(item => {
-                console.log(`[%c${this.name}%c] Emit new value event to %c${item.name}`, 'color: red', 'color: black', 'color: red');
+                debug.msg(`[%c${this.name}%c] Emit new value to %c${item.name}`, debug.colorName, debug.colorDefault, debug.colorName);
                 this.emit(Form.getEventValueByName(item.name), item.newValue);
                 this.emit(Form.EVENT_VALUE, item);
             })
         }
         
         if (event instanceof AvailabilityEvent) {
-            console.log(`[%c${Form.getTargetName(this)}%c]:`, 'color: red', 'color: black', 'Dispatch event', event)
+            debug.msg(`%c${Form.getTargetName(this)}%c handle AvailabilityEvent.`, debug.colorName, debug.colorDefault, event);
 
             if (event.newAvailability !== event.oldAvailability) {
                 this.emit(Form.EVENT_AVAILABLE, event.newAvailability);
@@ -407,12 +411,12 @@ export default class Form extends EventEmitter implements FormDependence {
             .forEach(eventName => {
                 const eventFieldName = /^available:(.*)/.exec(eventName)?.[1]; // Имя поля для которого есть обработчик
                 if (!eventFieldName) return;
-                console.group("EVENT AVAILABILITY")
                 const [sourceAv, oldAv] = AvailabilityEvent.GetFieldAvailability(event, eventFieldName);
                 // Получаем ближайшее поле для текущего и его значение
-                console.log(`For %c${eventFieldName}%c: %c${sourceAv}%c, %c${oldAv}`, 'color: green', 'color: black', 'color: red', 'color: black', 'color: red')
-                if (sourceAv !== oldAv) this.emit(eventName, sourceAv) // Если состояние поменялось - уведомляем об этом
-                console.groupEnd();
+                if (sourceAv !== oldAv) {
+                    debug.msg(`Availability field %c${eventFieldName}%c: ${sourceAv} -> ${oldAv}.`, debug.colorName, debug.colorDefault);
+                    this.emit(eventName, sourceAv) // Если состояние поменялось - уведомляем об этом
+                }
             })
         }
     }
@@ -447,8 +451,8 @@ export default class Form extends EventEmitter implements FormDependence {
      * @description Метод используется для очистки changes. Иными словами происходит просто очистка всех changes.
      * */
     revert() {
-        console.log('Form: %crevert changes', 'color: purple');
-    
+        debug.msg('revert changes');
+
         if (this.parent) return void this.parent.cleanChangesByField(this.name as string);
         
         this.setValues(this.pureValues, {
@@ -553,7 +557,7 @@ export default class Form extends EventEmitter implements FormDependence {
     /**
      * @description Function for save data (Update/Create)
      */
-    #saveData: FunctionHandleData = () => Promise.resolve();
+    #saveData: FunctionHandleData | null = null;
     /**
      * @description The same with read. After saving run cleanChanges.
      */
@@ -566,10 +570,21 @@ export default class Form extends EventEmitter implements FormDependence {
             if (typeof elemController.save === 'function') acc.push(elemController.save.bind(elemController));
             return acc;
         }, []))
-        
-        array.push(() => this.#saveData?.())
-        array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
-        array.push(() => this.revert());
+
+        if (this.#saveData || !this.parent) {
+            array.push(() => this.#saveData?.())
+            array.push((data: any) => this.emit(Form.EVENT_SAVE, data));
+            /**
+             * After success saving changes will be merged(overwrite) with values.
+             * Is Bug: https://github.com/Jenesius/vue-form/issues/149
+             * */
+            array.push(() => {
+                const saveChanges = copyObject(this.changes);
+                this.revert();
+                this.setValues(saveChanges);
+            });
+        }
+
         
         return () => runPromiseQueue(array).finally(() => this.wait = false);
     }
@@ -628,17 +643,15 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     available(type: boolean, names: string[]):void {
         if (this.parent) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
-        console.group(`AVAILABLE %c${type}`, 'color: purple')
-        
+        debug.group(`AVAILABILITY %c${Form.getTargetName(this)}%c to %c${type}`, debug.colorName, debug.colorDefault, debug.colorFocus);
+
         const oldAvailable = this.isAvailable;
         if (names.length === 0) this.isAvailable = type;
         
         
         const copyAV = copyObject(this.#availabilities);
-        console.log('Old availability', copyAV)
-        
-        /**MERGIN DATA*/
-        
+
+        /**MERGING DATA*/
         // Помечаем новые поля
         if (names.length) names.forEach(name => this.#availabilities[name] = true)
         else this.#availabilities = {}
@@ -651,9 +664,7 @@ export default class Form extends EventEmitter implements FormDependence {
         
         /**OPTIMIZATION*/
         const notOptimizeNames = Object.keys(this.#availabilities);
-        
-        console.log("Before optimization:", copyObject(this.#availabilities));
-        
+
         notOptimizeNames
         .forEach(key => {
             const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
@@ -666,16 +677,14 @@ export default class Form extends EventEmitter implements FormDependence {
             }
 
         })
-        
-        console.log("Optimization:", copyObject(this.#availabilities))
-        
-        console.group('DISPATCHING EVENT');
+
+        debug.group('DISPATCHING EVENT');
         this.dispatchEvent(new AvailabilityEvent(this.#availabilities, copyAV, this.isAvailable, oldAvailable));
-        console.groupEnd();
+        debug.groupEnd();
         
         /**OPTIMIZATION END*/
 
-        console.groupEnd();
+        debug.groupEnd();
     }
     
     #availabilities: FormAvailability = {}
@@ -700,12 +709,14 @@ export default class Form extends EventEmitter implements FormDependence {
     validate(): boolean {
         const result = this.dependencies.reduce((acc, dep) => {
             const depValidationResult = (typeof dep.validate === "function") ?  dep.validate() : true;
-            console.log("Dep validation result:", depValidationResult)
             acc = acc && !!depValidationResult;
             return acc;
         }, true);
     
-        debug.msg(`Validation ${result ? 'successful' : 'failed'}`);
+        debug.msg(`Validation %c${Form.getTargetName(this)}%c %c${result ? 'successful' : 'failed'}%c`,
+            debug.colorName, debug.colorDefault,
+            result ? debug.colorSuccess : debug.colorError, debug.colorDefault
+        );
     
         return result;
     }

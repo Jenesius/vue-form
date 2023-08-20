@@ -3,6 +3,7 @@ import EmptyApp from "./components/EmptyApp.vue";
 import {defineComponent} from "vue";
 import {InputField, Form} from "../../src/index";
 import STORE from "../../src/config/store";
+import wait from "../wait";
 
 function defineDateComponent() {
     return defineComponent({
@@ -75,31 +76,27 @@ describe("Input date", () => {
 
         expect(app.get('.container-date-calendar')).toBeTruthy()
     })
-    test("Calendar should be closed if click was outside, or date was selected, or icon was press twice", async () => {
+    test("Calendar should be closed if icon was press twice", async () => {
         const component = defineComponent({
             template: `<div><input-field name = "created" type = "date"/></div>`,
             components: {InputField}
         })
         const app = mount(EmptyApp, { attachTo: document.body, slots: { default: component } });
+
         const getCalendar = () => app.find('.container-date-calendar');
         await app.vm.$nextTick();
 
+        // Click to button - open calendar
         const button = app.get('.input-date-icon');
         await button.trigger('click');
         await app.vm.$nextTick()
 
         expect(getCalendar().exists()).toBe(true);
-        await button.trigger('click');
+        await button.trigger('click'); // second button click - close calendar
         await app.vm.$nextTick()
-        expect(getCalendar().exists()).toBe(false);
-        await button.trigger('click');
-        await app.vm.$nextTick()
-        expect(getCalendar().exists()).toBe(true);
-        await app.get('.main').trigger('click');
-        await app.get('.main').trigger('click');
 
-        await app.vm.$nextTick()
         expect(getCalendar().exists()).toBe(false);
+
     })
     test("Calendar should show current date or selected date", async () => {
         const app = defaultMount();

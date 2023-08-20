@@ -6,7 +6,7 @@
 
 <script setup lang = "ts">
 
-import {InputField} from "../../../plugin";
+import {InputField} from "../../../src";
 
 
 

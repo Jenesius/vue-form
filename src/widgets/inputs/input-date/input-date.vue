@@ -14,7 +14,7 @@
 				>
 			</div>
 			<div class="input-date-icon"
-				 @click.stop="changeCalendarStatus(!calendarStatus)"
+				 @click="changeCalendarStatus(!calendarStatus)"
 				 :class="{
 					'input-date-icon_active': calendarStatus
 				}"
@@ -71,6 +71,7 @@ function handleCalendarInput(calendarStringData: string) {
 
 let offCalendar: any;
 function changeCalendarStatus(status: boolean) {
+
 	calendarStatus.value = status;
 	nextTick(() => {
 		if (status) offCalendar = clickOutside(refCalendar.value, changeCalendarStatus.bind(null, false))
@@ -154,10 +155,8 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	padding: 0 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
-	background-color: transparent;
-	outline: none;
 	position: relative;
-	z-index: 1;
+	/*z-index: 1;*/
 }
 
 .wrap-input-date {
@@ -192,6 +191,9 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 
 .input-date-icon_active {
 	stroke: var(--vf-input-active);
+}
+.container-input-date_disabled .input-date-icon{
+	stroke: var(--vf-input-gray-light);
 }
 
 .input-date-calendar {

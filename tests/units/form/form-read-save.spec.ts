@@ -150,12 +150,15 @@ describe("Form read/save", () => {
         expect(mockSave.mock.calls.length).toBe(1);
         expect(mockSave.mock.results[0].value).toEqual({version: 4});
     })
-    test("Changes must be clean after save was success", async () => {
+    test("Changes must be clean after save was success, and values should be mixed with changes", async () => {
         const form = new Form();
         form.change({
             name: "Jack"
         })
         await form.save();
+        expect(form.values).toEqual({
+            name: "Jack"
+        })
         expect(form.changes).toEqual({})
         expect(form.changed).toBe(false)
     })
@@ -281,5 +284,33 @@ describe("Form read/save", () => {
         await expect(form.save()).rejects.toBe("Error from Child")
         expect(form.changes).toEqual({name: "Jack"})
         
+    })
+    test("Объект сохранений должен доходить до родительского, если в дочернем нет save", async () => {
+        const form = new Form();
+        const child = new Form({
+            name: "address"
+        })
+        form.subscribe(child);
+
+        const mockSave = jest.fn(() => {
+            return JSON.parse(JSON.stringify(form.changes))
+        });
+
+        child.change({
+            x: 1,
+            y: 2
+        })
+
+        form.save = mockSave
+
+        await form.save();
+
+        expect(mockSave.mock.results.length).toBe(1);
+        expect(mockSave.mock.results[0].value).toEqual({
+            address: {
+                x: 1, y: 2
+            }
+        });
+
     })
 })

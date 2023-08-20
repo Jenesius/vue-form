@@ -4,7 +4,7 @@
     <button @click = "show">values</button>
 </template>
 <script setup>
-    import {Form, InputField} from "./../../plugin"
+    import {Form, InputField} from "./../../src"
     const form = new Form();
     const arr = [ {value: 1, title: 'Earth'} ]
 

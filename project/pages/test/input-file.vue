@@ -3,12 +3,14 @@
 		<p>UPLOADING FILE</p>
 		<input class="widget-input-file" type="file" @change="onInput"/>
 		{{modelValue}}
+		{{disabled}}
 	</div>
 </template>
 
 <script setup lang="ts">
 interface Props {
-	modelValue: any
+	modelValue: any,
+	disabled: boolean
 }
 
 const props = defineProps<Props>()
@@ -27,6 +29,7 @@ function onInput(event: any) {
 .container-input-file {
 	display: flex;
 	background-color: red;
+	position: relative;
 }
 
 .button-upload-file {

@@ -18,22 +18,21 @@
 					@click="setActive()"
 					:disabled = "disabled"
 				/>
-				<transition name="fade">
+				<transition name="height-resize">
 					<div class = "input-select-option" v-if="active">
 						<widget-input-select-search
 							v-if = "options.length > 6"
 							v-model = "filter"
 
 							@focusin = "setActive(true)"
-							@focusout = "deactivate()"
 						/>
-
 						<div class = "input-select-option-list">
 							<p
 								v-for = "option in filteredOptions"
 								:key = "option.value"
 								:class="{'input-select-option-list-item_active': modelValue === option.value}"
 								class="input-select-option-list-item"
+								:title = "option.value"
 
 								@click = "onInput(option.value), setActive(false)"
 							>{{getLabelFromOptionRow(option)}}</p>
@@ -48,12 +47,13 @@
 
 <script setup lang="ts">
 import {OptionRow} from "../../../types";
-import {computed, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref} from "vue";
 import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
 import updateInputPosition from "../../../utils/update-input-position";
 import WidgetInputSelectSearch from "./widget-input-select-search.vue";
 import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 import FieldWrap from "../field-wrap.vue";
+import debounce from "../../../utils/debounce";
 
 const props = defineProps<{
 	label?: string,
@@ -74,6 +74,12 @@ function setActive(v = !active.value) {
 
 	if (props.disabled) return active.value = false;
 	active.value = v;
+
+	if (v) {
+		nextTick(() => {
+			scrollToActiveItem('auto')
+		})
+	}
 }
 
 const emit = defineEmits<{
@@ -110,12 +116,27 @@ onMounted(() => {
 			case "ArrowDown":
 				e.preventDefault();
 				updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration: 1});
+				scrollToActiveItem('smooth')
 				break;
 			case "ArrowUp":
 				e.preventDefault();
 				updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration: -1});
+				scrollToActiveItem('smooth')
 				break;
 		}
+	})
+})
+
+/**
+ * @description Для того, чтобы предотвратить повторный scroll - используем debounce.
+ * */
+const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'auto') {
+	if (!active.value) return;
+	nextTick(() => {
+		refInputSelect.value?.querySelector('.input-select-option-list-item_active')?.scrollIntoView({
+			block: 'nearest',
+			behavior
+		})
 	})
 })
 
@@ -123,9 +144,14 @@ onMounted(() => {
 const filter = ref('');
 const filteredOptions = computed(() => {
 	const _search = filter.value.toLowerCase();
+
 	return props.options.filter(option =>
+		// Если объекта нет в скрытых значениях
 		!props.hiddenValues?.includes(option.value) &&
-		getLabelFromOptionRow(option)?.toLowerCase?.().includes(_search)
+		// Если поиск пуст или если label содержит search
+		// String used to convert number or other types(not string) to string
+		// Resolve https://github.com/Jenesius/vue-form/issues/107
+		(_search.length === 0 || String(getLabelFromOptionRow(option))?.toLowerCase?.().includes(_search))
 	)
 })
 
@@ -169,7 +195,6 @@ const filteredOptions = computed(() => {
 
 	display: grid;
 	grid-template-rows: min-content minmax(0, 1fr);
-	z-index: 2;
 }
 
 .input-select-option-list-item {
@@ -198,16 +223,19 @@ const filteredOptions = computed(() => {
 	margin-bottom: 1px;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-	transition: max-height var(--vf-input-transtion-medium);
-	overflow: hidden !important;
-	z-index: 3;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	max-height: 0;
+/**
+Для options - чтобы в момент, когда active становился false, они не пропадали под другими поля для ввода.
+Для блока целиком - чтобы в момент активации он был выше сверстников
+*/
+.input-select-option,
+.input-select_active{
 	z-index: 1;
 }
+/**
+При активации - чтобы был выше предыдуще активированного блока.
+*/
+.input-select_active:has(.height-resize-enter-active) {
+	z-index: 2;
+}
+
 </style>

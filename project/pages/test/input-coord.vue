@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang = "ts">
-import {Form, InputField, useFormValues} from "../../../plugin";
+import {Form, InputField, useFormValues} from "../../../src";
 
 const props = defineProps<{
 	name: string,

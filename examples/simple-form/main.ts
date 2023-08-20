@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue';
-import {config} from "../../plugin";
+import {config} from "../../src";
 
 config({
     debug: true

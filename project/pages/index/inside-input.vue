@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang = "ts">
-import {InputField} from "./../../../plugin/index";
+import {InputField} from "./../../../src/index";
 
 const options = {
   a: "name - 1",

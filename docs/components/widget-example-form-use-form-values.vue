@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import {useFormValues, Form, InputField} from "../../plugin"
+import {useFormValues, Form, InputField} from "../../src"
 
 const form = new Form();
 const values = useFormValues(form); // Reactive {}

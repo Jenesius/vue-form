@@ -1,8 +1,11 @@
 <template>
-	<input-field
-		:options = "country"
-		type = "select"
-	/>
+	<div>
+		<input-field
+			v-bind = "$attrs"
+			:options = "country"
+			type = "select"
+		/>
+	</div>
 </template>
 
 <script setup lang = "ts">

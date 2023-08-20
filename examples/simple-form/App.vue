@@ -25,7 +25,7 @@
 
 <script setup lang='ts'>
 
-import {ComputedValue, Form, InputField, useFormValues} from "../../plugin";
+import {ComputedValue, Form, InputField, useFormValues} from "../../src";
 
 const form = new Form({name: "Simple Form"});
 window.form = form;

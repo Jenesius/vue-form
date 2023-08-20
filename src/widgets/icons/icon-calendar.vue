@@ -1,5 +1,5 @@
 <template>
-	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" id="calendar">
+	<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" id="calendar">
 		<g fill="none" fill-rule="evenodd"  stroke-linecap="round" stroke-linejoin="round"
 		   stroke-width="1.5" transform="translate(3 2)">
 			<line x1=".093" x2="17.917" y1="7.404" y2="7.404"></line>

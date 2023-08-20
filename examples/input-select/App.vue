@@ -8,7 +8,11 @@
 		<div class="wrap-app ">
 			<input-field type="select" name = "sex" :options = "sexOptions"/>
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
+
+
 			<input-field type= "select" name="programming-language" :options = "programLanguageOptions" :hidden-values = "['2','1']"/>
+			<input-field type = "select" name = "year" :options = "yearOptions" label = "Year"/>
+
 			<button class="button" @click="form.cleanValues()">Clean Form</button>
 		</div>
 	</div>
@@ -16,9 +20,11 @@
 
 <script setup lang='ts'>
 
-import {Form, InputField, useFormValues} from "../../plugin";
+import {Form, InputField, useFormValues} from "../../src";
 
 const form = new Form();
+// @ts-ignore
+window.form = form
 const values = useFormValues(form);
 
 /*JUST ENUMS*/
@@ -41,6 +47,13 @@ const programLanguageOptions = {
 	3: "Assembler",
 	4: "C++"
 }
+
+const offset = 1900;
+
+const yearOptions = Array.from({length: 200}).map((x, index) => ({
+	label: offset + index + '',
+	value: offset + index
+}))
 
 </script>
 
