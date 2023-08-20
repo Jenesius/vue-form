@@ -71,3 +71,5 @@ export interface FormSetValuesOptions {
 export interface FormAvailability {
 	[name: string]: boolean
 }
+
+export type OnFunction<T> = (v: T) => string
