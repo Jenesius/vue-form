@@ -1,6 +1,7 @@
 <template>
-    <field-wrap :label = "label" :errors = "errors">
-        <div class = "container-input-tel" @click = "inputTel?.focus()"             :class = "{
+    <field-wrap  :errors = "errors">
+        <div class = "container-input-tel" @click = "inputTel?.focus?.()"
+			 :class = "{
                     'container-input-tel_disabled': disabled,
                     'container-input-tel_error': errors.length
                 }">
@@ -22,11 +23,10 @@ import {computed, ref} from "vue";
 import {parsePhoneNumber, AsYouType} from 'libphonenumber-js'
 
 interface Props {
-	label?: string,
 	errors: string[],
 	modelValue: any,
 	disabled: boolean,
-	autofocus: boolean
+	autofocus?: boolean
 }
 
 const props = defineProps<Props>()
@@ -36,17 +36,18 @@ const emit = defineEmits<{
 
 // Ref to Input
 const inputTel = ref<HTMLInputElement>();
-
 /**
  * @description Using libphonenumber-js return pretty value of phone number. In Error case return user's target value.
  * */
-const prettyValue = computed(() => {
+const prettyValue = computed(() => prettifyPhoneValue(props.modelValue))
+function prettifyPhoneValue(value: unknown) {
 	try {
-		return new AsYouType().input(props.modelValue)
-    } catch (e) {
+		if (typeof value !=='string') return '';
+		return new AsYouType().input(value)
+	} catch (e) {
 		return props.modelValue;
-    }
-})
+	}
+}
 const countryCode = computed(() => {
 	try {
 		return parsePhoneNumber(props.modelValue).country?.toLocaleLowerCase();
@@ -55,20 +56,20 @@ const countryCode = computed(() => {
     }
 })
 
+function onInput(e: any) {
+	const value = parseTelStr(e.target.value);
+
+	emit('update:modelValue', value);
+}
+
 /**
  * @description Put just numeric and start +
  */
 function parseTelStr(a: string) {
 	const numericStr = a.replace(/\D+/g, '');
-	return '+' + numericStr;
+
+	return numericStr.length ? '+' + numericStr : '';
 }
-
-function onInput(e: any) {
-	const value = parseTelStr(e.target.value);
-
-	emit('update:modelValue', value)
-}
-
 
 </script>
 
