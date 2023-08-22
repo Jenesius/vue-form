@@ -6,6 +6,7 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 		<form-field type = "country" name = "country" label = "Country" />
+		<form-field type = "date" name = "birthday" label = "Bithday" />
 
 
 		<form-field :name="name" :label = "name === 'username' ? 'Username' : 'Age'"/>
@@ -46,6 +47,9 @@ setInterval(() => {
 }, 50);
 
 
+form.oninput('birthday', v => {
+	console.log(v)
+})
 const values = ref(0);
 const changes = ref({});
 const pureValue= ref({});

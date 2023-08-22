@@ -100,6 +100,9 @@ function handleUserHandInput(input: string) {
 function emitInput(date: Date | null) {
 	if (props.disabled) return false;
 	emit('update:modelValue', date ? date.toISOString() : date);
+
+	// Cleaning insideValue if date is NULL. Also, this step clean input value.
+	if (!date) insideValue.value = ""
 }
 
 
