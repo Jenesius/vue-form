@@ -1,6 +1,6 @@
-# utils
-It provides information about all the functions that you can use in your project. All features
-are deeply used in the library itself.
+# Utils
+Здесь предоставлена информация о всех функциях, которых вы можете использовать у себя в проекте. Все функции
+глубоко используются в самой библиотеке.
 
 ## bypassObject
 
@@ -48,7 +48,7 @@ are deeply used in the library itself.
 
 ## iterate-endpoint
 
-## iterate points
+## iterate-points
 
 ## mergeObjects
 

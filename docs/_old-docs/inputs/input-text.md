@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import {InputField, Form, useFormValues} from './../../src'
+import {InputField, Form, useFormValues} from '@/index.js'
 
 const form = new Form();
 function modifyInput(a) {

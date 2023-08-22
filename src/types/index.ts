@@ -6,7 +6,7 @@ export type Value = Values | any;
 /**
  * @description Callback использующийся для валидации поля для ввода.
  * */
-export type FormInputValidationCallback = (values: any) => true | ValidationError
+export type FormFieldValidationCallback = (values: any) => true | ValidationError
 export type ValidationError = string | false
 
 export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
@@ -26,16 +26,16 @@ export interface FormInput {
 	changed: boolean,
 	disabled: boolean,
 	errors: ValidationError[],
-	setValidation(arr: FormInputValidationCallback[]): void,
+	setValidation(arr: FormFieldValidationCallback[]): void,
 	setValue(v: any): void,
 	setName(name: string | null): void,
-	validationRules: FormInputValidationCallback[],
+	validationRules: FormFieldValidationCallback[],
 	deactivate: () => void
 }
 
 export interface InputDependency {
 	name: string,
-	validate: FormInputValidationCallback
+	validate: FormFieldValidationCallback
 }
 /**
  * @description Current interface using for special widget-inputs, not for InputField

@@ -18,7 +18,7 @@
 import {computed, onUnmounted, watch} from "vue";
 import {getFieldType} from "../config/store";
 import Form from "../classes/Form";
-import {FormInputValidationCallback} from "../types";
+import {FormFieldValidationCallback} from "../types";
 import useFormInput from "../hooks/use-form-input";
 import mergeValidation from "../local-hooks/merge-input-validation";
 import {OptionRow} from "../types";
@@ -27,7 +27,7 @@ import {parseOptions} from "../local-hooks/parse-options";
 interface IProps {
 	name?: string,
 	type?: string,
-    validation?: FormInputValidationCallback[] | FormInputValidationCallback,
+    validation?: FormFieldValidationCallback[] | FormFieldValidationCallback,
     required?: boolean,
 	options?: OptionRow[] | Record<string, any>
 }

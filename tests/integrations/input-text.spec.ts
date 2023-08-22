@@ -2,9 +2,9 @@ import {mount} from "@vue/test-utils";
 import EmptyApp from "./components/EmptyApp.vue";
 import Form from "../../src/classes/Form";
 import {defineComponent, h} from "vue";
-import {InputField} from "../../src//index";
+import {InputField} from "../../src/index";
 import wait from "../wait";
-import {FormInputValidationCallback} from "@/types";
+import {FormFieldValidationCallback} from "@/types";
 import STORE from "../../src/config/store";
 import AppInputTextPretty from "./components/input-text/AppInputTextPretty.vue"
 
@@ -178,7 +178,7 @@ describe("Input text", () => {
         expect(inputs.map(a => a.element.value)).toEqual(["T", "T"])
     })
     test("Input-text with validation", async () => {
-        const test:FormInputValidationCallback[] = [
+        const test:FormFieldValidationCallback[] = [
             x => x !== 'Jack'
         ];
         const component = defineComponent({
@@ -212,7 +212,7 @@ describe("Input text", () => {
     })
     test("Input should has error effect when one of validation was rejected", async () => {
         const ERROR_TEXT = 'Jack is rejected'
-        const test:FormInputValidationCallback[] = [
+        const test:FormFieldValidationCallback[] = [
             x => x === 'Jack' ? true : 'Jack is rejected'
         ];
         const component = defineComponent({

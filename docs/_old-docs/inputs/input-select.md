@@ -1,7 +1,7 @@
 <script setup>
-import ExampleInputSelectPets from "./../components/input-select/example-input-select-pets.vue" ;
-import ExampleInputSelectLabel from "./../components/input-select/example-input-select-label.vue" ;
-import ExampleInputSelectSearch from "./../components/input-select/example-input-select-search.vue" ;
+import ExampleInputSelectPets from "../../components/input-select/example-input-select-pets.vue" ;
+import ExampleInputSelectLabel from "../../components/input-select/example-input-select-label.vue" ;
+import ExampleInputSelectSearch from "../../components/input-select/example-input-select-search.vue" ;
 </script>
 
 # Input Select
