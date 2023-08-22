@@ -1,26 +1,32 @@
 <template>
-  <div class = "container">
-    <div>
-      <h2>Values</h2>
-      <pre class = "container-values">{{JSON.stringify(values, undefined, 4)}}</pre>
-    </div>
+	<div class="container">
+		<div>
+			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
+		</div>
 
-    <div class = "wrap-app">
-      <h2>Simple Form</h2>
-      <input-field name = "username" label = "Username"/>
-      <input-field name = "about" label = "About yourself" type = "textarea"/>
-      <input-field name = "gender" label = "Gender" type = "radio" :options = "sexOptions"/>
-      <input-field name = "language" label = "Language" type = "select" :options = "languageOptions" />
-      <input-field name = "age" label = "Age" type = "number"/>
-      <input-field name = "mobile" type = "tel" label = "Mobile phone" required/>
-      <input-field name = "range" type = "range" label = "Volume"/>
-      <input-field name = "isProgrammer" label = "You are programmer" type = "switch" class="padding_10"/>
+		<div class="wrap-app">
+			<div class = "container-navigation">
+				<button class="button" @click="form.cleanValues()">Clean Form</button>
+				<button class="button" @click="form.validate()">Validate</button>
+			</div>
+			<div class = "container-inputs">
+				<input-field name="username" label="Username"/>
+				<input-field name="gender" label="Gender" type="radio" :options="sexOptions"/>
+				<input-field name="about" label="About yourself" type="textarea" class = "grid-full"/>
 
-      <input-field name = "programLanguages" label = "Program language" type = "checkbox"
-                   :options = "programLanguageOptions" v-if = "computedIsProgrammer"/>
-      <button class = "button" @click = "form.cleanValues()">Clean Form</button>
-    </div>
-  </div>
+				<input-field name="age" label="Age" type="number"/>
+				<input-field name="birthday" label="Birthday" type="date"/>
+				<input-field name="language" label="Language" type="select" :options="languageOptions"/>
+
+				<input-field name="mobile" type="tel" label="Mobile phone" required/>
+				<input-field name="isProgrammer" label="You are programmer" type="switch" class="padding_10"/>
+
+				<input-field name="programLanguages" label="Program language" type="checkbox"
+							 :options="programLanguageOptions" v-if="computedIsProgrammer"/>
+			</div>
+
+		</div>
+	</div>
 </template>
 
 <script setup lang='ts'>
@@ -33,59 +39,81 @@ const values = useFormValues(form);
 
 /*JUST ENUMS*/
 const sexOptions = {
-  0: "female",
-  1: "male"
+	0: "female",
+	1: "male"
 }
 const languageOptions = {
-  1: "English",
-  2: "Dutch",
-  3: "Chinese",
-  4: "Portuguese",
-  5: "Spanish",
-  6: "Italian",
-  7: "Russian"
+	en: "English",
+	de: "Dutch",
+	ch: "Chinese",
+	po: "Portuguese",
+	sp: "Spanish",
+	it: "Italian",
+	ru: "Russian"
 }
 const programLanguageOptions = {
-  1: "JavaScript",
-  2: "TypeScript",
-  3: "Assembler",
-  4: "C++"
+	js: "JavaScript",
+	ts: "TypeScript",
+	asm: "Assembler",
+	cpp: "C++",
+	py: 'Python'
 }
 
 </script>
 
 <style>
-.container{
-  display: flex;
+.container-inputs {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
 }
+.grid-full {
+	grid-column: 1/3;
+}
+.container-navigation {
+	display: flex;
+	gap: 10px;
+	padding: 20px 0;
+}
+
+.container {
+	display: flex;
+}
+
 @media screen and (max-width: 768px) {
-  .container{
-    flex-direction: column;
-  }
+	.container {
+		flex-direction: column;
+	}
 }
-.wrap-app{
-  width: 100%;
-  max-width: 600px;
-  margin:  auto auto;
+
+.wrap-app {
+	width: 100%;
+	max-width: 600px;
+	margin: auto auto;
 }
+
 body {
-  font-family: sans-serif;
+	font-family: sans-serif;
 }
-.padding_10{
-  padding: 10px 0;
+
+.padding_10 {
+	padding: 10px 0;
 }
-.container-values{
-  width: 300px;
-  padding: 20px 0;
+
+.container-values {
+	width: 300px;
+	padding: 20px 0;
 }
-.button{
-  cursor: pointer;
-  padding: 6px 10px;
-  border: 1px solid lightgray;
-  background-color: white;
-  transition: transform;
+
+.button {
+	cursor: pointer;
+	padding: 6px 10px;
+	border: 1px solid lightgray;
+	background-color: white;
+	transition: transform;
 }
+
 .button:hover {
-  transform: scale(.96);
+	transform: scale(.96);
 }
 </style>
