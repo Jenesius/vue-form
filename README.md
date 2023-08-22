@@ -22,23 +22,24 @@ For questions and support please use [the GitHub repo](https://github.com/Jenesi
 
 ## Quick Example
 
-![Alt Text](./gif-example.gif)
+![Alt Text](./readme-example.gif)
 
 ## Usage
 This example demonstrates a simple use of this library using the login form as an example.
 
 ```vue
 <template>
-  <form-field name = "login"/>
-  <form-field name = "password" type = "password"/>
-  <button @click = "handleLogin">Login</button>
+    <form-field name = "login"/>
+    <form-field name = "password" type = "password"/>
+    <button @click = "handleLogin">Login</button>
 </template>
+
 <script setup>
 import {FormField, Form} from "jenesius-vue-form";
 
 const form = new Form();
 function handleLogin() {
-  console.log(form.values)  // { login: "", password: "" }
+    console.log(form.values)  // { login: "", password: "" }
 }
 </script>
 ```
