@@ -6,6 +6,7 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 		<form-field type = "country" name = "country" label = "Country" />
+		<form-field type = "tel" name = "phone" label = "Phone" required />
 		<form-field type = "date" name = "birthday" label = "Bithday" />
 
 
