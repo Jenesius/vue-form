@@ -4,12 +4,12 @@ export default defineConfig({
 	title: 'JenesiusVueForm',
 	description: "Vue Form. Form system for Vue.",
 	head: [
-		['link', { rel: 'icon', href: `./../images/logo.png` }]
+		['link', { rel: 'icon', href: `/images/logo.png` }]
 	],
 	themeConfig: {
 		nav: nav(),
 		sidebar: sidebar(),
-		logo: './../images/logo.svg',
+		logo: '/images/logo.svg',
 		socialLinks: [
 			{ icon: 'github', link: 'https://github.com/Jenesius/vue-form' },
 		],
