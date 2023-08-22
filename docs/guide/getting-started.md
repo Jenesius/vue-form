@@ -1,49 +1,50 @@
-# Quick start
-This section contains information that allows you to customize the form and
-manage all the functionality that spans the library.
-
-## Creating a Form
-To initialize the form, you also need to create:
-```ts
-import {Form} from "jenesius-vue-form"
-const form = new Form();
-```
-Connecting child elements, provide form to child component, setting
-the form will make default values itself.
-
-## Input connection
-To add input fields, you can use standard components
-provided by the library. However, you can also create your own
-lean library functionality, [reed more](./custom-field).
-```vue
-<template>
-    <input-field type = "text" name = "user" label = "Username"/>
-    <input-field type = "text" name = "age" label = "Age"/>
-</template>
-<script setup>
-    import {Form, InputField} from "jenesius-vue-form"
-    
-    const form = new Form();
-</script>
-```
-
-By default, *InputField* will connect to the nearest parent form.
-After that, all control over the input field will go to the *Form* instance.
-
-## Setting and getting values
-The main task of the form is to work with the data that has been entered.
-user.
-Use **form.values** to get data. To set values
-you need to pass values to the **form.setValues** method
-
 <script setup>
 import WidgetExampleValues from '../components/widget-example-values.vue'
 </script>
+
+# Let's Start Using
+
+Creating a web application using Vue + JenesiusVueForm is an elegant and simple solution: a concise way to describe
+fields allows you to simplify the development of components, the large functionality of the library allows you to write multifunctional logic,
+and Vue's reactivity keeps our interface simple.
+
+## Installation
+Install *jenesius-vue-form* as a dependency using any manager
+packages:
+```shell
+npm i jenesius-vue-form
+```
+
+
+## Form
+
+The main element of this library, oddly enough, is the Form class. It is the main link in the construction of forms,
+because linking, data validation, value control is done automatically.
+
+```ts
+import {Form} from "jenesius-vue-form";
+
+const form = new Form();
+```
+
+We have created an instance of the form, now we need to add reactive input fields to the interface. They are also provided
+by this library.
+
+### Introductory
+
+```vue{2,3}
+<template>
+<input-field name="username" label="Username"/>
+<input-field name="email" label="Email"/>
+</template>
+<script setup>
+import {InputField, Form} from "jenesius-vue-form";
+
+const form = new Form()
+</script>
+```
+### Result
+
 <WidgetExampleValues/>
 
-
-----
-
-In this article, the basic features of the library were considered.
-
-- Detailed Form Documentation [here](/guide/form.md).
+In the following sections of the guide, we will explore these and other interesting features in more detail.

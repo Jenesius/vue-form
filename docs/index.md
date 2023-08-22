@@ -2,25 +2,29 @@
 layout: home
 
 title: JenesiusVueForm
-titleTemplate: Jenesius Vue Form & Heavy form system for Vue
+titleTemplate: Jenesius Vue Form & Powerful form library
 
 hero:
-  name: JenesiusVueForm
-  text: Heavy form system for Vue
-  tagline: Simple, powerful, and performant.
+  name: Jenesius VueForm
+  text: Powerful form library
+  tagline: Simple, powerful and fast.
   actions:
   - theme: brand
-    text: Get Started
-    link: /guide/getting-started
+    text: Getting started
+    link: ./guide/getting-started
   - theme: alt
-    text: View on GitHub
+    text: Go to GitHub
     link: https://github.com/jenesius/vue-form
 
 features:
-  - title: So simple
-    details: A couple of lines of code, and you already control everything. 12124124124
-  - title: Отличная библиотека компонент
-    details: "Большой набор компонент для работы с формами: текст, дата, номер телефона и др."
-  - title: Интеграция
-    details: Система глубоко интегрирована со Vue, что позволяет использовать реактивность по максимуму
+
+  - title: Simple
+    icon: 💡
+    details: A couple of lines of code and reactive work with forms is ready. Working with input fields and connecting them to the form is done automatically.
+  - title: Set Component
+    icon: 🎁
+    details: "This library provides a set of tested components for you to use on your interface."
+  - title: Integration
+    icon: 🚀
+    details: The system is deeply integrated with Vue, which allows you to use reactivity to the maximum.
 ---

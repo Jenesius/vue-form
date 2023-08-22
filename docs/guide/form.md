@@ -1,189 +1,117 @@
-<script setup>
-import WidgetExampleOnePointValue from '../components/widget-example-one-point-value.vue';
-import WidgetExampleSimpleForm from '../components/widget-example-simple-form.vue';
-import WidgetExampleFormDisable from '../components/widget-example-form-disable.vue'
-</script>
+# form
 
-# Form
-Form is the main element developed in this library. Servant uniform for
-combining input fields and the mechanism of providing for common work with them.
+As previously stated, **Form** is the main mechanism you will be using. Forms work built
+on the event system, which allows you to catch changes in any child element. Mechanism **subscribe /
+unsubscribe** allow you to create a tree-like form system of any nesting.
 
-## Form creation
-To create a form, you need to create an instance of the *Form* class:
+## Initialization
+
+For the initial installation, you need to create an instance of **Form**:
 ```ts
-import {Form} from "jenesius-vue-form"
+import Form from "./Form";
+
 const form = new Form()
 ```
-This is the minimum requirement to use the form. All child elements
-that use the mechanisms of this library will automatically be signed
-to the child form.
-To do this, let's add a couple of input fields that will automatically subscribe to the form.
-```vue
-<template>
-    <input-field type = "text" name = "note"/>
-    <input-field type = "select" name = "planet" :options = "arr" />
-    <button @click = "show">values</button>
-</template>
-<script setup>
-    import {Form, InputField} from "jenesius-vue-form"
-    const form = new Form();
-    const arr = [ {value: 1, title: 'Earth'} ]
+Now you can add **FormField** to the page and they will automatically interact with **form**. Familiarize yourself
+with them you can HERE XXXXXXX.
 
-    function show() {
-        alert(form.values)
-    }
-</script>
-```
-<WidgetExampleSimpleForm/>
+### Options
 
-## Setting values
-To set the form value, you can use one of
-the following methods:
-- **change**(values: Values) - method sets form values and marks them as changed.
-This method affects **changed** forms.
-The Values type is a value object, any nesting, has the following
-interface:
-```ts
-interface Values {
-	[name: string]: any
-}
-```
-- **setValues**(values: Values) - the method just sets the value without flagging them
-as changed.
-
-Things to remember about [value unwrapping method](#form-values-simplified)!
-
-## Getting values
-There are two reverse ways to get values:
-- **changes** - will return an object of changed values
-- **values** - will return all form values
-
-Sometimes you need to get a value by a field name. To do this, we use the method
-**getValueByName**:
-```ts
-fomr.values // { address: { city: { code: 1, name: 'Jenesius' } } }
-fotm.getValueByName('address.city') // { code: 1, name: 'Jenesius' }
-```
-
-## Lock and unlock
-Quite useful in its essence functionality is the ability to block
-fields via JS. This approach allows you to easily build dynamic interfaces.
-
-The form has the following methods:
-- **disable** - blocks the entire form or one field.
-```ts
-disable(name?: string)
-```
-- **enable** - unlocks the entire field or one field.
-```ts
-enable(name?: string)
-```
-
-For example, a form was implemented with which you can play around to see
-how it works.
-<WidgetExampleFormDisable/>
-
-It must be remembered that when I block a common element, we automatically block everyone
-his offspring and vice versa. Unblock a shared item, we will automatically unblock
-all his descendants.
-Also, when the form is unlocked: `form.enable()` - all previously elements will be
-unlocked. The same applies to form blocking.
-
-
-## Validation
-Form validation involves checking all child signed elements.
-The validation is recursive, so by calling the **validate** method on the parent
-form, it will automatically be called for all child elements.
-- **validate** - Returns true if the form (all of its children) are
-valid, false otherwise.
-```ts
-form.validate() // true or false
-```
-
-## Save and Read
-To save and read data in the form, getters / setters were implemented for
-save and read properties:
-```ts
-form.save
-form.read
-```
-You can set an async function to be called whenever
-when the corresponding method is called, as well as along the chain for all dependent
-elements. This is best shown with an example:
-```ts
-// ./ParentForm.vue
-const parentForm = new Form();
-parentForm.save = () => asyncSaveData(form.changes);
-```
-```ts
-// ./ChildrenForm.vue
-const childrenForm = new Form();
-childrenForm.save = () => asyncSaveChildrenData()
-```
-In this example, `children.save()` will be automatically called after
-`parentForm.save()` will be executed.
-
-Similar behavior will be for the **form.read** property.
-
-Using this approach, it is possible to build a single dependent interface that
-it is convenient to manage through the parent form. For example, you might have the form
-from the input field, as well as a widget, with its own logic (For example, a table,
-which can be modified). This table can be implemented based on form
-and link to the parent.
-
-## Form.wait
-Данное свойство показывается, находится ли форма в прцоессе сохранения или изменения данных.
-```ts
-const form = new Form()
-form.wait // false
-```
-
-## Automatic Dependencies
-When a form is created, it will automatically notify all child elements:
-```ts
-// provide('form-controller', form)
-provideVue(Form.PROVIDE_NAME, this); 
-```
-Thus, child elements: Form, FormProxy, Input - can subscribe to
-form and be controlled by it.
-
-## Basic principles
-To successfully work with the form, you need to remember the basic principles of the form:
-### All state inside the Form
-All input fields, as well as components for storing and working with data on
-based form should always rely on the values inside the parent form.
-### Form values simplified
-This means that any form values that are passed in will be simplified and decomposed.
-This is done in order to make it easier to work and rely on a single point.
-Let's take an example of how this works in practice.
-Example:
+For flexible work with the form, you can pass the settings:
 
 ```ts
-form.setValues({ 'address.city.name': 'Jenesius Town'})
+const form = new Form(params)
 ```
 
-At the output we will get the following:
-```js
-{
-	address: {
-		city: {
-			name: 'Jenesius Town'
-        }
-    }
-}
+#### params <Badge type = "tip">Optional</Badge>
+An object with the following properties:
+:::info_
+
+#### name <Badge type = "warning">Variable</Badge>
+The name of the entity (field) that will be used if this form will act as a child and will be signed
+to another form.
+
+It is optional if the given form does not have a parent form or the **parent** flag is set in
+null.
+
+#### parent <Badge type = "info">Optional</Badge>
+It takes the following values: `Form` or `null`, `false`. If another Form was passed, then signing will occur
+on it, and not the automatic search for the parent form. Otherwise (null, false) this form will not produce
+search for an ancestor.
+
+#### provide <Badge type = "info">Optional</Badge>
+Forms use the **provide/inject** mechanism added to Vue 3 to automatically subscribe to each other. If
+this parameter is set to false, then the form will not notify descendants about itself. In other words, this form will become
+invisible to child elements.
+:::
+
+
+
+## Subscribing to a form
+
+Subscription to the form occurs automatically. However, there are situations when this mechanism is not available. For example, when
+we create two different forms in one place. What form will be the main one in this case?
+
+The following methods are used for this:
+- **subscribe** - accepts a child to be subscribed to the form. Returns a function to unsubscribe from:
+```ts{6}
+import Form from "./Form";
+
+const form = new Form();
+const child = new Form({ name: "address" });
+
+form.subscribe(child);
+```
+- **unsubscribe** - unsubscribes the element from the form.
+```ts
+form.unsubscribe(child);
+```
+Or you can use the function returned by **subscribe**:
+```ts
+const offChild = form.subscribe(child);
+offChild(); // form.unsubscribe(child);
 ```
 
-In this case, it doesn't matter at all whether you use a compound name for input or
-use nesting based on FormProxy, values in all inputs will be
-the same:
+## Internal form properties
 
-```html
-<input-field name="address.city"/>
-<input-address name="address"/>
-. . .
-// ./input-address.vue
-<input-field name = "city"/>
+For convenient work, properties have been added that you can use in your work to read and change.
+
+### name <Badge type = "tip">Read-only</Badge>
+The name of the entity to which the form belongs. Automatically set on creation if the **name** parameter was passed.
+Relying on this parameter, child forms interact with the parent form.
+
+### parent <Badge type = "tip">Read-only</Badge>
+Link to the parent form.
+
+### id
+Form identifier. This property is freely editable.
+To subscribe to an id change, use the `onid` method:
+```ts
+form.onid(newId => console.log('New id: ' + newId))
+
+form.id = 1 // New id: 1
+form.id = 2 // New id: 2
 ```
 
+Also, changing this field creates a `Form.EVENT_ID` event, which you can also subscribe to:
+```ts
+form.on(Form.EVENT_ID, () => {});
+```
 
-<WidgetExampleOnePointValue/>
+### version
+Version of the current form. Similar to *id*, this property is freely editable and has a built-in callback
+`onversion` and `Form.EVENT_VERSION` event:
+```ts
+form.on(Form.EVENT_VERSION, () => console.log("Upgrade."))
+form.onversion(v => console.log('Version: ' + v));
+
+form.version = 15; // upgrade. Version: 15
+
+```
+
+### wait <Badge type = "tip">Read-only</Badge>
+Accepts `true` or `false`, changes during read/save. When changing this property
+event `Form.EVENT_WAIT` is created:
+```ts
+form.on(Form.EVENT_WAIT, () => {...})
+```

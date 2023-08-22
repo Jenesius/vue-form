@@ -43,4 +43,4 @@
 
 ## Return value
 
-Возвращаемое значение идентично результаты работы функции [compare-difference](./compare-difference.md).
+Возвращаемое значение идентично результаты работы функции [compare-difference](compare-difference.md).

@@ -1,70 +1,81 @@
 # Configuration
-For full control over the behavior of forms and built-in input fields
-you need to use **config**:
+
+Working with the library configuration is used through the **config** function:
 ```ts
 import {config} from "jenesius-vue-form"
-config(Params)
+config(params)
 ```
-Params can contain the following fields:
 
-## Input Types
-To add new or redefine field types to `InputField` you need
-specify *type* input and vue to the component that will be rendered for the specified
-type:
+The Params object has the following type:
+```ts
+interface IConfigurationParams {
+inputTypes: {
+[name: string]: any
+},
+requiredMessage:string
+typeNotCaseSensitive: boolean
+debug: boolean
+defaultType: string
+}
+```
+
+### inputType <Badge type = "info">Optional</Badge>
+An object to overwrite or define new fields.
+
+To add new or override type used in `FormField`
+you need to specify **type name** and Vue component:
 ```ts
 import NewInputAddress from "./address.vue"
 import NewInputText from "./text.vue"
 config({
-  inputTypes: {
-    address: NewInputAddress, // New Input
-    text   : NewInputText     // Override Text
-  }
+   inputTypes: {
+     address: NewInputAddress, // New field
+     text : NewInputText // Overridden field
+   }
 })
 ```
-In this example, we specified a new type *address* and redefined the type
-*text*.
-
+In this example, we specified a new address field and overridden the existing *text* type:
 ```html
-<!--Will render NewInputAddress-->
-<input-field type = "address" name = "some-name-address"/>
+<!--Will generate NewInputAddress-->
+<input-field type="address" name="some-name-address"/>
 
-<!--Will render new Text input that provided in config-->
-<input-field name = "new-text-widget"/>
+<!--Will generate an overridden component-->
+<input-field name="new-text-widget"/>
 ```
-
-## Required Message
-When a field is set to required the following message will be shown by default: *Please fill in this field* to
-to change it, you need to set the **requiredMessage** parameter:
+### requiredMessage <Badge type = "info">Optional</Badge>
+When the **required** parameter is set for a field, the message displayed if the field is not filled in during validation will be
+*Please fill in this field*. Set a new value for the given field to override it:
 ```ts
 config({
-  requiredMessage: "Write here something."
+   requiredMessage: "This field must be filled."
 })
 ```
 
-## Type Not Case Sensitive
+### typeNotCaseSensitive <Badge type = "info">Optional</Badge>
 
-By default, the field type is case-insensitive. The **typeNotCaseSensitive** property is equal to **true**. In this case
-the following entry will render three identical input fields:
+By default, the field type is not case sensitive. The **typeNotCaseSensitive** property is set to **true**. In this case
+the following entry will display three identical input fields:
 ```html
-<input-field name = "a" type = "test"/>
-<input-field name = "a" type = "Test"/>
-<input-field name = "a" type = "TEST"/>
+<input-field name="a"type="test"/>
+<input-field name="a" type="Test"/>
+<input-field name="a" type="TEST"/>
 ```
-If this behavior is not suitable for your project, the above parameter must be set to *false*:
+If this behavior is not suitable for your project, you should set the above parameter to *false*:
 ```ts
 config({
-	typeNotCaseSensitive: false
+typeNotCaseSensitive: false
 })
 ```
 
-## Debug
+### debug <Badge type = "info">Optional</Badge>
 
-To better see what is happening with the form, you can enable the **debug** option, after which an additional output will be displayed in the console
+To better see what's going on with the form, you can enable the **debug** option, after which additional output will be displayed in the console
 information while the form is running:
 ```ts
 config({
-	debug: true
+debug: true
 })
 ```
-After that, you can see additional information in the console:
-![img.png](../images/debug.png)
+
+### defaultType <Badge type = "info">Optional</Badge>
+The default is **text**. Stores the name of the type to be used if type is not given in `FormField`.
