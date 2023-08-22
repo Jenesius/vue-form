@@ -1,5 +1,5 @@
 import Form from "../classes/Form";
-import {FormInput, FormInputValidationCallback, ValidationError} from "../types";
+import {FormInput, FormFieldValidationCallback, ValidationError} from "../types";
 import {reactive} from "vue";
 
 export default function useFormInput(parentForm: Form) {
@@ -38,7 +38,7 @@ export default function useFormInput(parentForm: Form) {
 	function updateAvailability() {
 		input.disabled = parentForm.checkFieldDisable(input.name);
 	}
-	function setValidation(array?: FormInputValidationCallback[] | FormInputValidationCallback) {
+	function setValidation(array?: FormFieldValidationCallback[] | FormFieldValidationCallback) {
 		input.validationRules = typeof array === 'function' ? [array] : (array || []);
 	}
 	function setValue(value: any) {

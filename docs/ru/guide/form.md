@@ -84,10 +84,34 @@ offChild(); // form.unsubscribe(child);
 Ссылка на родительскую форму. 
 
 ### id
-Идентификатор формы. 
+Идентификатор формы. Данное свойство свободно редактируется. 
+Чтобы подписаться на изменение id, воспользуйтесь `onid` методом:
+```ts
+form.onid(newId => console.log('New id: ' + newId)) 
+
+form.id = 1 // New id: 1 
+form.id = 2 // New id: 2
+```
+
+Также изменение данного поля создаёт событие `Form.EVENT_ID`, на которое вы также можете подписаться:
+```ts
+form.on(Form.EVENT_ID, () => {});
+```
 
 ### version
-Версия текущей формы.
+Версия текущей формы. Аналогично с *id*, данное свойство свободно редактируется и имеет встроенный обратный вызов
+`onversion` и событие `Form.EVENT_VERSION`:
+```ts
+form.on(Form.EVENT_VERSION, () => console.log("Upgrade."))
+form.onversion(v => console.log('Version: ' + v));
+
+form.version = 15; // Upgrade. Version: 15
+
+```
 
 ### wait <Badge type = "tip">Только для чтения</Badge>
-Принимается значение `true` или `false`, изменяется в процессе read/save.
+Принимается значение `true` или `false`, изменяется в процессе read/save. При изменении данного свойства
+создаётся событие `Form.EVENT_WAIT`:
+```ts
+form.on(Form.EVENT_WAIT, () => {...})
+```
