@@ -1,5 +1,5 @@
 <script setup>
-import {FormField, Form} from './../src';
+import {FormField, Form} from './../../src';
 const form = new Form();
 
 const arrayColor = [

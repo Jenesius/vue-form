@@ -1,7 +1,7 @@
 # Input File
 
 When loading a file in the input field, it must be "frozen", otherwise the Form will simply skip it and not
-will add neither to values nor changes. A detailed explanation can be found [Here](./form-in-depth.md#serialize)
+will add neither to values nor changes. A detailed explanation can be found [Here](form-in-depth.md#serialize)
 ```vue
 <template>
     <div>

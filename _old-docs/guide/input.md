@@ -54,7 +54,7 @@ This method gives you complete control over the situation, however, when develop
 fields partially rely on neither `<InputField/>`.
 
 Creating more different input fields will create confusion in your code. For this
-[extension mechanism](./configuration.md#inputtypes) of standard input fields was implemented.
+[extension mechanism](configuration.md#inputtypes) of standard input fields was implemented.
 
 Let's go back to our `new-input.vue` and rewrite it for better usability:
 ```vue

@@ -28,7 +28,6 @@
 import {ComputedValue, Form, InputField, useFormValues} from "../../src";
 
 const form = new Form({name: "Simple Form"});
-window.form = form;
 const computedIsProgrammer = ComputedValue(form, 'isProgrammer');
 const values = useFormValues(form);
 

@@ -20,16 +20,16 @@ import {computed} from "vue";
 
 const form = new Form();
 const formState = useFormState(form);
-const mainButton = computed(() => (formState.state.disabled ? 'Enable' : 'Disable') + ' Form')
+const mainButton = computed(() => (formState.disabled ? 'Enable' : 'Disable') + ' Form')
 
 function handleMain() {
   (form.disabled) ? form.enable() : form.disable()
 }
 function handleUsername() {
-  (form.getDisabledByName('username')) ? form.enable('username') : form.disable('username')
+  (form.checkFieldDisable('username')) ? form.enable('username') : form.disable('username')
 }
 function handleCountry() {
-  (form.getDisabledByName('country')) ? form.enable('country') : form.disable('country')
+  (form.checkFieldDisable('country')) ? form.enable('country') : form.disable('country')
 }
 
 
