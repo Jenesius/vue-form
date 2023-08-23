@@ -81,7 +81,7 @@ function prettyPrint(this: object){
 }
 </script>
 
-<style>
+<style scoped>
 .container-inputs {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -112,9 +112,7 @@ function prettyPrint(this: object){
 	margin: auto auto;
 }
 
-body {
-	font-family: sans-serif;
-}
+
 
 .padding_10 {
 	padding: 10px 0;

@@ -29,7 +29,8 @@ const values = useFormValues(form);
 
 </script>
 
-<style>
+<style scoped >
+
 .container{
   display: flex;
 }
@@ -42,9 +43,6 @@ const values = useFormValues(form);
   width: 100%;
   max-width: 600px;
   margin:  auto auto;
-}
-body {
-  font-family: sans-serif;
 }
 .padding_10{
   padding: 10px 0;
@@ -63,4 +61,5 @@ body {
 .button:hover {
   transform: scale(.96);
 }
+
 </style>

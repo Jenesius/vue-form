@@ -57,7 +57,7 @@ const yearOptions = Array.from({length: 200}).map((x, index) => ({
 
 </script>
 
-<style>
+<style scoped>
 .container {
 	display: flex;
 }
@@ -76,9 +76,6 @@ const yearOptions = Array.from({length: 200}).map((x, index) => ({
 	gap: 20px;
 }
 
-body {
-	font-family: sans-serif;
-}
 
 .padding_10 {
 	padding: 10px 0;

@@ -46,7 +46,7 @@ const languageOptions = {
 
 </script>
 
-<style>
+<style scoped>
 .container{
   display: flex;
 }
@@ -55,9 +55,7 @@ const languageOptions = {
   max-width: 600px;
   margin:  auto auto;
 }
-body {
-  font-family: sans-serif;
-}
+
 .padding_10{
   padding: 10px 0;
 }

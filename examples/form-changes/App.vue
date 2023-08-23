@@ -59,7 +59,7 @@ const programLanguageOptions = {
 
 </script>
 
-<style>
+<style scoped>
 .container{
   display: flex;
 }
@@ -73,9 +73,7 @@ const programLanguageOptions = {
   max-width: 600px;
   margin:  auto auto;
 }
-body {
-  font-family: sans-serif;
-}
+
 .padding_10{
   padding: 10px 0;
 }

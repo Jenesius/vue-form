@@ -30,7 +30,7 @@ const values = useFormValues(form);
 
 </script>
 
-<style>
+<style scoped>
 .container{
   display: flex;
 }
@@ -44,9 +44,7 @@ const values = useFormValues(form);
   max-width: 600px;
   margin:  auto auto;
 }
-body {
-  font-family: sans-serif;
-}
+
 .padding_10{
   padding: 10px 0;
 }
