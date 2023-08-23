@@ -22,6 +22,8 @@ import isPrefixName from "../utils/is-prefix-name";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array";
 import AvailabilityEvent from "./AvailabilityEvent";
+import plainObject from "../utils/plain-object";
+import bypassObject from "../utils/bypass-object";
 
 /**
  * Main principe : GMN
@@ -180,7 +182,11 @@ export default class Form extends EventEmitter implements FormDependence {
         // По options функция возвращает ссылку на объект, которые изменяется
         function getTargetValue(this: Form) {
             const fieldName = concatName(options.executedFrom, options.target);
-            
+
+            /**
+             * @description Это неверный подход. Он чётче может сказать что изменилось, но точно не правильнее.
+             * Предыдущее значение всегда должно браться только из values.
+             * */
             // Если имеется change и clean - то мы не работаем с values, т.к. к нему примешены другие changes.
             //const values = (options.change && options.clean) ? this.pureValues : this.values;
             
@@ -194,13 +200,17 @@ export default class Form extends EventEmitter implements FormDependence {
         debug.msg('%cTarget Values:', debug.colorFocus, targetValues)
         
         // Если параметр clean, был передан, мы используем функцию полного сравнения, а не сравнения изменений.
+        // Сливаем ExecutedFrom Target Name
         const compareResult = (options.clean ? compareDifference : compareMergeChanges)(targetValues, grandValues)
         .map(item => {
             item.name = concatName(options.executedFrom, options.target, item.name);
             return item;
         })
-        
-        // Пока используется для того, чтобы добавить CompareResult для executedFrom и target
+
+        /**
+         * @description Т.к.есть механизм executedBy и target мы к compareResult должны добавить родительские изменения,
+         * которые автоматически затрагиваются при изменении дочерних.
+         * */
         function superCompare(this: Form, compareResult: CompareItem[], superName: string): CompareItem[] {
             const copy = copyObject(this.values);
             compareResult.forEach(data => {
@@ -227,7 +237,6 @@ export default class Form extends EventEmitter implements FormDependence {
             
             debug.msg('Result', test);
             debug.groupEnd();
-    
         }
 
 
@@ -238,7 +247,23 @@ export default class Form extends EventEmitter implements FormDependence {
         // В случае, когда change: false, изменения затрагивают как this.values, так и удаление полей из this.changes.
         // Т.к. туда передаётся CompareItem[], то все изменения уже просчитаны и нам нужно их просто спроецировать на объект.
         this.mergeValues(compareResult, options.change);
-        
+
+        /**
+         * @description Если текущий процесс не является changed - мы проходим по конечным точкам значений и проверяем:
+         * Если поле до сих пор находится в статусе change -> мы должны подтвердить данное изменение и переместить их на
+         * pureValues.
+         * */
+        if (!options.change) {
+            const extendName = concatName(options.executedFrom, options.target)
+            const extendValues = extendName ? {[extendName]: values} : values
+            const keys = Object.keys(plainObject(extendValues));
+
+            keys.forEach(endPointName => {
+                if (this.checkFieldChange(endPointName))
+                    this.acceptChanges(endPointName)
+            });
+        }
+
         // После того как изменения были спроецированы на формы, происходит создание события и уведомления всех дочерних
         // и выполнения внешних событий.
         
@@ -251,8 +276,30 @@ export default class Form extends EventEmitter implements FormDependence {
         debug.groupEnd();
 
         debug.groupEnd();
-        
-        
+    }
+    /**
+     * @description Метод для принятия изменения и переноса их в pureValues
+     * */
+    acceptChanges(name?: string) {
+        if (name) {
+
+            if (!checkNameInObject(this.changes, name)) {
+                debug.msg(`%cCan't accept%c changes for %c${name}%c, field not founded in changes.`,
+                    debug.colorError, debug.colorDefault, debug.colorName, debug.colorDefault)
+                return;
+            }
+
+
+            debug.msg(`%caccept%c changes for ${name}`, debug.colorSuccess, debug.colorDefault)
+            const values = getPropFromObject(this.changes, name);
+
+            recursiveRemoveProp(this.#changes, name);
+            insertByName(this.#values, name, values);
+        } else {
+            mergeObjects(this.#values, this.#changes);
+            this.#changes = {};
+        }
+
     }
     
     /**
@@ -289,7 +336,7 @@ export default class Form extends EventEmitter implements FormDependence {
                 }))
             }
             
-            // Если при изменении новое значение совпадает со значением, находящимся в pureValues. Это означает, что
+            // Если при изменении новое значение совпадает со значением, находящимся в pureValues. Это означает, то
             // Что новое значение эквивалентно значению по умолчанию.
             // В таком случае рекурсивно чистим значение
             if (isChange && isEndPointValue(item.newValue) && item.newValue === getPropFromObject(this.pureValues, item.name)) {
@@ -311,8 +358,8 @@ export default class Form extends EventEmitter implements FormDependence {
                 ((isEndPointValue(item.newValue) || isEndPointValue(item.oldValue)) && !isChange)
                 // || (item.newValue === undefined && isChange)
             ) {
-                debug.msg(`%cReturn%c changes for %c${item.name}%c`,
-                    debug.colorFocus, debug.colorDefault, debug.colorName, debug.colorDefault
+                debug.msg(`%cRevert%c changes for %c${item.name}%c`,
+                    debug.colorError, debug.colorDefault, debug.colorName, debug.colorDefault
                     );
                 // this.cleanChangesByField(item.name);
                 recursiveRemoveProp(this.#changes, item.name)
@@ -584,11 +631,7 @@ export default class Form extends EventEmitter implements FormDependence {
              * After success saving changes will be merged(overwrite) with values.
              * Is Bug: https://github.com/Jenesius/vue-form/issues/149
              * */
-            array.push(() => {
-                const saveChanges = copyObject(this.changes);
-                this.revert();
-                this.setValues(saveChanges);
-            });
+            array.push(this.acceptChanges.bind(this, undefined));
         }
 
         

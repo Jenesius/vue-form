@@ -193,4 +193,29 @@ describe("Form oninput handler", () => {
         expect(mockChange.mock.results[0].value).toBe(undefined);
         expect(form.changes).toEqual({})
     })
+    test("Setting the same value should not execute event", () => {
+        const form = new Form();
+        const mockOninput = jest.fn(x => x);
+        form.oninput('age', mockOninput);
+
+        form.setValues({age: 1})
+        form.setValues({age: 3})
+        form.setValues({age: 3});
+        form.setValues({age: 3});
+        expect(mockOninput.mock.results.length).toBe(2)
+        expect(mockOninput.mock.results[0].value).toBe(1)
+        expect(mockOninput.mock.results[1].value).toBe(3)
+    })
+    test("Setting the same value after change should not execute event", () => {
+        const form = new Form();
+        const mockOninput = jest.fn(x => x);
+        form.oninput('age', mockOninput);
+
+        form.change({age: 23})
+        form.setValues({age: 24})
+
+        expect(mockOninput.mock.results.length).toBe(2)
+        expect(mockOninput.mock.results[0].value).toBe(23)
+        expect(mockOninput.mock.results[1].value).toBe(24)
+    })
 })

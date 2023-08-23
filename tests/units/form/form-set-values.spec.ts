@@ -503,5 +503,17 @@ describe("Form.setValues", () => {
         
         expect(form.changes).toEqual({})
     })
+    test("Setting equal object using setValues after change", () => {
+        const form = new Form()
+        form.change({
+            username: "Jack"
+        })
+        form.setValues({
+            username: "Jack"
+        })
+
+        expect(form.changes).toEqual({})
+        expect(form.values).toEqual({ username: "Jack" })
+    })
     
 })
