@@ -67,8 +67,10 @@ export interface IStore {
 export default STORE;
 
 export function getFieldType(type: any) {
-	if (typeof type !== 'string') return STORE.inputTypes[STORE.defaultType];
 
+	if (typeof type !== 'string') return STORE.inputTypes[STORE.defaultType];
 	type = STORE.typeNotCaseSensitive ? type?.toLowerCase() : type;
-	return STORE.inputTypes[type] || STORE.inputTypes[STORE.defaultType];
+
+	const resultComponent = STORE.inputTypes[type] || STORE.inputTypes[STORE.defaultType]
+	return resultComponent;
 }

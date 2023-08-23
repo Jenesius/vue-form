@@ -1,15 +1,13 @@
 <template>
 	<div>
 		<input-field
-			v-bind = "$attrs"
-			:options = "country"
-			type = "select"
+			v-bind = "$attrs" :options = "country" type = "select"
 		/>
 	</div>
 </template>
 
 <script setup lang = "ts">
-import {InputField} from "../../../src";
+import {InputField} from "./../../../src";
 
 const country = [
 	{ label: "Albania", value: '1' },

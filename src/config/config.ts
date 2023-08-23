@@ -26,7 +26,10 @@ export default function config(params: ConfigParams) {
 					return acc;
 				}, {})
 
-			mergeObjects(STORE.inputTypes, parsedInputTypes)
+			Store.inputTypes = {
+				...STORE.inputTypes,
+				...parsedInputTypes
+			}
 		}
 	} catch (e) {
 		console.error(e)

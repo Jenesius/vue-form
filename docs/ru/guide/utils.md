@@ -66,13 +66,20 @@ child: **address.city.index** true
 
 Вернёт **true** если переданное значение является примитивом(*null* или *undefined* или любое значение не являющееся объектом).
 
-## clickOutside
+## clickOutside <Badge type = "warning">Позже</Badge>
 
-## compareDifference
+## compareDifference <Badge type = "warning">Позже</Badge>
 
-## compareMergeChanges
+## compareMergeChanges <Badge type = "warning">Позже</Badge>
 
 ## concatName
+
+Метод используется для соединения переданных имён.
+
+```ts
+concatName('address', 'city', 'indxe'); // "address.city.index"
+concatName('name', null, '', 'first'); // "name.first"
+```
 
 ## convertOptionsObject
 
@@ -95,8 +102,6 @@ child: **address.city.index** true
 ## insetByName
 
 ## isEmptyObject
-
-## isEndPointValue
 
 ## isPrefixName
 

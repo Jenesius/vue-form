@@ -35,15 +35,20 @@ const props = defineProps<IProps>()
 const emit = defineEmits<{
 	(event: 'update:modelValue', value: any): void
 }>()
-const componentItem = computed(() => getFieldType(props.type));
+const componentItem = computed(() => {
+	// console.log(`Type: ${props.type}, Name: ${props.name}`)
+	return getFieldType(props.type);
+});
 const parentForm = Form.getParentForm();
+
+const input = parentForm ?  useFormInput(parentForm) : null;
+
 
 function handleInput(value: any) {
 	if (input && props.name) input.setValue?.(value);
 	emit('update:modelValue', value)
 }
 
-const input = parentForm ?  useFormInput(parentForm) : null;
 
 function initializeInput() {
 	if (!parentForm) return;

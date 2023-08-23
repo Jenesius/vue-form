@@ -16,7 +16,6 @@ import getPropFromObject from "./get-prop-from-object";
 import grandObject from "./grand-object";
 import insertByName from "./insert-by-name";
 import isEmptyObject from "./is-empty-object";
-import isEndPointValue from "./is-end-point-value";
 import isPrefixName from "./is-prefix-name";
 import iteratePoints from "./iterate-points";
 import mergeObjects from "./merge-objects";
@@ -53,7 +52,6 @@ const utils = {
 	grandObject,
 	insertByName,
 	isEmptyObject,
-	isEndPointValue,
 	isPrefixName,
 	iteratePoints,
 	mergeObjects,

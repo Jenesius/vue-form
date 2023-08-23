@@ -17,11 +17,7 @@
 <script setup lang='ts'>
 import {config, Form, InputField, useFormValues} from "../../src";
 import InputCountry from "./input-country.vue";
-config({
-  inputTypes: {
-    country: InputCountry
-  }
-})
+
 
 const form = new Form();
 const values = useFormValues(form);

@@ -1,7 +1,5 @@
 <template>
 	<div>
-		++
-		{{options}}
 		<input-field v-bind = "$attrs" type = "select" :options = "options" />
 	</div>
 </template>

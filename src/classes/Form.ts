@@ -10,7 +10,6 @@ import {compareDifference, compareDTO, CompareItem, compareMergeChanges} from ".
 import DependencyQueue from "./DependencyQueue";
 import CompareEvent from "./CompareEvent";
 import {FormAvailability, FormSetValuesOptions, OnFunction} from "../types";
-import isEndPointValue from "../utils/is-end-point-value";
 import splitName from "../utils/split-name";
 import isEmptyObject from "../utils/is-empty-object";
 import concatName from "../utils/concat-name";
@@ -22,8 +21,8 @@ import isPrefixName from "../utils/is-prefix-name";
 import findNearestNameFromArray from "../utils/find-nearest-name-from-array";
 import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array";
 import AvailabilityEvent from "./AvailabilityEvent";
-import plainObject from "../utils/plain-object";
 import bypassObject from "../utils/bypass-object";
+import isIterablePoint from "../utils/is-iterable-point";
 
 /**
  * Main principe : GMN
@@ -330,9 +329,9 @@ export default class Form extends EventEmitter implements FormDependence {
             
             // Если текущее значение - примитивное, а предыдущее нет - необходимо пометить данное поле как конечное, то
             // есть все дальнейшие(внутренние поля) - является упразднёнными и их не нужно проецировать на форму.
-            if (isEndPointValue(item.newValue) && !isAbolish) abolishNames.push(item.name);
+            if (!isIterablePoint(item.newValue) && !isEmptyObject(item.newValue) && !isAbolish) abolishNames.push(item.name);
             
-            if (isEndPointValue(item.newValue) || isEmptyObject(item.newValue)) {
+            if (!isIterablePoint(item.newValue)) {
                 mergeObjects(isChange ? this.#changes : this.#values, grandObject({
                     [item.name]: item.newValue
                 }))
@@ -341,7 +340,7 @@ export default class Form extends EventEmitter implements FormDependence {
             // Если при изменении новое значение совпадает со значением, находящимся в pureValues. Это означает, то
             // Что новое значение эквивалентно значению по умолчанию.
             // В таком случае рекурсивно чистим значение
-            if (isChange && isEndPointValue(item.newValue) && item.newValue === getPropFromObject(this.pureValues, item.name)) {
+            if (isChange && !isIterablePoint(item.newValue) && item.newValue === getPropFromObject(this.pureValues, item.name)) {
                 recursiveRemoveProp(this.#changes, item.name)
             }
             
@@ -357,7 +356,7 @@ export default class Form extends EventEmitter implements FormDependence {
             // которые было произведено влияние. Однако только на те, которые являются конечными точками, т.к. изменение
             // может затронуть лишь одно поле объекта, но при этом этот объект будет полностью помечен, как изменённый.
             if (
-                ((isEndPointValue(item.newValue) || isEndPointValue(item.oldValue)) && !isChange)
+                ((!isIterablePoint(item.newValue) || !isIterablePoint(item.oldValue)) && !isChange)
                 // || (item.newValue === undefined && isChange)
             ) {
                 debug.msg(`%cRevert%c changes for %c${item.name}%c`,
