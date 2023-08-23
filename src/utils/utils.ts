@@ -1,6 +1,5 @@
 import bypassObject from "./bypass-object";
 import checkCompositeName from "./check-composite-name";
-import checkDeepValue from "./check-deep-value";
 import checkNameInObject from "./check-name-in-object";
 import checkPrimitiveValue from "./check-primitive-value";
 import clickOutside from "./click-outside";
@@ -37,7 +36,6 @@ import updateInputPosition from "./update-input-position";
 const utils = {
 	bypassObject,
 	checkCompositeName,
-	checkDeepValue,
 	checkNameInObject,
 	checkPrimitiveValue,
 	clickOutside,

@@ -48,8 +48,6 @@ child: **address.city.index** true
 ### Результат
 Вернёт логическое значение: является ли первый параметр родителем для второго.
 
-## checkDeepValue
-
 ## checkNameInObject
 
 ## checkPrimitiveValue

@@ -1,9 +1,7 @@
 import concatName from "./concat-name";
 import mergeObjects from "./merge-objects";
 import copyObject from "./copy-object";
-import checkDeepValue from "./check-deep-value";
-import isEndPointValue from "./is-end-point-value";
-import isEmptyObject from "./is-empty-object";
+import isIterablePoint from "./is-iterable-point";
 
 export interface CompareItem {
 	name: string,
@@ -69,10 +67,7 @@ export function compareMergeChanges(sourceValue: any, changes: any) {
 
 function step(this: CompareState, newValue: any, oldValue: any, name: string): any  {
 	// Если оба значения конечны.
-	if (
-		(isEndPointValue(newValue) || isEmptyObject(newValue)) &&
-		(isEndPointValue(oldValue) || isEmptyObject(oldValue))
-	){
+	if ( !isIterablePoint(newValue) && !isIterablePoint(oldValue)){
 		if (newValue !== oldValue)
 			this.array.push({ name, newValue, oldValue})
 	}
@@ -91,7 +86,7 @@ function step(this: CompareState, newValue: any, oldValue: any, name: string): a
  * соответсвующим значением из newValue и oldValue.
  * */
 function compare( newValue: any, oldValue: any, name: string = ''): CompareItem[] {
-	const addKeys = (data: any) => checkDeepValue(data) && Object.keys(data).map(keys.add, keys)
+	const addKeys = (data: any) => isIterablePoint(data) && Object.keys(data).map(keys.add, keys)
 	const state:CompareState = {
 		array: []
 	}
