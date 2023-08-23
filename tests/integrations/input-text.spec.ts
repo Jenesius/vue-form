@@ -129,8 +129,6 @@ describe("Input text", () => {
         
         const input = app.get('input');
         
-        console.log(input.element.name, input.element.classList)
-        
         expect(input.element.disabled).toBe(true)
     })
     test("Input should remove disable class after form.enable", async () => {

@@ -41,7 +41,6 @@ describe("Form validate", () => {
             name: "city",
             index: 0,
             validate() {
-                console.log(this.index > 0)
                 
                 return this.index++ > 0
             }
