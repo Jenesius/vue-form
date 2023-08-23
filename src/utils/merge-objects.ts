@@ -6,9 +6,7 @@ import isEmptyObject from "./is-empty-object";
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
  * */
 export default function mergeObjects(originalValues: Values, ...newValues: Values[]){
-	function set(o: any, k: string, v: any) {
-		o[k] = v;
-	}
+	function set(o: any, k: string, v: any) { o[k] = v; } // object/key/value
 
 	newValues.forEach(objectValue => {
 		for( const key in objectValue ) {
@@ -17,17 +15,13 @@ export default function mergeObjects(originalValues: Values, ...newValues: Value
 
 			if (!isIterablePoint(value) && !isEmptyObject(value)) set(originalValues, key, value);
 			else {
-				if (!originalValues.hasOwnProperty(key)) originalValues[key] = {};
-
 				// If current value is primitive we need to change it to object.
 				if (!isIterablePoint(originalValues[key])) originalValues[key] = {};
-
 
 				mergeObjects(originalValues[key], value);
 			}
 		}
 	})
-
 
 	return originalValues;
 }
