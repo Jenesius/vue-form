@@ -9,8 +9,7 @@
 </p>
 
 # Jenesius Vue Form
-Heavy form system for Vue.js ( **Only 3 Version** ). Library provides a wide range of
-functionality and interaction with form elements.
+Powerful system for working with forms and inputs. The deep library integrates with Vue (**3 version only**) and provides a large set of tools for working with forms.
 
 ## Documentation
 
