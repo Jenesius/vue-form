@@ -39,7 +39,7 @@ const componentItem = computed(() => getFieldType(props.type));
 const parentForm = Form.getParentForm();
 
 function handleInput(value: any) {
-	if (input) input.setValue?.(value);
+	if (input && props.name) input.setValue?.(value);
 	emit('update:modelValue', value)
 }
 
