@@ -20,7 +20,6 @@ import insertByName from "./insert-by-name";
 import isEmptyObject from "./is-empty-object";
 import isEndPointValue from "./is-end-point-value";
 import isPrefixName from "./is-prefix-name";
-import iterateEndpoint from "./iterate-endpoint";
 import iteratePoints from "./iterate-points";
 import mergeObjects from "./merge-objects";
 import parseFirstName from "./parse-first-name";
@@ -60,7 +59,6 @@ const utils = {
 	isEmptyObject,
 	isEndPointValue,
 	isPrefixName,
-	iterateEndpoint,
 	iteratePoints,
 	mergeObjects,
 	parseFirstName,

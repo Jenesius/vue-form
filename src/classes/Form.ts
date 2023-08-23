@@ -255,13 +255,15 @@ export default class Form extends EventEmitter implements FormDependence {
          * */
         if (!options.change) {
             const extendName = concatName(options.executedFrom, options.target)
-            const extendValues = extendName ? {[extendName]: values} : values
-            const keys = Object.keys(plainObject(extendValues));
+            const extendValues = extendName ? {[extendName]: values} : values;
 
-            keys.forEach(endPointName => {
-                if (this.checkFieldChange(endPointName))
-                    this.acceptChanges(endPointName)
-            });
+            console.log('EXTEND VALUES', extendValues)
+            bypassObject(extendValues)
+            .forEach(point => {
+                console.log(extendValues, point, '++')
+                if (this.checkFieldChange(point.name))
+                    this.acceptChanges(point.name)
+            })
         }
 
         // После того как изменения были спроецированы на формы, происходит создание события и уведомления всех дочерних
