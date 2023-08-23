@@ -58,4 +58,16 @@ describe("Form accept changes", () => {
 	})
 	test("Accept clean without name for clean changes", () =>{})
 	test("Accept clean without name", () =>{})
+	test("Step accept and then full accept should clean changes", () => {
+		const form = new Form();
+		form.change({ username: "Jack", age: 24, id: 1 })
+
+		form.acceptChanges('username');
+		expect(form.pureValues).toEqual({ username: "Jack" })
+		expect(form.changes).toEqual({ age: 24, id: 1 })
+
+		form.acceptChanges();
+		expect(form.pureValues).toEqual({ username: "Jack", age: 24, id: 1 });
+		expect(form.changes).toEqual({})
+	})
 })
