@@ -150,4 +150,26 @@ describe("Bypass object", () => {
 			]
 		)
 	})
+	test("Should return empty array for empty object", () =>{
+		expect(bypassObject({})).toEqual([]);
+	})
+	test("Should return array with length 2, for object with two empty props", () => {
+		expect(bypassObject({
+			address: {},
+			value: {}
+		})).toEqual([
+			{
+				path: ["address"],
+				name: "address",
+				value: {},
+				set: expect.any(Function)
+			},
+			{
+				path: ["value"],
+				name: "value",
+				value: {},
+				set: expect.any(Function)
+			}
+		])
+	} )
 })

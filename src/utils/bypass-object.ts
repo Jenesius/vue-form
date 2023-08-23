@@ -56,7 +56,6 @@ interface BypassItem {
 	value: any,
 	path: string[],
 	name: string,
-
 	set: (x: any) => void
 }
 

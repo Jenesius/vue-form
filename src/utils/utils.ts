@@ -11,7 +11,6 @@ import copyObject from "./copy-object";
 import deletePropByName from "./delete-prop-by-name";
 import findNearestNameFromArray from "./find-nearest-name-from-array";
 import findNearestPrefixFromArray from "./find-nearest-prefix-from-array";
-import generateFieldByPath from "./generate-field-by-path";
 import getCastObject from "./get-cast-object";
 import getLabelFromOptionRow from "./get-label-from-option-row";
 import getPropFromObject from "./get-prop-from-object";
@@ -50,7 +49,6 @@ const utils = {
 	deletePropByName,
 	findNearestNameFromArray,
 	findNearestPrefixFromArray,
-	generateFieldByPath,
 	getCastObject,
 	getLabelFromOptionRow,
 	getPropFromObject,
