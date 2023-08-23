@@ -1,4 +1,4 @@
-import isEndPointValue from "./is-end-point-value";
+import isIterablePoint from "./is-iterable-point";
 
 export default function getCastObject(values: any, cast: any) {
 	const output:any = {};
@@ -6,7 +6,7 @@ export default function getCastObject(values: any, cast: any) {
 	Object.keys(cast)
 	.forEach(name => {
 		// В слепке дошли до true
-		if (isEndPointValue(cast[name])) {
+		if (!isIterablePoint(cast[name])) {
 			output[name] = values[name];
 			return;
 		}

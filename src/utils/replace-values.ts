@@ -1,35 +1,18 @@
 import {Values} from "../types";
-import isEndPointValue from "./is-end-point-value";
-import iterateEndpoint from "./iterate-endpoint";
-import generateFieldByPath from "./generate-field-by-path";
+import bypassObject from "./bypass-object";
+import insertByName from "./insert-by-name";
 
 /**
- * @description Метод вернёт новый объект, заменив все примитивные значения
+ * @description Метод вернёт новый объект, заменив все примитивные значения.
  * на переданный аргумент.
+ *
+ * @warning Не заменит объект на объект, а поменяет все !isIterablePoint на переданное значение.
  * */
-
-function replace(o: Values, value: any): {} {
-	Object.keys(o)
-	.forEach(key => {
-		if (isEndPointValue(o[key])) return  o[key] = value;
-		
-		replace(o[key], value);
-	})
-	
-	return o;
-}
-
 export default function replaceValues(object: Values, value: any = true) {
 
-	return iterateEndpoint(object)
+	return bypassObject(object)
 	.reduce((acc: any, item) => {
-		generateFieldByPath(acc, item.path, value)
+		insertByName(acc, item.name, value);
 		return acc;
 	}, {})
-
-	/*
-	const copyObject = JSON.parse(JSON.stringify(object));
-	
-	return replace(copyObject, value);*/
-
 }

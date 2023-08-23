@@ -1,5 +1,6 @@
 import {Values} from "../types";
-import isEndPointValue from "./is-end-point-value";
+import isIterablePoint from "./is-iterable-point";
+import isEmptyObject from "./is-empty-object";
 /**
  * @description Сливает второй объект в первый.
  * {a: {b: 1}}, {a: {c: 1}} => {a: {b: 1 , c: 1}}
@@ -11,13 +12,16 @@ export default function mergeObjects(originalValues: Values, ...newValues: Value
 
 	newValues.forEach(objectValue => {
 		for( const key in objectValue ) {
+
 			const value = objectValue[key];
-			if (isEndPointValue(value)) set(originalValues, key, value);
+
+			if (!isIterablePoint(value) && !isEmptyObject(value)) set(originalValues, key, value);
 			else {
 				if (!originalValues.hasOwnProperty(key)) originalValues[key] = {};
 
 				// If current value is primitive we need to change it to object.
-				if (isEndPointValue(originalValues[key])) originalValues[key] = {};
+				if (!isIterablePoint(originalValues[key])) originalValues[key] = {};
+
 
 				mergeObjects(originalValues[key], value);
 			}

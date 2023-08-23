@@ -5,7 +5,9 @@
 		<div :key = "changes">Changes: {{changes}}</div>
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
+
 		<form-field type = "country" name = "country" label = "Country" />
+
 		<form-field type = "tel" name = "phone" label = "Phone" required />
 		<form-field type = "date" name = "birthday" label = "Bithday" />
 
@@ -41,10 +43,11 @@ const form = window.form = new Form({
 
 setInterval(() => {
 	if (!form) return;
+
 	values.value = copyObject(form?.values);
 	changes.value = copyObject(form.changes);
 	pureValue.value = copyObject(form.TEST_PURE_VALUE);
-    pureAvailabilities.value = copyObject(form.TEST_PURE_AVAILABILITIES)
+	pureAvailabilities.value = copyObject(form.TEST_PURE_AVAILABILITIES)
 }, 50);
 
 

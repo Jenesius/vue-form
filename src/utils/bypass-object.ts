@@ -1,29 +1,9 @@
-import isEndPointValue from "./is-end-point-value";
+import concatName from "./concat-name";
+import isIterablePoint from "./is-iterable-point";
+import splitName from "./split-name";
 
-function step(array: BypassItem[], value: any, path: string[] = []): void {
-	if (isEndPointValue(value)) return;
-	
-	Object.keys(value)
-	.forEach(key => {
-
-		const parsedKey = key.split('.');
-		
-		const p = [...path, ...parsedKey]; // Step path
-		const v = value[key];	  // Step value
-		
-		if (isEndPointValue(v)) {
-			array.push({
-				path: p,
-				value: v
-			})
-			return;
-		}
-
-		step(array, v, p)
-	})
-}
 /**
- * @description Функция проходит по всем конечным полям объекта.
+ * @description Функция проходит по всем конечным элементам объекта.
  * @return Array of {path: string[], value: any}
  * @example
  * { person: { profile: { head: { mouth: 1, eyes: 2 } } } }
@@ -41,15 +21,42 @@ function step(array: BypassItem[], value: any, path: string[] = []): void {
  */
 export default function bypassObject(object: any): BypassItem[] {
 	const array:BypassItem[] = [];
-	
+
 	step(array, object);
-	
+
 	return array
+}
+
+function step(array: BypassItem[], value: any, path: string[] = []): void {
+	if (!isIterablePoint(value)) return;
+	
+	Object.keys(value)
+	.forEach(key => {
+
+		const parsedKey = splitName(key);
+		
+		const p = [...path, ...parsedKey]; // Step path
+		const v = value[key];	  // Step value
+		
+		if (!isIterablePoint(v)) {
+			array.push({
+				path: p,
+				value: v,
+				name: concatName(...p),
+				set: (newValue) => value[key] = newValue
+			})
+			return;
+		}
+
+		step(array, v, p)
+	})
 }
 
 interface BypassItem {
 	value: any,
-	path: string[]
+	path: string[],
+	name: string,
+	set: (x: any) => void
 }
 
 

@@ -1,5 +1,5 @@
 import splitName from "./split-name";
-import isEndPointValue from "./is-end-point-value";
+import isIterablePoint from "./is-iterable-point";
 
 /**
  * @description Вставляет поле в объект. Поле может быть составным address.city.name. Вставка является GRAND.
@@ -12,7 +12,7 @@ export default function insertByName(target: any, fieldName: string, value: any)
         // The last
         if (index === parsedName.length - 1) return target[name] = value;
         
-        if (isEndPointValue(target[name])) target[name] = {};
+        if (!isIterablePoint(target[name])) target[name] = {};
         
         target = target[name]
     })
