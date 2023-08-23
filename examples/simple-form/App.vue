@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
-		<div>
-			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
+		<div class = "container-values">
+			<pre style = "margin: 0"><code v-html = "prettyPrint.call(values)"></code></pre>
 		</div>
 
 		<div class="wrap-app">
@@ -59,6 +59,26 @@ const programLanguageOptions = {
 	py: 'Python'
 }
 
+
+function prettyPrint(this: object){
+	var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+	var replacer = function(match, pIndent, pKey, pVal, pEnd) {
+		var key = '<span class="json-key" style="color: brown">',
+			val = '<span class="json-value" style="color: navy">',
+			str = '<span class="json-string" style="color: olive">',
+			r = pIndent || '';
+		if (pKey)
+			r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+		if (pVal)
+			r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+		return r + (pEnd || '');
+	};
+
+	return JSON.stringify(this, null, 3)
+	.replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+	.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+	.replace(jsonLine, replacer);
+}
 </script>
 
 <style>
