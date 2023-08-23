@@ -1,8 +1,8 @@
 <template>
 	<div class="widget-calendar">
 		<div class="widget-calendar-navigation">
-			<input-field v-model="month" type="select" :options="arrayMonths" placeholder="Month"/>
-			<input-field v-model="year" type="select" :options="arrayYears" placeholder="Year"/>
+			<form-field v-model="month" type="select" :options="arrayMonths" placeholder="Month"/>
+			<form-field v-model="year" type="select" :options="arrayYears" placeholder="Year"/>
 		</div>
 		<div class="widget-calendar-board">
 			<div class="widget-calendar-board-header">
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import {InputField} from "../../../index";
+import {FormField} from "../../../index";
 import {computed, ref} from "vue";
 import STORE from "../../../config/store";
 import {IOptionRowWithLabel} from "../../../types";
