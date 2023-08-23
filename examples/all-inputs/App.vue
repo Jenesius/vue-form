@@ -20,6 +20,13 @@
 		<input-field name = "description" type = "textarea" label = "Auto resize" autoresize  />
 
 		<h2>Input Tel</h2>
+		<input-field name = "birthday" type = "date"/>
+		<input-field name = "birthday" type = "date" label = "With label"/>
+		<input-field name = "birthday" type = "date" label = "Disabled" disabled/>
+		<input-field name = "birthday" type = "date" label = "With Error" :errors = "['Some mistake']"/>
+		<input-field name = "birthday" type = "date" label = "Placeholder" placeholder = "Add your birthday." />
+
+		<h2>Input Tel</h2>
 		<input-field name = "phone" type = "tel"/>
 		<input-field name = "phone" type = "tel" label = "With label"/>
 		<input-field name = "phone" type = "tel" label = "Disabled" disabled/>
