@@ -1,5 +1,5 @@
 <template>
-	<div class="widget-number-step" :class= "{'widget-number-step_disabled': disabled}">
+	<div class="widget-number-step">
 		<div class="step-container step_up" @click="emits('step', true)">
 			<i class="vf-arrow vf-arrow_up"></i>
 		</div>
@@ -10,9 +10,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-	disabled: boolean
-}>()
+
 const emits = defineEmits<{
 	(name: 'step', a: boolean): void
 }>()
@@ -29,9 +27,6 @@ const emits = defineEmits<{
 	cursor: pointer;
 	border-radius: var(--vf-input-border-radius);
 	transition: background-color 0.2s;
-}
-.widget-number-step_disabled {
-	display: none;
 }
 
 .widget-number-step:active {

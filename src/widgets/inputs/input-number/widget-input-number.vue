@@ -1,5 +1,5 @@
 <template>
-	<field-wrap :label = "label">
+	<field-wrap :label = "label" :errors = "errors">
 		<div class = "container-input-number"
 			:class = "{
 				'container-input-number_disabled': disabled,
@@ -8,7 +8,7 @@
 		>
 			<widget-number-step
 				@step = "onStep"
-				:disabled = "disabled"
+				v-if = "!disabled"
 			/>
 			<input
 				ref = "refInput"
@@ -32,14 +32,14 @@
 <script setup lang = "ts">
 import WidgetNumberStep from "./widget-number-step.vue";
 import {ref, withDefaults} from "vue";
-import {StringModify} from "../../../types";
+import {StringModify, ValidationError} from "../../../types";
 import useModify from "../../../local-hooks/use-modify";
 import FieldWrap from "../field-wrap.vue";
 import {parseNumber} from "../../../utils/parse-number";
 interface Props{
 	step?: number | string,
 	label?: string,
-	errors: string[],
+	errors: ValidationError[],
 	modelValue: unknown,
 	disabled: boolean,
 	autofocus?	: boolean,
