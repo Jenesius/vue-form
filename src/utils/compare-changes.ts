@@ -53,7 +53,7 @@ export function compareDifference(oldValue: unknown, newValue: unknown): Compare
  * результирующий объект(который предполагается): { coordinate: { x: 1, y: 2 } }
  * и в данном случае мы получаем, что у нас два изменения:
  * [
- *  { name: 'coordinate', newValue: { x: 1, y: 2 }, oldValue: { x: 1, y: 2 } },
+ *  { name: 'coordinate', newValue: { x: 1, y: 2 }, oldValue: { x: 1 } },
  *  { name: 'coordinate.y', newValue: 2, oldValue: undefined }
  * ]
  * */

@@ -3,17 +3,17 @@ import findNearestPrefixFromArray from "../../../src/utils/find-nearest-prefix-f
 describe("Nearest name", () => {
     
     test("Name is founded.", () => {
-        expect(findNearestPrefixFromArray('address.city', ['city', 'address', 'address.city'])).toBe('address')
+        expect(findNearestPrefixFromArray(['city', 'address', 'address.city'], 'address.city' )).toBe('address')
     })
     
     test("Name not founded", () => {
-        expect(findNearestPrefixFromArray('address.city', ['a', 'b', 'city', 'addre'])).toBe(undefined)
+        expect(findNearestPrefixFromArray(['a', 'b', 'city', 'addre'], 'address.city' )).toBe(undefined)
     })
     
     test("Founded more nearest", () => {
-        expect(findNearestPrefixFromArray('address.city.name', ['address', 'city', 'address.city'])).toBe('address.city');
+        expect(findNearestPrefixFromArray(['address', 'city', 'address.city'], 'address.city.name')).toBe('address.city');
     })
     test("Founded more nearest with other order", () => {
-        expect(findNearestPrefixFromArray('address.city.name', ['address.city', 'address', 'city'])).toBe('address.city');
+        expect(findNearestPrefixFromArray(['address.city', 'address', 'city'], 'address.city.name')).toBe('address.city');
     })
 })

@@ -46,7 +46,7 @@ export default class AvailabilityEvent extends FormEvent{
      * текущая доступность для целевого объекта.
      * */
     static GetAvailability(state: FormAvailability, name: string, defaultAvailability: boolean = true) {
-        const nearestName = findNearestNameFromArray(name, Object.keys(state));
+        const nearestName = findNearestNameFromArray( Object.keys(state), name);
         return nearestName ? state[nearestName] : defaultAvailability;
     }
     

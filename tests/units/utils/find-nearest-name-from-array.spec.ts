@@ -4,17 +4,17 @@ import findNearestNameFromArray
 describe("Nearest name", () => {
 	
 	test("Name is founded.", () => {
-		expect(findNearestNameFromArray('address.city', ['city', 'address'])).toBe('address')
+		expect(findNearestNameFromArray(['city', 'address'], 'address.city' )).toBe('address')
 	})
 	
 	test("Name not founded", () => {
-		expect(findNearestNameFromArray('address.city', ['a', 'b', 'city', 'addre'])).toBe(undefined)
+		expect(findNearestNameFromArray(['a', 'b', 'city', 'addre'], 'address.city')).toBe(undefined)
 	})
 	
 	test("Founded more nearest", () => {
-		expect(findNearestNameFromArray('address.city.name', ['address', 'city', 'address.city'])).toBe('address.city');
+		expect(findNearestNameFromArray(['address', 'city', 'address.city'], 'address.city.name')).toBe('address.city');
 	})
 	test("Founded more nearest", () => {
-		expect(findNearestNameFromArray('address.city.name', ['address.city', 'address', 'city'])).toBe('address.city');
+		expect(findNearestNameFromArray(['address.city', 'address', 'city'], 'address.city.name' )).toBe('address.city');
 	})
 })
