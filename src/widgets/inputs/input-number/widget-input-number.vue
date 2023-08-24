@@ -1,5 +1,5 @@
 <template>
-	<field-wrap :label = "label">
+	<field-wrap :label = "label" :errors = "errors">
 		<div class = "container-input-number"
 			:class = "{
 				'container-input-number_disabled': disabled,
@@ -8,21 +8,21 @@
 		>
 			<widget-number-step
 				@step = "onStep"
-				:disabled = "disabled"
+				v-if = "!disabled"
 			/>
 			<input
 				ref = "refInput"
 				class = "input-number"
 				type = "text"
-				:value = "isFocused ? modelValue : executePretty(modelValue)"
-				@input = "onInput($event.target.value)"
+				:value = "isFocused ? modelValue : useModify(() => props.pretty)(modelValue)"
+				@input = "handleInput($event.target.value)"
 				:disabled = "disabled"
 				:autofocus="autofocus"
 
-				@keyup.up = "onStep(true)"
-				@keyup.down.prevent = "onStep(false)"
-                @focusin = "isFocused = true"
-                @focusout = "isFocused = false"
+				@keydown.up = "onStep(true)"
+				@keydown.down = "onStep(false)"
+				@focusin = "isFocused = true"
+				@focusout = "isFocused = false"
 			>
 			<span v-if = "suffix" class = "input-number-suffix">{{suffix}}</span>
 		</div>
@@ -32,16 +32,17 @@
 <script setup lang = "ts">
 import WidgetNumberStep from "./widget-number-step.vue";
 import {ref, withDefaults} from "vue";
-import {StringModify} from "../../../types";
+import {StringModify, ValidationError} from "../../../types";
 import useModify from "../../../local-hooks/use-modify";
 import FieldWrap from "../field-wrap.vue";
+import {parseNumber} from "../../../utils/parse-number";
 interface Props{
-	step?: number,
+	step?: number | string,
 	label?: string,
-	errors: string[],
-	modelValue?: number,
+	errors: ValidationError[],
+	modelValue: unknown,
 	disabled: boolean,
-	autofocus: boolean,
+	autofocus?	: boolean,
 	name: string,
 	pretty?: StringModify | StringModify[],
 	suffix?: string,
@@ -52,31 +53,21 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const isFocused = ref(false);
 
-const executePretty = useModify(() => props.pretty);
-
-
 const emits = defineEmits<{
 	(e: 'update:modelValue', value: any): void
 }>()
 const refInput = ref<HTMLInputElement>()
-function onInput(v: string | number) {
+function handleInput(data: string | number) {
+	const value = (typeof data !== "number") ? parseNumber(data) : data
 
-	if (typeof v === "number") {
-		emits('update:modelValue', v);
-	}
-	else {
-		v = v.replace(/[^0-9.]/g, '');
-		emits("update:modelValue", Number.parseFloat(v));
-	}
-
-	if (refInput.value)
-		refInput.value.value = String(v);
+	if (value !== props.modelValue) emits("update:modelValue", value);
+	if (refInput.value) refInput.value.value = String(data).replace(/[^0-9.,+-]|/g, '')
 }
 
 function onStep(v: boolean) {
-	if (typeof props.modelValue !== "number") return void onInput(0);
-
-	onInput(props.modelValue + (Number(props.step) * (v?1:-1)))
+	const multiDir = v ? 1 : -1 // Direction of the step. +1 - Up, -1 -Down
+	const value = typeof props.modelValue !== "number" ? 0 : props.modelValue
+	handleInput(Number(props.step) * multiDir + value )
 }
 
 </script>
