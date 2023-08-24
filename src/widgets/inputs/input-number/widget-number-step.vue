@@ -51,7 +51,7 @@ const emits = defineEmits<{
 	padding: 0 0 8px 0;
 }
 
-.step-container:active > .arrow {
+.step-container:active > .vf-arrow {
 	border-color: var(--vf-input-active);
 }
 </style>

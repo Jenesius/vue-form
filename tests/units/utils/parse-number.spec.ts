@@ -16,4 +16,10 @@ describe("Parse Number", () => {
     test("Should parse empty string and return default value", () => {
         expect(parseNumber("oprty", 25)).toBe(25)
     })
+    test("Float number", () => {
+        expect(parseNumber("13123.10")).toBe(13123.10)
+    })
+    test("Float number with comma", () =>{
+        expect(parseNumber("123,15")).toBe(123.15);
+    })
 })
