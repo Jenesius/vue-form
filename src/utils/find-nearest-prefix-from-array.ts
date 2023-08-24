@@ -1,6 +1,6 @@
 import isPrefixName from "./is-prefix-name";
 
-export default function findNearestPrefixFromArray<T extends string>(name: string, arrayPrefixes: T[]): T | undefined {
+export default function findNearestPrefixFromArray<T extends string>(arrayPrefixes: T[], name: string): T | undefined {
     let answer: T | undefined;
     
     arrayPrefixes.forEach(prefix => {

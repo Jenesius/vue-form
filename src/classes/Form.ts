@@ -256,10 +256,8 @@ export default class Form extends EventEmitter implements FormDependence {
             const extendName = concatName(options.executedFrom, options.target)
             const extendValues = extendName ? {[extendName]: values} : values;
 
-            console.log('EXTEND VALUES', extendValues)
             bypassObject(extendValues)
             .forEach(point => {
-                console.log(extendValues, point, '++')
                 if (this.checkFieldChange(point.name))
                     this.acceptChanges(point.name)
             })
@@ -717,7 +715,7 @@ export default class Form extends EventEmitter implements FormDependence {
 
         notOptimizeNames
         .forEach(key => {
-            const nearestAvailability = findNearestPrefixFromArray(key, notOptimizeNames);
+            const nearestAvailability = findNearestPrefixFromArray(notOptimizeNames, key);
             if (!nearestAvailability && this.#availabilities[key] === this.isAvailable) return  delete this.#availabilities[key];
             
             if (nearestAvailability) {
@@ -747,7 +745,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     checkFieldDisable(fieldName: string): boolean {
         if (this.parent) return this.parent.checkFieldDisable(concatName(this.name, fieldName));
-        const nearestName = findNearestNameFromArray(fieldName, Object.keys(this.#availabilities));
+        const nearestName = findNearestNameFromArray(Object.keys(this.#availabilities), fieldName);
         if (!nearestName) return this.disabled;
         
         return !this.#availabilities[nearestName];
