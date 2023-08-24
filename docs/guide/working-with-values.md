@@ -20,7 +20,7 @@ The values when will be set for the form.
 #### options <Badge type="info">Optional</Badge>
 An optional parameter, an object with the following properties:
 
-:::info_
+::: info _
 ##### changed <Badge type="info">Optional</Badge>
 Boolean value whether the given values are changes. If *true* then values will be projected onto changes.
 
@@ -65,9 +65,9 @@ form.values // { name: "Jack" }
 #### Using target and clean together
 ```ts
 form.setValues({
-     name: "Jack",
-     address: {
-city: "Emerald City"
+    name: "Jack",
+    address: {
+        city: "Emerald City"
      }
 })
 

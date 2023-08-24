@@ -12,8 +12,8 @@ import Form from "./Form";
 
 const form = new Form()
 ```
-Now you can add **FormField** to the page and they will automatically interact with **form**. Familiarize yourself
-with them you can HERE XXXXXXX.
+Now you can add **FormField** to the page, and they will automatically interact with **form**. Familiarize yourself
+with them you can [here](./../fields/form-fields.md).
 
 ### Options
 
@@ -25,7 +25,8 @@ const form = new Form(params)
 
 #### params <Badge type = "tip">Optional</Badge>
 An object with the following properties:
-:::info_
+
+::: info _
 
 #### name <Badge type = "warning">Variable</Badge>
 The name of the entity (field) that will be used if this form will act as a child and will be signed
@@ -36,7 +37,7 @@ null.
 
 #### parent <Badge type = "info">Optional</Badge>
 It takes the following values: `Form` or `null`, `false`. If another Form was passed, then signing will occur
-on it, and not the automatic search for the parent form. Otherwise (null, false) this form will not produce
+on it, and not the automatic search for the parent form. Otherwise, (null, false) this form will not produce
 search for an ancestor.
 
 #### provide <Badge type = "info">Optional</Badge>

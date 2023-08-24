@@ -134,7 +134,7 @@ Password entry field. It has the ability to switch the visibility mode.
 ```
 <FormField type="password" label="Password" name="password" />
 
-##Checkbox
+## Checkbox
 
 Elements of type checkbox are displayed as checked checkboxes by default.
 (marked) upon activation, as you can see on the official government paper form.

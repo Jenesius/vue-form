@@ -7,13 +7,13 @@ child elements, and so on deeper.
 
 ```vue{7-9}
 <template>
-<form-field name="age" :validation="ageValidation"/>
+    <form-field name="age" :validation="ageValidation"/>
 </template>
 <script setup>
 import {Form, FormField} from "jenesius-vue-form";
 
 function ageValidation(x) {
-return x > 17 || 'So small'
+    return x > 17 || 'So small'
 }
 
 form.setValues({ age: 17 });
@@ -30,7 +30,7 @@ For field validation, FormField takes one required parameter:
 It has the following type:
 ```ts
 interface FormFieldProps {
-validation: FormFieldValidationCallback[] | FormFieldValidationCallback // [!code focus]
+    validation: FormFieldValidationCallback[] | FormFieldValidationCallback // [!code focus]
 }
 ```
 As you can see from the specification, the field can accept both a single function and an array of functions. The function type is described below:
@@ -47,14 +47,14 @@ type FormFieldValidationCallback = (value: any) => true | string | boolean
 ### Size limit
 ```vue
 <template>
-<form-field name="token" :validation="validation"/>
+    <form-field name="token" :validation="validation"/>
 </template>
 <script setup>
 import {FormField, Form} from "jenesius-vue-form";
 
 const validation = [
-x => x.length > 5 || "That's too short. The minimum length is 5.",
-     x => x.length < 25 || "Value length must be less than 25."
+    x => x.length > 5 || "That's too short. The minimum length is 5.",
+    x => x.length < 25 || "Value length must be less than 25."
 ]
 </script>
 ```
@@ -69,8 +69,8 @@ In this example, there are two rules:
 
 ```vue{3}
 <template>
-<form-field type="switch" name="isAdmin"/>
-<form-field name="login" :validation="validation"/>
+    <form-field type="switch" name="isAdmin"/>
+    <form-field name="login" :validation="validation"/>
 </template>
 <script setup>
 import {FormField, Form, ComputedValue} from "jenesius-vue-form";
@@ -78,13 +78,12 @@ import {FormField, Form, ComputedValue} from "jenesius-vue-form";
 const form = new Form();
 const isAdmin = ComputedValue(form, "isAdmin"); // For reactive communication
 const validation = [
-login => {
-if (isAdmin.value && !login.startsWith('$'))
-return 'Administrator name must start with $';
-if (!isAdmin.value && login.length < 5)
-return 'Username must be at least 5 characters long.'
-
-         return true;
+    login => {
+        if (isAdmin.value && !login.startsWith('$'))
+            return 'Administrator name must start with $';
+        if (!isAdmin.value && login.length < 5)
+            return 'Username must be at least 5 characters long.'
+        return true;
      }
 ]
 </script>

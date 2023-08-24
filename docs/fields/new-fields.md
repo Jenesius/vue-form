@@ -38,21 +38,21 @@ In cases with countries, the widget will look like this:
 
 ```vue
 <template>
-<div>
-<form-field
-             v-bind = "$attrs"
-type="select"
-             :options = "countryOptions"
-         />
-</div>
+    <div>
+        <form-field
+            v-bind = "$attrs"
+            type="select"
+            :options = "countryOptions"
+        />
+    </div>
 </template>
 <script setup>
 import {FormField} from "jenesius-vue-form";
 
 const countryOptions = [
-{ label: 'Canada', value: 'ca' },
-{ label: 'Australia', value: 'au' },
-     // other
+    { label: 'Canada', value: 'ca' },
+    { label: 'Australia', value: 'au' },
+    // other
 ]
 </script>
 ```
@@ -71,9 +71,9 @@ If you set the field via **config** and then use **formField** then the followin
 
 ```ts
 defineProps<{
-name:string
-     modelValue: any
-     ...
+    name:string
+    modelValue: any
+    ...
 }>()
 ```
 

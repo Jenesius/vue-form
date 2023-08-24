@@ -47,8 +47,8 @@ Next, we will connect this component to our project
 ```vue{4}
 // app.vue
 <template>
-<input-address name="address"/>
-<form-field name="address.city" label="Short City"/>
+    <input-address name="address"/>
+    <form-field name="address.city" label="Short City"/>
 </template>
 <script setup>
 import {FormField, Form} from "jenesius-vue-form";

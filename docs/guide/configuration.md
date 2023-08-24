@@ -9,13 +9,13 @@ config(params)
 The Params object has the following type:
 ```ts
 interface IConfigurationParams {
-inputTypes: {
-[name: string]: any
-},
-requiredMessage:string
-typeNotCaseSensitive: boolean
-debug: boolean
-defaultType: string
+    inputTypes: {
+        [name: string]: any
+    },
+    requiredMessage:string
+    typeNotCaseSensitive: boolean
+    debug: boolean
+    defaultType: string
 }
 ```
 

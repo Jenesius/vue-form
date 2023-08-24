@@ -74,8 +74,8 @@ const state = useFormState(form); // { changed, disabled }
 The reactive state has the following interface:
 ```ts
 interface FormReactiveState {
-changed: boolean,
-disabled: boolean
-wait: boolean
+    changed: boolean,
+    disabled: boolean
+    wait: boolean
 }
 ```

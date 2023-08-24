@@ -4,9 +4,9 @@ import WidgetExampleValues from '../components/widget-example-values.vue'
 
 # Let's Start Using
 
-Creating a web application using Vue + JenesiusVueForm is an elegant and simple solution: a concise way to describe
-fields allows you to simplify the development of components, the large functionality of the library allows you to write multifunctional logic,
-and Vue's reactivity keeps our interface simple.
+Creating a web application using **Vue** + **JenesiusVueForm** is an elegant and simple solution: a concise way to describe
+fields allows you to simplify the development of components, the large functionality of the library allows you to write
+multifunctional logic and Vue's reactivity keeps our interface simple.
 
 ## Installation
 Install *jenesius-vue-form* as a dependency using any manager
@@ -34,9 +34,10 @@ by this library.
 
 ```vue{2,3}
 <template>
-<input-field name="username" label="Username"/>
-<input-field name="email" label="Email"/>
+    <input-field name="username" label="Username"/>
+    <input-field name="email" label="Email"/>
 </template>
+
 <script setup>
 import {InputField, Form} from "jenesius-vue-form";
 
