@@ -6,20 +6,10 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 
-		<input type = "number" step = "10"/>
+		<form-field name = "age" type = "number" step = "10" v-if = "show"/>
+		<button @click = "show = !show">{{labelButton}}</button>
+		<br>
 
-		<form-field type = "number" name = "age" label = "Age" step = "10"/>
-		<form-field type = "country" name = "country" label = "Country" />
-
-		<form-field type = "tel" name = "phone" label = "Phone" required />
-		<form-field type = "date" name = "birthday" label = "Bithday" />
-
-
-		<form-field :name="name" :label = "name === 'username' ? 'Username' : 'Age'"/>
-		<form-field name="username" label = "Username" />
-		<form-field name="name" label = "Name"/>
-		<widget-address/>
-        <form-field name="address.city.index" label = "City Index" />
 		<button @click = "change">change field name</button>
 		<button @click = "clean">clean values</button>
 
@@ -33,7 +23,7 @@
 <script setup lang='ts'>
 import Form from "../../../src/classes/Form";
 import FormField from "./../../../src/widgets/form-field.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import WidgetAddress from "./widget-address.vue"
 import copyObject from "./../../../src/utils/copy-object";
 
@@ -42,7 +32,8 @@ const form = window.form = new Form({
 	name: "main",
 	parent:false
 });
-
+const show = ref(false);
+const labelButton = computed(() => show.value ? 'Hide' : 'Show')
 
 setInterval(() => {
 	if (!form) return;
@@ -54,9 +45,8 @@ setInterval(() => {
 }, 50);
 
 
-form.oninput('birthday', v => {
-	console.log(v)
-})
+
+
 const values = ref(0);
 const changes = ref({});
 const pureValue= ref({});
