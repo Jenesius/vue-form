@@ -56,7 +56,9 @@ export default class Form extends EventEmitter implements FormDependence {
     static getEventValueByName(name: string) {
         return `${Form.EVENT_VALUE}:${name}`
     }
-    
+    static getEventAvailabilityByName(name: string) {
+        return `${Form.EVENT_AVAILABLE}:${name}`
+    }
     static restoreFullName<T extends { name?: string, parent?: Form }>(elem: T): string {
         if (elem.parent) return `${Form.restoreFullName(elem.parent)}.${elem.name}`;
         return elem.name || '';
@@ -661,15 +663,12 @@ export default class Form extends EventEmitter implements FormDependence {
         return this.isAvailable;
     }
 
-    private getAvailableEventName(fieldName: string) {
-        return `${Form.EVENT_AVAILABLE}:${fieldName}`
-    }
     onavailable(callback: (disabled: boolean) => any): any
     onavailable(fieldName: string, callback: (disabled: boolean) => any): any
     onavailable(arg1: ((disabled: boolean) => any) | string, arg2?: (disabled: boolean) => any):any {
         if (typeof arg1 === 'string') {
             if (!arg2) throw new Error('For named handler you need provided callback.');
-            return this.on(this.getAvailableEventName(arg1), arg2);
+            return this.on(Form.getEventAvailabilityByName(arg1), arg2);
         }
 
         return this.on(Form.EVENT_AVAILABLE, arg1);

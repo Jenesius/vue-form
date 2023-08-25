@@ -6,6 +6,9 @@ export default function useFormInput(parentForm: Form) {
 
 	if (!parentForm) return null;
 	let offDependency: undefined | (() => void );
+	let offOnInput: undefined | (() => void )
+	let offOnAvailability: undefined | (() => void )
+
 	const input = reactive<Partial<FormInput>>({ setValidation, setValue, setName, validationRules: [], deactivate }) as FormInput
 
 	return input;
@@ -21,9 +24,8 @@ export default function useFormInput(parentForm: Form) {
 		// Отписываемся от формы для старого поля, подписываемся для нового
 		deactivate()
 		offDependency = parentForm.subscribe(getNewDependency(input))
-
-		parentForm.oninput(name, updateInput)
-		parentForm.onavailable(name, updateAvailability)
+		offOnInput = parentForm.oninput(name, updateInput)
+		offOnAvailability = parentForm.onavailable(name, updateAvailability)
 
 		// Начальная инициализация состояния Input
 		updateInput();
@@ -46,7 +48,9 @@ export default function useFormInput(parentForm: Form) {
 	}
 
 	function deactivate() {
-		if (offDependency) offDependency();
+		offDependency?.();
+		offOnInput?.();
+		offOnAvailability?.()
 	}
 }
 
