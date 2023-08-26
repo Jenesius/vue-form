@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import FieldWrap from "../field-wrap.vue";
-import {onMounted, ref, watch} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 
 const props = withDefaults(defineProps<{
 	label?: string,
@@ -62,13 +62,11 @@ function resize() {
 }
 
 watch(() => props.modelValue, () => {
-	resize()
+	nextTick(resize)
 }, {
 	immediate: true
 })
-onMounted(() => {
-	resize()
-})
+onMounted(resize)
 
 </script>
 

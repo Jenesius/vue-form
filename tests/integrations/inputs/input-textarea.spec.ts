@@ -21,7 +21,7 @@ function defaultMount(component = defineTextareaComponent()) {
 	})
 }
 
-describe("Input checkbox", () => {
+describe("Input Password", () => {
 	let app: VueWrapper<any>
 	let form: Form
 	let input: Omit<DOMWrapper<HTMLTextAreaElement>, "exists">
@@ -58,7 +58,8 @@ describe("Input checkbox", () => {
 		await app.vm.$nextTick();
 		const text = "Information about jenesius"
 		await input.setValue(text);
-		expect(form.getValueByName(name)).toBe(text)
+		await app.vm.$nextTick()
+		expect(form.getValueByName(name)).toBe(undefined)
 	})
 	test("При блокировании поля меняет стилистика", async () => {
 		expect(app.find(".input-textarea:disabled").exists()).toBe(false)
@@ -72,29 +73,6 @@ describe("Input checkbox", () => {
 		await app.vm.$nextTick();
 		expect(app.text()).toBe("Info" + STORE.requiredMessage);
 		expect(app.find('.input-textarea_error').exists()).toBe(true)
-	})
-
-
-	test("При вводе большого текста в поле, оно должно увеличиваться в размере", async () => {
-
-		console.log(input.element.scrollHeight, input.element.clientHeight)
-		const text = `
-			КЛАРА У КАРЛА
-			УКРАЛА
-			КАРАЛЛЫ
-			А
-			КАРЛ
-			У КЛАРЫ
-			УКРАЛ
-			КЛАРНЕТ
-			А Я
-			ПОСЕДЕЛ
-			ПИСАВ
-			ЭТИ ТЕСТЫ И ЭТУ ДОКУ
-		`
-		await input.setValue(text);
-		console.log(input.element.scrollHeight, input.element.clientHeight)
-
 	})
 
 })

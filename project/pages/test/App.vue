@@ -10,6 +10,8 @@
 		<button @click = "show = !show">{{labelButton}}</button>
 		<br>
 
+		<textarea rows="10"/>
+
 		<button @click = "change">change field name</button>
 		<button @click = "clean">clean values</button>
 

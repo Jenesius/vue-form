@@ -67,7 +67,6 @@ ____
 Поле не прошло валидацию:
 <FormField :errors = "['The password is too simple']" type = "password" name = "pass" label = "С ошибкой" />
 
-____
 
 
 ----
