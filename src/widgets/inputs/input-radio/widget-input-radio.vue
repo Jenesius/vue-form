@@ -15,12 +15,8 @@
 				@input="onInput(item.value)"
 				@next = "handleMove(1)"
 				@prev = "handleMove(-1)"
-
-
 			/>
-
 		</div>
-
 	</field-wrap>
 </template>
 

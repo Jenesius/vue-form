@@ -74,9 +74,63 @@ describe("Testing radio button", () => {
 		await checkClickChange(radioItems, 2)
 		await checkClickChange(radioItems, 0)
 	})
+	test("Значение меняется по нажатию на стрелки. Вверх/Вниз/ Переход",async () => {
+		const app = defaultMount();
+		const form = (app.vm as any).form as Form;
 
-	test("Значение меняется по нажатию на стрелки",() => {})
-	test("Контейнер должен реагировать на focus", () => {})
-	test("Элемент должен реагировать на disabled", () => {})
-	test("Элемент должен реагировать на errors", () => {})
+		function triggerKey(this: {items: DOMWrapper<HTMLElement>[]}, index: number, dir: 'up' | 'down') {
+			return this.items[index].trigger('keydown.' + dir)	;
+		}
+
+		const obj = {
+			items: app.findAll<HTMLElement>('.element-input-radio')
+		}
+
+		await triggerKey.call(obj, 0, 'down');
+		expect(form.getValueByName(name)).toBe('g')
+
+		await triggerKey.call(obj, 1, 'down');
+		expect(form.getValueByName(name)).toBe('y')
+
+		await triggerKey.call(obj, 2, 'down');
+		expect(form.getValueByName(name)).toBe('r')
+	})
+	test("Элемент должен быть активным для Tab процессе", async () => {
+		const app = defaultMount();
+		const form = (app.vm as any).form as Form;
+
+		const firstItem = app.find<HTMLElement>('.element-input-radio');
+
+		expect(firstItem.element.tabIndex).toBe(0)
+	})
+	test("Если значение имеется, то tabindex должен быть активный элемент", async () => {
+		const app = defaultMount();
+		const form = (app.vm as any).form as Form;
+		form.setValues({
+			color: defaultOptions[1].value
+		})
+		await app.vm.$nextTick()
+
+		const items = app.findAll<HTMLElement>('.element-input-radio');
+
+		expect(items[0].element.getAttribute('tabindex')).toBe('none')
+		expect(items[1].element.getAttribute('tabindex')).toBe('0')
+		expect(items[2].element.getAttribute('tabindex')).toBe('none')
+	})
+	test("Элемент должен реагировать на disabled", async () => {
+		const app = defaultMount();
+		const form = (app.vm as any).form as Form;
+		form.disable()
+		await app.vm.$nextTick()
+	})
+	test("Элемент должен реагировать на errors", async () => {
+		const app = defaultMount();
+		const form = (app.vm as any).form as Form;
+		form.validate()
+		await app.vm.$nextTick()
+
+		expect(app.findAll('.element-input-radio_error').length).toBe(3)
+
+
+	})
 })

@@ -33,6 +33,9 @@ module.exports = defineConfig({
     "input-select": {
       entry: "./examples/input-select/main.ts"
     },
+    "input-checkbox": {
+      entry: "./examples/input-checkbox/main.ts"
+    },
     "all-inputs": {
       entry: "./examples/all-inputs/main.ts"
     }
