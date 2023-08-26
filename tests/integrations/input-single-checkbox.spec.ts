@@ -107,4 +107,16 @@ describe("Input single checkbox", () => {
 		await input.trigger('keyup.enter')
 		expect(form.getValueByName(name)).toBe("good")
 	})
+	test("Tabindex should be provided if field is not disabled", async () => {
+		const item = app.find('.element-input-checkbox')
+
+		expect(item.element.getAttribute('tabindex')).toBe('0')
+	})
+	test("Tabindex should be 'none' if field was disabled", async () => {
+		const item = app.find('.element-input-checkbox')
+		form.disable()
+		await app.vm.$nextTick();
+
+		expect(item.element.getAttribute('tabindex')).toBe('none')
+	})
 })

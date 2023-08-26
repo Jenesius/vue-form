@@ -3,6 +3,7 @@
 		<element-input-checkbox
 			:model-value="values ? modelValue === values[0] : modelValue || false"
 			:disabled="disabled"
+			:tabindex="disabled? 'none' : 0"
 			:label="label"
 			@click="onInput"
 			@keyup.enter="onInput"

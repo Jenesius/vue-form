@@ -58,6 +58,10 @@ defineProps<{
 .element-input-checkbox-button_disabled{
 	cursor: default;
 }
+.element-input-checkbox:has(.element-input-checkbox-button_disabled) {
+	cursor: default;
+}
+
 .element-input-checkbox-button_error {
 	border: var(--vf-input-border-error);
 }
