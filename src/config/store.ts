@@ -41,6 +41,10 @@ const STORE: IStore = {
 			yearCount: 60,
 			yearStart: 1965
 		}
+	},
+	select: {
+		countWithoutSearch: 6,
+		searchLabel: "Search"
 	}
 }
 
@@ -62,6 +66,10 @@ export interface IStore {
 			yearCount: number,
 			yearStart: number
 		}
+	},
+	select: {
+		countWithoutSearch: number,
+		searchLabel: string
 	}
 }
 export default STORE;

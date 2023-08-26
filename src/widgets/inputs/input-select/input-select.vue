@@ -1,27 +1,30 @@
 <template>
 	<field-wrap :label="label" :errors="errors">
-		<div class="container-input-select" ref="inputSelectWrap">
+		<div class="container-input-select">
 			<div class="input-select"
 				 :class="{
                     'input-select_disabled': disabled,
                     'input-select_error': errors.length,
-            		'input-select_active': active
+            		'input-select_active': isActive
 				}"
-				 @focusout = "deactivate()"
 				 :tabindex="!disabled? 0 : null"
+
+				 @focusout = "deactivate()"
 				 @keyup.enter="setActive()"
+				 @keydown.down.prevent = "handleMove(1)"
+				 @keydown.up.prevent = "handleMove(-1)"
 				 ref="refInputSelect"
 			>
 				<widget-input-select-current
-					:label="title"
-					:active="active"
-					@click="setActive()"
+					:label="label"
 					:disabled = "disabled"
+					:active="isActive"
+					@click="setActive()"
 				/>
 				<transition name="height-resize">
-					<div class = "input-select-option" v-if="active">
+					<div class = "input-select-option" v-if="isActive">
 						<widget-input-select-search
-							v-if = "options.length > 6"
+							v-if = "options.length > store.select.countWithoutSearch"
 							v-model = "filter"
 
 							@focusin = "setActive(true)"
@@ -47,13 +50,14 @@
 
 <script setup lang="ts">
 import {OptionRow} from "../../../types";
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
 import updateInputPosition from "../../../utils/update-input-position";
 import WidgetInputSelectSearch from "./widget-input-select-search.vue";
 import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 import FieldWrap from "../field-wrap.vue";
 import debounce from "../../../utils/debounce";
+import store from "../../../config/store";
 
 const props = defineProps<{
 	label?: string,
@@ -64,74 +68,60 @@ const props = defineProps<{
 	errors: string[],
 	hiddenValues?: OptionRow['value'][]
 }>()
-
-const refInputSelect = ref<HTMLElement>()
-const inputSelectWrap = ref();
-const active = ref(false);
-
-function setActive(v = !active.value) {
-	if (!v) filter.value = '';
-
-	if (props.disabled) return active.value = false;
-	active.value = v;
-
-	if (v) {
-		nextTick(() => {
-			scrollToActiveItem('auto')
-		})
-	}
-}
-
 const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
 }>()
 
+const refInputSelect = ref<HTMLElement>()
+
+/**
+ * @description true when user open the list of options.
+ * */
+const isActive = ref(false);
+function setActive(v = !isActive.value) {
+	if (props.disabled) return isActive.value = false;
+
+	isActive.value = v;
+
+	if (!v) filter.value = '';
+	if (v) nextTick(scrollToActiveItem.bind(null,'auto'))
+}
 function onInput(v: any) {
 	if (props.disabled) return;
 	emit('update:modelValue', v)
 }
-
-const title = computed(() => {
+/**
+ * @description Метка отображаемая в поле.
+ * */
+const label = computed(() => {
 	const selected = props.options.find(x => x.value === props.modelValue);
 	if (selected) return getLabelFromOptionRow(selected);
 
-	if (props.disabled) return '';
-
-	return props.placeholder || '';
+	return props.disabled ? '' : props.placeholder || '';
 })
 
 function deactivate() {
 	const elem = refInputSelect.value;
 	if (!elem) return;
 
-	let focusedOrHasFocused = elem.matches(':focus-within');
-	if (focusedOrHasFocused) return;
-
+	// If Input inside InputSelect stay in focus
+	if (elem.matches(':focus-within')) return;
 	setActive(false);
 }
 
-onMounted(() => {
-	refInputSelect.value?.addEventListener("keydown", e => {
-		switch (e.code) {
-			case "ArrowDown":
-				e.preventDefault();
-				updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration: 1});
-				scrollToActiveItem('smooth')
-				break;
-			case "ArrowUp":
-				e.preventDefault();
-				updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration: -1});
-				scrollToActiveItem('smooth')
-				break;
-		}
-	})
-})
+/**
+ * @description Функция для обработки перехода по списку, если пользователь нажимает клавиши вниз/вверх
+ * */
+function handleMove(duration: number) {
+	updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration});
+	scrollToActiveItem('smooth')
+}
 
 /**
  * @description Для того, чтобы предотвратить повторный scroll - используем debounce.
  * */
 const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'auto') {
-	if (!active.value) return;
+	if (!isActive.value) return;
 	nextTick(() => {
 		refInputSelect.value?.querySelector('.input-select-option-list-item_active')?.scrollIntoView({
 			block: 'nearest',
@@ -144,12 +134,11 @@ const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'aut
 const filter = ref('');
 const filteredOptions = computed(() => {
 	const _search = filter.value.toLowerCase();
-
 	return props.options.filter(option =>
 		// Если объекта нет в скрытых значениях
 		!props.hiddenValues?.includes(option.value) &&
 		// Если поиск пуст или если label содержит search
-		// String used to convert number or other types(not string) to string
+		// *String* used to convert number or other types(not string) to string
 		// Resolve https://github.com/Jenesius/vue-form/issues/107
 		(_search.length === 0 || String(getLabelFromOptionRow(option))?.toLowerCase?.().includes(_search))
 	)

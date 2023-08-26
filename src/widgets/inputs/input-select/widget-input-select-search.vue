@@ -1,6 +1,6 @@
 <template>
 	<div class="container-input-select-search">
-		<input type="text" class="container-input-select-search-input" placeholder="Search..."
+		<input type="text" class="container-input-select-search-input" :placeholder="store.select.searchLabel"
 			   @input="emits('update:modelValue', $event.target.value)"
 			   :value="modelValue"
 			   @focusin="emits('focusin')"
@@ -11,6 +11,8 @@
 
 <script setup lang="ts">
 
+import store from "../../../config/store";
+
 defineProps<{
 	modelValue: string
 }>()
@@ -19,7 +21,6 @@ const emits = defineEmits<{
 	(event: 'focusin'): void,
 	(event: 'focusout'): void
 }>()
-
 
 </script>
 
