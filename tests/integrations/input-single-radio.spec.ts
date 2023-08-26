@@ -85,4 +85,25 @@ describe("Input single radio", () => {
 		await input.trigger('keyup.enter')
 		expect(form.getValueByName(name)).toBe(true)
 	})
+	test("If values was provided, modelValue should be or first or second value", async () => {
+		const app = defaultMount(defineComponent({
+			template: `<div><form-field 
+				type = "single-radio" name = "${name}" label = "Select" required
+				:values = "['good', 'bad']"
+			/></div>`,
+			components:  {FormField}
+		}))
+		const form = (app.vm as any).form
+
+		const input = app.get('.element-input-radio')
+
+		await input.trigger('click')
+		expect(form.getValueByName(name)).toBe("good")
+
+		await input.trigger('click')
+		expect(form.getValueByName(name)).toBe("bad")
+
+		await input.trigger('click')
+		expect(form.getValueByName(name)).toBe("good")
+	})
 })

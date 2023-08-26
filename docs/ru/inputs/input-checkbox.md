@@ -7,7 +7,7 @@ const options = {
     g: "Зелёный",
     y: "Жёлтый"
 };
-const values = useFormValues(form)
+const values = useFormValues(form);
 
 </script>
 

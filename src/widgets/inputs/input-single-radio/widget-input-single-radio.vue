@@ -1,7 +1,7 @@
 <template>
     <field-wrap :errors = "errors">
 		<element-input-radio
-			:model-value="!!modelValue"
+			:model-value="values ? modelValue === values[0] : modelValue || false"
 			:disabled="disabled"
 			:label="label"
 			:error="!!errors.length"
@@ -24,6 +24,7 @@
         modelValue: any,
         disabled: boolean,
 		errors: string[],
+		values?: [any, any],
     }>()
 
     const emit = defineEmits<{
@@ -31,8 +32,10 @@
     }>()
 
     function handleInput() {
-        if (props.disabled) return;
-        emit('update:modelValue', !props.modelValue)
+		if (props.disabled) return;
+
+		const value = props.values ? props.modelValue === props.values[0] ? props.values[1] : props.values[0] : !props.modelValue;
+		emit('update:modelValue', value)
     }
 </script>
 
