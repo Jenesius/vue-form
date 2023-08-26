@@ -97,7 +97,6 @@ describe("Input checkbox", () => {
 			defaultOptions.map(el => el.label).join('') + STORE.requiredMessage
 		)
 	})
-
 	test("Tabindex should be added for all items", () => {
 		const items = app.findAll('.element-input-checkbox')
 

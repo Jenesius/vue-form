@@ -38,6 +38,9 @@ module.exports = defineConfig({
     },
     "all-inputs": {
       entry: "./examples/all-inputs/main.ts"
+    },
+    "input-single-radio": {
+      entry: "./examples/input-single-radio/main.ts"
     }
   },
   configureWebpack: {

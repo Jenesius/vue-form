@@ -48,7 +48,7 @@ const STORE: IStore = {
 	}
 }
 
-type defineInputTypes = 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
+type defineInputTypes = 'single-checkbox' | 'single-radio' | 'text' | 'select' | 'radio' | 'checkbox' | 'switch' | 'password' | 'tel' | 'number' | 'range' | 'textarea';
 export interface IStore {
 	inputTypes: {
 		[name: defineInputTypes | string]: any
