@@ -1,11 +1,14 @@
 <template>
-	<field-wrap>
+	<field-wrap :errors = "errors">
 		<element-input-checkbox
-			:model-value="values ? modelValue === values[0] : modelValue"
+			:model-value="values ? modelValue === values[0] : modelValue || false"
 			:disabled="disabled"
 			:label="label"
 			@click="onInput"
-			@keyup.enter="onInput()"
+			@keyup.enter="onInput"
+			@keydown.space.prevent
+			@keyup.space="onInput"
+			:has-error = "errors.length !== 0"
 		/>
 	</field-wrap>
 </template>
@@ -18,7 +21,8 @@ const props = defineProps<{
 	label?: string,
 	modelValue: any,
 	disabled: boolean,
-	values?: [any, any]
+	values?: [any, any],
+	errors: string[]
 }>()
 
 const emit = defineEmits<{
