@@ -1,10 +1,11 @@
 <template>
-	<div class = "element-input-checkbox" :tabindex="disabled? 'none' : 0">
+	<div class = "element-input-checkbox" >
 		<div
 			class = "element-input-checkbox-button"
 			:class = "{
                         'element-input-checkbox-button_active': modelValue,
                         'element-input-checkbox-button_disabled': disabled,
+                        'element-input-checkbox-button_error': hasError,
                     }"
 		>
 			<i class = "element-input-checkbox-button__check"/>
@@ -18,7 +19,8 @@
 defineProps<{
 	modelValue: boolean,
 	label?: string,
-	disabled: boolean
+	disabled: boolean,
+	hasError: boolean
 }>()
 </script>
 
@@ -55,6 +57,9 @@ defineProps<{
 }
 .element-input-checkbox-button_disabled{
 	cursor: default;
+}
+.element-input-checkbox-button_error {
+	border: var(--vf-input-border-error);
 }
 .element-input-checkbox-label{
 	margin: 0;

@@ -1,6 +1,17 @@
 <template>
     <field-wrap :errors = "errors">
-		<element-input-radio :model-value="!!modelValue" :disabled="disabled" :label="label" :error="!!errors.length" @input = "onInput"/>
+		<element-input-radio
+			:model-value="!!modelValue"
+			:disabled="disabled"
+			:label="label"
+			:error="!!errors.length"
+			:tabindex = "!disabled ? 0 : 'none'"
+
+			@input = "handleInput"
+			@keyup.enter="handleInput"
+			@keydown.space.prevent
+			@keyup.space.prevent="handleInput"
+		/>
     </field-wrap>
 </template>
 
@@ -19,7 +30,7 @@
         (e: 'update:modelValue', v: any): void
     }>()
 
-    function onInput() {
+    function handleInput() {
         if (props.disabled) return;
         emit('update:modelValue', !props.modelValue)
     }
