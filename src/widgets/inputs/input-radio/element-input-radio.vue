@@ -6,9 +6,10 @@
         	'element-input-radio_disabled'	: disabled,
             'element-input-radio_error'	: error
         }"
-		:tabindex = "disabled ? 'none' : 0"
-		@click = "emits('input')"
-		@keyup.enter = "emits('input')"
+		:tabindex = "tabindex"
+		@click = "emit('input')"
+		@keydown.down.prevent = "emit('next')"
+		@keydown.up.prevent = "emit('prev')"
 	>
 		<div class = "element-input-radio-button">
 			<transition name = "fade">
@@ -22,6 +23,7 @@
 
 <script setup lang = "ts">
 interface IProps {
+	tabindex: string | number
 	modelValue: boolean,
 	disabled: boolean,
 	error: boolean,
@@ -29,8 +31,10 @@ interface IProps {
 }
 
 const props = defineProps<IProps>()
-const emits = defineEmits<{
-	(event: 'input'): void
+const emit = defineEmits<{
+	(event: 'input'): void,
+	(event: 'next'): void,
+	(event: 'prev'): void
 }>()
 </script>
 
@@ -61,7 +65,7 @@ const emits = defineEmits<{
 
 		border-radius: 50%;
 		background-color: var(--vf-input-active);
-		border: 1px solid var(--vf-input-white-light)
+		border: 1px solid var(--vf-input-gray-dark)
 	}
 	.element-input-radio-label{
 		margin: 0;

@@ -87,7 +87,7 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	background-color: var(--vf-input-background);
 }
 .container-input-text:focus-within {
-	border-color: var(--vf-input-gray-dark);
+	border: var(--vf-input-border-focus)
 }
 .container-input-text_disabled {
 	background-color: var(--vf-input-background-disabled);

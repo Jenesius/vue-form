@@ -2,7 +2,6 @@ import {defineComponent} from "vue";
 import {InputField, Form} from "./../../src/index";
 import {mount, VueWrapper} from "@vue/test-utils";
 import EmptyApp from "./components/EmptyApp.vue";
-import wait from "../wait";
 
 const defaultOptions =  [
 	{
@@ -65,7 +64,7 @@ describe("Input Select Testing", () => {
 		const form = app.vm.form as Form
 
 		await app.get('.input-select').trigger('keyup.enter');
-		await wait(12)
+
 		expect(app.text()).toBe(defaultOptions.map(a => a.label).join(''))
 	})
 	test("Переключение значений при нажатии клавиши вниз при фокусе на поле.", async () => {
@@ -73,7 +72,7 @@ describe("Input Select Testing", () => {
 		const form = app.vm.form as Form
 
 		function triggerDown() {
-			return app.get('.input-select').trigger('keydown', {code: "ArrowDown"});
+			return app.get('.input-select').trigger('keydown.down');
 		}
 
 		await triggerDown()
@@ -115,7 +114,7 @@ describe("Input Select Testing", () => {
 		expect(app.find('.input-select_disabled').exists()).toBe(true)
 
 		function triggerDown() {
-			return app.get('.input-select').trigger('keydown', {code: "ArrowDown"});
+			return app.get('.input-select').trigger('keydown.down');
 		}
 
 		await triggerDown()

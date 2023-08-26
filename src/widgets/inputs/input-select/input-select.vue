@@ -16,7 +16,7 @@
 				 ref="refInputSelect"
 			>
 				<widget-input-select-current
-					:label="label"
+					:label="inputTitle"
 					:disabled = "disabled"
 					:active="isActive"
 					@click="setActive()"
@@ -93,7 +93,7 @@ function onInput(v: any) {
 /**
  * @description Метка отображаемая в поле.
  * */
-const label = computed(() => {
+const inputTitle = computed(() => {
 	const selected = props.options.find(x => x.value === props.modelValue);
 	if (selected) return getLabelFromOptionRow(selected);
 

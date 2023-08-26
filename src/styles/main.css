@@ -6,14 +6,16 @@
     --vf-input-white-dark:                  #dadada;
     --vf-input-gray-light:                  #c8c8c8;
     --vf-input-gray-dark:                   #b2b2b2;
-    --vf-input-black-dark:                  #333333;
+    --vf-input-gray-deep:                   #888888;
     --vf-input-black-light:                 #646363;
+    --vf-input-black-dark:                  #333333;
     --vf-input-color:                       #1c1c1c;
     --vf-input-background:                  #ffffff;
     --vf-input-background-disabled:         #e9e9e9;
 
+
     --vf-input-border-color: var(--vf-input-gray-light);
-    --vf-input-border-color-focus: var(--vf-input-gray-dark);
+    --vf-input-border-color-focus: var(--vf-input-gray-deep);
 
     --vf-input-placeholder-color: var(--vf-input-gray-dark);
 

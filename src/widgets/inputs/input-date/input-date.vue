@@ -151,7 +151,7 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	border: var(--vf-input-border-error);
 }
 .container-input-date:focus-within {
-	border-color: var(--vf-input-gray-dark);
+	border: var(--vf-input-border-focus)
 }
 
 .input-date {
