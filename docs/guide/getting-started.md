@@ -1,5 +1,8 @@
 <script setup>
-import WidgetExampleValues from '../components/widget-example-values.vue'
+import {Form, FormField, useFormValues} from "./../../src/index";
+
+const form = new Form();
+const values = useFormValues(form)
 </script>
 
 # Let's Start Using
@@ -34,18 +37,24 @@ by this library.
 
 ```vue{2,3}
 <template>
-    <input-field name="username" label="Username"/>
-    <input-field name="email" label="Email"/>
+    <form-field name="username" label="Username"/>
+    <form-field name="email" label="Email"/>
 </template>
 
 <script setup>
-import {InputField, Form} from "jenesius-vue-form";
+import {FormField, Form} from "jenesius-vue-form";
 
 const form = new Form()
 </script>
 ```
 ### Result
 
-<WidgetExampleValues/>
+<FormField name = "username" label = "Username"/>
+<FormField name = "email" label = "Email"/>
+
+```json-vue
+{{values}}
+```
+
 
 In the following sections of the guide, we will explore these and other interesting features in more detail.

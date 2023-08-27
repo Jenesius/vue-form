@@ -66,7 +66,7 @@ import {FormField} from "jenesius-vue-form";
 :::
 
 Поле по умолчанию:
-<FormField  type = "date" name = "created" label = "Это администратор" />
+<FormField  type = "date" name = "created" label = "Дата создания" />
 
 ____
 
@@ -81,7 +81,7 @@ ____
 ____
 
 Изменённое значение `mask`:
-<FormField mask = "YYYY_MM" type = "date" name = "deleted" label = "С переданными values" />
+<FormField mask = "YYYY_MM" type = "date" name = "deleted" label = "С переданными mask" />
 _____
 
 

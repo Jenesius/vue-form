@@ -6,7 +6,7 @@ const values = useFormValues(form);
 
 </script>
 
-# Поле number
+# Поле range
 
 Поле используется для ввода численных значений.
 
