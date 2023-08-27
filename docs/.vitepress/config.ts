@@ -7,6 +7,9 @@ export default defineConfig({
 	head: [
 		['link', { rel: 'icon', href: `/logo.png` }]
 	],
+	sitemap: {
+		hostname: "https://form.jenesius.com"
+	},
 	themeConfig: {
 		nav: nav(),
 		sidebar: sidebar(),
