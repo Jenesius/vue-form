@@ -1,91 +1,66 @@
-import {mount} from "@vue/test-utils";
-import EmptyApp from "./components/EmptyApp.vue";
-import Form from "../../src/classes/Form";
+import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
+import EmptyApp from "../components/EmptyApp.vue";
 import {defineComponent, h} from "vue";
-import {InputField} from "../../src/index";
-import wait from "../wait";
-import {FormFieldValidationCallback} from "@/types";
-import STORE from "../../src/config/store";
-import AppInputTextPretty from "./components/input-text/AppInputTextPretty.vue"
+import {InputField, STORE, Form, FormField} from "../../../src/index";
+import {FormFieldValidationCallback} from "../../../src/types";
+import AppInputTextPretty from "../components/input-text/AppInputTextPretty.vue"
+
+const name = 'username'
+function defineTextComponent() {
+    return defineComponent({
+        template: `<div><form-field type = "text" name = "${name}" required label = "Username" /></div>`,
+        components: {FormField}
+    })
+}
+function defaultMount(component = defineTextComponent()) {
+    return mount(EmptyApp, {
+        slots: {
+            default: component
+        },
+        attachTo: document.body
+    })
+}
 
 describe("Input text", () => {
+    let app: VueWrapper<any>;
+    let form: Form
+    let input: DOMWrapper<HTMLInputElement>
+    beforeEach(() => {
+        app = defaultMount()
+        form = (app.vm as any).form
+        input = app.find('input')
+    })
+
     test("Default empty input-text", async () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-    
-        await wait()
-        
-        const input = app.get('input');
         expect(input.element.value).toBe("")
     })
     test("Input-text by default should take value from form", async () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-        const form = (app.vm as any).form as Form;
         form.setValues({
             username: "Jack"
         })
-    
-        await wait()
-    
-        const input = app.get('input');
+        await app.vm.$nextTick()
         expect(input.element.value).toBe("Jack")
     })
     test("Input-text be reactive input value", async () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-        const form = (app.vm as any).form as Form;
         form.setValues({
             username: "Jack"
         })
         const input = app.get('input');
-        await wait()
+        await app.vm.$nextTick()
         expect(input.element.value).toBe("Jack");
         form.change({
             username: "TTT"
         })
-        await wait()
+        await app.vm.$nextTick()
         expect(input.element.value).toBe("TTT");
         form.setValues({
             username: "Jenesius"
         })
-        await wait()
+        await app.vm.$nextTick()
         expect(input.element.value).toBe("Jenesius")
     })
     test("Input-text should update form after entering data", async () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-        const form = (app.vm as any).form as Form;
-    
-        await wait()
+        await app.vm.$nextTick()
     
         const input = app.get('input');
         await input.setValue("TEST")
@@ -93,61 +68,17 @@ describe("Input text", () => {
         expect(form.getValueByName("username")).toBe("TEST")
     })
     test("By default input should be not disable", () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-        const form = (app.vm as any).form as Form;
         const input = app.get('input');
         expect(form.checkFieldDisable('username')).toBe(false)
         expect(input.element.disabled).toBe(false)
     })
     test("Input should has disabled class after form.disable", async () => {
-        const component = defineComponent({
-            template: `<div><input-field name = "username"/></div>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-    
-        // update prop, and wait a tick to allow it to take effect
-        // app.vm.loadingResource = true
         await app.vm.$nextTick()
-        
-        const form = (app.vm as any).form as Form;
         form.disable()
-        
-        await wait(100)
-        
-        const input = app.get('input');
-        
+        await app.vm.$nextTick()
         expect(input.element.disabled).toBe(true)
     })
     test("Input should remove disable class after form.enable", async () => {
-        const component = defineComponent({
-            template: `<input-field name = "username"/>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
-        // update prop, and wait a tick to allow it to take effect
-        // app.vm.loadingResource = true
-        await app.vm.$nextTick()
-        
-        const form = (app.vm as any).form as Form;
-        const input = app.get('input');
-    
         form.disable()
         await app.vm.$nextTick()
         expect(input.element.disabled).toBe(true)
@@ -160,17 +91,13 @@ describe("Input text", () => {
             template: `<div><input-field name = "username"/> <input-field name="username"/></div>`,
             components: {InputField}
         })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            },
-        });
+        const app = defaultMount(component)
         const form = (app.vm as any).form as Form;
         form.setValues({
             username: "T"
         })
-    
-        await wait()
+
+        await app.vm.$nextTick()
     
         const inputs = app.findAll('input');
         expect(inputs.map(a => a.element.value)).toEqual(["T", "T"])
@@ -229,7 +156,7 @@ describe("Input text", () => {
         const validateResult = form.validate()
         expect(validateResult).toBe(false);
         await app.vm.$nextTick();
-        await wait()
+
         expect(app.find('.container-input-text_error').exists()).toBe(true);
         expect(app.text()).toBe(ERROR_TEXT);
         
@@ -238,7 +165,6 @@ describe("Input text", () => {
         })
         form.validate()
         await app.vm.$nextTick()
-        await wait()
         
         expect(app.find('.container-input-text_error').exists()).toBe(false);
         expect(app.text()).toBe("");
@@ -256,15 +182,15 @@ describe("Input text", () => {
         await app.vm.$nextTick()
         
         expect(form.validate()).toBe(false);
-        
-        await wait();
+
+        await app.vm.$nextTick()
         
         expect(app.text()).toBe(STORE.requiredMessage);
         form.setValues({
             username: "PP"
         })
         expect(form.validate()).toBe(true);
-        await wait()
+        await app.vm.$nextTick()
         expect(app.text()).toBe("")
     })
     test("If label is provided it should be visible", async () => {
@@ -327,19 +253,19 @@ describe("Input text", () => {
         const input = app.get("input");
         await input.setValue("jack")
         await app.vm.$nextTick();
-        await wait()
+        await app.vm.$nextTick()
         
         expect(form.getValueByName('name')).toBe("jack")
         expect(input.element.value).toBe('-jack-')
     
     
         await input.setValue("a")
-        await wait()
+        await app.vm.$nextTick()
         expect(form.getValueByName('name')).toBe("a")
         expect(input.element.value).toBe("-a-")
     
         await input.setValue("")
-        await wait()
+        await app.vm.$nextTick()
         expect(form.getValueByName('name')).toBe("")
         expect(input.element.value).toBe("")
     })
@@ -369,13 +295,11 @@ describe("Input text", () => {
         const form = (app.vm as any).form as Form;
         //app.vm.loadingResource = true;
         await app.vm.$nextTick()
-        await wait()
+
         const input = app.get('input');
         
         await input.setValue("123");
         await app.vm.$nextTick()
-        await wait()
-        
         
         expect(input.element.value).toBe("123")
         expect(form.getValueByName('username')).toBe("123")
@@ -402,7 +326,7 @@ describe("Input text", () => {
         
         const input = app.get("input");
         await input.setValue("12345678910")
-        await wait();
+        await app.vm.$nextTick()
         
         expect(form.getValueByName("test")).toBe("123456");
         expect(input.element.value).toBe("123456")
@@ -454,33 +378,19 @@ describe("Input text", () => {
     
         const input = app.get("input");
         await input.setValue("Jenesius 24")
-        await wait();
+        await app.vm.$nextTick()
     
         expect(form.getValueByName("age")).toBe(24);
         expect(input.element.value).toBe("24")
         
     })
     test("Empty value for undefined value in form", async () => {
-        const component = defineComponent({
-            template: `<div><input-field name = "age"/></div>`,
-            components: {InputField}
-        })
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            }
-        })
-        // app.vm.loadingResource = true;
-        await app.vm.$nextTick();
-        const form = (app.vm as any).form as Form
         form.setValues({
-            age: undefined
+            [name]: undefined
         })
+        await app.vm.$nextTick()
         
-        const input = app.get("input");
-        await wait();
-        
-        expect(form.getValueByName("age")).toBe(undefined);
+        expect(form.getValueByName(name)).toBe(undefined);
         expect(input.element.value).toBe("")
         
     })

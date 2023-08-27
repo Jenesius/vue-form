@@ -11,6 +11,7 @@
 		<input-field name = "username" label = "Prefix" prefix = "Login:"/>
 		<input-field name = "username" label = "Placeholder" placeholder = "Write something"/>
 		<input-field name = "username" label = "Numeric" numeric/>
+		<input-field name = "username" label = "Max length 10" maxlength = "10" />
 		<h2>Input Textarea</h2>
 		<input-field name = "description" type = "textarea"/>
 		<input-field name = "description" type = "textarea" label = "With label"/>
@@ -56,7 +57,7 @@
 
 		<h2>Input Password</h2>
 
-		<input-field name = "password" type = "password" />
+		<input-field name = "password" type = "password" autofocus />
 		<input-field name = "password" type = "password" label = "With label" />
 		<input-field name = "password" type = "password" label = "Disabled" disabled />
 		<input-field name = "password" type = "password" label = "With Error" :errors = "['Some mistake']" />

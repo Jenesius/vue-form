@@ -12,7 +12,7 @@
 				:value="modelValue"
 				@input="emit('update:modelValue', $event.target.value)"
 				:disabled="disabled"
-				:autofocus="autofocus"
+				:autofocus="autofocus || false"
 			/>
 			<div class="input-password-toggle" @click="toggleType()">
 				<div
@@ -36,7 +36,7 @@ interface Props {
 	errors: string[],
 	modelValue: any,
 	disabled: boolean,
-	autofocus: boolean
+	autofocus?: boolean | string
 }
 
 const props = defineProps<Props>()
