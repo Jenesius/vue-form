@@ -1,7 +1,7 @@
 import {StringModify} from "../types";
 import warn from "../debug/warn";
 
-type ModifyParam = undefined | StringModify | Array<StringModify | undefined>
+type ModifyParam = undefined | StringModify | Array<StringModify | undefined | Function> | Function
 export default function useModify(callbackModifyProps: () => ModifyParam) {
 	function parse(param: ModifyParam) {
 		if (!param) return [];

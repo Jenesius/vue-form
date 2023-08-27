@@ -32,21 +32,23 @@ import {StringModify, ValidationError} from "../../../types";
 import FieldWrap from "../field-wrap.vue";
 import {parseNumber} from "../../../utils/parse-number";
 
-
 const props = defineProps<{
 	label?: string,
 	errors: ValidationError[],
 	modelValue: any,
 	disabled?: boolean,
+	name?: string
+
 	autofocus?: boolean,
 	pretty?: StringModify | StringModify[] | Function,
 	modify?: StringModify | StringModify[]| Function
 	placeholder?: string,
-	maxLength?: string | number,
 	maxlength?: string | number,
 	prefix?: string,
-	name?: string
 	numeric?: boolean,
+
+	maxLength?: string | number,
+
 }>()
 
 const isFocused = ref(false);
