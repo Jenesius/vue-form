@@ -18,6 +18,7 @@
 <script setup lang = "ts">
 	import ElementInputRadio from "./../input-radio/element-input-radio.vue";
 	import FieldWrap from "../field-wrap.vue";
+	import getNextFormToggleValues from "../../../utils/get-next-from-toggle-values";
 
     const props = defineProps<{
         label?: string,
@@ -34,7 +35,7 @@
     function handleInput() {
 		if (props.disabled) return;
 
-		const value = props.values ? props.modelValue === props.values[0] ? props.values[1] : props.values[0] : !props.modelValue;
+		const value = props.values ? getNextFormToggleValues(props.values, props.modelValue) : !props.modelValue;
 		emit('update:modelValue', value)
     }
 </script>

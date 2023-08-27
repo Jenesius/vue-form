@@ -12,6 +12,7 @@ export type ValidationError = string | false
 export type FormFieldOptions = OptionRow | Record<string, string>
 
 export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
+export type ToggleValues = [any, any];
 
 export interface IOptionRowWithLabel {
 	label: string,

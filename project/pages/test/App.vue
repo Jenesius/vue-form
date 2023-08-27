@@ -6,11 +6,10 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 
-		<form-field name = "age" type = "number" step = "10" v-if = "show"/>
+		<form-field name = "phone" type = "tel" v-if = "show"/>
 		<button @click = "show = !show">{{labelButton}}</button>
 		<br>
 
-		<textarea rows="10"/>
 
 		<button @click = "change">change field name</button>
 		<button @click = "clean">clean values</button>

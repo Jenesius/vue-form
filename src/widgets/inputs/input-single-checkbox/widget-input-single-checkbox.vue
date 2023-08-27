@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import FieldWrap from "../field-wrap.vue";
 import ElementInputCheckbox from "../input-checkbox/element-input-checkbox.vue";
+import getNextFormToggleValues from "../../../utils/get-next-from-toggle-values";
 
 const props = defineProps<{
 	label?: string,
@@ -33,7 +34,7 @@ const emit = defineEmits<{
 function onInput() {
 	if (props.disabled) return;
 
-	const value = props.values ? props.modelValue === props.values[0] ? props.values[1] : props.values[0] : !props.modelValue;
+	const value = props.values ? getNextFormToggleValues(props.values, props.modelValue) : !props.modelValue;
 	emit('update:modelValue', value)
 }
 

@@ -20,7 +20,7 @@
 import FieldWrap from "../field-wrap.vue";
 import WidgetInputTelCode from "./widget-input-tel-code.vue";
 import {computed, ref} from "vue";
-import {parsePhoneNumber, AsYouType} from 'libphonenumber-js'
+import {AsYouType, parsePhoneNumber} from 'libphonenumber-js'
 
 interface Props {
 	errors: string[],
@@ -40,17 +40,24 @@ const inputTel = ref<HTMLInputElement>();
  * @description Using libphonenumber-js return pretty value of phone number. In Error case return user's target value.
  * */
 const prettyValue = computed(() => prettifyPhoneValue(props.modelValue))
+
+// Метод просто добавляет + в начало строки, если его там ещё нет
+function addPlus(str: string) {
+	if (!str.length) return '';
+	return str.startsWith('+') ? str : '+' + str
+}
+
 function prettifyPhoneValue(value: unknown) {
 	try {
 		if (typeof value !=='string') return '';
-		return new AsYouType().input(value)
+		return new AsYouType().input(addPlus(value))
 	} catch (e) {
 		return props.modelValue;
 	}
 }
 const countryCode = computed(() => {
 	try {
-		return parsePhoneNumber(props.modelValue).country?.toLocaleLowerCase();
+		return parsePhoneNumber(addPlus(props.modelValue)).country?.toLocaleLowerCase();
     } catch (e) {
 		return "";
     }
@@ -63,12 +70,10 @@ function onInput(e: any) {
 }
 
 /**
- * @description Put just numeric and start +
+ * @description Put just numeric
  */
 function parseTelStr(a: string) {
-	const numericStr = a.replace(/\D+/g, '');
-
-	return numericStr.length ? '+' + numericStr : '';
+	return a.replace(/\D+/g, '');
 }
 
 </script>

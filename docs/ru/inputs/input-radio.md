@@ -26,6 +26,7 @@ const values = useFormValues(form);
 
 - Тип [FormFieldOptions](./../fields/form-field-options).
 
+Набор возможных значений поля.
 ____ 
 
 Так же все параметры, общие для всех `FormField`. Информацию о них можно посмотреть
