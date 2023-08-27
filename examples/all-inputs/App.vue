@@ -11,6 +11,7 @@
 		<input-field name = "username" label = "Prefix" prefix = "Login:"/>
 		<input-field name = "username" label = "Placeholder" placeholder = "Write something"/>
 		<input-field name = "username" label = "Numeric" numeric/>
+		<input-field name = "username" label = "Max length 10" maxlength = "10" />
 		<h2>Input Textarea</h2>
 		<input-field name = "description" type = "textarea"/>
 		<input-field name = "description" type = "textarea" label = "With label"/>

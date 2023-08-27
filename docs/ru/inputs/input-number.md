@@ -66,7 +66,7 @@ ____
 ## Пример
 
 Для данного поля нет дополнительных обязательных параметров, по этому нам необходимо
-указать лишь `type` и `name`:
+указать лишь `type` и `name`. Функция `pretty` находится во вкладке `ts`:
 
 ::: code-group
 ```html
@@ -75,6 +75,11 @@ ____
 
 ```ts
 import {FormField} from "jenesius-vue-form";
+
+function prettyFn(value) {
+	if (!value) return '0';
+	return `- ${value} -`;
+}
 ```
 :::
 
