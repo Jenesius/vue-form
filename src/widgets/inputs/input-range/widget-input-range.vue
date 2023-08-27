@@ -17,15 +17,18 @@
 import FieldWrap from "../field-wrap.vue";
 import {computed, ref} from "vue";
 
+
+
 interface RangeProps {
-	max?: number | string,
-	min?: number | string,
-	step?: number | string,
 	label?: string,
 	errors: string[],
 	modelValue: any,
 	disabled: boolean,
-	autofocus: boolean
+
+	max?: number | string,
+	min?: number | string,
+	step?: number | string,
+	autofocus?: boolean
 	// thumb?: boolean
 }
 const props = withDefaults(defineProps<RangeProps>(), {
