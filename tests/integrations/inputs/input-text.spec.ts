@@ -1,7 +1,8 @@
 import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
 import EmptyApp from "../components/EmptyApp.vue";
 import {defineComponent, h} from "vue";
-import {InputField, STORE, Form, FormField} from "../../../src/index";
+import {InputField, Form, FormField} from "../../../src/index";
+import STORE from "./../../../src/config/store";
 import {FormFieldValidationCallback} from "../../../src/types";
 import AppInputTextPretty from "../components/input-text/AppInputTextPretty.vue"
 
