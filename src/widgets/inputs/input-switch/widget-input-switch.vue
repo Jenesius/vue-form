@@ -1,17 +1,21 @@
 <template>
-	<field-wrap>
+	<field-wrap :errors = "errors">
 		<div class="container-input-switch">
 			<div class="input-switch"
-				 @click="onInput()"
+
 				 :class="{
-                     'input-switch_disabled': disabled
+                     'input-switch_disabled': disabled,
+                     'vf-input-switch_error': errors && errors.length !== 0
                  }"
 				 :tabindex=" disabled ? 'none' : 0"
+
+				 @click="onInput()"
 				 @keyup.enter = "onInput()"
+				 @keyup.space = "onInput()"
 			>
 				<div class="input-switch-button"
 					 :class="{
-                    'input-switch-button_active': !!modelValue
+                    'input-switch-button_active': values ? values[0] === modelValue : !!modelValue
                 }"
 				></div>
 			</div>
@@ -23,11 +27,15 @@
 
 <script setup lang="ts">
 import FieldWrap from "../field-wrap.vue";
+import {ToggleValues} from "../../../types";
+import getNextFormToggleValues from "../../../utils/get-next-from-toggle-values";
 
 const props = defineProps<{
 	label?: string,
 	modelValue: any,
-	disabled: boolean
+	disabled: boolean,
+	errors: string[],
+	values?: ToggleValues
 }>()
 
 
@@ -35,8 +43,9 @@ const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
 }>()
 
-function onInput(v = !props.modelValue) {
+function onInput(v = props.values ? getNextFormToggleValues(props.values, props.modelValue) : !props.modelValue) {
 	if (props.disabled) return;
+
 	emit('update:modelValue', v)
 }
 
@@ -77,6 +86,9 @@ function onInput(v = !props.modelValue) {
 .input-switch-button_active {
 	background-color: var(--vf-input-active);
 	transform: translateX(18px);
+}
+.vf-input-switch_error {
+	border: var(--vf-input-border-error);
 }
 
 .input-switch-label {

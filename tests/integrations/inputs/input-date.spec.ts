@@ -1,49 +1,58 @@
-import {mount} from "@vue/test-utils";
-import EmptyApp from "./components/EmptyApp.vue";
+import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
+import EmptyApp from "../components/EmptyApp.vue";
 import {defineComponent} from "vue";
-import {InputField, Form} from "../../src/index";
-import STORE from "../../src/config/store";
-import wait from "../wait";
+import {InputField, Form} from "../../../src/index";
+import STORE from "../../../src/config/store";
 
-function defineDateComponent() {
+const name = "created";
+const label = "Created date"
+function defineDateComponent(propsValues:any = {}) {
     return defineComponent({
-        template: '<div><input-field type = "date" name = "created"/></div>',
+        data:() => ({
+            propsValues
+        }),
+        template: `<div><input-field v-bind = "propsValues" type = "date" name = "${name}" label = "${label}"/></div>`,
         components: {InputField}
     })
 }
-function defaultMount() {
+function defaultMount(component = defineDateComponent()) {
     return mount(EmptyApp, {
         slots: {
-            default: defineDateComponent()
+            default: component
         }
     })
 }
 
 
 describe("Input date", () => {
+    let app: VueWrapper<any>
+    let form: Form
+    let input: DOMWrapper<HTMLInputElement>
+    beforeEach(() => {
+        app = defaultMount();
+        form = (app.vm as any).form
+        input = app.find('input')
+    })
+    test("By default input should be empty", () => {
+        expect(input.element.value).toBe("")
+    })
+    test("Label should be displayed", () => {
+        expect(app.text()).toBe(label + "YYYY/MM/DD")
+    })
+    test("Placeholder should be displayed", () => {
+        const app = defaultMount(defineDateComponent({
+            placeholder: "Input something"
+        }))
+        expect(app.text()).toBe( label + "Input something")
+    })
     test("Default date", async () => {
-        const component = defineComponent({
-            template: `
-                <div>
-                    <input-field type = "date" name = "created"/>
-                </div>
-            `,
-            components: {InputField}
-        })
-
-        const app = mount(EmptyApp, {
-            slots: {
-                default: component
-            }
-        })
-        const form = (app.vm as any).form as Form;
         const today = new Date()
         form.setValues({
             created: today.toISOString()
         })
         await app.vm.$nextTick();
 
-        expect(app.get('input').element.value).toBe(`${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`)
+        expect(input.element.value).toBe(`${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`)
     })
     test("Entering not full date dont has effect for form", async () => {
         const component = defineComponent({
@@ -74,7 +83,7 @@ describe("Input date", () => {
         await app.get('.input-date-icon').trigger('click')
         await app.vm.$nextTick();
 
-        expect(app.get('.container-date-calendar')).toBeTruthy()
+        expect(app.find('.container-date-calendar').exists()).toBe(true)
     })
     test("Calendar should be closed if icon was press twice", async () => {
         const component = defineComponent({
@@ -147,4 +156,21 @@ describe("Input date", () => {
         expect(app.get('.container-error-wrap').text()).toEqual(STORE.requiredMessage)
 
     })
+
+    test("If mask was provided the input should display changed date", async () => {
+        const app = defaultMount(defineDateComponent({
+            mask: "YYYY_MM"
+        }))
+        const input = app.find('input');
+        const form = (app.vm as any).form as Form
+
+        const today = new Date()
+        form.setValues({
+            created: today.toISOString()
+        })
+        await app.vm.$nextTick();
+
+        expect(input.element.value).toBe(`${today.getFullYear()}_${String(today.getMonth() + 1).padStart(2, '0')}`)
+    })
+
 })
