@@ -1,13 +1,14 @@
 import {defineComponent} from "vue";
-import {InputField, Form} from "../../src/index";
-import {mount, VueWrapper} from "@vue/test-utils";
-import EmptyApp from "./components/EmptyApp.vue";
+import {FormField, Form} from "./../../../src/index";
+import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
+import EmptyApp from "../components/EmptyApp.vue";
 import {FormFieldValidationCallback} from "@/types";
 
+const name = 'age'
 function defineNumberComponent() {
 	return defineComponent({
-		template: '<div><input-field type = "number" name = "age"/></div>',
-		components: {InputField}
+		template: `<div><form-field type = "number" name = "${name}" required label = "Numeric" /></div>`,
+		components: {FormField}
 	})
 }
 function defaultMount(component = defineNumberComponent()) {
@@ -22,48 +23,55 @@ function defaultMount(component = defineNumberComponent()) {
 describe("Input number",  () => {
 
 	let wrap: VueWrapper<any>;
-	beforeEach(() => wrap = defaultMount())
+	let form: Form
+	let input: DOMWrapper<HTMLInputElement>
+	beforeEach(() => {
+		wrap = defaultMount()
+		form = (wrap.vm as any).form
+		input = wrap.find('input')
+	})
 
+	test("Should show label", async () => {
+		expect(wrap.text()).toBe("Numeric")
+	})
+	test("Should be empty by default", async () => {
+		expect(input.element.value).toBe("")
+	})
 	test("Should display value from Form", async () => {
-		const form = wrap.vm.form as Form;
 		form.setValues({
 			age: 25
 		})
 		await wrap.vm.$nextTick()
-		expect(wrap.find("input").element.value).toBe("25")
+		expect(input.element.value).toBe("25")
 	})
 	test("Should change form value", async () => {
-		const form = wrap.vm.form as Form;
 		form.setValues({
 			age: 25
 		})
 		await wrap.vm.$nextTick()
-		expect(wrap.find("input").element.value).toBe("25");
+		expect(input.element.value).toBe("25");
 		form.setValues({
 			age: 26
 		})
 		await wrap.vm.$nextTick()
-		expect(wrap.find("input").element.value).toBe("26");
+		expect(input.element.value).toBe("26");
 		form.setValues({
 			age: 27
 		})
 		await wrap.vm.$nextTick()
-		expect(wrap.find("input").element.value).toBe("27");
+		expect(input.element.value).toBe("27");
 	})
 	test("Step Controller Should be hidden if disabled and input should be disabled", async () => {
-		const form = wrap.vm.form as Form;
 		form.setValues({
 			age: 25
 		})
 		form.disable('age')
 
 		await wrap.vm.$nextTick()
-		expect(wrap.find("input").element.disabled).toBe(true);
+		expect(input.element.disabled).toBe(true);
 		expect(wrap.find('.widget-number-step_disabled').exists()).toBe(false);
-
 	})
 	test("Click on button should change the value(up arrow/down arrow)", async () => {
-		const form = wrap.vm.form as Form;
 		form.setValues({
 			age: 25
 		})
@@ -84,14 +92,12 @@ describe("Input number",  () => {
 		expect(form.values).toEqual({age: 25});
 	})
 	test("Press up and down should change the value", async () => {
-		const form = wrap.vm.form as Form;
 		form.setValues({
 			age: 25
 		})
 
 		await wrap.vm.$nextTick()
-
-		const input = wrap.find("input");
+		
 		await input.trigger('keydown.up');
 		await input.trigger('keydown.up');
 
@@ -103,8 +109,8 @@ describe("Input number",  () => {
 	test("If Step was provided it should change onStep", async () => {
 
 		wrap = defaultMount(defineComponent({
-			template: '<div><input-field type = "number" name = "age" step = "10"/></div>',
-			components: {InputField}
+			template: '<div><form-field type = "number" name = "age" step = "10"/></div>',
+			components: {FormField}
 		}))
 
 		const form = wrap.vm.form as Form;
@@ -122,8 +128,8 @@ describe("Input number",  () => {
 	test("If suffix was provided it should be displayed", async () => {
 
 		wrap = defaultMount(defineComponent({
-			template: '<div><input-field type = "number" name = "age" suffix = "Years"/></div>',
-			components: {InputField}
+			template: '<div><form-field type = "number" name = "age" suffix = "Years"/></div>',
+			components: {FormField}
 		}))
 
 		await wrap.vm.$nextTick();
@@ -138,8 +144,8 @@ describe("Input number",  () => {
 		];
 
 		wrap = defaultMount(defineComponent({
-			template: `<div><input-field type = "number" name = "age"  :validation = "${test}" /></div>`,
-			components: {InputField}
+			template: `<div><form-field type = "number" name = "age"  :validation = "${test}" /></div>`,
+			components: {FormField}
 		}))
 		const form = wrap.vm.form as Form;
 		await wrap.vm.$nextTick();
@@ -163,5 +169,34 @@ describe("Input number",  () => {
 		await wrap.vm.$nextTick()
 		expect(wrap.text()).toBe('')
 	})
+	test("If pretty was provided it should change input", async () => {
+		function prettyFn(v?: string | number) {
+			if (v === undefined) return ''
 
+			return `- ${v} _`
+		}
+
+		const app = defaultMount(defineComponent({
+			setup() {
+				return {
+					prettyFn
+				}
+			},
+			template: `<div><form-field type = "number" name = "${name}" required label = "Numeric" :pretty = "prettyFn" /></div>`,
+			components: {FormField}
+		}))
+		const form = (app.vm as any).form as Form;
+		const input = app.find('input')
+		expect(input.element.value).toBe("");
+
+		form.setValues({
+			[name]: 123
+		})
+		await app.vm.$nextTick()
+		expect(input.element.value).toBe(prettyFn('123'))
+
+		await input.setValue(321);
+		expect(input.element.value).toBe(prettyFn('321'))
+
+	})
 })

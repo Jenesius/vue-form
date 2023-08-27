@@ -69,7 +69,6 @@ ____
 
 ```ts
 import {FormField} from "jenesius-vue-form";
-
 ```
 
 :::
