@@ -1,3 +1,52 @@
+#### 3.0.1 (2023-08-27)
+
+##### Breaking Changes
+
+*  remove isEndPointValue, fix merging input-types. ([b8be24cd](https://github.com/Jenesius/vue-form/commit/b8be24cd63afd1d336acee6259724c953541c65c))
+*  remove method check-deep-value.ts ([85e72020](https://github.com/Jenesius/vue-form/commit/85e72020b973fad243a10e4040875e09986cd98a))
+
+##### Documentation Changes
+
+*  translate specification files. ([99055448](https://github.com/Jenesius/vue-form/commit/99055448e4ba8b0fe84ec471b46cbcdad0bc113c))
+*  add specification and tests for password ([b82036b4](https://github.com/Jenesius/vue-form/commit/b82036b422a2de7564402a37277358a50c333fea))
+*  add specification for radio(also single). Add values props for single-radio ([80d7f01b](https://github.com/Jenesius/vue-form/commit/80d7f01bd47ca9263e5c43924a331551645f0c4e))
+*  add specification for checkbox and single-checkbox. ([26368845](https://github.com/Jenesius/vue-form/commit/2636884523d8aade9c0c27e33629696ec4bfd3c0))
+*  add docs for primitive value, add test for primitive value ([1ec59513](https://github.com/Jenesius/vue-form/commit/1ec59513081121847d65a3110831fcef0942c876))
+*  add documentation for check-composite-name.ts, update tests. ([ecede3b8](https://github.com/Jenesius/vue-form/commit/ecede3b87a20a6b48eb5cc9c89aa4e7736c95d59))
+*  add documentation for bypassObject, update tests ([0fabfbae](https://github.com/Jenesius/vue-form/commit/0fabfbae26d0112bc8b75553f6516f4a9288764e))
+
+##### New Features
+
+*  update test for input-select, add specification for select. ([8ccd8f0a](https://github.com/Jenesius/vue-form/commit/8ccd8f0a0baee36bd547eaae9c913687c251bdfc))
+*  tests/specification for switch, date. Add get-next-from-toggle-values.ts ([099bbe00](https://github.com/Jenesius/vue-form/commit/099bbe009e40eafb38272700b15782cd964f143a))
+*  tests/specification for range ([83adf787](https://github.com/Jenesius/vue-form/commit/83adf78702d10ba441de62234b724d1dab3795f9))
+*  update input tel, remove '+', add spec/tests for input-tel. ([1d653ab7](https://github.com/Jenesius/vue-form/commit/1d653ab7b9a914315f5e7e99eaeda9533106ccdd))
+*  add specification for input-text ([ed4ee51e](https://github.com/Jenesius/vue-form/commit/ed4ee51ebe8d9a4cd4238888714c7da405a02026))
+*  update test for input-number, add input-number specification ([380cc246](https://github.com/Jenesius/vue-form/commit/380cc246c71d3c0d1482fb1a3b0e741a234b9c31))
+*  add specification for textarea ([340574a2](https://github.com/Jenesius/vue-form/commit/340574a23921f61e094d169e63532d3ddc3349a0))
+*  update input-radio logic, fix tabindex ([52325829](https://github.com/Jenesius/vue-form/commit/5232582925e4425c59736cfef2928d11241deb7f))
+
+##### Bug Fixes
+
+*  input-number new parse string ([4b37aec3](https://github.com/Jenesius/vue-form/commit/4b37aec351e90f1b44059068309bb6fb0d5f13cc))
+
+##### Other Changes
+
+*  countWithoutSearch and searchLabel ([32c23b7a](https://github.com/Jenesius/vue-form/commit/32c23b7a93125df33bec9033cf0901708d3e11bc))
+*  fix en docs. ([e1ef4a93](https://github.com/Jenesius/vue-form/commit/e1ef4a93d5fa7e03a87eefc2ad086f6db9465cbf))
+* utils.md ([db29173d](https://github.com/Jenesius/vue-form/commit/db29173d430862b85141f2edf90d7bf71b82d575))
+*  iterateEndPoint was deleted. ([a748bc16](https://github.com/Jenesius/vue-form/commit/a748bc16274d73359707e2aa2971c0c1b9ae2551))
+*  update scoped App.vue ([4405a16b](https://github.com/Jenesius/vue-form/commit/4405a16bbefecc62fc8972b6919fd8cda9682421))
+
+##### Tests
+
+*  Resolve [#171](https://github.com/Jenesius/vue-form/pull/171). Add test for single-checkbox ([ed2f3ddf](https://github.com/Jenesius/vue-form/commit/ed2f3ddff2e38ce6d5d641c6f98723263bc8d55f))
+*  add test for single-radio ([5d277aa5](https://github.com/Jenesius/vue-form/commit/5d277aa52733861fb07635c048b924e2784e6161))
+*  add test for input-checkbox, add hasError in element-input-checkbox ([ee270b6d](https://github.com/Jenesius/vue-form/commit/ee270b6d4dcce90752c50237b366ab8816d6ab57))
+*  update test for input-select ([5ad33ec1](https://github.com/Jenesius/vue-form/commit/5ad33ec1135a8fd8cb9113af64020306529fc846))
+*  Resolve [#151](https://github.com/Jenesius/vue-form/pull/151), add static method getEventAvailabilityByName. ([fb5ae0dd](https://github.com/Jenesius/vue-form/commit/fb5ae0dde006b41afac3e90f469a9dd421b5df0f))
+*  add test for input-number ([3a655fb3](https://github.com/Jenesius/vue-form/commit/3a655fb3c1bab697af2bba4f730d292c50167029))
+
 #### 3.0.0 (2023-08-23)
 
 ##### Breaking Changes
