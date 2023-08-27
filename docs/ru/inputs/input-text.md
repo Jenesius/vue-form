@@ -5,145 +5,145 @@ const form = new Form();
 const values = useFormValues(form);
 
 function prettyFn(v) {
-    if (!v) return '';
-    return `- ${v} - `;
+     if (!v) return '';
+     return `- ${v} - `;
 }
 function modifyFn(v) {
-    if (!v) return '';
-    return v.replace(/[^qwerty]/gi, '');
+     if (!v) return '';
+     return v.replace(/[^qwerty]/gi, '');
 }
 
 </script>
 
-# Поле text
+# Text field
 
-Поле используется для ввода текста.
+The field is used to enter text.
 
-- Ключевое слово `text`. Используется по умолчанию.
-- WhatWG [Спецификация](https://html.spec.whatwg.org/multipage/input.html#text-(type=text)-state-and-search-state-(type=search)).
+- Keyword `text`. Used by default.
+- WhatWG [Specification](https://html.spec.whatwg.org/multipage/input.html#text-(type=text)-state-and-search-state-(type=search)).
 
-## Параметры
+## Options
 
-### autofocus <Badge type = "info">Необязательный</Badge>
+### autofocus <Badge type = "info">Optional</Badge>
 
-- Тип `boolean | 'true' | 'false'`.
+- Type `boolean | 'true' | 'false'.
 
-Если данный параметр передаётся, при установке данного поля, на него будет автоматически передано управление.
+If this parameter is passed, when setting this field, control will be automatically transferred to it.
 
-### placeholder <Badge type = "info">Необязательный</Badge>
-- Тип `string`
+### placeholder <Badge type = "info">Optional</Badge>
+- Type `string`
 
-Строковое значение подсказки перед вводом данных.
+The string value of the prompt before entering data.
 
-### maxlength <Badge type = "info">Необязательный</Badge>
-- Тип 'string | number'
-Ограничивает максимальный размер вводимых данных.
+### maxlength <Badge type = "info">Optional</Badge>
+- Type 'string | number'
+  Limits the maximum input size.
 
-### prefix <Badge type = "info">Необязательный</Badge>
-- Тип 'string'
-Если данный атрибут передан, он будет отображаться перед вводимым значением.
+### prefix <Badge type = "info">Optional</Badge>
+- Type 'string'
+  If this attribute is passed, it will be displayed before the input value.
 
-### numeric <Badge type = "info">Необязательный</Badge>
-- Тип `boolean`
-Если данный атрибут указан, ввод будет приводиться к валидному числу. Обратите внимание,
-что тип возвращаемого значения остаётся строковым.
+### numeric <Badge type = "info">Optional</Badge>
+- Type `boolean`
+  If this attribute is specified, the input will be converted to a valid number. Note,
+  that the return type remains string.
 
-### pretty <Badge type = "info">Необязательный</Badge>
-- Тип [StringModify](./../guide/types#StringModify).
+### pretty <Badge type = "info">Optional</Badge>
+- Type [StringModify](./../guide/types#StringModify).
 
-Используется для изменения отображения поля. Не изменяет значение, хранимое в форме.
-Данные правила принимаются только после того, как поле стало не активным.
+Used to change the display of a field. Does not change the value stored in the form.
+These rules are accepted only after the field has become inactive.
 
-### modify <Badge type = "info">Необязательный</Badge>
-- Тип [StringModify](./../guide/types#StringModify).
+### modify <Badge type = "info">Optional</Badge>
+- Type [StringModify](./../guide/types#StringModify).
 
-Функция для изменения вводимого значения. В отличие от `pretty`, работает перманентно.
-Изменяет значение хранимое в форме.
+Function to change the input value. Unlike `pretty`, it works permanently.
+Changes the value stored in the form.
 
-____ 
+____
 
-Так же все параметры, общие для всех `FormField`. Информацию о них можно посмотреть на [этой странице](./form-field.md#params).
+Also all parameters common to all `FormField`. Information about them can be found on [this page](./form-field.md#params).
 
-## Значение
+## Meaning
 
-Данное поле работает со строковыми значениями.
+This field works with string values.
 
-## Спецификация
+## Specification
 
-- Поле доступно при использовании `Tab` и `Shift + Tab`.
-- Блокировка отменяет навигацию через `Tab`.
-- Блокировка поля изменяет стилистику `text`.
-- Ошибка валидации изменяет стилистику `text`.
-- Аттрибут `maxlength` влияет на ограничения только при вводе значения. Если значение 
-будет установлено из формы и по длине будет превышать значение `maxlength`, оно не будет
-обрезано в поле, а выведется полностью.
-
-
-## Примеры
+- The field is available when using `Tab` and `Shift + Tab`.
+- Lock cancels `Tab` navigation.
+- Blocking a field changes the style of `text`.
+- Validation error changes style of `text`.
+- The `maxlength` attribute affects limits only when a value is entered. If the value
+  will be set from the form and will exceed `maxlength` in length, it will not
+  truncated in the field, but will be displayed completely.
 
 
-Для данного поля нет дополнительных обязательных параметров, по этому нам необходимо
-указать лишь `name`, т.к. атрибут `type` по умолчанию имеет значение `text`. Функции `pretty` 
-и `modify` находятся во вкладке `ts`:
+## Examples
+
+
+There are no additional required parameters for this field, so we need to
+specify only `name`, because the `type` attribute defaults to `text`. `pretty` functions
+and `modify` are in the `ts` tab:
 
 ::: code-group
 ```html
-<form-field name = "username"/>
+<form-field name="username"/>
 ```
 
 ```ts
 import {FormField} from "jenesius-vue-form";
 
 function prettyFn(v) {
-	if (!v) return '';
-	return `- ${v} - `;
+if (!v) return '';
+return `- ${v} - `;
 }
 function modifyFn(v) {
-	if (!v) return '';
-	return v.replace(/[^qwerty]/gi, '');
+if (!v) return '';
+return v.replace(/[^qwerty]/gi, '');
 }
 ```
 :::
 
-Поле по умолчанию:
-<FormField name = "username" label = "Введите Username" />
+Default field:
+<FormField name = "username" label = "Enter Username" />
 
 ____
 
-В заблокированном состоянии:
-<FormField disabled  name = "username" label = "Заблокированное" />
+In locked state:
+<FormField disabled name = "username" label = "Disabled" />
 
 ____
 
-Поле не прошло валидацию:
-<FormField :errors = "['The password is too simple']"  name = "username" label = "С ошибкой" />
+Field not validated:
+<FormField :errors = "['The password is too simple']" name = "username" label = "Error" />
 
 ____
 
-Ограничение длинны поля используя `maxlength`:
-<FormField name = "username" label = "Введите Длинне 5" maxlength = 5 />
+Limit field length using `maxlength`:
+<FormField name = "username" label = "Enter Length 5" maxlength = 5 />
 
 ____
 
-Использование `prefix`:
-<FormField name = "username" label = "Введите значение" prefix = "username:" />
+Using `prefix`:
+<FormField name = "username" label = "Enter value" prefix = "username:" />
 
 ____
 
-Ввод строки приводимой к числу, использование атрибута `numeric`:
-<FormField name = "username" label = "Введите значение" numeric />
+Entering a string converted to a number, using the `numeric` attribute:
+<FormField name = "username" label = "Enter value" numeric />
 
 ____
 
-Изменение только отображаемого значения при помощи `pretty`:
-<FormField name = "username" label = "Ввод красивого значения" :pretty = "prettyFn" />
+Changing only the displayed value with `pretty`:
+<FormField name = "username" label = "Pretty value input" :pretty = "prettyFn" />
 
-____ 
-Изменения ввода через `modify`:
-<FormField name = "username" label = "Используй только q w e r t y" :modify = "modifyFn" />
+____
+Input changes via `modify`:
+<FormField name = "username" label = "Use only q w e r t y" :modify = "modifyFn" />
 
 ----
-Текущее состояние формы:
+The current state of the form:
 ```ts-vue
 {{values}}
 ```

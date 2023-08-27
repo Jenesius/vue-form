@@ -6,65 +6,65 @@ const values = useFormValues(form)
 
 </script>
 
-# Поле textarea
+# textarea field
 
-Поле используется для ввода длинного текста.
+The field is used to enter long text.
 
-- Ключевое слово `textarea`.
-- WhatWG [Спецификация](https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element).
+- Keyword `textarea`.
+- WhatWG [Specification](https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element).
 
-## Параметры
+## Options
 
-### autofocus <Badge type = "info">Необязательный</Badge>
+### autofocus <Badge type = "info">Optional</Badge>
 
-- Тип `boolean | 'true' | 'false'`
+- Type `boolean | 'true' | 'false'`
 
-Если данный параметр передаётся, при установке данного поля, на него будет автоматически передано управление.
+If this parameter is passed, when setting this field, control will be automatically transferred to it.
 
-### autoresize <Badge type = "info">Необязательный</Badge>
-- Тип `boolean | number | string`
+### autoresize <Badge type = "info">Optional</Badge>
+- Type `boolean | number | string`
 
-После ввода данных поле будет растягиваться, если данный параметр задан. 
+After entering the data, the field will stretch if this parameter is set.
 
-Если передать `true`, поле будет
-растягиваться под размер текста внутри него.
+If you pass `true`, the field will be
+stretch to fit the text inside it.
 
-Передача численного значения установит максимальное количество
-строк, которое поле будет отображать без прокрутки. При превышении это количества 
-появится вертикальная прокрутка.
+Passing a numeric value will set the maximum number
+rows that the field will display without scrolling. If this amount is exceeded
+vertical scroll will appear.
 
-### placeholder <Badge type = "info">Необязательный</Badge>
-- Тип `string`
+### placeholder <Badge type = "info">Optional</Badge>
+- Type `string`
 
-Строковое значение подсказки перед вводом данных.
+The string value of the prompt before entering data.
 
-____ 
+____
 
-Так же все параметры, общие для всех `FormField`. Информацию о них можно посмотреть на [этой странице](./form-field.md#params).
+Also all parameters common to all `FormField`. Information about them can be found on [this page](./form-field.md#params).
 
-## Значение
+## Meaning
 
-Данное поле работает со строковыми значениями.
+This field works with string values.
 
-## Спецификация
+## Specification
 
-- Поле доступно при использовании `Tab` и `Shift + Tab`.
-- Блокировка отменяет навигацию через `Tab`.
-- Блокировка поля изменяет стилистику `textarea`.
-- Ошибка валидации изменяет стилистику `textarea`.
-- При установке `autoresize` размер должен всегда проверяться, при изменении
-значения
+- The field is available when using `Tab` and `Shift + Tab`.
+- Lock cancels `Tab` navigation.
+- Blocking a field changes the style of `textarea`.
+- Validation error changes `textarea` style.
+- When set to `autoresize` the size should always be checked when changing
+  values
 
-## Примеры
+## Examples
 
 
-Для данного поля нет дополнительных обязательных параметров, по этому нам необходимо
-указать лишь `type` и `name`:
+There are no additional required parameters for this field, so we need to
+specify only `type` and `name`:
 
 ::: code-group
 
 ```html
-<form-field name = "pass" type="textarea"/>
+<form-field name="pass" type="textarea"/>
 ```
 
 ```ts
@@ -73,27 +73,27 @@ import {FormField} from "jenesius-vue-form";
 
 :::
 
-Поле по умолчанию:
-<FormField  type = "textarea" name = "description" label = "Введите описание" />
+Default field:
+<FormField type = "textarea" name = "description" label = "Enter a description" />
 
 ____
 
-В заблокированном состоянии:
-<FormField disabled type = "textarea" name = "description" label = "Заблокированное" />
+In locked state:
+<FormField disabled type = "textarea" name = "description" label = "Disabled" />
 
 ____
 
-Поле не прошло валидацию:
-<FormField :errors = "['The password is too simple']" type = "textarea" name = "description" label = "С ошибкой" />
+Field not validated:
+<FormField :errors = "['The password is too simple']" type = "textarea" name = "description" label = "Error" />
 
 ____
 
-Автоматическое увеличение поля при изменении данных:
-<FormField autoresize type = "textarea" name = "description" label = "Делаем больше" />
+Automatic field increase when data changes:
+<FormField autoresize type = "textarea" name = "description" label = "Doing more" />
 
 
 ----
-Текущее состояние формы:
+The current state of the form:
 ```ts-vue
 {{values}}
 ```

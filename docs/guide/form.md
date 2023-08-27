@@ -1,4 +1,4 @@
-# form
+# Form
 
 As previously stated, **Form** is the main mechanism you will be using. Forms work built
 on the event system, which allows you to catch changes in any child element. Mechanism **subscribe /

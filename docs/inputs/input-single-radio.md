@@ -1,30 +1,35 @@
 <script setup>
-import {FormField, Form, useFormValues} from '../../../src';
+import {FormField, Form, useFormValues} from '../../src';
 
 const form = new Form();
-const values = useFormValues(form)
 
+const values = useFormValues(form);
 </script>
 
-# switch field
+
+# Field single-radio
 
 The field can be used as a radio button or to select a single value
 out of two.
 
-- Keyword `switch`.
 
-## Options
+- Keyword `single-radio`.
+- WhatWG [Specification](https://html.spec.whatwg.org/multipage/input.html#radio-button-state-(type=radio)).
+
+## Params
 
 ### values <Badge type = "info">Optional</Badge>
 
 - Type `[any, any]`.
   If this parameter is passed, then the included parameter will correspond to `values[0]`
   value, and off `values[1]`.
-____
 
-Also all parameters common to all `FormField`. Information about them can be found on [this page](./form-field.md#params).
+____ 
 
-## Meaning
+Also, all parameters common to all `FormField`. Information about them can be viewed
+on [this page](./form-field.md#params).
+
+## Value
 
 If the **values** parameter was not passed, then the value will be **true** - enabled, **false** - disabled.
 In the case where **values** is passed, the included value will match `values[0]`,
@@ -32,12 +37,11 @@ and off the remaining value.
 
 ## Specification
 
-- The field is available when using `Tab` and `Shift + Tab`.
 - Selecting an element is possible by clicking on the element itself.
 - The choice is possible by pressing `Enter` or `Space`.
 - Blocking fields cancels navigation using `Tab`.
-  There is also a change in the style of `switch`.
-- If the validation fails, the field should change the `switch` style.
+  There is also a change in the style of `single-radio`.
+- If the validation fails, the field should change the `single-radio` style.
 
 ## Examples
 
@@ -47,36 +51,32 @@ specify only `type` and `name`:
 ::: code-group
 
 ```html
-<form-field name="hasPhone" type="switch"/>
+<form-field name = "hasPhone" type = "single-radio"/>
 ```
-
 ```ts
 import {FormField} from "jenesius-vue-form";
-
 ```
 
 :::
 
+
 Default field:
-<FormField type = "switch" name = "isAdmin" label = "This is an administrator" />
+<FormField :options = "companies" type = "single-radio" name = "hasPhone" label = "Are you using a phone?" />
 
 ____
 
 In locked state:
-<FormField disabled type = "switch" name = "isAdmin" label = "Disabled" />
+<FormField :options = "companies" type = "single-radio" name = "hasPhone" disabled label = "Disabled" />
 
 ____
 
 Field not validated:
-<FormField :errors = "['Seleact this fields']" type = "switch" name = "isAdmin" label = "Errored" />
+<FormField :errors = "['Seleact this fields']" :options = "companies" type = "single-radio" name = "hasPhone" label = "Error" />
 
 ____
 
-Field with passed `values`: ```['yes', 'no']```
-<FormField :values = "['yes', 'no']" type = "switch" name = "useMask" label = "With passed values" />
-_____
-
-
+Field with passed `values`: `['yes', 'no']`
+<FormField :values = "['yes', 'no']" type = "single-radio" name = "isAdmin" label = "With values passed" />
 
 
 ----

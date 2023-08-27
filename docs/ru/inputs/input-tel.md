@@ -6,49 +6,49 @@ const values = useFormValues(form);
 
 </script>
 
-# Поле tel
+# tel field
 
-Поле используется для ввода численных значений.
+The field is used to enter numerical values.
 
-- Ключевое слово `tel`.
-- WhatWG [Спецификация](https://html.spec.whatwg.org/multipage/input.html#telephone-state-(type=tel)).
+- Keyword `tel`.
+- WhatWG [Specification](https://html.spec.whatwg.org/multipage/input.html#telephone-state-(type=tel)).
 
-## Параметры
+## Options
 
-### autofocus <Badge type = "info">Необязательный</Badge>
+### autofocus <Badge type = "info">Optional</Badge>
 
-- Тип `boolean | 'true' | 'false'`
+- Type `boolean | 'true' | 'false'`
 
-Если данный параметр передаётся, при установке данного поля, на него будет автоматически передано управление.
+If this parameter is passed, when setting this field, control will be automatically transferred to it.
 
-____ 
+____
 
-Так же все параметры, общие для всех `FormField`. Информацию о них можно посмотреть на [этой странице](./form-field.md#params).
+Also all parameters common to all `FormField`. Information about them can be found on [this page](./form-field.md#params).
 
-## Значение
-Данное поле работает со строковым значением.
+## Meaning
+This field works with a string value.
 
-- Поле доступно при использовании `Tab` и `Shift + Tab`.
-- Блокировка отменяет навигацию через `Tab`.
-- Блокировка поля изменяет стилистику `number`.
-- Ошибка валидации изменяет стилистику `number`.
-- Результирующим значением поля является строка цифр.
-- Формат поля используется исключительно для ввода мобильных номеров. В иных случаях необходимо
-воспользоваться `text` и атрибутами `pretty/modify`.
-- Поле должно отображать иконку страны, к которой принадлежит введённый телефон, пустую - в случае, 
-если номер не удалось обработать. Анализ введённых данных лежит на `libphonenumber-js`.
-- Иконки, используемые для отображения принадлежности к стране, берутся с [flagcdn.com](https://flagcdn.com).
+- The field is available when using `Tab` and `Shift + Tab`.
+- Lock cancels `Tab` navigation.
+- Blocking a field changes the style of `number`.
+- Validation error changes `number` style.
+- The resulting field value is a string of numbers.
+- The field format is used exclusively for entering mobile numbers. In other cases, it is necessary
+  use `text` and `pretty/modify` attributes.
+- The field should display the icon of the country to which the entered phone belongs, empty - in case
+  if the number could not be processed. The analysis of the entered data lies with `libphonenumber-js`.
+- Icons used to display country affiliation are taken from [flagcdn.com](https://flagcdn.com).
 
 
 
-## Пример
+## Example
 
-Для данного поля нет дополнительных обязательных параметров, по этому нам необходимо
-указать лишь `type` и `name`:
+There are no additional required parameters for this field, so we need to
+specify only `type` and `name`:
 
 ::: code-group
 ```html
-<form-field name = "phone" type="tel"/>
+<form-field name="phone" type="tel"/>
 ```
 
 ```ts
@@ -57,21 +57,21 @@ import {FormField} from "jenesius-vue-form";
 :::
 
 
-Поле по умолчанию:
-<FormField  type = "tel" name = "phone" label = "Введите значение" />
+Default field:
+<FormField type = "tel" name = "phone" label = "Enter value" />
 
 ____
 
-В заблокированном состоянии:
-<FormField type = "tel" name = "phone" disabled   label = "Заблокированное" />
+In locked state:
+<FormField type = "tel" name = "phone" disabled label = "Disabled" />
 
 ____
 
-Поле не прошло валидацию:
-<FormField  type = "tel" name = "phone" :errors = "['The password is too simple']"  label = "С ошибкой" />
+Field not validated:
+<FormField type = "tel" name = "phone" :errors = "['The password is too simple']" label = "Error" />
 
 ----
-Текущее состояние формы:
+The current state of the form:
 ```ts-vue
 {{values}}
 ```

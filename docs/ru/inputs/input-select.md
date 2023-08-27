@@ -130,7 +130,7 @@ ____
 ____
 
 Использование `hiddenValues` и установка значения `['blue', 'purple', 'pink', 'brown', 'grey']`:
-<FormField :options = "colors" hiddenValues = "['blue', 'purple', 'pink', 'brown', 'grey']" type = "select" name = "color" label = "Большое число цветов" />
+<FormField :options = "colors" hiddenValues = "['blue', 'purple', 'pink', 'brown', 'grey']" type = "select" name = "color" label = "Отфильтрованные цвета" />
 
 
 ----

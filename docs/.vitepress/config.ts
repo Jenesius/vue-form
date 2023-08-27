@@ -1,15 +1,16 @@
 import {defineConfig} from "vitepress";
+import {labelStore} from "./language-store";
 
 export default defineConfig({
 	title: 'JenesiusVueForm',
 	description: "Vue Form. Form system for Vue.",
 	head: [
-		['link', { rel: 'icon', href: `/images/logo.png` }]
+		['link', { rel: 'icon', href: `/logo.png` }]
 	],
 	themeConfig: {
 		nav: nav(),
 		sidebar: sidebar(),
-		logo: '/images/logo.svg',
+		logo: '/logo.svg',
 		socialLinks: [
 			{ icon: 'github', link: 'https://github.com/Jenesius/vue-form' },
 		],
@@ -54,78 +55,7 @@ export default defineConfig({
 const defaultLang = 'en';
 type Lang = 'ru' | 'en'
 
-function getLabelHandler(lang: Lang) {
-	const labelStore = {
-		'guide': {
-			ru: 'руководство'
-		},
-		'examples': {
-			ru: 'примеры'
-		},
-		'found mistake?': {
-			ru: 'нашли ошибку?'
-		},
-		'installation': {
-			ru: 'установка'
-		},
-		'get started!': {
-			ru: 'приступим!'
-		},
-		'form': {
-			ru: 'форма'
-		},
-		'working with values': {
-			ru: 'работа со значениями'
-		},
-		'availability': {
-			ru: 'доступность полей'
-		},
-		'validation': {
-			ru: 'валидация'
-		},
-		'peculiarities': {
-			ru: 'особенности'
-		},
-		'tools': {
-			ru: 'Инструменты'
-		},
-		'for developers': {
-			ru: "Для разработчиков"
-		},
-		'reactivity': {
-			ru: "Реактивность"
-		},
-		'interface': {
-			ru: "Интерфейс"
-		},
-		'built-in fields': {
-			ru: "Встроенные поля"
-		},
-		'using v-model': {
-			ru: "Использование v-model"
-		},
-		'overwrite and new fields': {
-			ru: "Новые и Переопределённые поля"
-		},
-		'configuration': {
-			ru: 'конфигурация'
-		}
-	}
-	return function getLabel(label: keyof typeof labelStore) {
-		function upper(str: string) {
-			if (!str) return '---- -- -----'
-			return str[0].toUpperCase() + str.slice(1);
-		}
-		if (lang === defaultLang) return upper(label);
-		return upper(labelStore[label][lang])
-	}
-}
-function getLinkHandler(lang: Lang) {
-	return function getLink(link: string) {
-		if (lang === defaultLang) return link;
-		return [lang, link].join('/');
-	}
-}
+
 
 function nav(lang: Lang = defaultLang) {
 	const getLink = getLinkHandler(lang);
@@ -139,6 +69,9 @@ function nav(lang: Lang = defaultLang) {
 function sidebar(lang: Lang = defaultLang) {
 	const getLink = getLinkHandler(lang);
 	const getLabel = getLabelHandler(lang);
+
+	function getInputPage(name: string) { return { text: name, link: getLink('/inputs/input-' + name) } }
+
 	return [
 		{
 			text: getLabel('guide'),
@@ -155,7 +88,24 @@ function sidebar(lang: Lang = defaultLang) {
 		{
 		 text: getLabel('interface'),
 			items: [
-				{ text: getLabel('built-in fields'), link: getLink('/fields/form-fields')},
+				{
+					text: getLabel('built-in fields'),
+					link: getLink('/fields/form-fields'),
+					items: [
+						getInputPage('checkbox'),
+						getInputPage('date'),
+						getInputPage('number'),
+						getInputPage('password'),
+						getInputPage('radio'),
+						getInputPage('range'),
+						getInputPage('select'),
+						getInputPage('single-checkbox'),
+						getInputPage('switch'),
+						getInputPage('tel'),
+						getInputPage('text'),
+						getInputPage('textarea'),
+					]
+				},
 				{ text: getLabel('using v-model'), link: getLink('/fields/model-value')},
 				{ text: getLabel('overwrite and new fields'), link: getLink('/fields/new-fields') }
 			]
@@ -168,4 +118,23 @@ function sidebar(lang: Lang = defaultLang) {
 			]
 		}
 	]
+}
+
+
+function getLabelHandler(lang: Lang) {
+
+	return function getLabel(label: keyof typeof labelStore) {
+		function upper(str: string) {
+			if (!str) return '---- -- -----'
+			return str[0].toUpperCase() + str.slice(1);
+		}
+		if (lang === defaultLang) return upper(label);
+		return upper(labelStore[label][lang])
+	}
+}
+function getLinkHandler(lang: Lang) {
+	return function getLink(link: string) {
+		if (lang === defaultLang) return link;
+		return [lang, link].join('/');
+	}
 }
