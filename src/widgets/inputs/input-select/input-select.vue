@@ -7,10 +7,11 @@
                     'input-select_error': errors.length,
             		'input-select_active': isActive
 				}"
-				 :tabindex="!disabled? 0 : null"
+				 :tabindex="!disabled ? 0 : 'none'"
 
 				 @focusout = "deactivate()"
 				 @keyup.enter="setActive()"
+				 @keyup.space="setActive()"
 				 @keydown.down.prevent = "handleMove(1)"
 				 @keydown.up.prevent = "handleMove(-1)"
 				 ref="refInputSelect"
