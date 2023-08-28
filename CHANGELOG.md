@@ -1,3 +1,9 @@
+#### 3.0.2 (2023-08-28)
+
+##### Bug Fixes
+
+*  common to module. remove type `module` in package.json ([0e1f1a1e](https://github.com/Jenesius/vue-form/commit/0e1f1a1e27e037541ebc6844e37eef266f650cae))
+
 #### 3.0.1 (2023-08-27)
 
 ##### Breaking Changes
