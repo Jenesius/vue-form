@@ -31,7 +31,9 @@ export default defineConfig({
             entry: resolve(__dirname, srcFolder, "index.ts"),
             name: "JenesiusVueForm",
             formats: [`cjs`, 'umd', 'es'],
-
+            fileName(format) {
+                return [NAME, format, 'js'].join('.');
+            }
         },
         rollupOptions: {
             external: ["vue"],
