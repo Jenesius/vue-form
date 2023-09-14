@@ -1,4 +1,4 @@
-<p align="center"><a href="https://form.jenesius.com/" target="_blank" rel="noopener noreferrer"><img height="100" src="https://form.jenesius.com/images/logo.svg" alt="Vue logo"></a></p>
+<p align="center"><a href="https://form.jenesius.com/" target="_blank" rel="noopener noreferrer"><img height="100" src="https://form.jenesius.com/logo.svg" alt="Vue logo"></a></p>
 
 <p align="center">
   <a href="https://img.shields.io/npm/dm/jenesius-vue-form"><img src="https://img.shields.io/npm/dm/jenesius-vue-form" alt="Downloads"></a>
