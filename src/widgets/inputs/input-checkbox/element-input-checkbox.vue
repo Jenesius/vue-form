@@ -34,7 +34,9 @@ defineProps<{
 }
 .element-input-checkbox-button{
 	width: 18px;
-	height: 18px;
+	min-width: 18px;
+	aspect-ratio: 1/1;
+
 	margin: 0;
 	border: var(--vf-input-border);
 	background-color: var(--vf-input-background);
