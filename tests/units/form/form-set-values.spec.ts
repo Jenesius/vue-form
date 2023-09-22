@@ -515,5 +515,27 @@ describe("Form.setValues", () => {
         expect(form.changes).toEqual({})
         expect(form.values).toEqual({ username: "Jack" })
     })
+    /**
+     * При установке поля CoolName, поле Cool не должно как-то влиять на поле CoolName.
+     */
+    test("Short name should not has affect for field, that don't include first name like prefix", () => {
+        const form = new Form();
+        form.setValues({
+            Id: 13,
+            IdentityDocument: {
+                Name: "Test",
+                Type: "P"
+            }
+        })
+
+        expect(form.values).toEqual({
+            Id: 13,
+            IdentityDocument: {
+                Name: "Test",
+                Type: "P"
+            }
+        })
+
+    })
     
 })

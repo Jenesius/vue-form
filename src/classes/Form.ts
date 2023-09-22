@@ -323,9 +323,14 @@ export default class Form extends EventEmitter implements FormDependence {
         .forEach(item => {
             
             // Ранее было установлено простое поле
-            const isAbolish = abolishNames.find(name => (new RegExp(`^${name}\..*`)).test(item.name));
-            
-            if (isAbolish) return;
+            // const isAbolish = abolishNames.find(name => (new RegExp(`^${name}\..*`)).test(item.name));
+            const isAbolish = abolishNames.find(name => isPrefixName(item.name, name));
+
+            if (isAbolish) {
+                debug.msg(`Field is %cskipped%c %c${item.name}%c because its child field was previously set.`,
+                    debug.colorError, debug.colorDefault, debug.colorName, debug.colorDefault);
+                return;
+            }
             
             // Если текущее значение - примитивное, а предыдущее нет - необходимо пометить данное поле как конечное, то
             // есть все дальнейшие(внутренние поля) - является упразднёнными и их не нужно проецировать на форму.
