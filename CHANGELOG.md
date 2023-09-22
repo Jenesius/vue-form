@@ -1,3 +1,10 @@
+#### 3.0.3 (2023-09-22)
+
+##### Bug Fixes
+
+*  changed field ownership check when mixing ([a14602e3](https://github.com/Jenesius/vue-form/commit/a14602e3f6cd582d12ebb4936637d872edb75549))
+*  adding min-size for element-input-checkbox ([dbce50d3](https://github.com/Jenesius/vue-form/commit/dbce50d34b1d6edc9be5bf0f378be30ad6c0d620))
+
 #### 3.0.2 (2023-08-28)
 
 ##### Bug Fixes
