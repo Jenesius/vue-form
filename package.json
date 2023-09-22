@@ -1,6 +1,6 @@
 {
   "name": "jenesius-vue-form",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Heavy form system for Vue.js",
   "main": "dist/jenesius-vue-form.cjs.js",
   "module": "dist/jenesius-vue-form.es.js",
