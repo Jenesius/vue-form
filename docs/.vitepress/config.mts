@@ -86,6 +86,7 @@ function sidebar(lang: Lang = defaultLang) {
 				{ text: getLabel('validation'), link: getLink('/guide/validation') },
 				{ text: getLabel('reactivity'), link: getLink('/guide/reactivity') },
 				{ text: getLabel('configuration'), link: getLink('/guide/configuration') },
+				{ text: getLabel('third party UI libraries'), link: getLink('/guide/third-party-libraries') },
 			]
 		},
 		{

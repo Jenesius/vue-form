@@ -52,5 +52,8 @@ export const labelStore = {
 	},
 	'configuration': {
 		ru: 'конфигурация'
+	},
+	'third party UI libraries' : {
+		ru: "интеграция с UI библиотеками"
 	}
 }
