@@ -1,3 +1,19 @@
+#### 3.0.4 (2023-11-18)
+
+##### Documentation Changes
+
+*  add integration info ([a0d146a6](https://github.com/Jenesius/vue-form/commit/a0d146a68800024d1ce6f5a82c7957a526d2312f))
+
+##### Bug Fixes
+
+*  update `rtl` css variables. ([9b7e4979](https://github.com/Jenesius/vue-form/commit/9b7e4979a90b567314e868ed0c437d91d899d06c))
+*  add `--force` for vue@next installation ([66e47cdb](https://github.com/Jenesius/vue-form/commit/66e47cdb1d6615b7ccb03d955efaac586bf1b1ec))
+*  update icons, [#181](https://github.com/Jenesius/vue-form/pull/181) ([923828be](https://github.com/Jenesius/vue-form/commit/923828be0e0dc83bc4824c2688d077180af8fb22))
+
+##### Other Changes
+
+*  update test for password's eye. Update vitepress version. ([0d313715](https://github.com/Jenesius/vue-form/commit/0d3137158d8a7b914b17fe9f6eef20fa42a57049))
+
 #### 3.0.3 (2023-09-22)
 
 ##### Bug Fixes
