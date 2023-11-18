@@ -57,11 +57,14 @@ describe("Input checkbox", () => {
 		expect(input.element.getAttribute('type')).toBe("text")
 	})
 	test("При нажатии на иконку меняется иконка", async () => {
-		expect(app.find('.input-password-toggle-eye_cross').exists()).toBe(false)
+
+		const iconComponent = app.findComponent({name: "icon-eye"});
+
+		expect(iconComponent.vm.crossed).toBe(false)
 		await icon.trigger('click');
-		expect(app.find('.input-password-toggle-eye_cross').exists()).toBe(true)
+		expect(iconComponent.vm.crossed).toBe(true)
 		await icon.trigger('click');
-		expect(app.find('.input-password-toggle-eye_cross').exists()).toBe(false)
+		expect(iconComponent.vm.crossed).toBe(false)
 	})
 
 	test("Когда поле заблокировано ввод должен быть не доступен, форма меняться не должна", async () => {
