@@ -26,7 +26,7 @@ form.validate() // true
 
 Для валидации поля, FormField принимает один обязательный параметр:
 
-#### Validation <Badge type = "tip">Обязательный</Badge>
+#### validation <Badge type = "tip">Обязательный</Badge>
 Имеет следующий тип:
 ```ts
 interface FormFieldProps {
@@ -53,7 +53,7 @@ type FormFieldValidationCallback = (value: any) => true | string | boolean
 import {FormField, Form} from "jenesius-vue-form";
 
 const validation = [
-	x => x.length > 5 || "Значит слишком коротко. Минимальная длина 5.",
+	x => x.length > 5 || "Длина значения должна быть больше 5 символов.",
     x => x.length < 25 || "Длина значения должна быть меньше 25."
 ]
 </script>

@@ -198,8 +198,8 @@ child keys is 0, this property is completely removed from the changes object.
 form.setValues({age: 24})
 form.change({name: "Jack", age: 25}); // { name: "Jack", age: 25 }
 form.cleanChangesByField('name');
-// Changes: { name: "Jack" }
-// Values: { name: "Jack", age: 24 }
+// Changes: { age: 25 }
+// Values: { age: 25 }
 ```
 
 ## Check field for change

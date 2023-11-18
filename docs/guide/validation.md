@@ -26,7 +26,7 @@ form.validate() // true
 
 For field validation, FormField takes one required parameter:
 
-#### Validation <Badge type = "tip">Required</Badge>
+#### validation <Badge type = "tip">Required</Badge>
 It has the following type:
 ```ts
 interface FormFieldProps {

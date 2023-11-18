@@ -91,40 +91,7 @@ Passed parameters:
 
 - **options** A set of enumerated dimensions. There are two types of transfer: array and object.
   We will analyze each in more detail, but we recommend using Array to avoid errors and incomprehensible
-  moments in your code.
-
-In the case of Option(Array) the structure looks like this:
-
-```ts
-[
-{label: 'Green color', value: 'green'},
-{label: 'Red color', value: 'red'}
-]
-```
-
-The **label** field is a text label that will be displayed as a title.
-
-The **value** field accepts any value.
-:::tip Why an array is useful
-You will not get confused, where is the label and where is the value. In the case of an object, there is a possibility that
-you have to
-constantly look at the documentation to clarify the location of the label: on the right or on the left.
-:::
-
-Let's move on to options as an object. Remember: on the left is the value, on the right is the label (title).
-
-```json
-{
-   "green": "Green color",
-   "red": "Red color"
-}
-```
-
-However, in this case, we run into the following problem: the value can be **only** a string. Even the given number
-as a value - will be automatically converted by JavaScript to a string. There is one situation when it is convenient
-use
-or store the value in an object. To do this, we have provided a [function](./../guide/utils#convertOptionsObject) for
-converting an object to an array.
+  moments in your code. Described in more detail [here](./form-field-options).
 
 ## Password
 

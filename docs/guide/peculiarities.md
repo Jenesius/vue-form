@@ -25,7 +25,7 @@ This is easier to show with an example. Let's say on the interface we need
 show the address, which consists of two fields: Country and City. In the best traditions, we will create a separate field
 for the address structure and describe the above two fields there:
 
-```vue{3,4,13}
+```vue{4,5,12}
 // input-address.vue
 <template>
      <div>
@@ -44,7 +44,7 @@ const form = new Form({name: props.name})
 ```
 Next, we will connect this component to our project
 
-```vue{4}
+```vue{3}
 // app.vue
 <template>
     <input-address name="address"/>
