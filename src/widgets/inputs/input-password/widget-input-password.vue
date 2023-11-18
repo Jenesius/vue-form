@@ -15,12 +15,7 @@
 				:autofocus="autofocus || false"
 			/>
 			<div class="input-password-toggle" @click="toggleType()">
-				<div
-					class="input-password-toggle-eye"
-					:class="{
-                    'input-password-toggle-eye_cross': typeInput === 'text'
-                }"
-				></div>
+				<icon-eye :crossed = "typeInput === 'text'"/>
 			</div>
 
 		</div>
@@ -30,6 +25,7 @@
 <script setup lang="ts">
 import FieldWrap from "../field-wrap.vue";
 import {ref} from "vue";
+import IconEye from "../../icons/icon-eye.vue";
 
 interface Props {
 	label?: string,
@@ -97,39 +93,7 @@ function toggleType() {
 	display: grid;
 	place-content: center;
 	cursor: pointer;
-}
-
-.input-password-toggle-eye {
-	box-sizing: content-box;
-	width: 13px;
-	height: 13px;
-	border: solid 1px #000;
-	border-radius: 75% 15%;
-	position: relative;
-	transform: rotate(45deg);
-}
-
-.input-password-toggle-eye:before {
-	content: '';
-	display: block;
-	position: absolute;
-	width: 5px;
-	height: 5px;
-	border: solid 1px #000;
-	border-radius: 50%;
-	left: 3px;
-	top: 3px;
-}
-
-.input-password-toggle-eye_cross:after {
-	content: '';
-	display: block;
-	position: absolute;
-	height: 1px;
-	width: 16px;
-	background-color: black;
-	left: -21%;
-	top: 48%;
+	stroke: var(--vf-input-gray-deep);
 }
 
 .container-input-password_error {

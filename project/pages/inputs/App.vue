@@ -1,26 +1,27 @@
 <template>
 	<div class="container-examples">
-		<input-field type = "single-checkbox" name = "check" label = "Test" 	/>
-		<input-field type = "single-checkbox" name = "check-with-values" label = "Values" :values = "['A', 'R']" />
-		<input-field type = "text" name = "test" label = "Test" prefix = "V89"	required/>
-		<input-field type = "text" name = "test" label = "Test" prefix = "V89"	disabled/>
+		<div>
+			<form-field name = "mainAddress" type = "address" />
+			<form-field name = "mainAddress.city" label = "Just city" />
+		</div>
 		{{values}}
 	</div>
 </template>
 
 <script setup lang='ts'>
 import {Form, useFormValues, InputField} from "../../../src";
+import FormField from "./../../../src/widgets/form-field.vue";
 
 const form = new Form();
 
 const values = useFormValues(form);
-
-form.validate()
-
-window.form = form;
+form.validate();
 
 </script>
 
 <style>
-
+	.container-examples {
+		display: grid;
+		gap: 10px;
+	}
 </style>

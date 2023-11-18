@@ -1,20 +1,17 @@
 <template>
-	<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" id="calendar">
-		<g fill="none" fill-rule="evenodd"  stroke-linecap="round" stroke-linejoin="round"
-		   stroke-width="1.5" transform="translate(3 2)">
-			<line x1=".093" x2="17.917" y1="7.404" y2="7.404"></line>
-			<line x1="13.442" x2="13.451" y1="11.31" y2="11.31"></line>
-			<line x1="9.005" x2="9.014" y1="11.31" y2="11.31"></line>
-			<line x1="4.558" x2="4.567" y1="11.31" y2="11.31"></line>
-			<line x1="13.442" x2="13.451" y1="15.196" y2="15.196"></line>
-			<line x1="9.005" x2="9.014" y1="15.196" y2="15.196"></line>
-			<line x1="4.558" x2="4.567" y1="15.196" y2="15.196"></line>
-			<line x1="13.044" x2="13.044" y2="3.291"></line>
-			<line x1="4.966" x2="4.966" y2="3.291"></line>
-			<path
-				d="M13.2382655,1.57919622 L4.77096342,1.57919622 C1.83427331,1.57919622 0,3.21513002 0,6.22222222 L0,15.2718676 C0,18.3262411 1.83427331,20 4.77096342,20 L13.2290015,20 C16.1749556,20 18,18.3546099 18,15.3475177 L18,6.22222222 C18.0092289,3.21513002 16.1842196,1.57919622 13.2382655,1.57919622 Z"></path>
-		</g>
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M3.093 9.40405H20.917"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M16.442 13.3101H16.451"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M12.005 13.3101H12.014"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M7.558 13.3101H7.567"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M16.442 17.196H16.451"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M12.005 17.196H12.014"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M7.558 17.196H7.567"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M16.044 2V5.291"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M7.966 2V5.291"  stroke-linecap="round" stroke-linejoin="round"/>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M16.2383 3.5791H7.77096C4.83427 3.5791 3 5.21504 3 8.22213V17.2718C3 20.3261 4.83427 21.9999 7.77096 21.9999H16.229C19.175 21.9999 21 20.3545 21 17.3474V8.22213C21.0092 5.21504 19.1842 3.5791 16.2383 3.5791Z" stroke-linecap="round" stroke-linejoin="round"/>
 	</svg>
+
 </template>
 
 <script>
