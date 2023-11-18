@@ -187,7 +187,7 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 	cursor: pointer;
 	display: grid;
 	place-content: center;
-	stroke: var(--vf-input-gray-dark);
+	stroke: var(--vf-input-gray-deep);
 	transition: var(--vf-input-transtion-fast);
 	padding: 0 6px;
 }
