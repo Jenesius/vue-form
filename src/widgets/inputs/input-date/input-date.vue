@@ -13,7 +13,7 @@
 					:disabled="disabled"
 				>
 			</div>
-			<div class="input-date-icon"
+			<div class="input-date-icon vf-grid-center"
 				 @click="changeCalendarStatus(!calendarStatus)"
 				 :class="{
 					'input-date-icon_active': calendarStatus
@@ -155,7 +155,7 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 }
 
 .input-date {
-	padding: 0 4px;
+	padding-inline: 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
 	position: relative;
@@ -171,13 +171,15 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 .input-date-mask {
 	display: flex;
 	align-items: center;
-	position: absolute;
-	z-index: 0;
-	top: 0;
 	height: 100%;
-	left: 0;
+
+	position: absolute;
+	inset-inline-start: 0;
+	inset-block-start: 0;
+	z-index: 0;
 	margin: 0;
-	padding: 0 4px;
+
+	padding-inline: 4px;
 	user-select: none;
 	font-size: var(--vf-input-font-size);
 	color: var(--vf-input-gray-dark);
@@ -185,11 +187,9 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 
 .input-date-icon {
 	cursor: pointer;
-	display: grid;
-	place-content: center;
 	stroke: var(--vf-input-gray-deep);
 	transition: var(--vf-input-transtion-fast);
-	padding: 0 6px;
+	padding-inline: 6px;
 }
 
 .input-date-icon_active {
@@ -201,9 +201,9 @@ watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
 
 .input-date-calendar {
 	position: absolute;
-	right: 0;
-	margin-top: 10px;
 	z-index: 2;
+	inset-inline-end: 0;
+	inset-block-start: 10px;
 }
 .container-date-calendar {
 	position: relative;

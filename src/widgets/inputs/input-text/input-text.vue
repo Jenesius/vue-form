@@ -101,11 +101,11 @@ watch(() => props.maxLength, () => onInput(props.modelValue));
 	color: var(--vf-input-black-light);
 	line-height: var(--vf-input-height);
 	font-size: var(--vf-input-font-size);
-	padding: 0 0 0 4px;
+	padding-inline: 4px 0;
 }
 .input-text {
 	flex-grow: 1;
-	padding: 0 4px;
+	padding-inline: 4px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
 }

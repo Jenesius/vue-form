@@ -17,7 +17,7 @@
 
 <style scoped>
     .container-input-tel-code{
-        padding: 0 10px;
+        padding-inline: 10px;
     }
     .input-tel-code{
         user-select: none;

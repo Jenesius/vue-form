@@ -1,5 +1,10 @@
 <template>
 	<div>
+
+		<div>
+			<button @click = "handleRTL">Make RTL</button>
+		</div>
+
 		<h2>Input Text</h2>
 		<input-field name = "username"/>
 		<input-field name = "username" label = "With label"/>
@@ -20,7 +25,7 @@
 		<input-field name = "description" type = "textarea" label = "Placeholder" placeholder = "Add information about user." />
 		<input-field name = "description" type = "textarea" label = "Auto resize" autoresize  />
 
-		<h2>Input Tel</h2>
+		<h2>Input Date</h2>
 		<input-field name = "birthday" type = "date"/>
 		<input-field name = "birthday" type = "date" label = "With label"/>
 		<input-field name = "birthday" type = "date" label = "Disabled" disabled/>
@@ -141,6 +146,9 @@ function prettyUnit(unit: string) {
 	}
 }
 
+function handleRTL() {
+	document.body.dir =  (document.body.dir === 'rtl') ? "ltr" : "rtl"
+}
 
 const optionsCheckbox = [
 	{
