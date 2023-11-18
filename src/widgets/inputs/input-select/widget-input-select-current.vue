@@ -30,7 +30,7 @@ defineProps<{
 }
 
 .container-input-select-current-label {
-	padding: 0 6px;
+	padding-inline: 6px;
 	color: var(--vf-input-color);
 	font-size: var(--vf-input-font-size);
 
@@ -38,6 +38,6 @@ defineProps<{
 }
 
 .container-input-select-current > .vf-arrow {
-	margin: 0 10px 0 0;
+	margin-inline-end: 10px;
 }
 </style>

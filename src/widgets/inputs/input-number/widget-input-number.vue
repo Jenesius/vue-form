@@ -99,7 +99,7 @@ function onStep(v: boolean) {
 		outline: none;
 		padding: 0 4px;
 		color: var(--vf-input-color);
-		text-align: right;
+
 		background-color: transparent;
 	}
 
@@ -120,6 +120,6 @@ function onStep(v: boolean) {
         color: var(--vf-input-black-light);
         line-height: var(--vf-input-height);
         font-size: var(--vf-input-font-size);
-        padding: 0 5px 0 0;
+		padding-inline-end: 5px;
 	}
 </style>

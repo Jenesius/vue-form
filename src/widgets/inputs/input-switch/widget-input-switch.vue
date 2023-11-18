@@ -54,8 +54,9 @@ function onInput(v = props.values ? getNextFormToggleValues(props.values, props.
 <style scoped>
 .container-input-switch {
 	display: flex;
-	gap: 12px;
 	align-items: center;
+
+	gap: 12px;
 }
 
 .input-switch {
@@ -87,6 +88,13 @@ function onInput(v = props.values ? getNextFormToggleValues(props.values, props.
 	background-color: var(--vf-input-active);
 	transform: translateX(18px);
 }
+[dir="rtl"] .input-switch-button {
+	transform: translateX(-3px);
+}
+[dir="rtl"] .input-switch-button_active {
+	transform: translateX(-18px);
+}
+
 .vf-input-switch_error {
 	border: var(--vf-input-border-error);
 }
