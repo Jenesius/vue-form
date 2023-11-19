@@ -99,6 +99,20 @@ checkNameInObject(obj, "adress.test");     // false
 
 ```
 
+## checkObjectForPrimitiveInstance
+
+This function is used to identify objects that, by their nature,
+in essence are primitives and there is no need to make a separate copy for them,
+and go inside and iterate their properties. To such objects at this time
+moment include:
+
+- Date
+- Blob
+- Error
+
+Also, all other objects are inherited from them. This function is one of those
+with the help of which a check is made for [isIterable](#isiterablepoint).
+
 ## checkPrimitiveValue
 
 Returns **true** if the passed value is a primitive(*null* or *undefined* or any value
@@ -634,6 +648,8 @@ The iterable object is not:
 - A frozen object, `Object.frozen`
 - An empty object `(Object.keys.length === 0)`
 - Function
+- The object inherits from classes that are checked in
+[checkObjectForPrimitiveInstance](#checkobjectforprimitiveinstance)
 
 ### grand
 An object is *grand* if there is no property in it that has a dot in itself.
