@@ -15,6 +15,10 @@ Powerful system for working with forms and inputs. The deep library integrates w
 
 To check out [live examples](https://form.jenesius.com/examples/list.html) and docs, visit [form.jenesius.com](https://form.jenesius.com/).
 
+## Integration with other UI libraries
+
+This section is described in this part of the [documentation](https://form.jenesius.com/guide/third-party-libraries.html)
+
 ## Questions and Issues
 
 For questions and support please use [the GitHub repo](https://github.com/Jenesius/vue-form).
