@@ -86,11 +86,5 @@
     "vite": "4.4.9",
     "vite-tsconfig-paths": "4.2.0",
     "vitepress": "1.0.0-rc.27"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+  }
 }

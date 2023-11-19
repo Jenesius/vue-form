@@ -6,8 +6,8 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 
-		<form-field name = "phone" type = "tel" v-if = "show"/>
-		<button @click = "show = !show">{{labelButton}}</button>
+		<form-field type = "native-date" name = "create" />
+
 		<br>
 
 

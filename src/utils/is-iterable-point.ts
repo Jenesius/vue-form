@@ -1,5 +1,6 @@
 import isEmptyObject from "./is-empty-object";
 import checkPrimitiveValue from "./check-primitive-value";
+import checkObjectForNotIterableInstance from "./check-object-for-primitive-instance";
 
 /**
  * @description Функция используется для логики формы. Т.к. нам часто нужно проходить по объектам и перебирать их свойства,
@@ -8,6 +9,7 @@ import checkPrimitiveValue from "./check-primitive-value";
 export default function isIterablePoint(value: unknown) {
 	return !(
 		checkPrimitiveValue(value) ||
+		checkObjectForNotIterableInstance(value) ||
 		Array.isArray(value) ||
 		Object.isFrozen(value) ||
 		isEmptyObject(value) ||

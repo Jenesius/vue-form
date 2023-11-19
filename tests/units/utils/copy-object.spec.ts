@@ -18,4 +18,13 @@ describe("Copy object test", () => {
         input.address.city = 'Berlin';
         expect(copy).toEqual({address: { city: { code: 1 } }})
     });
+    it('Date and block should be also saved like link', () => {
+        const date = new Date();
+        const file = new Blob()
+        const data = {date, file};
+
+        expect(copyObject(data)).toEqual({date, file})
+
+    })
+
 })

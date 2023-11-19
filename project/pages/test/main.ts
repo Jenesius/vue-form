@@ -7,6 +7,7 @@ import accountType from "@/pages/test/widget-input-account-type.vue";
 import InputCoord from "@/pages/test/input-coord.vue";
 import InputFile from "@/pages/test/input-file.vue";
 import InputTestDateLocal from "./input-test-date-local.vue";
+import InputNativeDate from "./input-native-date.vue";
 
 config({
 	inputTypes: {
@@ -15,6 +16,7 @@ config({
 		coord: InputCoord,
 		file: InputFile,
 		'local-date': InputTestDateLocal,
+		'native-date': InputNativeDate
 	},
 	debug: true
 })
