@@ -24,4 +24,7 @@ describe("Is End Point Value", () => {
 			name: "Jenesius"
 		})).toBe(true)
 	})
+	test("Date is not deep value", () => {
+		expect(isIterablePoint(new Date())).toBe(false)
+	})
 })

@@ -535,7 +535,21 @@ describe("Form.setValues", () => {
                 Type: "P"
             }
         })
+    })
 
+    test("Date should not be deep after setting values", () => {
+        const form = new Form();
+        const dateOfBBirth = new Date()
+        const name = "J-e-n-e-s-i-u-s"
+        form.setValues({
+            name,
+            dateOfBBirth
+        })
+
+        expect(form.values).toEqual({
+            name,
+            dateOfBBirth
+        })
     })
     
 })

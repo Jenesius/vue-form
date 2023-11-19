@@ -129,7 +129,10 @@ describe("Grand Object", () => {
 			}
 		})
 	})
-	
+
+	test("Date should not be converted", () => {
+		expect(grandObject({ date: new Date() })).toEqual(grandObject({date: new Date()}))
+	})
 	
 })
 /**
