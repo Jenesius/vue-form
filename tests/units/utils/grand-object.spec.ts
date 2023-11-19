@@ -131,7 +131,10 @@ describe("Grand Object", () => {
 	})
 
 	test("Date should not be converted", () => {
-		expect(grandObject({ date: new Date() })).toEqual(grandObject({date: new Date()}))
+		const date = new Date(10, 10, 10, 0, 0, 0, 0)
+		const other = new Date(10, 10, 10, 0, 0, 0, 0)
+
+		expect(grandObject({ date: date })).toEqual(grandObject({date: other}))
 	})
 	
 })
