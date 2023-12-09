@@ -9,7 +9,7 @@ export type Value = Values | any;
 export type FormFieldValidationCallback = (values: any) => true | ValidationError
 export type ValidationError = string | false
 
-export type FormFieldOptions = OptionRow | Record<string, string>
+export type FormFieldOptions = OptionRow[] | Record<string, string>
 
 export type OptionRow = IOptionRowWithLabel | IOptionRowWithTitle
 export type ToggleValues = [any, any];
