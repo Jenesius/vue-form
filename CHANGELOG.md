@@ -1,3 +1,20 @@
+#### 3.0.5 (2023-12-09)
+
+##### Documentation Changes
+
+*  add information about isSimpleEqual ([2f56f6b5](https://github.com/Jenesius/vue-form/commit/2f56f6b5eacf2d25038a056251724e71596ed7ce))
+*  update information about new Method ([48133a28](https://github.com/Jenesius/vue-form/commit/48133a2806da33d5382bef788c8512d8b4e2ecdb))
+
+##### Bug Fixes
+
+*  [#190](https://github.com/Jenesius/vue-form/pull/190). Add isSimpleEqual to utils ([5958f941](https://github.com/Jenesius/vue-form/commit/5958f941936b5a443642c5306981f82caeb7b067))
+*  update OptionRow ([829f1a1c](https://github.com/Jenesius/vue-form/commit/829f1a1cb45a928c1fcca3897aae33b5fdbfac11))
+
+##### Other Changes
+
+*  isSimpleEqual, update compareMergeChanges [#190](https://github.com/Jenesius/vue-form/pull/190) ([5a9255de](https://github.com/Jenesius/vue-form/commit/5a9255de12e6adb42ff1286e67b53a13cd4f9ac1))
+*  update creating date ([1fc6e1e3](https://github.com/Jenesius/vue-form/commit/1fc6e1e355e64212882591aaefaf6606b6c4cad7))
+
 #### 3.0.4 (2023-11-18)
 
 ##### Documentation Changes
