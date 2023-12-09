@@ -2,6 +2,8 @@ import concatName from "./concat-name";
 import mergeObjects from "./merge-objects";
 import copyObject from "./copy-object";
 import isIterablePoint from "./is-iterable-point";
+import isEmptyObject from "./is-empty-object";
+import isSimpleEqual from "./is-simple-equal";
 
 export interface CompareItem {
 	name: string,
@@ -66,14 +68,16 @@ export function compareMergeChanges(sourceValue: any, changes: any) {
 }
 
 function step(this: CompareState, newValue: any, oldValue: any, name: string): any  {
+	console.log("=", newValue, oldValue)
 	// Если оба значения конечны.
 	if ( !isIterablePoint(newValue) && !isIterablePoint(oldValue)){
-		if (newValue !== oldValue)
+		if (!isSimpleEqual(newValue, oldValue))
 			this.array.push({ name, newValue, oldValue})
 	}
 	else {
 		const changes = compare(newValue, oldValue, name);
-		
+
+		console.log(changes);
 		
 		if (changes.length) {
 			this.array.push({ name, newValue, oldValue })

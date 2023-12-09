@@ -17,6 +17,7 @@ import grandObject from "./grand-object";
 import insertByName from "./insert-by-name";
 import isEmptyObject from "./is-empty-object";
 import isPrefixName from "./is-prefix-name";
+import isSimpleEqual from "./is-simple-equal";
 import iteratePoints from "./iterate-points";
 import mergeObjects from "./merge-objects";
 import parseFirstName from "./parse-first-name";
@@ -53,6 +54,7 @@ const utils = {
 	insertByName,
 	isEmptyObject,
 	isPrefixName,
+	isSimpleEqual,
 	iteratePoints,
 	mergeObjects,
 	parseFirstName,
