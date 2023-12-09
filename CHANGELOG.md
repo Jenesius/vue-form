@@ -1,3 +1,9 @@
+#### 3.0.6 (2023-12-09)
+
+##### Bug Fixes
+
+*  remove `console.log` ([61162994](https://github.com/Jenesius/vue-form/commit/6116299474e06c6dcfd88e560e706ea73ef7ea7d))
+
 #### 3.0.5 (2023-12-09)
 
 ##### Documentation Changes
