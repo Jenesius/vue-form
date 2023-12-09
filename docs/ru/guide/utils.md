@@ -479,6 +479,22 @@ function isPrefixName(fieldName: string, prefix: string): boolean {}
 - `position.city.type`, `city` -> **false**
 - `name`, `name` -> **false**
 
+## isSimpleEqual
+
+Функция проверяет два значения на идентичность. Не работает вглубь, однако
+сравнить два пустых объекта или два пустых массива может.
+
+```ts
+function isSimpleEqual(value: unknown, other: unknown) {}
+```
+
+### Примеры
+
+- `1`, `2` -> **false**
+- `test`, `test` -> **true**
+- `{}`, `{}` -> **true**
+- `{a: 1}`, `{a: 1}` -> **false**
+
 ## iteratePoints
 
 Метод принимает объект и возвращает массив, хранящий в себе значение каждого узла переданного объекта. Массив хранит 

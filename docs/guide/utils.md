@@ -487,6 +487,22 @@ function isPrefixName(fieldName: string, prefix: string): boolean {}
 - `position.city.type`, `city` -> **false**
 - `name`, `name` -> **false**
 
+## isSimpleEqual
+
+The function checks two values for identity. Doesn't work in depth, however
+You can compare two empty objects or two empty arrays.
+
+```ts
+function isSimpleEqual(value: unknown, other: unknown) {}
+```
+
+### Examples
+
+- `1`, `2` -> **false**
+- `test`, `test` -> **true**
+- `{}`, `{}` -> **true**
+- `{a: 1}`, `{a: 1}` -> **false**
+
 ## iteratePoints
 
 The method takes an object and returns an array containing the value of each node of the passed object. array stores
