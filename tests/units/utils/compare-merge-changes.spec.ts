@@ -181,4 +181,22 @@ describe("find changes", () => {
 
 		])
 	});
+
+	test("test", () => {
+		const source = {
+			age: 1,
+			name: "Jack",
+			application: {
+				name: "AA-1",
+				customers: {},
+				environments: {}
+			}
+		};
+		const changes = {
+			name: "Jen-esius"
+		};
+
+		expect(compareMergeChanges(source, changes)).toHaveLength(1);
+		expect(compareMergeChanges(source, changes)).toEqual([{ name: "name", newValue: "Jen-esius", oldValue: 'Jack' },])
+	})
 })

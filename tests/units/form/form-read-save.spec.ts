@@ -141,7 +141,7 @@ describe("Form read/save", () => {
         await wait();
         expect(form.wait).toBe(true);
     
-        await wait(60);
+        await wait(10);
         expect(form.wait).toBe(true);
     
         await promise;
