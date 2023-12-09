@@ -34,7 +34,6 @@ describe("Input range", () => {
 		expect(input.element.value).toBe("50") // по умолчанию на середине
 	})
 	test("Для пустого поля должна отображаться только метка", async () => {
-		console.log(app.html())
 		expect(app.text()).toBe(label)
 	})
 	test("При вводе значения в поле - форма должна меняться", async () => {
