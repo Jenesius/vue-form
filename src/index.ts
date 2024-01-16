@@ -11,6 +11,7 @@ import InputWrap from "./widgets/inputs/field-wrap.vue";
 import utils from "./utils/utils";
 import config from "./config/config";
 import ComputedValue from "./classes/ComputedValue";
+import widgets from "./config/widgets";
 
 const InputField = FormField;
 export {
@@ -23,5 +24,6 @@ export {
 	utils,
 	ComputedValue,
 	useFormState,
-	useFormValues
+	useFormValues,
+	widgets
 }
