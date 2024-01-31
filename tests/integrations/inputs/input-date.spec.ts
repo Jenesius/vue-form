@@ -1,7 +1,7 @@
 import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
 import EmptyApp from "../components/EmptyApp.vue";
 import {defineComponent} from "vue";
-import {InputField, Form} from "../../../src/index";
+import {InputField, Form, config} from "../../../src/index";
 import STORE from "../../../src/config/store";
 
 const name = "created";
@@ -171,6 +171,42 @@ describe("Input date", () => {
         await app.vm.$nextTick();
 
         expect(input.element.value).toBe(`${today.getFullYear()}_${String(today.getMonth() + 1).padStart(2, '0')}`)
+    })
+
+    test("Если установлена конфигурация маски - показывать её", async () => {
+        config({
+            dateMask: "DD/MM"
+        })
+        const app = defaultMount(defineDateComponent({}))
+        const input = app.find('input');
+        const form = (app.vm as any).form as Form
+        const today = new Date()
+        form.setValues({
+            created: today.toISOString()
+        })
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        expect(input.element.value).toBe(`${today.getDate()}/${String(today.getMonth() + 1).padStart(2, '0')}`)
+    })
+    test("", async () => {
+        config({
+            dateMask: "DD/MM"
+        })
+        const app = defaultMount(defineDateComponent({}))
+        const input = app.find('input');
+        const form = (app.vm as any).form as Form
+        const today = new Date()
+        console.log(today.toISOString())
+        console.log("1900-01-09T21:29:43")
+        form.setValues({
+            created: "1900-01-09T21:29:43"
+        })
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        expect(input.element.value).toBe(`${today.getDate()}/${String(today.getMonth() + 1).padStart(2, '0')}`)
+
     })
 
 })

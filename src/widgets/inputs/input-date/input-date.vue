@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<{
 	placeholder?: string,
 	disabled: boolean
 }>(), {
-	mask: () => STORE.date.dateMask,
+	mask: () => STORE.dateMask,
 })
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
