@@ -189,7 +189,7 @@ describe("Input date", () => {
         await app.vm.$nextTick();
         expect(input.element.value).toBe(`${today.getDate()}/${String(today.getMonth() + 1).padStart(2, '0')}`)
     })
-    test("", async () => {
+    test("Time without TimeZone", async () => {
         config({
             dateMask: "DD/MM"
         })

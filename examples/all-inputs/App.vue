@@ -118,6 +118,8 @@
 import {Form, InputField} from "../../src/index";
 
 const form = new Form();
+// @ts-ignore
+window.form = form;
 function modifyOnlyChar(a: string) {
 	return a.replace(/\d/g, '');
 }

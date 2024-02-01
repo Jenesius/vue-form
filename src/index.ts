@@ -12,6 +12,7 @@ import utils from "./utils/utils";
 import config from "./config/config";
 import ComputedValue from "./classes/ComputedValue";
 import widgets from "./config/widgets";
+import DateController from "./controllers/date-controller";
 
 const InputField = FormField;
 export {
@@ -25,5 +26,6 @@ export {
 	ComputedValue,
 	useFormState,
 	useFormValues,
-	widgets
+	widgets,
+	DateController
 }
