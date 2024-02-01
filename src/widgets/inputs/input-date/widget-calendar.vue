@@ -100,7 +100,6 @@ const arrayCalendar = computed<IOptionRowWithLabel[]>(() => {
 			label: dateFirstCalendar.getDate().toString(),
 			value: dateFirstCalendar.toDateString()
 		})
-		console.log(dateFirstCalendar.toDateString())
 		dateFirstCalendar.setDate(dateFirstCalendar.getDate() + 1);
 	}
 	return array

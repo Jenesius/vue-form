@@ -97,7 +97,7 @@ function handleInput(value: string) {
 function emitInput(value: string) {
 	if (props.disabled) return false;
 	if (props.handlers) value = props.handlers[1](value);
-	emit('update:modelValue', value);
+	emit('update:modelValue', value || null);
 
 	// Cleaning insideValue if date is NULL. Also, this step clean input value.
 	if (!value) insideValue.value = ""

@@ -1,18 +1,20 @@
-import mergeObjects from "./../utils/merge-objects";
 import STORE, {IStore} from "./store";
-import Store from "./store";
-import debug from "./../debug/debug";
+import widgets from "./widgets";
 
 export default function config(params: ConfigParams) {
 
-	mergeObjects(STORE, params);
+	Object.assign(STORE, params);
+
+	STORE.inputTypes = {
+		...widgets,
+		...(params.inputTypes || {}),
+	}
 
 	if (STORE.typeNotCaseSensitive)
 		STORE.inputTypes = Object.entries(STORE.inputTypes).reduce<Record<string, any>>((acc, [type, component]) => {
 			acc[type.toLowerCase()] = component
 			return acc;
 		}, {})
-
 
 	return;
 
