@@ -1,3 +1,20 @@
+#### 3.0.12 (2024-02-01)
+
+##### Documentation Changes
+
+*  add new information about 'handlers' of input-date. ([58780903](https://github.com/Jenesius/vue-form/commit/5878090358916863dcaea5e87b12b9eac3cd42a7))
+
+##### New Features
+
+*  add widgets prop for main import ([649e5f80](https://github.com/Jenesius/vue-form/commit/649e5f802c6e6edbf600cd85dffcb418d7cdc7fe))
+
+##### Bug Fixes
+
+*  update handlers for input-date. Add new tests. ([64826cf3](https://github.com/Jenesius/vue-form/commit/64826cf3c4c48e715e9bcb9093d041a43109fd4b))
+*  update version to 3.0.9. Add DateController. Add handlers for input-date ([c3d5f1d6](https://github.com/Jenesius/vue-form/commit/c3d5f1d6f2e56477b5700d21c8f8208c380afc9b))
+*  update version to 3.0.8 ([139c8958](https://github.com/Jenesius/vue-form/commit/139c8958ba45286f9bd94bea5a334f27aa692d12))
+*  update vue version ([34cb35b8](https://github.com/Jenesius/vue-form/commit/34cb35b89b6cbaa32e10eb9cff58892726236323))
+
 #### 3.0.6 (2023-12-09)
 
 ##### Bug Fixes
