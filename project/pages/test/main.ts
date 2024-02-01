@@ -18,7 +18,7 @@ config({
 		'local-date': InputTestDateLocal,
 		'native-date': InputNativeDate
 	},
-	debug: true
+	// debug: true
 })
 
 createApp(App).mount('#app')

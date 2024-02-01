@@ -9,8 +9,8 @@ const STORE: IStore = {
 	debug: false,
 	defaultType: 'text',
 	cleanValue: null,
+	dateMask: "DD/MM/YYYY",
 	date: {
-		dateMask: "YYYY/MM/DD",
 		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 		daysWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 		calendar: {
@@ -34,8 +34,8 @@ export interface IStore {
 	debug: boolean,
 	defaultType: string,
 	cleanValue: any,
+	dateMask: string,
 	date: {
-		dateMask: string,
 		months: string[],
 		daysWeek: string[],
 		calendar: {

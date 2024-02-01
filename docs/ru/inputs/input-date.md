@@ -28,6 +28,34 @@ const values = useFormValues(form)
 Маска задаёт формат отображение даты. Маска может состоять из символов любых символов, однако 
 ключевыми являются `Y`, `M`, `D`, `H` и `h`. На их позицию будут подставлены соотвествующие значений.
 
+### handlers
+- Тип: 'array'
+
+Массив обработчиков, которые можно применить к значению поля ввода. Массив должен состоять из двух элементов. Первый
+является обработчиком значения из модели форму к типу `Date`. Второй обработчик является конвертером из строки(значения,
+находящееся внутри поля ввода) в значение, которое необходимо хранить в модели данных формы.
+
+#### Example
+
+```vue
+
+<template>
+  <FormField type="date" :handlers="[handlerForm, handlerTo]" mask = "YYYY-MM-DD HH"/>
+</template>
+<script setup>
+  import {DateController} from "jenesius-vue-form";
+
+  function handlerFrom(formValue) {
+    return new Date(formValue)
+  }
+
+  function handlerTo(strValue) {
+    return DateController.ConvertToDate(strValue, 'YYYY-MM-DD HH').toISOString()
+  }
+</script>
+```
+В текущем примере мы установили новую маску для данного поля, а также определили обработчики для конвертации значения в
+ISO формат даты.
 ____ 
 
 Так же все параметры, общие для всех `FormField`. Информацию о них можно посмотреть на [этой странице](./form-field.md#params).

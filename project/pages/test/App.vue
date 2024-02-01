@@ -6,16 +6,9 @@
 		<div :key = "pureValue">Pure values: {{pureValue}}</div>
 		<div :key = "pureAvailabilities">Pure av: {{pureAvailabilities}}</div>
 
-		<form-field type = "native-date" name = "create" />
+		<input-field name = "birthday" type = "date" label = "Placeholder"  />
 
-		<br>
-
-
-		<button @click = "change">change field name</button>
-		<button @click = "clean">clean values</button>
-
-		<button @click = "setDefaultValues">set default values</button>
-
+		<input-field name = "birthday" type = "date" label = "Other mask" mask = "MM/DD/YYYY" :handlers = "[testFrom, testTo]"/>
 
 
 	</div>
@@ -23,10 +16,10 @@
 
 <script setup lang='ts'>
 import Form from "../../../src/classes/Form";
-import FormField from "./../../../src/widgets/form-field.vue";
-import {computed, ref} from "vue";
-import WidgetAddress from "./widget-address.vue"
+import {ref} from "vue";
 import copyObject from "./../../../src/utils/copy-object";
+import {InputField} from "../../../src/index";
+import DateController from "../../../src/controllers/date-controller";
 
 // @ts-ignore
 const form = window.form = new Form({
@@ -34,7 +27,6 @@ const form = window.form = new Form({
 	parent:false
 });
 const show = ref(false);
-const labelButton = computed(() => show.value ? 'Hide' : 'Show')
 
 setInterval(() => {
 	if (!form) return;
@@ -61,12 +53,21 @@ function change() {
 function clean() {
 	form.cleanValues();
 }
-function setDefaultValues() {
-	return form.cleanValues({
-		username: "Jenesius",
-		"coordinate.x": "123"
-	})
+
+function testFrom(date: unknown) {
+	if (typeof date !== 'string') return null;
+	return new Date(date)
 }
+
+function testTo(str?: string) {
+	if (typeof str !== 'string') return null;
+
+	const p = DateController.ConvertToDate(str, "MM/DD/YYYY");
+	if (!p) return null;
+
+	return DateController.GetPrettyDate(p, 'YYYY-MM-DD')
+}
+
 </script>
 
 <style>

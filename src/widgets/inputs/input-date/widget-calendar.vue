@@ -39,6 +39,9 @@ import {computed, ref} from "vue";
 import STORE from "../../../config/store";
 import {IOptionRowWithLabel} from "../../../types";
 
+/**
+ * @description The purpose of this component is to return a date in Date format
+ */
 interface IProps {
 	modelValue?: string, // Date correct parsed string
 	functionDateClass?: any
@@ -54,7 +57,7 @@ const parsedModelValue = computed(() => {
 })
 
 const emits = defineEmits<{
-	(event: 'update:modelValue', value: string): void
+	(event: 'update:modelValue', value: Date): void
 }>()
 
 const currentDate = parsedModelValue.value && props.modelValue ? new Date(props.modelValue) : new Date();
@@ -103,7 +106,7 @@ const arrayCalendar = computed<IOptionRowWithLabel[]>(() => {
 })
 
 function onInput(value: string) {
-	emits('update:modelValue', new Date(value).toUTCString());
+	emits('update:modelValue', new Date(value));
 }
 function isCurrentMonth(v: string) {
 	const currentMonth = (new Date(v)).getMonth();

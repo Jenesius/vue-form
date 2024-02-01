@@ -28,6 +28,36 @@ String label, displayed when there is no data in the field.
 The mask sets the date display format. The mask can consist of characters of any character, however
 keywords are `Y`, `M`, `D`, `H` and `h`. The corresponding values will be substituted for their position.
 
+### handlers
+- Type: 'array'
+- By default: `[]`.
+
+An array of handlers that can be used to enter fields. The array must consist of two elements. First
+It is a handler of form model values of the “Date” type. The second handler is a converter from strings(values,
+located inside the input fields) in the value that needs to be stored in the model data form.
+
+#### Example
+
+```vue
+
+<template>
+  <FormField type="date" :handlers="[handlerForm, handlerTo]" mask = "YYYY-MM-DD HH"/>
+</template>
+<script setup>
+  import {DateController} from "jenesius-vue-form";
+
+  function handlerFrom(formValue) {
+    return new Date(formValue)
+  }
+
+  function handlerTo(strValue) {
+    return DateController.ConvertToDate(strValue, 'YYYY-MM-DD HH').toISOString()
+  }
+</script>
+```
+In the current example, we have set a new mask for this field, and also defined handlers to convert the value to
+ISO date format.
+
 ____ 
 
 Also, all parameters common to all `FormField`. Information about them can be found on [this page](./form-field.md#params).

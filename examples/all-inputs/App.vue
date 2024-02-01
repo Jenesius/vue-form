@@ -31,6 +31,7 @@
 		<input-field name = "birthday" type = "date" label = "Disabled" disabled/>
 		<input-field name = "birthday" type = "date" label = "With Error" :errors = "['Some mistake']"/>
 		<input-field name = "birthday" type = "date" label = "Placeholder" placeholder = "Add your birthday." />
+		<input-field name = "birthday" type = "date" label = "Other mask" mask = "DD/MM/YYYY"/>
 
 		<h2>Input Tel</h2>
 		<input-field name = "phone" type = "tel"/>
@@ -117,6 +118,8 @@
 import {Form, InputField} from "../../src/index";
 
 const form = new Form();
+// @ts-ignore
+window.form = form;
 function modifyOnlyChar(a: string) {
 	return a.replace(/\d/g, '');
 }

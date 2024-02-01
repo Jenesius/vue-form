@@ -1,8 +1,9 @@
 import {DOMWrapper, mount, VueWrapper} from "@vue/test-utils";
 import EmptyApp from "../components/EmptyApp.vue";
 import {defineComponent} from "vue";
-import {InputField, Form} from "../../../src/index";
+import {InputField, Form, config} from "../../../src/index";
 import STORE from "../../../src/config/store";
+import DateController from "../../../src/controllers/date-controller";
 
 const name = "created";
 const label = "Created date"
@@ -37,7 +38,7 @@ describe("Input date", () => {
         expect(input.element.value).toBe("")
     })
     test("Label should be displayed", () => {
-        expect(app.text()).toBe(label + "YYYY/MM/DD")
+        expect(app.text()).toBe(label + STORE.dateMask)
     })
     test("Placeholder should be displayed", () => {
         const app = defaultMount(defineDateComponent({
@@ -47,12 +48,13 @@ describe("Input date", () => {
     })
     test("Default date", async () => {
         const today = new Date()
+        const values = [String(today.getDate()).padStart(2, '0'), String(today.getMonth() + 1).padStart(2, '0'), today.getFullYear()]
         form.setValues({
-            created: today.toISOString()
+            created: values.join('-')
         })
         await app.vm.$nextTick();
 
-        expect(input.element.value).toBe(`${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`)
+        expect(input.element.value).toBe(values.join('/'))
     })
     test("Entering not full date dont has effect for form", async () => {
         const component = defineComponent({
@@ -67,8 +69,8 @@ describe("Input date", () => {
 
         expect(form.getValueByName('created')).toBe(null);
 
-        await input.setValue('1998-10-13');
-        expect(form.getValueByName('created')).toBe(new Date(1998, 9, 13).toISOString())
+        await input.setValue('13-10-1998');
+        expect(form.getValueByName('created')).toBe(DateController.GetPrettyDate(new Date(1998, 9, 13), 'DD-MM-YYYY'))
     })
 
     test("Calendar should be opened after icon click", async () => {
@@ -171,6 +173,50 @@ describe("Input date", () => {
         await app.vm.$nextTick();
 
         expect(input.element.value).toBe(`${today.getFullYear()}_${String(today.getMonth() + 1).padStart(2, '0')}`)
+    })
+
+    test("Если установлена конфигурация маски - показывать её", async () => {
+        config({
+            dateMask: "DD/MM"
+        })
+        const app = defaultMount(defineDateComponent({}))
+        const input = app.find('input');
+        const form = (app.vm as any).form as Form
+        const today = new Date()
+        form.setValues({
+            created: DateController.GetPrettyDate(today, '01-11')
+        })
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        expect(input.element.value).toBe(`01/11`)
+    })
+    test("With provided handlers for ISO format", async () => {
+        const dateMask = 'MM/DD/YYYY'
+        config({
+            dateMask,
+        })
+        const app = defaultMount(defineDateComponent({
+            handlers: [
+                (value: string) => {
+                    return new Date(value)
+                },
+                (value: string) => {
+                    return DateController.ConvertToDate(value, dateMask)
+                }
+            ]
+        }))
+        const input = app.find('input');
+        const form = (app.vm as any).form as Form
+        const today = new Date()
+        form.setValues({
+            created: today.toISOString()
+        })
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        await app.vm.$nextTick();
+        expect(input.element.value).toBe(DateController.GetPrettyDate(today, dateMask))
+
     })
 
 })

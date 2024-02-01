@@ -9,7 +9,7 @@
 					type="text"
 					:value="prettyValue"
 					@input="handleInput($event.target.value)"
-					@change="handleChange($event.target.value)"
+					@change="handleEndInput()"
 					:disabled="disabled"
 				>
 			</div>
@@ -27,7 +27,8 @@
 			<div ref="refCalendar" v-if="calendarStatus" class = "container-date-calendar">
 				<widget-calendar class="input-date-calendar"
 								 :model-value="modelValue"
-								 @update:modelValue="handleCalendarInput" />
+								 @update:modelValue="handleCalendarInput"
+				/>
 			</div>
 		</transition>
 	</field-wrap>
@@ -42,6 +43,7 @@ import IconCalendar from "../../icons/icon-calendar.vue";
 import FieldWrap from "../field-wrap.vue";
 import {ValidationError} from "../../../types";
 import STORE from "../../../config/store";
+import {IInputDateHandlerFrom, IInputDateHandlerTo} from "../../../types/input-date-types";
 
 const props = withDefaults(defineProps<{
 	modelValue: any,
@@ -49,9 +51,10 @@ const props = withDefaults(defineProps<{
 	errors: ValidationError[],
 	mask?: string,
 	placeholder?: string,
-	disabled: boolean
+	disabled: boolean,
+	handlers?: [IInputDateHandlerFrom, IInputDateHandlerTo]
 }>(), {
-	mask: () => STORE.date.dateMask,
+	mask: () => STORE.dateMask,
 })
 const emit = defineEmits<{
 	(e: 'update:modelValue', value: any): void
@@ -61,60 +64,49 @@ const emit = defineEmits<{
 const insideValue = ref("")
 const refCalendar = ref();
 const calendarStatus = ref(false);
-
-/**
- * @description Принимает дату в формате DateString (new Date().toDateString()).
- * */
-function handleCalendarInput(calendarStringData: string) {
-	emitInput(new Date(calendarStringData))
-}
-
 let offCalendar: any;
-function changeCalendarStatus(status: boolean) {
 
+
+function changeCalendarStatus(status: boolean) {
 	calendarStatus.value = status;
 	nextTick(() => {
 		if (status) offCalendar = clickOutside(refCalendar.value, changeCalendarStatus.bind(null, false))
 		else offCalendar?.()
 	})
 }
-
-
-function handleInput(v: string) {
-	insideValue.value = v;
-	if (!DateController.CheckFullerMask(v, props.mask)) return;
-	nextTick(() => handleUserHandInput(prettyValue.value))
-}
-function handleChange(v: string) {
-	handleUserHandInput(v);
+/**
+ * @description Принимает дату в формате Date
+ * */
+function handleCalendarInput(calendarStringDate: Date) {
+	emitInput(DateController.GetPrettyDate(calendarStringDate, props.mask))
 }
 
 /**
- * @description Используется только для ручного ввода даты, т.к. далее использует конвертацию в дату по маске, а не
- * объект Date
- * */
-function handleUserHandInput(input: string) {
-	const date = DateController.ConvertToDate(input, props.mask);
-	emitInput(date);
+ * @description Функция для обработки конца ввода(Когда изменения поля завершилось).
+ */
+function handleEndInput() {
+	const value = insideValue.value;
+	emitInput(DateController.CheckFullerMask(value, props.mask) ? value : '')
 }
-function emitInput(date: Date | null) {
+function handleInput(value: string) {
+	insideValue.value = value;
+	if (DateController.CheckFullerMask(value, props.mask)) emitInput(value);
+}
+
+
+function emitInput(value: string) {
 	if (props.disabled) return false;
-	emit('update:modelValue', date ? date.toISOString() : date);
+	if (props.handlers) value = props.handlers[1](value);
+	emit('update:modelValue', value || null);
 
 	// Cleaning insideValue if date is NULL. Also, this step clean input value.
-	if (!date) insideValue.value = ""
+	if (!value) insideValue.value = ""
 }
 
 
 
 function pretty(s: unknown): string {
 	if (typeof s !== 'string') return ''
-
-	/**
-	 * Является ли дата конечной. В таком случае полученная строка уже не является исходником маски, а может иметь любой
-	 * вид. Для этого используется функция GetPrettyDate.
-	 * */
-	if (DateController.isUTCDate(s)) return DateController.GetPrettyDate(new Date(s), props.mask)
 
 	return DateController.SplitStringByMask(s, props.mask)
 	.map(a => a.input || (a.skipped ? a.part : ''))
@@ -131,7 +123,13 @@ const prettyMask = computed(() => {
 // Контролируем валидацию маски.
 watch(() => props.mask, () => DateController.ValidateMask(prettyMask.value), {immediate: true})
 // Контролируем внутренне значение поля.
-watch(() => props.modelValue, v => insideValue.value = v, {immediate: true})
+watch(() => props.modelValue, v => {
+	if (props.handlers) {
+		const tmp = props.handlers[0](v);
+		if (tmp) v = DateController.GetPrettyDate(tmp, props.mask);
+	}
+	insideValue.value = v
+}, {immediate: true})
 
 </script>
 

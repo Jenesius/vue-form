@@ -76,3 +76,7 @@ export interface FormAvailability {
 }
 
 export type OnFunction<T> = (v: T) => string
+
+type DeepPartial<T> = T extends object ? {
+	[P in keyof T]?: DeepPartial<T[P]>;
+} : T;
