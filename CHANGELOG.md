@@ -1,3 +1,14 @@
+#### 3.0.13 (2024-02-20)
+
+##### New Features
+
+*  add limit attr to input-select ([03b2a72d](https://github.com/Jenesius/vue-form/commit/03b2a72db66e7ed6f3e5bb6fb3590b937af51052))
+*  add `multiple` attr, update title and select handler. ([907b3fe2](https://github.com/Jenesius/vue-form/commit/907b3fe2f1b9b031428dfb4f9b5fbaf28723bc87))
+
+##### Tests
+
+*  add tests for multiple select. ([900ac31f](https://github.com/Jenesius/vue-form/commit/900ac31fe93d3268c7af187eb4d1b8212249f4a6))
+
 #### 3.0.12 (2024-02-01)
 
 ##### Documentation Changes
