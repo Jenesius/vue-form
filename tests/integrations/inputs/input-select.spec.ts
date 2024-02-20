@@ -201,4 +201,83 @@ describe("Input Select Testing", () => {
 		await app.vm.$nextTick();
 		expect(input.element.getAttribute('tabindex')).toBe("none")
 	})
+
+	test("Multiple attr should show first selected item as title", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions
+		}))
+		const form = (wrap.vm as any).form;
+		form.setValues({
+			[name]: [defaultOptions[0].value]
+		})
+		await wrap.vm.$nextTick();
+		expect(wrap.text()).toBe(defaultOptions[0].label);
+	})
+	test("Multiple attr should show first selected item + N as title if was selected more then one", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions
+		}))
+		const form = (wrap.vm as any).form;
+		form.setValues({
+			[name]: defaultOptions.map(i => i.value)
+		})
+		await wrap.vm.$nextTick();
+		expect(wrap.text()).toBe(defaultOptions[0].label + ' + ' + (defaultOptions.length - 1));
+	})
+
+	test("Multiple attr should show selected items", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions
+		}))
+		const form = (wrap.vm as any).form as Form;
+		form.setValues({
+			[name]: [defaultOptions[1].value]
+		})
+		currentItem = wrap.find('.container-input-select-current')
+		expect(currentItem.exists()).toBe(true);
+		await currentItem.trigger('click');
+
+		expect(wrap.findAll('.input-select-option-list-item_active').map(item => item.text())).toEqual([defaultOptions[1].label])
+	})
+	test("Selecting items should update value(multiple attr", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions
+		}))
+		const form = (wrap.vm as any).form as Form;
+		currentItem = wrap.find('.container-input-select-current')
+		await currentItem.trigger('click');
+
+		await wrap.findAll('.input-select-option-list-item').reduce((acc, item) => {
+			return acc.then(() => item.trigger('click'))
+		}, Promise.resolve())
+
+		expect(form.getValueByName(name)).toEqual(defaultOptions.map(item => item.value))
+
+		await wrap.findAll('.input-select-option-list-item').reduce((acc, item) => {
+			return acc.then(() => item.trigger('click'))
+		}, Promise.resolve())
+
+		expect(form.getValueByName(name)).toEqual([])
+	})
+
+	test("Using limit should reject selecting more then provided in limit attr.", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions,
+			limit: 2
+		}))
+		const form = (wrap.vm as any).form as Form;
+		currentItem = wrap.find('.container-input-select-current')
+		await currentItem.trigger('click');
+
+		await wrap.findAll('.input-select-option-list-item').reduce((acc, item) => {
+			return acc.then(() => item.trigger('click'))
+		}, Promise.resolve())
+
+		expect(form.getValueByName(name)).toEqual(defaultOptions.map(item => item.value).slice(0, 2))
+	})
 })

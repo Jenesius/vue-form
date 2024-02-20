@@ -8,9 +8,13 @@
 		<div class="wrap-app ">
 			<input-field type="select" name = "sex" :options = "sexOptions"/>
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
+			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages"/>
+			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages" disabled/>
+			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages" limit = "2"/>
 
 
 			<input-field type= "select" name="programming-language" :options = "programLanguageOptions" :hidden-values = "['2','1']"/>
+			<input-field type = "select" name = "year" :options = "yearOptions" label = "Year"/>
 			<input-field type = "select" name = "year" :options = "yearOptions" label = "Year"/>
 
 			<button class="button" @click="form.cleanValues()">Clean Form</button>
