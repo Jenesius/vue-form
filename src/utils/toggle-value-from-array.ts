@@ -3,10 +3,14 @@
  * Help with splicing in any case.
  * @param array
  * @param value
+ * @param limit Предельное число элементов в массиве.
  */
-export default function toggleValueFromArray<T>(array: T[], value: T) {
+export default function toggleValueFromArray<T>(array: T[], value: T, limit?: number) {
 	const index = array.indexOf(value);
-	if (index === -1) array.push(value);
+	if (index === -1) {
+		if (limit === undefined || (typeof limit === 'number' && Number.isFinite(limit) && array.length < limit))
+		array.push(value);
+	}
 	else array.splice(index, 1);
 
 	return array;

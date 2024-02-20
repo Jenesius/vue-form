@@ -263,4 +263,21 @@ describe("Input Select Testing", () => {
 
 		expect(form.getValueByName(name)).toEqual([])
 	})
+
+	test("Using limit should reject selecting more then provided in limit attr.", async () => {
+		const wrap = defaultMount(defineSelectComponent({
+			multiple: true,
+			options: defaultOptions,
+			limit: 2
+		}))
+		const form = (wrap.vm as any).form as Form;
+		currentItem = wrap.find('.container-input-select-current')
+		await currentItem.trigger('click');
+
+		await wrap.findAll('.input-select-option-list-item').reduce((acc, item) => {
+			return acc.then(() => item.trigger('click'))
+		}, Promise.resolve())
+
+		expect(form.getValueByName(name)).toEqual(defaultOptions.map(item => item.value).slice(0, 2))
+	})
 })

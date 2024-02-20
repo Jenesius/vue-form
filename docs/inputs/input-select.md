@@ -57,6 +57,13 @@ If no value is selected, a text label is shown.
 
 Данный параметр позволяет использовать множественную выборку. В таком случае modelValue будет обрабатываться как массив. 
 
+### limit <Badge type = "info">Optional</Badge>
+
+- Type `number`
+
+Данный параметр устанавливает предельное количество выбираемых элементов, если используется атрибут `multiple`.
+
+
 ____ 
 
 Also, all parameters common to all `FormField`. Information about them can be viewed
@@ -146,6 +153,12 @@ Using `hiddenValues` and setting the value to `['blue', 'purple', 'pink', 'brown
 
 Использование `multiple`:
 <FormField :options = "colors" type = "select" name = "multiple-color" multiple label = "Multiple colors" />
+
+----
+
+Использование `limit` = `2` вместе с `multiple`:
+<FormField :options = "colors" type = "select" name = "multiple-color" multiple label = "Multiple colors" limit = "2" />
+
 
 ----
 The current state of the form:

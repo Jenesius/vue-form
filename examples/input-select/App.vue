@@ -10,6 +10,7 @@
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
 			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages"/>
 			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages" disabled/>
+			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages" limit = "2"/>
 
 
 			<input-field type= "select" name="programming-language" :options = "programLanguageOptions" :hidden-values = "['2','1']"/>

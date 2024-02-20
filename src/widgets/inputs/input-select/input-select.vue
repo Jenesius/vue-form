@@ -69,7 +69,8 @@ const props = defineProps<{
 	placeholder?: string,
 	errors: string[],
 	hiddenValues?: OptionRow['value'][],
-	multiple?: boolean
+	multiple?: boolean,
+	limit?: number | string
 }>()
 const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
@@ -162,9 +163,12 @@ function handleSelect(value: any) {
 	if (!props.multiple) setActive(false)
 }
 function onInput(value: any) {
+
 	if (props.disabled) return;
 
-	const resultValue = props.multiple ? toggleValueFromArray(Array.isArray(props.modelValue) ? props.modelValue : [], value) : value
+	const limit = typeof props.limit === 'number' ? props.limit : (typeof props.limit === 'string' ? Number.parseInt(props.limit, 10) : undefined);
+
+	const resultValue = props.multiple ? toggleValueFromArray(Array.isArray(props.modelValue) ? props.modelValue : [], value, limit) : value
 	emit('update:modelValue', resultValue)
 }
 
