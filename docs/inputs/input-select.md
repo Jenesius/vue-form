@@ -51,6 +51,12 @@ If this array is specified, then the selection will not contain the elements spe
 
 If no value is selected, a text label is shown.
 
+### multiple <Badge type = "info">Optional</Badge>
+
+- Type `boolean`
+
+Данный параметр позволяет использовать множественную выборку. В таком случае modelValue будет обрабатываться как массив. 
+
 ____ 
 
 Also, all parameters common to all `FormField`. Information about them can be viewed
@@ -60,7 +66,8 @@ on [this page](./form-field.md#params).
 ## Value
 
 On clicking or selecting the corresponding `select` element, the value will be set to
-according to the value in the `value` field of the passed `options`.
+according to the value in the `value` field of the passed `options`. Если установлен атрибут `multiple`, то значение
+будет проверяться на наличие в modelValue: если не было найдено, то будет добавлено, иначе - исключено.
 
 ## Specification
 
@@ -73,6 +80,8 @@ according to the value in the `value` field of the passed `options`.
 - An additional search controller is shown for a long list.
 - Blocking fields cancels navigation using `Tab`. There is also a change in the style of `select`.
 - If the validation fails, the field should change the style of the `select`.
+- При использовании аттрибута `multiple` выборка не должна закрывать выпадающий список.
+
 
 ## Examples
 
@@ -133,6 +142,10 @@ ____
 Using `hiddenValues` and setting the value to `['blue', 'purple', 'pink', 'brown', 'grey']`:
 <FormField :options = "colors" hiddenValues = "['blue', 'purple', 'pink', 'brown', 'grey']" type = "select" name = "color" label = "Filtered colors" />
 
+----
+
+Использование `multiple`:
+<FormField :options = "colors" type = "select" name = "multiple-color" multiple label = "Multiple colors" />
 
 ----
 The current state of the form:

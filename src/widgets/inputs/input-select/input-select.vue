@@ -7,7 +7,7 @@
                     'input-select_error': errors.length,
             		'input-select_active': isActive
 				}"
-				 :tabindex="!disabled ? 0 : 'none'"
+				 :tabindex="!disabled ? 0 : 'none' "
 
 				 @focusout = "deactivate()"
 				 @keyup.enter="setActive()"
@@ -34,11 +34,11 @@
 							<p
 								v-for = "option in filteredOptions"
 								:key = "option.value"
-								:class="{'input-select-option-list-item_active': modelValue === option.value}"
+								:class="{'input-select-option-list-item_active': isActiveItem(option.value)}"
 								class="input-select-option-list-item"
 								:title = "option.value"
 
-								@click = "onInput(option.value), setActive(false)"
+								@click = "handleSelect(option.value)"
 							>{{getLabelFromOptionRow(option)}}</p>
 						</div>
 
@@ -59,6 +59,7 @@ import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 import FieldWrap from "../field-wrap.vue";
 import debounce from "../../../utils/debounce";
 import store from "../../../config/store";
+import toggleValueFromArray from "../../../utils/toggle-value-from-array";
 
 const props = defineProps<{
 	label?: string,
@@ -67,7 +68,8 @@ const props = defineProps<{
 	options: OptionRow[],
 	placeholder?: string,
 	errors: string[],
-	hiddenValues?: OptionRow['value'][]
+	hiddenValues?: OptionRow['value'][],
+	multiple?: boolean
 }>()
 const emit = defineEmits<{
 	(e: 'update:modelValue', v: any): void
@@ -87,16 +89,23 @@ function setActive(v = !isActive.value) {
 	if (!v) filter.value = '';
 	if (v) nextTick(scrollToActiveItem.bind(null,'auto'))
 }
-function onInput(v: any) {
-	if (props.disabled) return;
-	emit('update:modelValue', v)
-}
+
 /**
- * @description Метка отображаемая в поле.
+ * @description Метка отображаемая в поле. В случае с одиночной выборкой отображается либо текущий элемент, либо placeholder.
+ * В случае множественной выборки (multiple) - отображается первый выбранный элемент. Если элементов больше одного,
+ * то отображается ещё + N, где N - количество выбранных элементов - 1
  * */
 const inputTitle = computed(() => {
-	const selected = props.options.find(x => x.value === props.modelValue);
-	if (selected) return getLabelFromOptionRow(selected);
+
+	const value = props.multiple ? props.modelValue?.[0] : props.modelValue;
+
+	const selected = props.options.find(x => x.value === value);
+	if (selected) {
+		const resultLabel = getLabelFromOptionRow(selected);
+		if (!props.multiple) return resultLabel;
+
+		return resultLabel + (props.modelValue.length > 1 ? ` + ${props.modelValue.length - 1}` : '')
+ 	}
 
 	return props.disabled ? '' : props.placeholder || '';
 })
@@ -144,6 +153,27 @@ const filteredOptions = computed(() => {
 		(_search.length === 0 || String(getLabelFromOptionRow(option))?.toLowerCase?.().includes(_search))
 	)
 })
+
+/**
+ * @description Wrapper over data input.
+ */
+function handleSelect(value: any) {
+	onInput(value);
+	if (!props.multiple) setActive(false)
+}
+function onInput(value: any) {
+	if (props.disabled) return;
+
+	const resultValue = props.multiple ? toggleValueFromArray(Array.isArray(props.modelValue) ? props.modelValue : [], value) : value
+	emit('update:modelValue', resultValue)
+}
+
+/**
+ * @description Является ли данный элемент активным(modelValue) содержит значение
+ */
+function isActiveItem(value: any) {
+	return props.multiple ? (Array.isArray(props.modelValue) ? props.modelValue : []).includes(value) : props.modelValue === value
+}
 
 </script>
 
@@ -204,6 +234,7 @@ const filteredOptions = computed(() => {
 .input-select-option-list-item_active {
 	background-color: #f4f4f4;
 	border-radius: 3px;
+	color: var(--vf-input-active);
 }
 .input-select-option-list {
 	overflow: auto;
