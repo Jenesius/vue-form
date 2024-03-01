@@ -3,9 +3,9 @@
 		<div class="container-input-select">
 			<div class="input-select"
 				 :class="{
-                    'input-select_disabled': disabled,
-                    'input-select_error': errors.length,
-            		'input-select_active': isActive,
+                    'vf-input-select_disabled': disabled,
+                    'vf-input-select_error': errors.length,
+            		'vf-input-select_active': isActive,
             		'vf-input-select_multi': !!multiple
 				}"
 				 :tabindex="!disabled ? 0 : 'none' "
@@ -272,11 +272,11 @@ function isActiveItem(value: any) {
 .input-select:focus {
 	border: var(--vf-input-border-focus);
 }
-.input-select_error {
+.vf-input-select_error {
 	border: var(--vf-input-border-error);
 }
 
-.input-select_disabled {
+.vf-input-select_disabled {
 	background-color: var(--vf-input-background-disabled);
 	cursor: default;
 }
@@ -323,13 +323,13 @@ function isActiveItem(value: any) {
 Для блока целиком - чтобы в момент активации он был выше сверстников
 */
 .input-select-option,
-.input-select_active{
+.vf-input-select_active{
 	z-index: 1;
 }
 /**
 При активации - чтобы был выше предыдуще активированного блока.
 */
-.input-select_active:has(.height-resize-enter-active) {
+.vf-input-select_active:has(.height-resize-enter-active) {
 	z-index: 2;
 }
 
