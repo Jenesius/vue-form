@@ -6,6 +6,26 @@
 		</div>
 
 		<div class="wrap-app ">
+			<select name="select">
+				<!--Supplement an id here instead of using 'name'-->
+				<option value="value1">Значение 1</option>
+				<option value="value2" selected>Значение 2</option>
+				<option value="value3">Значение 3</option>
+				<option value="value3">Значение 4</option>
+				<option value="value3">Значение 5</option>
+			</select>
+			<select name="select" multiple size =10>
+				<!--Supplement an id here instead of using 'name'-->
+				<option value="value1">Значение 1</option>
+				<option value="value2">Значение 2</option>
+				<option value="value3">Значение 3</option>
+				<option value="value3">Значение 4</option>
+				<option value="value3">Значение 5</option>
+				<option value="value3">Значение 6</option>
+				<option value="value3">Значение 7</option>
+				<option value="value3">Значение 8</option>
+				<option value="value3">Значение 9</option>
+			</select>
 			<input-field type="select" name = "sex" :options = "sexOptions"/>
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
 			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages"/>

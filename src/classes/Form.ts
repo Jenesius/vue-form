@@ -407,7 +407,13 @@ export default class Form extends EventEmitter implements FormDependence {
     unsubscribe(element: any) {
         this.dependencies.remove(element);
     }
-    
+
+    /**
+     *
+     * @param name - tracked field
+     * @param callback
+     * @description The method fires every time the given field has been changed.
+     */
     oninput(name: string, callback: (newValue: any) => void) {
         return this.on(Form.getEventValueByName(name), callback)
     }
