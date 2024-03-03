@@ -85,7 +85,6 @@ describe("Testing radio button", () => {
 		const obj = {
 			items: app.findAll<HTMLElement>('.element-input-radio')
 		}
-
 		await triggerKey.call(obj, 0, 'down');
 		expect(form.getValueByName(name)).toBe('g')
 

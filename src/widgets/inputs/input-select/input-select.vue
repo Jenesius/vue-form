@@ -166,10 +166,7 @@ const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'aut
 	})
 })
 
-function handleSpace() {
-	if (!props.multiple) return;
-	input(toggleMultipleValue(props.modelValue,valueOfActiveItem.value))
-}
+
 
 /**
  * @description Карта переходов.
@@ -178,11 +175,11 @@ function handleSpace() {
  * 1, 0, 1, 1 - означает, что при переходе с активного на неактивный (1 -> 0), у нас должно получится активный и активный(1, 1)
 
 const MAP_SHIFT_TRANSITION = [
-	undefined, 0, undefined, 1, // 0
-	1, 0, 1, 1,					// 1
-	1, 0, 0, 1,					// 2
-	0, 0, 1, 1,					// 3
-	0, 1, 0, 0,					// 4
+	undefined, 0................undefined, (1), // 0
+	1, 0........................1, (1)          // 1
+	1, 1........................(0), 1          // 2
+	0, 0........................(1), 0          // 3
+	0, 1........................0, (0)          // 4
 ]
  * @description Функция для обработки перехода по списку, если пользователь нажимает клавиши вниз/вверх.
  * В режиме multi с зажатой Shift зависит от текущего положения пользователя.
@@ -203,12 +200,12 @@ function handleArrowKeyMove(event: KeyboardEvent) {
 		 */
 		let result: unknown[] = Array.isArray(props.modelValue) ? props.modelValue : [];
 		if (event.shiftKey) {
-			const movement = [result.length ? isActiveItem(savedPrevActiveItem) : undefined , isActiveItem(valueOfActiveItem.value)]
-			// 1-> 1. Для более краткой записи используется
-			const isPositiveMovement = (movement[0] && movement[1])
+			const movement = [savedPrevActiveItem ? isActiveItem(savedPrevActiveItem) : undefined , isActiveItem(valueOfActiveItem.value)]
+			// Закономерность
+			result = (movement[0] === movement[1])
+				? toggleMultipleValue(result, savedPrevActiveItem)
+				: toggleMultipleValue(result, valueOfActiveItem.value)
 
-			if (!isPositiveMovement) result = toggleMultipleValue(result, valueOfActiveItem.value)
-			if ((movement[0] === false && movement[1] === false) || isPositiveMovement) result = toggleMultipleValue(result, savedPrevActiveItem)
 			input(result);
 		}
 		else if (!event.ctrlKey) input([valueOfActiveItem.value]);
@@ -220,7 +217,7 @@ function handleArrowKeyMove(event: KeyboardEvent) {
  * @description Wrapper over data input.
  */
 function handleSelect(value: any) {
-	if (!props.disabled) input(props.multiple ? toggleMultipleValue(props.modelValue, value) : value)
+	input(props.multiple ? toggleMultipleValue(props.modelValue, value) : value)
 	if (!props.multiple) setActive(false)
 }
 
@@ -231,12 +228,23 @@ function handleSelect(value: any) {
 function toggleMultipleValue(array: unknown[], value: unknown) {
 	return toggleValueFromArray(Array.isArray(array) ? array : [], value, parsedLimit.value)
 }
+function handleSpace() {
+	if (!isActive.value) return setActive()
+	if (!props.multiple) return;
 
+	/**
+	 * @description Если выделенный элемент отсутствует.
+	 */
+	if (!props.options.find(item => item.value === valueOfActiveItem.value)) return;
+
+	input(toggleMultipleValue(props.modelValue, valueOfActiveItem.value))
+}
 /**
  * @description Конечная точка ввода данных. Используется для проверки типа.
  * @param value
  */
 function input(value: unknown) {
+	if (props.disabled) return ;
 	if (props.multiple && !(Array.isArray(value) || value === null || value === undefined))
 		return console.warn('An attempt to set a value for input-select(multiple: true) failed. The data is not an array, null or undefined.', value);
 	emit('update:modelValue', value)

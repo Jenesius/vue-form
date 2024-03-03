@@ -25,7 +25,7 @@ import FieldWrap from "../field-wrap.vue";
 import {OptionRow} from "../../../types";
 import ElementInputRadio from "./element-input-radio.vue";
 import {nextTick, ref} from "vue";
-import updateInputPosition from "../../../utils/update-input-position";
+import getOptionRowByDuration from "../../../utils/get-option-row-by-duration";
 
 const props = defineProps<{
 	label?: string,
@@ -53,8 +53,9 @@ function getTabindex(index: number) {
 }
 
 function handleMove(duration: number) {
-
-	updateInputPosition({options: props.options, value: props.modelValue || props.options[0].value, onInput, duration});
+	onInput(
+		getOptionRowByDuration( props.options, props.modelValue || props.options[0].value, duration).value
+	)
 	focusActiveItem()
 }
 

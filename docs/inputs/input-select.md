@@ -88,14 +88,14 @@ according to the value in the `value` field of the passed `options`. Если у
 - Blocking fields cancels navigation using `Tab`. There is also a change in the style of `select`.
 - If the validation fails, the field should change the style of the `select`.
 - При использовании аттрибута `multiple` выборка не должна закрывать выпадающий список.
-- В режиме `miltiple:true` с зажатой `Shift` используется следующий порядок переходов (`_` означение состояние
-  в котором ни один элемент не выбран, `->` - переход с одного элемента на другой, `0` - элемент не выбран, `1` - элемент
-  уже был выбран):
+- In `miltiple:true` mode with `Shift` held down, the following transition order is used (`_` state value
+  in which no element is selected, `->` - transition from one element to another, `0` - element not selected, `1` - element
+  already selected):
   - _ -> 0 = _ , 1
-  - 1 -> 0 = 1 , 1
-  - 1 -> 1 = 0 , 1
-  - 0 -> 0 = 1 , 1
-  - 0 -> 1 = 0 , 0
+  - 1 -> 0 = 1, 1
+  - 1 -> 1 = 0, 1
+  - 0 -> 0 = 1, 0
+  - 0 -> 1 = 0, 0
 
 
 ## Examples

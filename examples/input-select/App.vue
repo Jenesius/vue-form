@@ -1,15 +1,12 @@
 <template>
 	<div class="container">
-		<div>
-			<h2>Values</h2>
-			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
-		</div>
+
 
 		<div class="wrap-app ">
 			<select name="select">
 				<!--Supplement an id here instead of using 'name'-->
 				<option value="value1">Значение 1</option>
-				<option value="value2" selected>Значение 2</option>
+				<option value="value2" >Значение 2</option>
 				<option value="value3">Значение 3</option>
 				<option value="value3">Значение 4</option>
 				<option value="value3">Значение 5</option>
@@ -38,6 +35,10 @@
 			<input-field type = "select" name = "year" :options = "yearOptions" label = "Year"/>
 
 			<button class="button" @click="form.cleanValues()">Clean Form</button>
+		</div>
+		<div>
+			<h2>Values</h2>
+			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
 		</div>
 	</div>
 </template>
