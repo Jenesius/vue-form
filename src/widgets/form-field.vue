@@ -10,7 +10,7 @@
         :disabled = "input?.disabled || $attrs['disabled'] || false"
         :changed  = "input?.changed"
         :errors="input?.errors || []"
-		:options="parseOptions(options)"
+		:options="parseOptions(options || [])"
 	/>
 </template>
 

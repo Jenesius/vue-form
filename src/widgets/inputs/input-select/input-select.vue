@@ -3,17 +3,18 @@
 		<div class="container-input-select">
 			<div class="input-select"
 				 :class="{
-                    'input-select_disabled': disabled,
-                    'input-select_error': errors.length,
-            		'input-select_active': isActive
+                    'vf-input-select_disabled': disabled,
+                    'vf-input-select_error': errors.length,
+            		'vf-input-select_active': isActive,
+            		'vf-input-select_multi': !!multiple
 				}"
 				 :tabindex="!disabled ? 0 : 'none' "
 
 				 @focusout = "deactivate()"
 				 @keyup.enter="setActive()"
-				 @keyup.space="setActive()"
-				 @keydown.down.prevent = "handleMove(1)"
-				 @keydown.up.prevent = "handleMove(-1)"
+				 @keydown.down.prevent = "handleArrowKeyMove"
+				 @keydown.up.prevent = "handleArrowKeyMove"
+				 @keydown.space.prevent = "handleSpace"
 				 ref="refInputSelect"
 			>
 				<widget-input-select-current
@@ -34,7 +35,7 @@
 							<p
 								v-for = "option in filteredOptions"
 								:key = "option.value"
-								:class="{'input-select-option-list-item_active': isActiveItem(option.value)}"
+								:class="{'input-select-option-list-item_active': isActiveItem(option.value), 'vf-input-select-row_current': valueOfActiveItem === option.value}"
 								class="input-select-option-list-item"
 								:title = "option.value"
 
@@ -53,13 +54,13 @@
 import {OptionRow} from "../../../types";
 import {computed, nextTick, ref} from "vue";
 import WidgetInputSelectCurrent from "./widget-input-select-current.vue";
-import updateInputPosition from "../../../utils/update-input-position";
 import WidgetInputSelectSearch from "./widget-input-select-search.vue";
 import getLabelFromOptionRow from "../../../utils/get-label-from-option-row";
 import FieldWrap from "../field-wrap.vue";
 import debounce from "../../../utils/debounce";
 import store from "../../../config/store";
 import toggleValueFromArray from "../../../utils/toggle-value-from-array";
+import getOptionRowByDuration from "../../../utils/get-option-row-by-duration";
 
 const props = defineProps<{
 	label?: string,
@@ -70,6 +71,9 @@ const props = defineProps<{
 	errors: string[],
 	hiddenValues?: OptionRow['value'][],
 	multiple?: boolean,
+	/**
+	 * @description Максимальное возможное число выборки элементов в случае, когда установлен multiple атрибут.
+	 */
 	limit?: number | string
 }>()
 const emit = defineEmits<{
@@ -78,70 +82,40 @@ const emit = defineEmits<{
 
 const refInputSelect = ref<HTMLElement>()
 
+// Приведённый в числовой вид предел.
+const parsedLimit =computed(() => {
+	return typeof props.limit === 'number' ? props.limit : (typeof props.limit === 'string' ? Number.parseInt(props.limit, 10) : undefined);
+});
+
 /**
  * @description true when user open the list of options.
  * */
 const isActive = ref(false);
-function setActive(v = !isActive.value) {
-	if (props.disabled) return isActive.value = false;
-
-	isActive.value = v;
-
-	if (!v) filter.value = '';
-	if (v) nextTick(scrollToActiveItem.bind(null,'auto'))
-}
-
+/**
+ * @description Значение активного элемента(не выбранного) на котором находится пользователь при проходе по списку с Ctrl.
+ * элемента не установлено.
+ */
+const valueOfActiveItem = ref<unknown>(undefined);
 /**
  * @description Метка отображаемая в поле. В случае с одиночной выборкой отображается либо текущий элемент, либо placeholder.
  * В случае множественной выборки (multiple) - отображается первый выбранный элемент. Если элементов больше одного,
  * то отображается ещё + N, где N - количество выбранных элементов - 1
  * */
 const inputTitle = computed(() => {
-
 	const value = props.multiple ? props.modelValue?.[0] : props.modelValue;
-
 	const selected = props.options.find(x => x.value === value);
 	if (selected) {
 		const resultLabel = getLabelFromOptionRow(selected);
 		if (!props.multiple) return resultLabel;
 
 		return resultLabel + (props.modelValue.length > 1 ? ` + ${props.modelValue.length - 1}` : '')
- 	}
-
+	}
 	return props.disabled ? '' : props.placeholder || '';
 })
 
-function deactivate() {
-	const elem = refInputSelect.value;
-	if (!elem) return;
-
-	// If Input inside InputSelect stay in focus
-	if (elem.matches(':focus-within')) return;
-	setActive(false);
-}
-
 /**
- * @description Функция для обработки перехода по списку, если пользователь нажимает клавиши вниз/вверх
- * */
-function handleMove(duration: number) {
-	updateInputPosition({options: filteredOptions.value, value: props.modelValue, onInput, duration});
-	scrollToActiveItem('smooth')
-}
-
-/**
- * @description Для того, чтобы предотвратить повторный scroll - используем debounce.
- * */
-const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'auto') {
-	if (!isActive.value) return;
-	nextTick(() => {
-		refInputSelect.value?.querySelector('.input-select-option-list-item_active')?.scrollIntoView({
-			block: 'nearest',
-			behavior
-		})
-	})
-})
-
-
+ * @description Текущий фильтр введённый пользователем.
+ */
 const filter = ref('');
 const filteredOptions = computed(() => {
 	const _search = filter.value.toLowerCase();
@@ -155,21 +129,125 @@ const filteredOptions = computed(() => {
 	)
 })
 
+function setActive(v = !isActive.value) {
+	if (props.disabled) return isActive.value = false;
+
+	isActive.value = v;
+
+	if (!v) filter.value = '';
+	if (v) {
+		nextTick(scrollToActiveItem.bind(null,'auto'))
+		valueOfActiveItem.value = getCurrentLastValue()
+	}
+}
+
+function deactivate() {
+	const elem = refInputSelect.value;
+	if (!elem) return;
+
+	// If Input inside InputSelect stay in focus
+	if (elem.matches(':focus-within')) return;
+	setActive(false);
+}
+
+function getCurrentLastValue() {
+	return props.multiple ? Array.isArray(props.modelValue) ? props.modelValue[props.modelValue.length - 1] : undefined : props.modelValue
+}
+/**
+ * @description Для того, чтобы предотвратить повторный scroll - используем debounce.
+ * */
+const scrollToActiveItem = debounce(function (behavior: 'auto' | 'smooth' = 'auto') {
+	if (!isActive.value) return;
+	nextTick(() => {
+		refInputSelect.value?.querySelector('.vf-input-select-row_current')?.scrollIntoView({
+			block: 'nearest',
+			behavior
+		})
+	})
+})
+
+
+
+/**
+ * @description Карта переходов.
+ * undefined - предыдущее значение не определено
+ * 0 - не выбрано, 1- выбрано
+ * 1, 0, 1, 1 - означает, что при переходе с активного на неактивный (1 -> 0), у нас должно получится активный и активный(1, 1)
+
+const MAP_SHIFT_TRANSITION = [
+	undefined, 0................undefined, (1), // 0
+	1, 0........................1, (1)          // 1
+	1, 1........................(0), 1          // 2
+	0, 0........................(1), 0          // 3
+	0, 1........................0, (0)          // 4
+]
+ * @description Функция для обработки перехода по списку, если пользователь нажимает клавиши вниз/вверх.
+ * В режиме multi с зажатой Shift зависит от текущего положения пользователя.
+ * */
+function handleArrowKeyMove(event: KeyboardEvent) {
+	const duration = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+	// Запоминаем элемент с которого мы начали при инициировании прохода. Это требуется в случае с multiple & shiftKey
+	const savedPrevActiveItem = valueOfActiveItem.value;
+	valueOfActiveItem.value = getOptionRowByDuration(filteredOptions.value, valueOfActiveItem.value, duration).value;
+	if (!props.multiple) input(valueOfActiveItem.value);
+	else {
+		/**
+		 * В данном случае работа идёт с multiple select.
+		 * Если есть shift - выборка является срезом(добавляем элемент)
+		 * Иначе если зажат ctrl - ничего не делаем(перемещаемся, изменение position уже сделано выше) Данная проверка
+		 * уже сделана на первом if.
+		 * Иначе(нет ни Shift, ни Ctrl) устанавливаем элемент
+		 */
+		let result: unknown[] = Array.isArray(props.modelValue) ? props.modelValue : [];
+		if (event.shiftKey) {
+			const movement = [savedPrevActiveItem ? isActiveItem(savedPrevActiveItem) : undefined , isActiveItem(valueOfActiveItem.value)]
+			// Закономерность
+			result = (movement[0] === movement[1])
+				? toggleMultipleValue(result, savedPrevActiveItem)
+				: toggleMultipleValue(result, valueOfActiveItem.value)
+
+			input(result);
+		}
+		else if (!event.ctrlKey) input([valueOfActiveItem.value]);
+	}
+	scrollToActiveItem('smooth')
+}
+
 /**
  * @description Wrapper over data input.
  */
 function handleSelect(value: any) {
-	onInput(value);
+	input(props.multiple ? toggleMultipleValue(props.modelValue, value) : value)
 	if (!props.multiple) setActive(false)
 }
-function onInput(value: any) {
 
-	if (props.disabled) return;
+/**
+ * @description Абстракция нам метод переключения элемента из выборки. Используется как обёртка на этой функцией для того,
+ * чтобы каждый раз не проверять массив и подключать предел.
+ */
+function toggleMultipleValue(array: unknown[], value: unknown) {
+	return toggleValueFromArray(Array.isArray(array) ? array : [], value, parsedLimit.value)
+}
+function handleSpace() {
+	if (!isActive.value) return setActive()
+	if (!props.multiple) return;
 
-	const limit = typeof props.limit === 'number' ? props.limit : (typeof props.limit === 'string' ? Number.parseInt(props.limit, 10) : undefined);
+	/**
+	 * @description Если выделенный элемент отсутствует.
+	 */
+	if (!props.options.find(item => item.value === valueOfActiveItem.value)) return;
 
-	const resultValue = props.multiple ? toggleValueFromArray(Array.isArray(props.modelValue) ? props.modelValue : [], value, limit) : value
-	emit('update:modelValue', resultValue)
+	input(toggleMultipleValue(props.modelValue, valueOfActiveItem.value))
+}
+/**
+ * @description Конечная точка ввода данных. Используется для проверки типа.
+ * @param value
+ */
+function input(value: unknown) {
+	if (props.disabled) return ;
+	if (props.multiple && !(Array.isArray(value) || value === null || value === undefined))
+		return console.warn('An attempt to set a value for input-select(multiple: true) failed. The data is not an array, null or undefined.', value);
+	emit('update:modelValue', value)
 }
 
 /**
@@ -202,11 +280,11 @@ function isActiveItem(value: any) {
 .input-select:focus {
 	border: var(--vf-input-border-focus);
 }
-.input-select_error {
+.vf-input-select_error {
 	border: var(--vf-input-border-error);
 }
 
-.input-select_disabled {
+.vf-input-select_disabled {
 	background-color: var(--vf-input-background-disabled);
 	cursor: default;
 }
@@ -253,14 +331,17 @@ function isActiveItem(value: any) {
 Для блока целиком - чтобы в момент активации он был выше сверстников
 */
 .input-select-option,
-.input-select_active{
+.vf-input-select_active{
 	z-index: 1;
 }
 /**
 При активации - чтобы был выше предыдуще активированного блока.
 */
-.input-select_active:has(.height-resize-enter-active) {
+.vf-input-select_active:has(.height-resize-enter-active) {
 	z-index: 2;
 }
 
+.vf-input-select_multi .vf-input-select-row_current {
+	border: 1px solid var(--vf-input-gray-light) !important;
+}
 </style>

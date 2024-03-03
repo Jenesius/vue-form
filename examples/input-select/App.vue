@@ -1,11 +1,28 @@
 <template>
 	<div class="container">
-		<div>
-			<h2>Values</h2>
-			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
-		</div>
+
 
 		<div class="wrap-app ">
+			<select name="select">
+				<!--Supplement an id here instead of using 'name'-->
+				<option value="value1">Значение 1</option>
+				<option value="value2" >Значение 2</option>
+				<option value="value3">Значение 3</option>
+				<option value="value3">Значение 4</option>
+				<option value="value3">Значение 5</option>
+			</select>
+			<select name="select" multiple size =10>
+				<!--Supplement an id here instead of using 'name'-->
+				<option value="value1">Значение 1</option>
+				<option value="value2">Значение 2</option>
+				<option value="value3">Значение 3</option>
+				<option value="value3">Значение 4</option>
+				<option value="value3">Значение 5</option>
+				<option value="value3">Значение 6</option>
+				<option value="value3">Значение 7</option>
+				<option value="value3">Значение 8</option>
+				<option value="value3">Значение 9</option>
+			</select>
 			<input-field type="select" name = "sex" :options = "sexOptions"/>
 			<input-field type = "select" name = "language" :options = "languageOptions"/>
 			<input-field type = "select" name = "languages" :options = "languageOptions" multiple label = "Multi languages"/>
@@ -18,6 +35,10 @@
 			<input-field type = "select" name = "year" :options = "yearOptions" label = "Year"/>
 
 			<button class="button" @click="form.cleanValues()">Clean Form</button>
+		</div>
+		<div>
+			<h2>Values</h2>
+			<pre class="container-values">{{ JSON.stringify(values, undefined, 4) }}</pre>
 		</div>
 	</div>
 </template>

@@ -1,3 +1,21 @@
+#### 3.0.14 (2024-03-03)
+
+##### Breaking Changes
+
+*  remove update-input-position.ts ([30ee8b1c](https://github.com/Jenesius/vue-form/commit/30ee8b1cedf17b5fbdba9fa2443ae64088f6b7e1))
+
+##### Documentation Changes
+
+*  update `ru` info about input-select ([3c4350bb](https://github.com/Jenesius/vue-form/commit/3c4350bb1918d095679394fa23feddbea8cfc647))
+
+##### New Features
+
+*  update move Up/Down. ([7d7f21fa](https://github.com/Jenesius/vue-form/commit/7d7f21fa508617eaf08a24db1efee4034ffe85be))
+
+##### Tests
+
+*  modify tests, add input-select effect for Shift ([e6f3e9dc](https://github.com/Jenesius/vue-form/commit/e6f3e9dc47bbe24821d50fc8f1992a12b8958baa))
+
 #### 3.0.13 (2024-02-20)
 
 ##### New Features
