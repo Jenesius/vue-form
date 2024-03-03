@@ -29,10 +29,6 @@ import runPromiseQueue from "./run-promise-queue";
 import splitName from "./split-name";
 
 
-import updateInputPosition from "./update-input-position";
-
-
-
 const utils = {
 	bypassObject,
 	checkCompositeName,
@@ -64,6 +60,5 @@ const utils = {
 	replaceValues,
 	runPromiseQueue,
 	splitName,
-	updateInputPosition,
 }
 export default utils;
