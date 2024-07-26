@@ -1,12 +1,16 @@
+import STORE from "../config/store";
+
 /**
  * @description Попытка конвертации любой строки в число
  * */
-export function parseNumber(data: unknown, defaultValue: number = 0) {
+
+export function parseNumber(data: unknown, defaultValue: any = 0) {
+
     if (typeof data !== 'string') return defaultValue;
 
     const parsedResult = new RegExp(/^([-+]?)([^.,+-]*)(.*)/g).exec(data);
 
-    if (parsedResult === null) return 0;
+    if (parsedResult === null) return defaultValue;
 
     try {
         const parsedSting = [
@@ -20,14 +24,8 @@ export function parseNumber(data: unknown, defaultValue: number = 0) {
         if (parsedSting.length === 2) return defaultValue;
 
         const result = Number.parseFloat(parsedSting)
-        return  Number.isNaN(result) ? 0 : result
+        return  Number.isNaN(result) ? defaultValue : result
     } catch (e) {
-        return 0
+        return defaultValue;
     }
-
-
-}
-
-function test(str: string) {
-
 }

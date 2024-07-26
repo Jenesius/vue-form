@@ -8,14 +8,14 @@
 		>
 			<widget-number-step
 				@step = "onStep"
-				v-if = "!disabled"
+				v-if = "!hideStep && !disabled "
 			/>
 			<input
 				ref = "refInput"
 				class = "input-number"
 				type = "text"
 				:value = "isFocused ? modelValue : useModify(() => props.pretty)(modelValue)"
-				@input = "handleInput($event.target.value)"
+				@input = "handleInput(($event.target as HTMLInputElement).value)"
 				:disabled = "disabled"
 				:autofocus="autofocus"
 
@@ -36,6 +36,7 @@ import {StringModify, ValidationError} from "../../../types";
 import useModify from "../../../local-hooks/use-modify";
 import FieldWrap from "../field-wrap.vue";
 import {parseNumber} from "../../../utils/parse-number";
+import STORE from "../../../config/store";
 interface Props{
 	step?: number | string,
 	label?: string,
@@ -46,7 +47,8 @@ interface Props{
 	name: string,
 	pretty?: StringModify | StringModify[],
 	suffix?: string,
-	decimal?: boolean
+	decimal?: boolean,
+	hideStep?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
 	step: 1
@@ -58,7 +60,7 @@ const emits = defineEmits<{
 }>()
 const refInput = ref<HTMLInputElement>()
 function handleInput(data: string | number) {
-	const value = (typeof data !== "number") ? parseNumber(data) : data
+	const value = (typeof data !== "number") ? parseNumber(data, STORE.cleanValue) : data
 
 	if (value !== props.modelValue) emits("update:modelValue", value);
 	if (refInput.value) refInput.value.value = String(data).replace(/[^0-9.,+-]|/g, '')

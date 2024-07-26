@@ -77,7 +77,7 @@
 		<input-field name = "number" type = "number" label = "With Unit"  :pretty="prettyUnit('meters')" />
 		<input-field name = "number" type = "number" label = "With Suffix" suffix = "MHz"   />
 		<input-field name = "number" type = "number" disabled label = "With Suffix" suffix = "MHz"   />
-
+		<input-field name = "number" type = "number" label = "Without step" suffix = "MHz" hide-step  />
 		<h2>Input Radio</h2>
 
 		<input-field name = "radio" type = "radio" :options = "optionsCheckbox"/>
@@ -140,12 +140,12 @@ function prettyUnit(unit: string) {
 		if (typeof v !== "string" && typeof v !== "number") {
 			return v;
 		}
-		v = String(v);
-		v = v.replace(/[^0-9.]/g, '')
+		let strValue = String(v);
+		strValue = strValue.replace(/[^0-9.+-]/g, '')
 
-		v = k.format(Number(v));
+		strValue = k.format(Number(v));
 
-		return `${v} ${unit}`
+		return `${strValue} ${unit}`
 	}
 }
 

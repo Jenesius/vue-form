@@ -16,7 +16,7 @@
 				:disabled="disabled"
 				:autofocus="autofocus"
 				:placeholder="placeholder"
-				@input="onInput($event.target.value)"
+				@input="onInput(($event.target as HTMLInputElement).value)"
 				@focusin = "isFocused = true"
 				@focusout = "isFocused = false"
 				:name = "name"
@@ -31,6 +31,7 @@ import useModify from "../../../local-hooks/use-modify";
 import {StringModify, ValidationError} from "../../../types";
 import FieldWrap from "../field-wrap.vue";
 import {parseNumber} from "../../../utils/parse-number";
+import STORE from "../../../config/store";
 
 const props = defineProps<{
 	label?: string,
@@ -60,7 +61,7 @@ const emit = defineEmits<{
 const executePretty = useModify(() => props.pretty);
 const executeModify = useModify(
 	() => [
-		props.numeric ? parseNumber : undefined,
+		props.numeric ? (s) => parseNumber(s, STORE.cleanValue) : undefined,
 		...(Array.isArray(props.modify) ? props.modify : [props.modify])
 	]
 )
