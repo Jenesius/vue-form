@@ -1,3 +1,9 @@
+#### 3.0.15 (2024-07-26)
+
+##### Bug Fixes
+
+*  update method to calc numeric value ([300c484c](https://github.com/Jenesius/vue-form/commit/300c484c484e0b15550944dc3fe3e5e863dee9ba))
+
 #### 3.0.14 (2024-03-03)
 
 ##### Breaking Changes
