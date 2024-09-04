@@ -1,12 +1,13 @@
 import STORE, {IStore} from "./store";
-import widgets from "./widgets";
 
 export default function config(params: ConfigParams) {
+
+	const savedStoreInputs = STORE.inputTypes;
 
 	Object.assign(STORE, params);
 
 	STORE.inputTypes = {
-		...widgets,
+		...savedStoreInputs,
 		...(params.inputTypes || {}),
 	}
 
