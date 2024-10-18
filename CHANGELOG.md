@@ -1,3 +1,13 @@
+#### 3.0.17 (2024-10-18)
+
+##### Documentation Changes
+
+*  add information about autonomic ([51c3eae9](https://github.com/Jenesius/vue-form/commit/51c3eae9dc0c2a65e2e2c7dfe1bb66964736cf20))
+
+##### New Features
+
+*  add autonomic params in the form ([c5750508](https://github.com/Jenesius/vue-form/commit/c5750508141cee2736da33108ae7d70704ece9c3))
+
 #### 3.0.16 (2024-09-04)
 
 #### 3.0.15 (2024-07-26)
