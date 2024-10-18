@@ -1,3 +1,9 @@
+#### 3.0.18 (2024-10-18)
+
+##### New Features
+
+*  add test for autonomic forms, Hot fix for dispatching events to parent form from autonomic form. ([904c0165](https://github.com/Jenesius/vue-form/commit/904c0165652d3fccb36a2f79406e9b1d64af1acc))
+
 #### 3.0.17 (2024-10-18)
 
 ##### Documentation Changes
