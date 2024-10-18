@@ -595,5 +595,40 @@ describe("Form.setValues", () => {
             }
         })
     })
-    
+    test("", () => {
+        
+        const form = new Form({
+            name: "NewOLApplication"
+        })
+        
+        const mwForm = new Form({
+            name: "MWLink",
+            parent: form,
+        })
+        
+        const stationForm = new Form({
+            name: "Station",
+            parent: mwForm,
+            autonomic: true
+        })
+        
+        const coordinatesForm = new Form({
+            name: "Coordinates",
+            parent: stationForm,
+        })
+
+        coordinatesForm.change({
+            x: 1,
+            y: 2
+        })
+        expect(form.values).toEqual({})
+        expect(stationForm.values).toEqual({
+            Coordinates: {
+                x: 1,
+                y: 2
+            }
+        })
+        
+        
+    })
 })

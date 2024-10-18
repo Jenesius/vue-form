@@ -64,11 +64,11 @@ export default class Form extends EventEmitter implements FormDependence {
         if (elem.parent) return `${Form.restoreFullName(elem.parent)}.${elem.name}`;
         return elem.name || '';
     }
-    static getTargetName<T extends { name?: string, parent?: any }>(elem: T): string {
+    static getTargetName<T extends { name?: string, parent?: any, autonomic?: boolean }>(elem: T): string {
         const array = [];
         
         let target = elem;
-        while (target.parent) {
+        while (target.parent && !target.autonomic) {
             array.unshift(target.name);
             target = target.parent;
         }
@@ -192,7 +192,6 @@ export default class Form extends EventEmitter implements FormDependence {
             debug.msg(`%c${this.name}%c emit changes to parent [%c${this.parent.name}%c]`, debug.colorName, debug.colorDefault, debug.colorFocus,debug.colorDefault);
             return void this.parent.setValues(values, options);
         }
-        
         // Дошли до родительской формы. Теперь данные нужно завернуть и отправить вниз
         
         debug.group('SET VALUES');
