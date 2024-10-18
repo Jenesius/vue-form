@@ -39,8 +39,6 @@ import FormError from "./FormError";
  * Всё состояние формы лежит сугубо в форме.
  * */
 
-type FormWithParent = Form & {get parent(): Form};
-
 export default class Form extends EventEmitter implements FormDependence {
     static PROVIDE_NAME = 'form-controller';
     static EVENT_VALUE = 'value';
@@ -99,6 +97,8 @@ export default class Form extends EventEmitter implements FormDependence {
     set autonomic(value: boolean) {
         if (value === false && !this.parent) throw FormError.AutonomicFormWithoutParent();
         this.#autonomic = value;
+        
+        debug.msg(`The form's %c${Form.restoreFullName(this)}%c autonomic is %c${value}%c.`);
     }
     
     /**
@@ -815,8 +815,8 @@ interface FormParams {
     provide: boolean,
     parent: Form | null | false,
     /**
-     * @description Форма будет являться автономной. Хоть и будет иметь возможность зависеть от родителя, однако
-     * значения и changes будут храниться внутри данной формы.
+     * @description The form will be self-contained. They want and will have the opportunity to receive higher education
+     * from their parents, however values, changes, enabling and disabling will be stored inside this form.
      */
     autonomic: boolean
 }
