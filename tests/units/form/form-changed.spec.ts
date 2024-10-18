@@ -69,5 +69,23 @@ describe("Form.changed", () => {
 		form.cleanChangesByField("name");
 		expect(form.changed).toBe(false);
 	})
+	
+	test("With three parent", () => {
+		const grandParent = new Form({name: 'grand'})
+		const parent = new Form({name: 'parent', parent: grandParent})
+		const child = new Form({name: 'child', parent: parent})
+		
+		
+		child.change({name: 'Jack'})
+		
+		console.log(child.values)
+		console.log(child.changes)
+		console.log(parent.changes)
+		console.log(grandParent.changes)
+		
+		expect(grandParent.changed).toBe(true)
+		expect(parent.changed).toBe(true)
+		expect(child.changed).toBe(true)
+	})
 
 })

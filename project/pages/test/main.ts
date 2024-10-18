@@ -10,6 +10,7 @@ import InputTestDateLocal from "./input-test-date-local.vue";
 import InputNativeDate from "./input-native-date.vue";
 
 config({
+	
 	inputTypes: {
 		country,
 		"account-type": accountType,
@@ -18,7 +19,7 @@ config({
 		'local-date': InputTestDateLocal,
 		'native-date': InputNativeDate
 	},
-	// debug: true
+	debug: true
 })
 
 createApp(App).mount('#app')

@@ -12,8 +12,8 @@ export default class FormError extends Error{
 	static RepeatDependingWithSameName(name: string, element: any) {
 		return new FormError(`The element with the name ${name} has already been subscribed to the form.`, element);
 	}
-	static ProxyFormWithoutName() {
-		return new FormError(`Can't create FormProxy without name.`);
+	static FormWithoutName() {
+		return new FormError(`For some case form should has the name.`);
 	}
 	static TryToGetValueWithoutName() {
 		return new FormError(`Can't get value without name. Looks like form.getValueByName(). Current method has one required param.`)

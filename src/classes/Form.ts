@@ -107,8 +107,11 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     #changes = {};
     get changes(): any {
-        if (this.parent && !this.autonomic) return getPropFromObject(this.parent.changes, Form.getTargetName(this));
-        return this.#changes;
+        if (!this.parent || this.autonomic) return this.#changes;
+
+        const parentChanges = this.parent.changes;
+        if (!this.name) throw FormError.FormWithoutName()
+        return getPropFromObject(parentChanges, this.name);
     }
     
     #values = {}
@@ -454,8 +457,6 @@ export default class Form extends EventEmitter implements FormDependence {
      * Наша система построена так, что бы все значения идут от родителя к дочернему элементу (values, changes, event, other..)
      * */
     dispatchEvent<T extends FormEvent>(event: T) {
-        
-        
         if (event instanceof CompareEvent) {
             debug.msg(`[%c${Form.restoreFullName(this)}%c] %c${event?.comparison.length ? 'found updates' : 'not effect'}%c`,
                 debug.colorName, debug.colorDefault,
@@ -464,7 +465,16 @@ export default class Form extends EventEmitter implements FormDependence {
                 )
 
             if (event.comparison.length) this.emit(Form.EVENT_CHANGED, this.changed);
-
+            
+            // HOT FIX FOR AUTONOMIC FORM
+            {
+                let p = this.parent;
+                while(p) {
+                    p.emit(Form.EVENT_CHANGED, p.changed);
+                    p = p.parent;
+                }
+            }
+            
             // Проходим по всем дочерним элементам и уведомляем их
             this.dependencies.forEach(dep => {
                 if (dep.name) {
