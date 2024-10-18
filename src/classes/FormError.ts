@@ -33,4 +33,7 @@ export default class FormError extends Error{
 	static DependencyNotFounded() {
 		return new FormError(`Dependency was not subscribe on form or unsubscribed early.`)
 	}
+	static AutonomicFormWithoutParent() {
+		return new FormError(`The form will always be autonomic unless a parent is specified.`)
+	}
 }

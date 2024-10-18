@@ -116,3 +116,24 @@ event `Form.EVENT_WAIT` is created:
 ```ts
 form.on(Form.EVENT_WAIT, () => {...})
 ```
+
+### autonomic
+
+Sometimes you want a child form to be dependent on its parent, but rely on its state
+(changes, values, availabilities). In this case, save/read will be called from the parent form. Also, the changed
+value will be read from the parent form.
+
+```ts
+const parent = new Form();
+const child = new Form({
+    parent,
+    name: "user",
+    autonomic: true
+});
+
+parent.change({
+    "user.name": "Jack"
+})
+child.values  // {}
+parent.values // { user: { name: "Jack" } }
+```

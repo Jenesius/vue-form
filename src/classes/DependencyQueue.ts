@@ -32,7 +32,9 @@ export default class DependencyQueue<T extends (DependencyItem & Record<string, 
 			this.array.indexOf(object), 1
 		)
 	}
-
+	find(expression: (elem: T, index: number) => boolean) {
+		return this.array.find(expression);
+	}
 	forEach(callback: (elem: T) => void) {
 		this.array.forEach(callback);
 	}

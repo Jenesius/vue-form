@@ -23,6 +23,7 @@ import findNearestPrefixFromArray from "../utils/find-nearest-prefix-from-array"
 import AvailabilityEvent from "./AvailabilityEvent";
 import bypassObject from "../utils/bypass-object";
 import isIterablePoint from "../utils/is-iterable-point";
+import FormError from "./FormError";
 
 /**
  * Main principe : GMN
@@ -63,7 +64,6 @@ export default class Form extends EventEmitter implements FormDependence {
         if (elem.parent) return `${Form.restoreFullName(elem.parent)}.${elem.name}`;
         return elem.name || '';
     }
-    
     static getTargetName<T extends { name?: string, parent?: any }>(elem: T): string {
         const array = [];
         
@@ -81,18 +81,39 @@ export default class Form extends EventEmitter implements FormDependence {
      * */
     name?: string
     /**
+     * @description If set to true, then values,changes are standalone and independent of the parent form.
+     */
+    
+    #autonomic: boolean | undefined = undefined;
+    /**
+     * @description Класс является автономным, если не указан родитель или если свойство #autonomic установлено в true
+     */
+    get autonomic():boolean {
+        // Если есть родитель, то проверяем на autonomic
+        if (this.parent) return this.#autonomic === true;
+        // Родитель отсутствует, в таком случае форма всегда является автономной
+        return true;
+    }
+    set autonomic(value: boolean) {
+        if (value === false && !this.parent) throw FormError.AutonomicFormWithoutParent();
+        this.#autonomic = value;
+        
+        debug.msg(`The form's %c${Form.restoreFullName(this)}%c autonomic is %c${value}%c.`);
+    }
+    
+    /**
      * @description Внутренний объект изменений. Хранит в себе значения полей, которые были установлены, используя флаг
      * changes: true в методе setValues или используя метод change.
      * */
     #changes = {};
     get changes(): any {
-        if (this.parent) return getPropFromObject(this.parent.changes, Form.getTargetName(this));
+        if (this.parent && !this.autonomic) return getPropFromObject(this.parent.changes, Form.getTargetName(this));
         return this.#changes;
     }
     
     #values = {}
     get values(): any {
-        if (this.parent) {
+        if (this.parent  && !this.autonomic) {
             return this.parent.getValueByName(this.name as string) || {};
         }
         return mergeObjects({}, this.#values, this.#changes)
@@ -101,7 +122,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * @description Чистые значения формы. Которые изменяются при помощи setValues без опции change.
      * */
     get pureValues():any {
-        if (this.parent) return getPropFromObject(this.parent.pureValues, this.name as string) || {}
+        if (this.parent && !this.autonomic) return getPropFromObject(this.parent.pureValues, this.name as string) || {}
         return this.#values;
     }
     
@@ -126,20 +147,23 @@ export default class Form extends EventEmitter implements FormDependence {
         this.#parent = parent;
     }
     
+    /**
+     * !!!!!!!!!!!
+     * CONSTRUCTOR
+     * !!!!!!!!!!!
+     */
     constructor(params: Partial<FormParams> = {}) {
         super();
         
         this.name = params.name;
         const currentInstance = !!getCurrentInstance();
-        
         debug.msg(`new form %c${Form.restoreFullName(this)}%c`, debug.colorName, debug.colorDefault, this);
-        if (currentInstance) {
-            const parent = Form.getParentForm();
-            if (parent && !(params.parent === false || params.parent === null)) {
-                parent.subscribe(this);
-            }
-        }
+        
+        const parent = (currentInstance ? Form.getParentForm() : null) || params.parent
+        if (parent) parent.subscribe(this);
         if (params.provide !== false && currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
+        
+        if (typeof params.autonomic === 'boolean') this.autonomic = params.autonomic;
     }
     
     setValues(values: any, options: Partial<FormSetValuesOptions> = {}): void {
@@ -155,13 +179,13 @@ export default class Form extends EventEmitter implements FormDependence {
         if (!checkNameInObject(values, target)) insertByName(values, target)
          */
         
-        if (!options.executedFrom) {
+        if (!options.executedFrom && !this.autonomic) {
             debug.msg(`Executed from not founded in options, values will be %c${Form.getTargetName(this)}`, debug.colorSuccess)
             options.executedFrom = Form.getTargetName(this);
         }
         
         // Текущий элемент имеет родителя - отправляем изменения наверх.
-        if (this.parent) {
+        if (this.parent && !this.autonomic) {
             debug.msg(`%c${this.name}%c emit changes to parent [%c${this.parent.name}%c]`, debug.colorName, debug.colorDefault, debug.colorFocus,debug.colorDefault);
             return void this.parent.setValues(values, options);
         }
@@ -395,8 +419,13 @@ export default class Form extends EventEmitter implements FormDependence {
     /**
      * @description Return true if form includes changes, otherwise false.
      * */
-    get changed() {
-        return !!(this.changes && Object.keys(this.changes).length !== 0);
+    get changed(): boolean {
+        return !!(
+            (this.changes && Object.keys(this.changes).length !== 0)
+            || this.dependencies.find(
+                elem =>  (elem instanceof Form && elem.changed)
+            )
+        );
     }
     
     subscribe(element: any) {
@@ -494,7 +523,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * для данного поля будет стёрто из объекта changes.
      * */
     cleanChangesByField(fieldName: string): void {
-        if (this.parent) return void this.parent.cleanChangesByField(concatName(this.name, fieldName));
+        if (this.parent && !this.autonomic) return void this.parent.cleanChangesByField(concatName(this.name, fieldName));
         
         // Если значение есть в pureValues - устанавливаем его
         // Иначе undefined
@@ -512,7 +541,7 @@ export default class Form extends EventEmitter implements FormDependence {
     revert() {
         debug.msg('revert changes');
 
-        if (this.parent) return void this.parent.cleanChangesByField(this.name as string);
+        if (this.parent && !this.autonomic) return void this.parent.cleanChangesByField(this.name as string);
         
         this.setValues(this.pureValues, {
             change: true,
@@ -670,7 +699,7 @@ export default class Form extends EventEmitter implements FormDependence {
         return !this.enabled;
     }
     get enabled() {
-        if (this.parent) return !this.parent.checkFieldDisable(this.name as string);
+        if (this.parent && !this.autonomic) return !this.parent.checkFieldDisable(this.name as string);
         return this.isAvailable;
     }
 
@@ -700,7 +729,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * Далее передаём объект в dispatchEvent.
      * */
     available(type: boolean, names: string[]):void {
-        if (this.parent) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
+        if (this.parent && !this.autonomic) return this.parent.available(type, names.length ? names.map(k => concatName(this.name, k)) : [this.name as string])
         debug.group(`AVAILABILITY %c${Form.getTargetName(this)}%c to %c${type}`, debug.colorName, debug.colorDefault, debug.colorFocus);
 
         const oldAvailable = this.isAvailable;
@@ -754,7 +783,7 @@ export default class Form extends EventEmitter implements FormDependence {
      * @description Вернёт true, если переданное поле является disabled.
      * */
     checkFieldDisable(fieldName: string): boolean {
-        if (this.parent) return this.parent.checkFieldDisable(concatName(this.name, fieldName));
+        if (this.parent && !this.autonomic) return this.parent.checkFieldDisable(concatName(this.name, fieldName));
         const nearestName = findNearestNameFromArray(Object.keys(this.#availabilities), fieldName);
         if (!nearestName) return this.disabled;
         
@@ -784,7 +813,12 @@ export default class Form extends EventEmitter implements FormDependence {
 interface FormParams {
     name: string,
     provide: boolean,
-    parent: Form | null | false
+    parent: Form | null | false,
+    /**
+     * @description The form will be self-contained. They want and will have the opportunity to receive higher education
+     * from their parents, however values, changes, enabling and disabling will be stored inside this form.
+     */
+    autonomic: boolean
 }
 
 interface FormDependence {

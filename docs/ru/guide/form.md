@@ -115,3 +115,24 @@ form.version = 15; // Upgrade. Version: 15
 ```ts
 form.on(Form.EVENT_WAIT, () => {...})
 ```
+
+### autonomic
+
+Иногда вам нужно, чтобы дочерняя форма зависела от родительской формы, но полагалась на ее состояние.
+(изменения, значения, наличие). В этом случае сохранение/чтение будет вызываться из родительской формы.
+Кроме того, измененный значение будет прочитано из родительской формы.
+
+```ts
+const parent = new Form();
+const child = new Form({
+    parent,
+    name: "user",
+    autonomic: true
+});
+
+parent.change({
+    "user.name": "Jack"
+})
+child.values  // {}
+parent.values // { user: { name: "Jack" } }
+```
