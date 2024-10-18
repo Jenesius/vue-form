@@ -8,6 +8,7 @@
     <p><a href = "/input-country" class = "example-link">Input Country</a></p>
     <p><a href = "/input-otp" class = "example-link">Input One-Time Password</a></p>
     <p><a href = "/all-inputs" class = "example-link">All Inputs</a></p>
+    <p><a href = "/form-autonomic" class = "example-link">Form Autonomic</a></p>
   </div>
 	<div class = "container-examples">
 		<h3 class = "container-examples-title">Test:</h3>

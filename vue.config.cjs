@@ -41,6 +41,9 @@ module.exports = defineConfig({
     },
     "input-single-radio": {
       entry: "./examples/input-single-radio/main.ts"
+    },
+    "form-autonomic": {
+      entry: "./examples/autonomic-form/main.ts"
     }
   },
   configureWebpack: {

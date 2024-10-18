@@ -552,4 +552,48 @@ describe("Form.setValues", () => {
         })
     })
     
+    
+    test("Autonomic form: Set values only in children form", () => {
+        const parentForm = new Form();
+        const childrenForm = new Form({
+            parent: parentForm,
+            name: "test",
+            autonomic: true
+        })
+        
+        childrenForm.change({
+            username: "Jack",
+            age: 25
+        })
+        
+        expect(childrenForm.changes).toEqual({
+            username: "Jack",
+            age: 25
+        })
+        expect(parentForm.changes).toEqual({})
+    })
+    test("Autonomic form: Set values in parent form", () => {
+        const parentForm = new Form();
+        const childrenForm = new Form({
+            parent: parentForm,
+            name: "test",
+            autonomic: true
+        })
+        
+        parentForm.change({
+            "test.username": "Jack",
+            test: {
+                name: "Jenesius"
+            }
+        })
+        
+        expect(childrenForm.changes).toEqual({})
+        expect(parentForm.changes).toEqual({
+            test:{
+                name: "Jenesius",
+                username: "Jack"
+            }
+        })
+    })
+    
 })

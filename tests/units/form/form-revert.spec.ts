@@ -66,4 +66,38 @@ describe("Form revert changes", () => {
         expect(form.changes).toEqual({})
     })
     
+    
+    test("Autonomic Form: revert from children form has not effect for parent", () => {
+        const parent = new Form();
+        const child = new Form({
+            name: "test",
+            parent,
+            autonomic: true
+        })
+        
+        parent.change({ name: "Jack"} );
+        child.change({age: 20});
+
+        child.revert();
+        
+        expect(parent.changes).toEqual({name: "Jack"});
+        expect(child.changes).toEqual({})
+    })
+    test("Autonomic Form: revert from parent form has not effect for children", () => {
+        const parent = new Form();
+        const child = new Form({
+            name: "test",
+            parent,
+            autonomic: true
+        })
+        
+        parent.change({ name: "Jack"} );
+        child.change({age: 20});
+        
+        parent.revert();
+        
+        expect(parent.changes).toEqual({});
+        expect(child.changes).toEqual({age: 20})
+    })
+    
 })

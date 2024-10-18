@@ -229,5 +229,48 @@ describe("Test for check disabled/enabled state", () => {
         expect(mockDisable.mock.results.length).toBe(2);
         expect(mockDisable.mock.results[1].value).toBe(true);
     })
-
+    
+    test("Autonomic form: children enable has not effect to parent", () => {
+        const parent = new Form();
+        const child = new Form({
+            name: "test",
+            parent,
+            autonomic: true
+        });
+        
+        child.disable("test");
+        
+        expect(parent.checkFieldDisable('test')).toBe(false);
+        expect(child.checkFieldDisable('test')).toBe(true);
+        expect(child.disabled).toBe(false);
+    })
+    test("Autonomic form: parent enable/disable has not effect to children", () => {
+        const parent = new Form();
+        const child = new Form({
+            name: "test",
+            parent,
+            autonomic: true
+        });
+        
+        parent.disable("test");
+        
+        expect(parent.checkFieldDisable('test')).toBe(true);
+        expect(child.checkFieldDisable('test')).toBe(false);
+        expect(child.disabled).toBe(false);
+    })
+    
+    test("Autonomic form: parent full disable has no effect for child", () => {
+        const parent = new Form();
+        const child = new Form({
+            name: "test",
+            parent,
+            autonomic: true
+        });
+        
+        parent.disable()
+        
+        expect(parent.disabled).toBe(true);
+        expect(child.disabled).toBe(false);
+    })
+    
 })

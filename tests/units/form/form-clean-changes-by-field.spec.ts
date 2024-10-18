@@ -1,4 +1,5 @@
 import Form from "../../../src/classes/Form";
+import {utils} from "../../../src/index";
 
 describe("Form clean changes by field", () => {
     test("Simple clean changes", () => {
@@ -108,4 +109,64 @@ describe("Form clean changes by field", () => {
         })
         expect(form.changes).toEqual({})
     })
+    
+    
+    /**AUTONOMIC FORMS**/
+    test("Очистка изменений не должна иметь эффект на дочерние автономные(autonomic) классы.", () => {
+        const parentForm = new Form();
+        const childrenForm = new Form({
+            parent: parentForm,
+            name: "test",
+            autonomic: true
+        })
+        
+        childrenForm.change({
+            username: "Jack",
+            age: 25
+        })
+        parentForm.change({
+            age: 100
+        })
+        /**
+         * Очищаем поле username в родительской форме. Поле username в childrenForm не должно
+         * быть затронуто.
+         */
+        parentForm.cleanField( utils.concatName(childrenForm.name, 'username'))
+        
+        expect(childrenForm.changes).toEqual({
+            username: "Jack",
+            age: 25
+        })
+        expect(parentForm.changes).toEqual({
+            age: 100
+        })
+        
+        /**
+         * Очищаем поле age в childrenForm. Поле age не должно быть затронуто в parentForm.
+         */
+        childrenForm.cleanField( utils.concatName('age') )
+        expect(childrenForm.changes).toEqual({
+            username: "Jack",
+        })
+        expect(parentForm.changes).toEqual({
+            age: 100
+        })
+        
+        /**
+         * Предустанавливаем поле age в childrenForm. После очистки поля в parentForm, оно не должно
+         * иметь эффект над children.
+         */
+        childrenForm.change({
+            age: 18
+        })
+        parentForm.cleanField( utils.concatName('age') )
+        expect(childrenForm.changes).toEqual({
+            username: "Jack",
+            age: 18
+        })
+        expect(parentForm.changes).toEqual({})
+        
+    })
+    
+    
 })
