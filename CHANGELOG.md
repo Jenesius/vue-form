@@ -1,3 +1,9 @@
+#### 3.0.20 (2024-10-25)
+
+##### Other Changes
+
+*  update form parent searching ([962ed981](https://github.com/Jenesius/vue-form/commit/962ed9816d91cf8a4b02c8d943cff4c69afb4608))
+
 #### 3.0.19 (2024-10-18)
 
 #### 3.0.18 (2024-10-18)
