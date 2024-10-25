@@ -162,7 +162,9 @@ export default class Form extends EventEmitter implements FormDependence {
         const currentInstance = !!getCurrentInstance();
         debug.msg(`new form %c${Form.restoreFullName(this)}%c`, debug.colorName, debug.colorDefault, this);
         
-        const parent = (currentInstance ? Form.getParentForm() : null) || params.parent
+        const parent = (params.parent === null || params.parent === false)
+            ? null : ( params.parent  || (currentInstance ? Form.getParentForm() : null));
+        
         if (parent) parent.subscribe(this);
         if (params.provide !== false && currentInstance) provideVue(Form.PROVIDE_NAME, this); // Default providing current form for children.
         
