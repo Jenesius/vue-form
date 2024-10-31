@@ -1,6 +1,4 @@
-
-import {Value, Values} from "../types";
-
+import {Value} from "../types";
 
 /**
  * @description Функция вернёт значения поля из объекта. Prop может быть вложеным, указывается через точку
@@ -8,15 +6,13 @@ import {Value, Values} from "../types";
  * Если имя не было найдёно - вернёт undefined
  * */
 
-
-
-export default function getPropFromObject(obj: Values, name: string) : Value | undefined{
+export default function getPropFromObject(obj: unknown, name: string) : Value | undefined{
 
     /**
      * Если переданный объект, явялется примитивным типом, то дальнейший спуск
      * по объекты - не возможет. Возвращается undefined
      * */
-    if (typeof obj !== 'object' || obj === null) return undefined;
+    if (!isRecord(obj)) return undefined;
 
     
     /**
@@ -50,14 +46,6 @@ export default function getPropFromObject(obj: Values, name: string) : Value | u
     return obj[name];
 }
 
-
-/**
- * @description Разбивает имя с сервера(точки рассоединяет)
- *
- * @param {String} name
- * @return {Array} arr
- *
- * */
-export function parseName(name:string){
-    return name.split(".");
+function isRecord(data: unknown): data is Record<string, unknown> {
+    return (typeof data === 'object' && data !== null)
 }
