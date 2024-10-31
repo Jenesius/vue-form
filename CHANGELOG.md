@@ -1,3 +1,9 @@
+#### 3.0.21 (2024-10-31)
+
+##### Other Changes
+
+*  update type declaration for getPropFromObject ([1c849fe6](https://github.com/Jenesius/vue-form/commit/1c849fe63d1b617edf6708376c176a922bdbd5d5))
+
 #### 3.0.20 (2024-10-25)
 
 ##### Other Changes
