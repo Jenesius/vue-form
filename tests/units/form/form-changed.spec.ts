@@ -78,12 +78,6 @@ describe("Form.changed", () => {
 		
 		child.change({name: 'Jack'})
 		
-		console.log(child.values)
-		console.log(child.changes)
-		console.log(parent.changes)
-		console.log(grandParent.changes)
-		
-		expect(grandParent.changed).toBe(true)
 		expect(parent.changed).toBe(true)
 		expect(child.changed).toBe(true)
 	})

@@ -20,7 +20,24 @@ export default defineConfig({
            ...typescript({ tsconfig: resolve(srcFolder, "tsconfig.json"),  }),
             apply: 'build'
         },
-        cssInjectedByJsPlugin(),
+        cssInjectedByJsPlugin({
+            injectCodeFunction: function injectCodeCustomRunTimeFunction(cssCode, options) {
+                try {
+                    if (!document) return;
+
+                    const elementStyle = document.createElement('style');
+                    // SET ALL ATTRIBUTES
+                    for (const attribute in options.attributes) {
+                        elementStyle.setAttribute(attribute, options.attributes[attribute]);
+                    }
+
+                    elementStyle.appendChild(document.createTextNode(cssCode));
+                    document.head.prepend(elementStyle);
+                } catch (e) {
+                    console.error('vite-plugin-css-injected-by-js', e);
+                }
+            }
+        }),
         vue(),
 
     ],
